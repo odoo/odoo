@@ -37,6 +37,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * @property { GoogleMapsOptionPlugin['commitPlace'] } commitPlace
  * @property { GoogleMapsOptionPlugin['getPlace'] } getPlace
  * @property { GoogleMapsOptionPlugin['getMapsAPI'] } getMapsAPI
+ * @property { GoogleMapsOptionPlugin['notifyGMapsError'] } notifyGMapsError
  */
 
 export class GoogleMapsOptionPlugin extends Plugin {
@@ -51,6 +52,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
         "commitPlace",
         "getPlace",
         "getMapsAPI",
+        "notifyGMapsError",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -142,7 +144,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
         if (place?.geometry) {
             const location = place.geometry.location;
             /** @type {Coordinates} */
-            const coordinates = `(${location.lat()},${location.lng()})`;
+            const coordinates = `(${location.lat},${location.lng})`;
             this.gpsMapCache.set(coordinates, place);
             /** @type {{mapGps: Coordinates, pinAddress: string}} */
             const currentMapData = editingElement.dataset;
