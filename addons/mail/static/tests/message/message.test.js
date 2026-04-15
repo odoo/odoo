@@ -283,7 +283,7 @@ test("Editing message keeps the mentioned roles", async () => {
     await contains(".o-discuss-mention", { text: "@admin" });
 });
 
-test("Can edit message comment in chatter", async () => {
+async function canEditMessageCommentInChatter({ isMacOS = false } = {}) {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
     pyEnv["mail.message"].create({
@@ -293,6 +293,9 @@ test("Can edit message comment in chatter", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
+    if (isMacOS) {
+        mockUserAgent("mac");
+    }
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message [title='Edit']");
@@ -301,22 +304,40 @@ test("Can edit message comment in chatter", async () => {
     await click(".o-mail-Message button:text('save')");
     await contains(".o-mail-Message-content:text('edited message (edited)')");
     await click(".o-mail-Message [title='Edit']");
-    await contains(".o-mail-Message:contains('Press ESC to cancel, CTRL-Enter to save')");
+    await contains(
+        `.o-mail-Message:contains('Press ESC to cancel, ${isMacOS ? "CMD" : "CTRL"}-Enter to save')`
+    );
     await contains(".o-mail-Message .o-mail-Composer.o-focused");
     await webContains(".o-mail-Message .o-mail-Composer-input").edit("edited again");
     await webContains(".o-mail-Message .o-mail-Composer-input").press("Enter");
     await animationFrame();
     await contains(".o-mail-Message .o-mail-Composer-input"); // still editing message
     await contains(".o-mail-Message .o-mail-Composer-input:value('edited again')"); // FIXME: even though value has trailing '\n', HOOT selector doesn't see it on the node
-    await webContains(".o-mail-Message .o-mail-Composer-input").press(["Control", "Enter"]);
+    await webContains(".o-mail-Message .o-mail-Composer-input").press([
+        isMacOS ? "Command" : "Control",
+        "Enter",
+    ]);
     await contains(".o-mail-Message-content:text('edited again (edited)')");
     // save without change should keep (edited)
     await click(".o-mail-Message [title='Edit']");
     await contains(".o-mail-Message .o-mail-Composer.o-focused");
     await contains(".o-mail-Message .o-mail-Composer-input:value('edited again')");
-    await contains(".o-mail-Message:contains('Press ESC to cancel, CTRL-Enter to save')");
-    await webContains(".o-mail-Message .o-mail-Composer-input").press(["Control", "Enter"]);
+    await contains(
+        `.o-mail-Message:contains('Press ESC to cancel, ${isMacOS ? "CMD" : "CTRL"}-Enter to save')`
+    );
+    await webContains(".o-mail-Message .o-mail-Composer-input").press([
+        isMacOS ? "Command" : "Control",
+        "Enter",
+    ]);
     await contains(".o-mail-Message-content:text('edited again (edited)')");
+}
+
+test("Can edit message comment in chatter", async () => {
+    await canEditMessageCommentInChatter();
+});
+
+test("Can edit message comment in chatter (MacOS)", async () => {
+    await canEditMessageCommentInChatter({ isMacOS: true });
 });
 
 test("Basic list of edit message actions in chatter", async () => {
