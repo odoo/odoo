@@ -114,7 +114,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "ir_ui_view": 1,
             "product_attribute": 1,
             "product_attribute_value": 2,
-            "product_document": 1,
+            "product_document": 2,
             "product_image": 2,
             "product_pricelist": 1,
             "product_product": 2,
@@ -168,7 +168,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
 
         # When a new combination matches another product, additional templates and values are sent
         # to the client (tags, images, ...)
-        product_change_query_count = 40
+        product_change_query_count = 42
         if self._has_demo_data():
             product_change_query_count += 1
         if "website_sale_stock" in self.installed_modules:

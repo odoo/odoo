@@ -61,6 +61,15 @@ class WebsiteSaleVariantController(Controller):
                 },
             )
 
+        if self.env.website.is_view_active("website_sale.documents"):
+            combination_info["documents"] = self.env.website._render_template(
+                "website_sale.documents",
+                values={
+                    "product": product_template,
+                    "product_variant": product,
+                },
+            )
+
         if self.env.website.is_view_active("website_sale.product_tags"):
             all_tags = product.all_product_tag_ids if product else product_template.product_tag_ids
             combination_info["product_tags"] = self.env.website._render_template(

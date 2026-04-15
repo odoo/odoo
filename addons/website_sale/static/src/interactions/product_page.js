@@ -6,7 +6,7 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { memoize, uniqueId } from '@web/core/utils/functions';
 import { KeepLast } from '@web/core/utils/concurrency';
-import { setElementContent } from '@web/core/utils/html';
+import { setElementContent, createElementWithContent } from '@web/core/utils/html';
 import { insertThousandsSep, formatFloat } from '@web/core/utils/numbers';
 import { renderToElement, renderToFragment } from '@web/core/utils/render';
 import { isEmail } from '@web/core/utils/strings';
@@ -371,6 +371,31 @@ export class ProductPage extends Interaction {
     }
 
     /**
+     * Update the documents section of the product page.
+     */
+    _updateDocumentsSection(productContainer, newDocumentsSection) {
+        const documentsSection = productContainer.querySelector('#product_documents');
+
+        if (!documentsSection && !newDocumentsSection) return;
+
+        const newDocumentsSectionEl = newDocumentsSection
+            ? createElementWithContent('div', newDocumentsSection)
+            : null;
+
+        if (documentsSection && newDocumentsSectionEl) {
+            // Swap the old documents section with the new one.
+            documentsSection.replaceWith(...newDocumentsSectionEl.childNodes);
+        } else if (documentsSection) {
+            // Remove the old documents section
+            documentsSection.remove();
+        } else {
+            // Add a new documents section
+            const productDetails = productContainer.querySelector('#product_details article');
+            productDetails?.append(...newDocumentsSectionEl.childNodes);
+        }
+    }
+
+    /**
      * Toggles the disabled class on the parent element and the "add to cart" and "buy now" buttons
      * depending on whether the current combination is possible.
      *
@@ -415,6 +440,9 @@ export class ProductPage extends Interaction {
         }
         if (combinationInfo.out_of_stock_message) {
             combinationInfo.out_of_stock_message = markup(combinationInfo.out_of_stock_message);
+        }
+        if (combinationInfo.documents) {
+            combinationInfo.documents = markup(combinationInfo.documents);
         }
         combinationInfo.packaging_selector = markup(combinationInfo.packaging_selector);
 
@@ -721,6 +749,7 @@ export class ProductPage extends Interaction {
         // Only update the images, tags and packaging selector if the product has changed.
         if (!combination.no_product_change) {
             this._updateProductImages(parent.closest('#product_detail_main'), combination.carousel);
+            this._updateDocumentsSection(parent.closest('#product_detail_main'), combination.documents);
             const productTags = parent.querySelector('.o_product_tags');
             productTags?.insertAdjacentHTML('beforebegin', htmlEscape(combination.product_tags));
             productTags?.remove();

@@ -7,9 +7,13 @@
         <field name="inherit_id" ref="product.product_document_form"/>
         <field name="arch" type="xml">
             <sheet position="inside">
-                <group name="sale" string="Sales">
-                    <field name="attached_on_sale" class="oe_inline"/>
-                </group>
+                <notebook>
+                    <page name="sale" string="Sales">
+                        <group>
+                            <field name="attached_on_sale" class="oe_inline ms-2" widget="selection"/>
+                        </group>
+                    </page>
+                </notebook>
             </sheet>
         </field>
     </record>
@@ -19,9 +23,9 @@
         <field name="model">product.document</field>
         <field name="inherit_id" ref="product.product_document_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//main/div" position="inside">
+            <xpath expr="//main/field[@name='variant_attribute_value_ids']" position="after">
                 <div class="d-flex mt-2">
-                    <span>Sales visibility</span>
+                    <span>Accessible</span>
                     <field name="attached_on_sale" class="ms-2" widget="selection"/>
                 </div>
             </xpath>

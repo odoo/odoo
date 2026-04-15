@@ -202,9 +202,7 @@ class SalePdfFormField(models.Model):
     @api.model
     def _cron_post_upgrade_assign_missing_form_fields(self):
         # Called post-upgrade as we can't access the files during the upgrade process
-        product_documents = self.env["product.document"].search([
-            ("attached_on_sale", "=", "inside")
-        ])
+        product_documents = self.env["product.document"].search([])
         quote_documents = self.env["quotation.document"].search([])
         self._create_or_update_form_fields_on_pdf_records(product_documents, "product_document")
         self._create_or_update_form_fields_on_pdf_records(quote_documents, "quotation_document")
