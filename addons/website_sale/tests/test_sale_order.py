@@ -84,3 +84,14 @@ class TestSaleOrder(WebsiteSaleCommon):
         self.assertTrue(
             self.cart.partner_id.active, "Registered customers shouldn't be archived on payment"
         )
+
+        # Case when SO is toward the parent company and one of its contact has a user
+        customer = self.env["res.partner"].create({"parent_name": "Company", "name": "Cuzco"})
+        self._create_new_portal_user(login=f"whatever-{customer.id}", partner_id=customer.id)
+        self.assertNotEqual(customer, customer.parent_id)
+
+        cart = self._create_so(partner_id=customer.parent_id.id)
+        cart._archive_partner_if_no_user()
+        self.assertTrue(
+            self.cart.partner_id.active, "Registered company shouldn't be archived if any contact has a user"
+        )
