@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from lxml.etree import LIBXML_VERSION
 from markupsafe import Markup
 from unittest.mock import patch
 
@@ -259,7 +260,11 @@ class TestMailTemplate(MailCommon):
         templates = (
             # here sanitizer adds an 'equals void' after object.name as properties
             # should have values
-            ('''<p ou="<p t-out="object.name">"</p>''', '<p ou="&lt;p t-out=" object.name="">"</p>'),
+            (
+                # Note: lxml build against libxml2 2.14.0+ interprets slightly differently malformed HTMl snippets
+                """<p ou="<p t-out="object.name">"</p>""",
+                '<p ou="&lt;p t-out=" object.name"="">"</p>' if LIBXML_VERSION >= (2, 14, 0) else '<p ou="&lt;p t-out=" object.name="">"</p>',
+            ),
             ('''<p title="'<p t-out='object.name'/>">''', '''<p title="'&lt;p t-out='object.name'/&gt;"></p>'''),
         )
         o_render = self.env['mail.render.mixin']._render_template_qweb_regex
