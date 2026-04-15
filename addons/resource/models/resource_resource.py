@@ -5,14 +5,14 @@ from collections import defaultdict
 from datetime import datetime, timedelta, time
 from zoneinfo import ZoneInfo
 
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta, weekdays
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.tools import get_lang, babel_locale_parse
 from odoo.tools.intervals import Intervals
-from odoo.tools.date_utils import localized, sum_intervals, to_timezone, weeknumber, weekstart, weekend
+from odoo.tools.date_utils import localized, sum_intervals, to_timezone, weeknumber
 
 
 class ResourceResource(models.Model):
@@ -301,6 +301,7 @@ class ResourceResource(models.Model):
         leave_start_day = leave[0].date()
         leave_end_day = leave[1].date()
         tz = ZoneInfo(self.tz or self.env.user.tz)
+        week_start_day = int(get_lang(self.env).week_start) - 1
 
         while leave_start_day <= leave_end_day:
             if not self._is_fully_flexible():
@@ -308,7 +309,7 @@ class ResourceResource(models.Model):
                 # only days inside the original period
                 if leave_start_day >= start_day and leave_start_day <= end_day:
                     resource_hours_per_day[self.id][leave_start_day] -= hours
-                year_and_week = weeknumber(babel_locale_parse(locale), leave_start_day)
+                year_and_week = weeknumber(babel_locale_parse(locale), leave_start_day, week_start_day)
                 resource_hours_per_week[self.id][year_and_week] -= hours
 
             range_start_datetime = datetime.combine(leave_start_day, datetime.min.time(), tzinfo=tz)
@@ -324,11 +325,14 @@ class ResourceResource(models.Model):
         assert start.tzinfo and end.tzinfo
 
         start_day, end_day = start.date(), end.date()
-        week_start_date, week_end_date = start, end
         locale = babel_locale_parse(get_lang(self.env).code)
-        week_start_date = weekstart(locale, start)
-        week_end_date = weekend(locale, end)
-        end_year, end_week = weeknumber(locale, week_end_date)
+
+        week_start_day = int(get_lang(self.env).week_start) - 1
+        delta = relativedelta(weekday=weekdays[week_start_day](-1))
+        week_start_date = start + delta
+        week_end_date = end + delta + relativedelta(days=6)
+
+        end_year, end_week = weeknumber(locale, week_end_date, week_start_day)
 
         min_start_date = week_start_date + relativedelta(hour=0, minute=0, second=0, microsecond=0)
         max_end_date = week_end_date + relativedelta(days=1, hour=0, minute=0, second=0, microsecond=0)
@@ -368,7 +372,7 @@ class ResourceResource(models.Model):
                 if day >= start_day and day <= end_day:
                     resource_hours_per_day[resource.id][day] = day_working_hours
 
-                year_week = weeknumber(babel_locale_parse(locale), day)
+                year_week = weeknumber(babel_locale_parse(locale), day, week_start_day)
                 year, week = year_week
                 if (year < end_year) or (year == end_year and week <= end_week):
                     # cap weekly hours to the resource's configured hours_per_week (not the
@@ -419,8 +423,9 @@ class ResourceResource(models.Model):
 
         work_hours = 0.0
         locale = get_lang(self.env).code
+        week_start_day = int(get_lang(self.env).week_start) - 1
         for day, hours in interval_duration_per_day.items():
-            week = weeknumber(babel_locale_parse(locale), day)
+            week = weeknumber(babel_locale_parse(locale), day, week_start_day)
             day_working_hours = max(0.0, min(
                 hours,
                 duration_per_day.get(day, 0.0),
