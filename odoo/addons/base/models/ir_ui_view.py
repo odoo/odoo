@@ -374,7 +374,8 @@ actual arch.
                 combined_arch = view._get_combined_arch()
                 if view.type == 'qweb':
                     continue
-            except (etree.ParseError, ValueError) as e:
+            except (etree.ParseError, ValueError, TypeError) as e:
+                # Note: lxml < 5.0 raises ValueError; lxml 5.0+ / libxml2 2.12+ raises TypeError
                 err = ValidationError(_(
                     "Error while parsing or validating view:\n\n%(error)s",
                     error=tools.ustr(e),
