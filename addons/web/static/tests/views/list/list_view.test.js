@@ -5584,6 +5584,38 @@ test(`pager, grouped, with count limit reached`, async () => {
     expect(`.o_group_header:first-of-type .o_pager_limit`).toHaveText("2");
 });
 
+test.tags("desktop");
+test(`pager, grouped, with count limit reached and total above countLimit`, async () => {
+    Foo._records.push({ id: 398, foo: "blip" });
+    Foo._records.push({ id: 399, foo: "blip" });
+    Foo._records.push({ id: 400, foo: "blip" });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list limit="2" count_limit="3"><field name="foo"/><field name="bar"/></list>`,
+        groupBy: ["foo"],
+    });
+    expect(`.o_group_header`).toHaveCount(3, { message: "should have 3 groups" });
+
+    await contains(`.o_group_header:first-of-type`).click();
+    expect(`.o_group_header:first-of-type .o_pager:eq(0)`).toHaveCount(1, {
+        message: "first group should have a pager",
+    });
+    expect(`.o_group_header:first-of-type .o_pager_value`).toHaveText("1-2");
+    expect(`.o_group_header:first-of-type .o_pager_limit`).toHaveText("5", {
+        message:
+            "The true count being already computed, we can display it instead of the countLimit",
+    });
+
+    await contains(`.o_pager_next:eq(1)`).click();
+    expect(`.o_group_header:first-of-type .o_pager_value`).toHaveText("3-4");
+    expect(`.o_group_header:first-of-type .o_pager_limit`).toHaveText("5", {
+        message:
+            "The true count being already computed, we can display it instead of the countLimit",
+    });
+});
+
+test.tags("desktop");
 test(`multi-level grouped list, pager inside a group`, async () => {
     for (const record of Foo._records) {
         record.bar = true;
