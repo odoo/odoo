@@ -909,3 +909,30 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
         payment.action_draft()
         with self.assertRaises(UserError):
             payment.amount = 300.0
+
+    def test_payment_with_multiple_counterpart_lines(self):
+        payment = self.env['account.payment'].create({
+            'amount': 500.0,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.bank_journal_1.id,
+        })
+        payment.action_post()
+        move = payment.move_id
+        move.button_draft()
+        counterpart_lines = payment._seek_for_lines()[1]
+        move.write({
+            'line_ids': [
+                Command.update(counterpart_lines.id, {'amount_currency': 400}),
+                Command.create({
+                    'account_id': counterpart_lines.account_id.id,
+                    'balance': 100.0,
+                    'currency_id': payment.currency_id.id,
+                }),
+            ],
+        })
+        move.action_post()
+        payment.action_draft()
+        with self.assertRaises(UserError):
+            payment.amount = 300.0
