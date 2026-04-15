@@ -16,7 +16,7 @@
 <t t-inherit="website.TranslationBuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='translation_options']" position="after">
         <translate_attribute_option
-            t-att-selector="translateAttributeOptionSelector"
+            t-att-selector="this.translateAttributeOptionSelector"
             editableOnly="false"/>
     </xpath>
 </t>

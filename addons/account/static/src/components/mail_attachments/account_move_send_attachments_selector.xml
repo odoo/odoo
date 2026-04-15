@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="account.AccountMoveSendAttachmentsSelector">
-        <FileUploader multiUpload="true" onUploaded.bind="onFileUploaded">
+        <FileUploader multiUpload="true" onUploaded.bind="this.onFileUploaded">
             <t t-set-slot="toggler">
                 <span class="d-none" t-custom-ref="fileUploadTrigger"/>
             </t>

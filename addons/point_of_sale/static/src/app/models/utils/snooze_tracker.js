@@ -1,5 +1,5 @@
+import { reactive } from "@web/owl2/utils";
 const { DateTime } = luxon;
-import { reactive } from "@odoo/owl";
 
 const REFRESH_DELAY = 1000;
 

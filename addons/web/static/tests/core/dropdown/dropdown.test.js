@@ -221,7 +221,7 @@ test("close on click outside when the opening active element was removed", async
         static props = [];
         static template = xml`
             <div class="outside">outside</div>
-            <div t-if="state.showActive" t-ref="active">
+            <div t-if="this.state.showActive" t-ref="active">
                 <button class="active-button">Active</button>
             </div>
             <Dropdown>

@@ -32,13 +32,13 @@
                 t-ref="emoji-grid"
                 t-on-scroll="this.highlightActiveCategory"
             >
-                <t t-if="searchTerm and !hasEmojisFromSearch" class="d-flex flex-column">
+                <t t-if="this.searchTerm and !hasEmojisFromSearch" class="d-flex flex-column">
                     <span class="o-EmojiPicker-empty">😢</span>
                     <span>No emojis match your search</span>
                 </t>
                 <t t-if="_recentEmojis.length > 0">
-                    <t t-if="!searchTerm" t-call="web.EmojiPicker.section">
-                        <t t-set="category" t-value="recentCategory"/>
+                    <t t-if="!this.searchTerm" t-call="web.EmojiPicker.section">
+                        <t t-set="category" t-value="this.recentCategory"/>
                     </t>
                     <t t-foreach="_recentEmojis" t-as="emoji" t-key="'recent_' + emoji_index">
                         <t t-call="web.EmojiPicker.emoji">
@@ -50,7 +50,7 @@
                 </t>
                 <t t-set="current" t-value=""/>
                 <t t-foreach="currentEmojis" t-as="emoji" t-key="emoji_index">
-                    <t t-if="!searchTerm and current !== emoji.category">
+                    <t t-if="!this.searchTerm and current !== emoji.category">
                         <t t-set="current" t-value="emoji.category"/>
                         <t t-call="web.EmojiPicker.section">
                             <t t-set="category" t-value="current"/>
@@ -152,7 +152,7 @@
         t-att-title="emoji.name"
         t-att-data-codepoints="emoji.codepoints"
         t-att-data-index="itemIndex"
-        t-att-data-category="inRecent ? recentCategory.sortId : emoji.category.sortId"
+        t-att-data-category="inRecent ? this.recentCategory.sortId : emoji.category.sortId"
         t-on-click="this.selectEmoji"
         t-on-mouseenter="(ev) => this.onMouseenterEmoji(ev, emoji)"
         t-on-mouseleave="(ev) => this.onMouseleaveEmoji(ev, emoji)"
@@ -165,10 +165,10 @@
     <input
         class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active lh-1"
         t-att-placeholder="this.placeholder"
-        t-model="localState.searchTerm"
+        t-custom-model="localState.searchTerm"
         t-ref="autofocus"
         t-att-model="localState.searchTerm"
-        t-att-tabindex="isMobileOS ? -1 : 0"
+        t-att-tabindex="this.isMobileOS ? -1 : 0"
         t-on-input="() => this.state.activeEmojiIndex = 0"
     />
 </t>

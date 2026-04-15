@@ -1,4 +1,5 @@
-import { Component, onWillDestroy, useRef, useState } from "@odoo/owl";
+import { useRef, useState } from "@web/owl2/utils";
+import { Component, onWillDestroy } from "@odoo/owl";
 import { normalizedMatch } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
 import { isVisible } from "@web/core/utils/ui";

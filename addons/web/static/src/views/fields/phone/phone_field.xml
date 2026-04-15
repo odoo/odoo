@@ -25,7 +25,7 @@
         <span class="d-flex flex-nowrap">
             <t t-foreach="this.actionButtons" t-as="btn" t-key="btn.name">
                 <button
-                    t-if="props.record.data[props.name]"
+                    t-if="this.props.record.data[this.props.name]"
                     t-on-click.stop="btn.onSelected"
                     class="o_phone_form_link btn btn-sm btn-link p-1 py-0 text-nowrap"
                 >

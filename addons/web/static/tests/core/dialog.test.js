@@ -107,10 +107,10 @@ test("hotkey control+enter on input triggers blur event before clicking dialog b
         static components = { Dialog };
         static template = xml`
             <Dialog title="'Test Dialog'">
-                <input type="text" t-on-blur="onInputBlur" class="test_input"/>
+                <input type="text" t-on-blur="this.onInputBlur" class="test_input"/>
                 
                 <t t-set-slot="footer">
-                    <button t-on-click="onConfirm">Confirm</button>
+                    <button t-on-click="this.onConfirm">Confirm</button>
                 </t>
             </Dialog>
         `;

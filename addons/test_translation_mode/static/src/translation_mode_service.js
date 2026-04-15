@@ -1,4 +1,5 @@
-import { onMounted, onWillUnmount, reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
+import { onMounted, onWillUnmount } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";

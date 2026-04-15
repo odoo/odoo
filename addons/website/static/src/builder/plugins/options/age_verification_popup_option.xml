@@ -13,14 +13,14 @@
             </BuilderSelect>
             <BuilderButton id="'error_message_opt'"
                 title.translate="Show Rejection Message"
-                className="'fa ' + (isActiveItem('error_message_opt') ? 'fa-eye' : 'fa-eye-slash')"
+                className="'fa ' + (this.isActiveItem('error_message_opt') ? 'fa-eye' : 'fa-eye-slash')"
                 classAction="'d-none'" inverseAction="true" applyTo="'#verification_error'"
                 preview="false"/>
         </BuilderRow>
-        <BuilderRow label.translate="Minimum Age" t-if="isActiveItem('birth_year_verification') || isActiveItem('birth_date_verification')" level="1">
+        <BuilderRow label.translate="Minimum Age" t-if="this.isActiveItem('birth_year_verification') || this.isActiveItem('birth_date_verification')" level="1">
             <BuilderNumberInput dataAttributeAction="'minAge'" default="18" unit.translate="years" saveUnit="''" min="1"/>
         </BuilderRow>
-        <BuilderRow label.translate="Placeholder" t-if="isActiveItem('birth_year_verification') || isActiveItem('birth_date_verification')" level="1">
+        <BuilderRow label.translate="Placeholder" t-if="this.isActiveItem('birth_year_verification') || this.isActiveItem('birth_date_verification')" level="1">
             <BuilderTextInput attributeAction="'placeholder'" applyTo="'input[name^=&quot;age_verification_birth_&quot;]'"/>
         </BuilderRow>
         <BuilderRow label.translate="Background blur">

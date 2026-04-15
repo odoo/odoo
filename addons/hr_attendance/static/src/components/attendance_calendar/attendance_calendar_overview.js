@@ -1,4 +1,5 @@
-import { Component, useEffect, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, useEffect } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 

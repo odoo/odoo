@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 const mainComponents = registry.category("main_components");
 
 export class ConvertInlineContainer extends Component {
-    static template = xml`<div class="o-convert-inline" t-ref="root"></div>`;
+    static template = xml`<div class="o-convert-inline" t-custom-ref="root"></div>`;
     static props = { share: Object };
 
     setup() {

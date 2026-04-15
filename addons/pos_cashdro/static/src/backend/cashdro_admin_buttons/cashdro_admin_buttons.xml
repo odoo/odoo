@@ -5,13 +5,13 @@
         <div class="d-flex gap-2 mt-3">
             <button type="button"
                 class="btn btn-secondary"
-                t-on-click.stop="downloadLogs"
+                t-on-click.stop="this.downloadLogs"
             >
                 Download Logs
             </button>
             <button type="button"
                 class="btn btn-secondary"
-                t-on-click.stop="openDiagnosticsPage"
+                t-on-click.stop="this.openDiagnosticsPage"
             >
                 Open Diagnostics Page
             </button>

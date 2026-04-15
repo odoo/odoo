@@ -21,7 +21,7 @@
                                 class="o_searchview_input flex-grow-1 border-0 p-0 bg-transparent"
                                 placeholder="Search…"
                                 t-att-disabled="!highlightsEnabled"
-                                t-model="this.state.filter"
+                                t-custom-model="this.state.filter"
                             />
                         </div>
                     </search>
@@ -69,7 +69,7 @@
                                     >
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h5 class="d-flex gap-2 align-items-center m-0">
-                                                <span t-out="formatTarget(translation.targets)" />
+                                                <span t-out="this.formatTarget(translation.targets)" />
                                                 <t t-if="this.hiddenTranslations.has(translation)">
                                                     <i
                                                         class="fa fa-eye-slash text-muted"

@@ -94,11 +94,11 @@
 
 <t t-name="website.s_website_form_form_option_add_snippet_dropdown">
     <Dropdown menuClass="'o-hb-select-dropdown'">
-        <button class="btn btn-success pe-2" t-att-title="props.tooltip">+ New</button>
+        <button class="btn btn-success pe-2" t-att-title="this.props.tooltip">+ New</button>
         <t t-set-slot="content">
             <t t-foreach="this.snippets" t-as="snippet" t-key="snippet.name">
                 <DropdownItem onSelected="() => this.addField(snippet)">
-                    <t t-esc="snippet.name"/>
+                    <t t-out="snippet.name"/>
                 </DropdownItem>
             </t>
         </t>

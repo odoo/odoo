@@ -148,10 +148,10 @@ test("offlineUI: react to [data-available-offline] attribute changes", async () 
     class Root extends Component {
         static template = xml`
             <div>
-                <button type="button" class="btn1" t-att="{ 'data-available-offline': state.btn1Available }">
+                <button type="button" class="btn1" t-att="{ 'data-available-offline': this.state.btn1Available }">
                     First
                 </button>
-                <button type="button" class="btn2" t-att="{ 'data-available-offline': state.btn2Available }">
+                <button type="button" class="btn2" t-att="{ 'data-available-offline': this.state.btn2Available }">
                     Second
                 </button>
             </div>

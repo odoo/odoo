@@ -37,10 +37,10 @@
                     <tbody>
                         <t t-if="this.transactions.length > 0" t-foreach="this.transactions" t-as="tx" t-key="tx.id">
                             <tr>
-                                <td><t t-esc="tx.name"/></td>
-                                <td><t t-esc="tx.phone"/></td>
-                                <td><t t-esc="tx.amount"/></td>
-                                <td><t t-esc="tx.received_at"/></td>
+                                <td><t t-out="tx.name"/></td>
+                                <td><t t-out="tx.phone"/></td>
+                                <td><t t-out="tx.amount"/></td>
+                                <td><t t-out="tx.received_at"/></td>
                                 <td>
                                     <button class="btn btn-primary"
                                             t-on-click="() => this.confirm(tx)">

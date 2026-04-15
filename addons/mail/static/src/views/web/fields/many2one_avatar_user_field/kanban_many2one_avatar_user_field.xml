@@ -5,7 +5,7 @@
         <t t-set="relation" t-value="this.props.record.fields[this.props.name].relation"/>
         <KanbanMany2One t-props="this.m2oProps">
             <t t-set-slot="avatar">
-                <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="this.value.id" uniqueId="this.uniqueId" noSpacing="!displayName?.length" displayName="this.displayName"/>
+                <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="this.value.id" uniqueId="this.uniqueId" noSpacing="!this.displayName?.length" displayName="this.displayName"/>
             </t>
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                 <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">

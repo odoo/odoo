@@ -6,7 +6,7 @@
         <t t-set="slicingLength" t-value="this.env.isSmall ? 30 : 45"/>
         <div
             class="input-group-text rounded-start text-lowercase border-0"
-            t-esc="this.serverUrl.length > slicingLength ? this.serverUrl.slice(0, (slicingLength / 2) - 1) + '..' + this.serverUrl.slice((-slicingLength / 2) + 1) : this.serverUrl"
+            t-out="this.serverUrl.length > slicingLength ? this.serverUrl.slice(0, (slicingLength / 2) - 1) + '..' + this.serverUrl.slice((-slicingLength / 2) + 1) : this.serverUrl"
         />
     </xpath>
 </t>

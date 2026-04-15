@@ -279,11 +279,11 @@
             <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-if="groupCellColspan > 0" t-att-colspan="groupCellColspan"/>
             <th class="o_count_column" t-if="this.showCountColumn">
                 <div class="d-flex justify-content-end align-items-center w-100 h-100">
-                    <span t-if="!showGroupPager(group)" class="m-1" >
+                    <span t-if="!this.showGroupPager(group)" class="m-1" >
                         <t t-out="group.count"/>
                     </span>
                     <div t-else="" t-on-click.stop="" class="o_pager_cell_counter">
-                        <Pager t-props="getGroupPagerProps(group)"/>
+                        <Pager t-props="this.getGroupPagerProps(group)"/>
                     </div>
                 </div>
             </th>

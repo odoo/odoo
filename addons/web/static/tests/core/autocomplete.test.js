@@ -648,7 +648,7 @@ test("autocomplete always closes on click away", async () => {
 test("autocomplete dropdown remains open when props.value changes", async () => {
     let state;
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources" autoSelect="true"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources" autoSelect="true"/>`;
         static components = { AutoComplete };
         static props = [];
 
