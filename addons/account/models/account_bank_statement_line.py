@@ -746,6 +746,12 @@ class AccountBankStatementLine(models.Model):
                     else False
 
                 if len(liquidity_lines) != 1:
+                    # Opening balance statement lines legitimately have 2 liquidity lines
+                    # (_create_opening_balance_bank_statements rewrites the suspense account
+                    # to the bank account). Skip sync for this known edge case.
+                    opening_move = st_line.company_id.account_opening_move_id
+                    if opening_move and len(liquidity_lines) == 2 and st_line.company_currency_id.is_zero(sum(liquidity_lines.mapped('balance'))):
+                        continue
                     raise UserError(_(
                         "The journal entry %s reached an invalid state regarding its related statement line.\n"
                         "To be consistent, the journal entry must always have exactly one journal item involving the "
