@@ -410,6 +410,7 @@
             'web/static/lib/bootstrap/scss/_maps.scss',
             'website/static/src/scss/website.wysiwyg.scss',
             'website/static/src/scss/website.edit_mode.scss',
+            'website/static/src/components/googleplaces_autocomplete/*',
             'website/static/src/js/editor/snippets.editor.js',
             'website/static/src/js/editor/snippets.options.js',
             'website/static/src/js/editor/shared_options/pricelist.js',
@@ -511,6 +512,7 @@
             ('include', 'html_builder.assets'),
             'website/static/src/scss/website_common.scss',
             'website/static/src/builder/**/*',
+            'website/static/src/components/googleplaces_autocomplete/*',
             ('remove', 'website/static/src/builder/**/*.inside.scss'),
         ],
         'html_builder.iframe_add_dialog': [
