@@ -233,8 +233,9 @@ owl.provideEnv = provideEnv;
  * @param {object} extension
  */
 function extendEnv(extension) {
-    const env = useChildEnv();
-    const subEnv = Object.assign(Object.create(env), extension);
+    const env = Object.create(useChildEnv());
+    const descrs = Object.getOwnPropertyDescriptors(extension);
+    const subEnv = Object.freeze(Object.defineProperties(env, descrs));
     return provideEnv(subEnv);
 }
 
