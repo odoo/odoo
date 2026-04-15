@@ -207,6 +207,7 @@ class ProductProduct(models.Model):
         works as intended :-)
         """
         now = self.env.cr.now()
+        self.fetch(['write_date'])
         for record in self:
             if not record.id:
                 record.write_date = record._origin.write_date
