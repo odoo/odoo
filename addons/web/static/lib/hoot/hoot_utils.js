@@ -125,11 +125,11 @@ export const T_NULL = t.literal(null);
 /** @type {undefined} */
 export const T_UNDEFINED = t.literal(undefined);
 
-export const DEEP_EQUAL_OPTIONS_TYPE = t.object({
+export const T_DEEP_EQUAL_OPTIONS = t.object({
     "ignoreOrder?": t.boolean(),
     "partial?": t.boolean(),
 });
-export const REPORTING_TYPE = t.object({
+export const T_REPORTING = t.object({
     assertions: t.number(),
     failed: t.number(),
     passed: t.number(),
@@ -738,11 +738,11 @@ export function copyAndBind(object) {
 }
 
 /**
- * @param {typeof REPORTING_TYPE} [parentReporting]
+ * @param {typeof T_REPORTING} [parentReporting]
  */
 export function createReporting(parentReporting) {
     /**
-     * @param {Partial<typeof REPORTING_TYPE>} values
+     * @param {Partial<typeof T_REPORTING>} values
      */
     function add(values) {
         for (const [key, value] of $entries(values)) {
@@ -837,7 +837,7 @@ export function deepCopy(value) {
 /**
  * @param {unknown} a
  * @param {unknown} b
- * @param {typeof DEEP_EQUAL_OPTIONS_TYPE} [options]
+ * @param {typeof T_DEEP_EQUAL_OPTIONS} [options]
  * @returns {boolean}
  */
 export function deepEqual(a, b, options) {

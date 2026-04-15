@@ -30,7 +30,7 @@ const { userAgent: $userAgent } = navigator;
 // Types
 //-----------------------------------------------------------------------------
 
-export const PLATFORM_TYPE = t.selection(["android", "ios", "linux", "mac", "windows"]);
+export const T_PLATFORM = t.selection(["android", "ios", "linux", "mac", "windows"]);
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -144,7 +144,7 @@ function getUserAgentBrowser() {
 }
 
 /**
- * @param {typeof PLATFORM_TYPE} platform
+ * @param {typeof T_PLATFORM} platform
  */
 function makeUserAgent(platform) {
     const userAgent = ["Mozilla/5.0"];
@@ -462,7 +462,7 @@ export function mockSendBeacon(callback) {
 }
 
 /**
- * @param {typeof PLATFORM_TYPE} platform
+ * @param {typeof T_PLATFORM} platform
  */
 export function mockUserAgent(platform = "linux") {
     ensureTest("mockUserAgent");
