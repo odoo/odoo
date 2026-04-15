@@ -11,7 +11,7 @@ from psycopg2 import Error
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import SQL
+from odoo.tools import SQL, float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -853,8 +853,6 @@ class StockQuant(models.Model):
         if self.env.context.get('packaging_uom_id') and product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
             available_quantity = self.env.context.get('packaging_uom_id')._check_qty(available_quantity, product_id.uom_id, "DOWN")
 
-        quantity = min(quantity, available_quantity)
-
         # `quantity` is in the quants unit of measure. There's a possibility that the move's
         # unit of measure won't be respected if we blindly reserve this quantity, a common usecase
         # is if the move's unit of measure's rounding does not allow fractional reservation. We chose
@@ -864,12 +862,16 @@ class StockQuant(models.Model):
         # `available_quantity` is brought by a chained move line. In this case, `_prepare_move_line_vals`
         # will take care of changing the UOM to the UOM of the product.
         if not strict and uom_id and product_id.uom_id != uom_id:
-            quantity_move_uom = product_id.uom_id._compute_quantity(quantity, uom_id, rounding_method='DOWN')
+            quantity_move_uom = product_id.uom_id._compute_quantity(min(quantity, available_quantity), uom_id, rounding_method='DOWN')
             quantity = uom_id._compute_quantity(quantity_move_uom, product_id.uom_id, rounding_method='HALF-UP')
-
-        if product_id.tracking == 'serial':
-            if product_id.uom_id.compare(quantity, int(quantity)) != 0:
-                quantity = 0
+        # Products tracked with serial numbers cannot be reserved in fractional amounts. Rounding is necessary.
+        # If the reserved quantity is insufficient, we round down to provide all we have at hand as floor(reserved_quantity).
+        # Otherwise, we round up to make sure we can provide enough to cover the desired fractional amount.
+        elif product_id.tracking == 'serial':
+            quantity = min(float_round(quantity, precision_digits=0, rounding_method='UP'),
+                           float_round(available_quantity, precision_digits=0, rounding_method='DOWN'))
+        else:
+            quantity = min(quantity, available_quantity)
 
         reserved_quants = []
 
