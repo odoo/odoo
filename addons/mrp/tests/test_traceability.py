@@ -128,9 +128,10 @@ class TestTraceability(TestMrpCommon):
             self.assertEqual(len(lines), 3, "There should be 3 lines. 1 for untracked, 1 for lot, and 1 for serial")
 
             for line in lines:
-                tracking = line['columns'][1].split(' ')[1]
+                columns = {column['name']: column['value'] for column in line['columns']}
+                tracking = columns['product'].split(' ')[1]
                 self.assertEqual(
-                    line['columns'][-1], "1.00 Units", 'Part with tracking type "%s", should have quantity = 1' % (tracking)
+                    columns['quantity'], "1.00 Units", 'Part with tracking type "%s", should have quantity = 1' % (tracking)
                 )
                 unfoldable = tracking in ['lot', 'serial']
                 self.assertEqual(
