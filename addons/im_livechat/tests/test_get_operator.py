@@ -6,6 +6,7 @@ from unittest.mock import patch
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
+from odoo.tests import freeze_time  # testing
 from odoo.tests.common import users
 
 
@@ -422,12 +423,12 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             }
         )
         now = fields.Datetime.now()
-        with freeze_all_time(now + timedelta(minutes=-3)):
+        with freeze_time(now + timedelta(minutes=-3)):
             self._create_conversation(livechat_channel, second_operator)
-        with freeze_all_time(now):
+        with freeze_time(now):
             self._create_conversation(livechat_channel, first_operator)
             self.assertEqual(second_operator, livechat_channel._get_operator())
-        with freeze_all_time(now + timedelta(seconds=121)):
+        with freeze_time(now + timedelta(seconds=121)):
             self.assertEqual(first_operator, livechat_channel._get_operator())
 
     def test_bypass_buffer_time_when_impossible_selection(self):

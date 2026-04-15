@@ -58,7 +58,7 @@ from werkzeug.exceptions import BadRequest
 import odoo.cli
 import odoo.models
 import odoo.orm.registry
-from odoo import api
+from odoo import api, fields
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.http.requestlib import Request, _request_stack, request
@@ -3063,18 +3063,32 @@ class freeze_time:
             auto_tick_seconds=auto_tick_seconds,
         )
 
+        self.cursor_patcher = patch(
+            'odoo.sql_db.BaseCursor.now', 
+            side_effect=lambda *args, **kwargs: fields.Datetime.now()
+        )
+
     def __call__(self, arg):
         if isinstance(arg, type) and issubclass(arg, case.TestCase):
             arg.freeze_time = self
             return arg
+        freezer_wrapped = self.freezer(arg)
 
-        return self.freezer(arg)
+        # Wrap it once more to ensure the cursor patcher is active
+        @wraps(arg)
+        def wrapper(*args, **kwargs):
+            with self.cursor_patcher:
+                return freezer_wrapped(*args, **kwargs)
+
+        return wrapper
 
     def __enter__(self):
+        self.cursor_patcher.start()
         return self.freezer.start()
 
     def __exit__(self, *args):
         self.freezer.stop()
+        self.cursor_patcher.stop()
 
     start = __enter__
     stop = __exit__
