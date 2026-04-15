@@ -442,7 +442,11 @@ class ResourceCalendar(models.Model):
 
         if domain is None:
             domain = [('count_as', '=', 'absence')]
+
+        resources_list = list(resources) if resources else []
+
         if self:
+            resources_list.append(self.env['resource.resource'])
             domain = domain + [('calendar_id', 'in', [False] + self.ids)]
 
         all_resources = set()
