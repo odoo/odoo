@@ -420,6 +420,6 @@ test("should temporarily repin unpinned thread while it is being viewed", async 
     await insertText(".o-mail-Composer-input", "Batman");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await click(".o-mail-DiscussSidebarChannel-subChannel:text('Sub Channel 2')");
-    await contains(".o-mail-DiscussSidebarChannel-subChannel:eq(0):text('Sub Channel 1')");
-    await contains(".o-mail-DiscussSidebarChannel-subChannel:eq(1):text('Sub Channel 2').o-active");
+    await contains(".o-mail-DiscussSidebarChannel-subChannel:eq(0):text('Sub Channel 2').o-active");
+    await contains(".o-mail-DiscussSidebarChannel-subChannel:eq(1):text('Sub Channel 1')");
 });
