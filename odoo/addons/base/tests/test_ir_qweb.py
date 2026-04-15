@@ -892,6 +892,18 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
+    def test_empty_foreach(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="empty-for">
+                <t t-foreach="[1, 2]" t-as="v">
+                </t>
+            </t>'''
+        })
+        rendered = self.env['ir.qweb']._render(t.id)
+        self.assertEqual(rendered.strip(), "")
+
     def test_att_escaping_1(self):
         t = self.env['ir.ui.view'].create({
             'name': 'test',

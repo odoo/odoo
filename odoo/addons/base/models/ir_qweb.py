@@ -2396,7 +2396,7 @@ class IrQweb(models.AbstractModel):
                     values[{expr_as + '_parity'!r}] = 'odd' if values[{expr_as + '_odd'!r}] else 'even'
             """, level))
 
-        code.extend(content_foreach or indent_code('continue', level + 1))
+        code.extend(content_foreach or [indent_code('continue', level + 1)])
         code.append(indent_code("attrs = None", level + 1))
 
         return code
