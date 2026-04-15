@@ -351,6 +351,9 @@
                             <field name="display_name" invisible="not holiday_status_id"/>
                         </div>
                         <group name="col_left" class="m-0">
+                            <!-- When calling .sudo(), context keys starting with default_ get cleaned -->
+                            <!-- so we use leave_date_from in addition to default_date_from -->
+                            <!-- default_date_from and default_date_to are still kept because they are used in different parts of the code -->
                             <field name="holiday_status_id" force_save="1"
                                 domain="[
                                     '|',
