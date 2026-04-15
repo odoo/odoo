@@ -25,12 +25,14 @@ export class PosPayment extends Base {
             ? {
                   qrCode: this.uiState.qrCode,
                   amount: this.getAmount(),
+                  provider: this.payment_provider,
                   isCustomerDisplay: true,
                   footer: false,
               }
             : {
                   qrCode: this.qr_code,
                   amount: formatCurrency(this.getAmount(), this.pos_order_id.currency),
+                  provider: this.payment_provider,
               };
     }
 

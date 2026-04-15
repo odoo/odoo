@@ -11,7 +11,7 @@ definePosSelfModels();
 beforeEach(async () => {
     const mockCreateBancontactPayment = async (request) => {
         const { params } = await request.json();
-        const { payment_method_id, order_uuid } = params;
+        const { payment_method_id, line_uuid, order_uuid } = params;
 
         // Should normally use the `access_token` from params
         // But we override `odoo.access_token` in `setupPosEnvForSelfOrder`
@@ -31,6 +31,7 @@ beforeEach(async () => {
         }
 
         return MockServer.env["pos.payment.method"].create_bancontact_payment(payment_method_id, {
+            uuid: line_uuid,
             configId: config.id,
             amount: -window.__test_error__ || order.amount_total,
             currency: order.currency_id.name,

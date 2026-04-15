@@ -21,6 +21,7 @@ class TestKioskFrontend(TestFrontend):
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each',
             'payment_method_ids': [Command.clear(), Command.link(cls.payment_method_display.id)],
+            'self_ordering_available_language_ids': [Command.link(lang.id) for lang in cls.env['res.lang'].search([])],
         })
 
     def start_kiosk_tour(self, tour_name, **kwargs):

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_bancontact_pay.CustomerDisplay" t-inherit="point_of_sale.CustomerDisplay" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('qr-payment-card')]" position="before">
+            <div t-elif="qrPaymentData.provider === 'bancontact_pay'"
+                class="o_bancontact_qr_code_container w-25 w-lg-75"
+                style="min-width: 250px; max-width: 500px; max-height: 75vh;">
+
+                <div class="o_bancontact_stack_image position-relative w-100 h-100">
+                    <img class="o_bancontact_frame w-100 h-100"
+                        t-attf-src="/pos_bancontact_pay/static/img/frames/frame_{{ qrPaymentData.frameLanguage }}.svg"/>
+                    <img class="o_bancontact_qr_code position-absolute top-50 start-50 translate-middle loaded"
+                        style="width: 60%; max-width: 29vh"
+                        t-att-src="qrPaymentData.qrCode"
+                        alt="QR Code"/>
+
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PaymentScreenPaymentLines">
-        <div t-if="this.props.paymentLines.length" class="paymentlines flex-grow-1 d-flex flex-column overflow-y-auto gap-2" t-att-class="{'mb-3': !this.ui.isSmall}">
-            <t t-foreach="this.props.paymentLines" t-as="line" t-key="line.uuid">
+        <div t-if="this.paymentLines.length" class="paymentlines flex-grow-1 d-flex flex-column overflow-y-auto gap-2" t-att-class="{'mb-3': !this.ui.isSmall}">
+            <t t-foreach="this.paymentLines" t-as="line" t-key="line.uuid">
                 <div class="paymentline d-flex align-items-center rounded-3" t-att-class="{ 'selected': line.isSelected() }">
                     <!-- Show QR Code -->
                     <t t-if="line.useQr">

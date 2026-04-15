@@ -1,5 +1,4 @@
 from json import JSONDecodeError
-from urllib.parse import urlencode
 
 import requests
 
@@ -21,10 +20,6 @@ class PosPaymentMethod(models.Model):
     def _auto_init(self):
         if not column_exists(self.env.cr, "pos_payment_method", "bancontact_usage"):
             create_column(self.env.cr, "pos_payment_method", "bancontact_usage", "varchar")
-        if not column_exists(self.env.cr, "pos_payment_method", "bancontact_sticker_size"):
-            create_column(self.env.cr, "pos_payment_method", "bancontact_sticker_size", "varchar")
-        if not column_exists(self.env.cr, "pos_payment_method", "bancontact_sticker_url"):
-            create_column(self.env.cr, "pos_payment_method", "bancontact_sticker_url", "varchar")
         return super()._auto_init()
 
     bancontact_api_key = fields.Char("Bancontact API Key")
@@ -44,38 +39,11 @@ class PosPaymentMethod(models.Model):
             "- Static Sticker: A fixed QR sticker placed near the counter is used for scanning with every order."
         ),
     )
-    bancontact_sticker_size = fields.Selection(
-        selection=[
-            ("S", "Small (180x180)"),
-            ("M", "Medium (250x250)"),
-            ("L", "Large (400x400)"),
-            ("XL", "Extra Large (800x800)"),
-        ],
-        string="Sticker Size",
-        required=True,
-        default="S",
-    )
-    bancontact_sticker_url = fields.Char("Sticker URL", compute="_compute_bancontact_sticker_url", store=True)
 
     # ----- Model ----- #
     @api.model
     def _load_pos_data_fields(self, config):
         return super()._load_pos_data_fields(config) + ["bancontact_usage"]
-
-    @api.depends("payment_provider", "bancontact_sticker_size", "bancontact_ppid", "bancontact_test_mode")
-    def _compute_bancontact_sticker_url(self):
-        """Compute the sticker QR code URL for Bancontact Pay sticker usage."""
-        for record in self:
-            if (record.bancontact_sticker_url and (record.payment_provider != "bancontact_pay" or record.bancontact_usage != "sticker")):
-                record.bancontact_sticker_url = False
-                continue
-
-            params = urlencode({
-                'f': 'PNG',
-                's': record.bancontact_sticker_size,
-                'c': f'https://payconiq.com/l/1/{record.bancontact_ppid}/pm{record.id}',
-            })
-            record.bancontact_sticker_url = f'{record._get_bancontact_api_url("qrcode")}?{params}'
 
     @api.constrains("payment_provider", "journal_id", "company_id")
     def _check_bancontact_currency(self):
@@ -109,8 +77,8 @@ class PosPaymentMethod(models.Model):
         self.ensure_one()
         return {
             "type": "ir.actions.act_url",
-            "url": self.bancontact_sticker_url,
-            "target": "download",
+            "url": f"/bancontact_pay/sticker/{self.id}",
+            "target": "new",
         }
 
     # ----- Bancontact Integration ----- #
@@ -128,9 +96,13 @@ class PosPaymentMethod(models.Model):
         self._assert_bancontact_http_success(response)
         bancontact_data = response.json()
 
+        bancontact_id = bancontact_data["paymentId"]
+        bancontact_qr = bancontact_data.get("_links", {}).get("qrcode", {}).get("href", "")
+        if bancontact_qr:
+            bancontact_qr += "&f=SVG"
         return {
-            "bancontact_id": bancontact_data["paymentId"],
-            "qr_code": bancontact_data.get("_links", {}).get("qrcode", {}).get("href", ""),
+            "bancontact_id": bancontact_id,
+            "qr_code": bancontact_qr,
         }
 
     def cancel_bancontact_payment(self, bancontact_id):
@@ -169,6 +141,7 @@ class PosPaymentMethod(models.Model):
         return [
             f"{self._get_bancontact_api_url('merchant')}/v3/payments",
             {
+                "reference": data.get("uuid", "").replace("-", "")[:35],
                 "amount": round(data.get("amount", 0.0) * 100),
                 "currency": data.get("currency", "EUR"),
                 "description": data.get("description", "")[:140],
@@ -183,6 +156,7 @@ class PosPaymentMethod(models.Model):
         return [
             f"{self._get_bancontact_api_url('merchant')}/v3/payments/pos",
             {
+                "reference": data.get("uuid", "").replace("-", "")[:35],
                 "amount": round(data.get("amount", 0.0) * 100),
                 "currency": data.get("currency", "EUR"),
                 "description": data.get("description", "")[:140],
@@ -198,6 +172,23 @@ class PosPaymentMethod(models.Model):
         """Return the Bancontact endpoint URL for the current environment."""
         environment = "preprod" if self.bancontact_test_mode else "production"
         return const.API_URLS[environment][target]
+
+    def _fetch_bancontact_sticker_image(self):
+        self.ensure_one()
+        if self.payment_provider != "bancontact_pay":
+            raise ValidationError(_("Bancontact sticker URL can only be generated for payment methods using Bancontact Pay as provider."))
+        if self.bancontact_usage != "sticker":
+            raise ValidationError(_("Bancontact sticker URL can only be generated for payment methods configured with 'Static Sticker' usage."))
+        if not self.bancontact_ppid:
+            raise ValidationError(_("Bancontact PPID must be set to generate the sticker URL."))
+        qr_url = self._get_bancontact_api_url("qrcode")
+        response = requests.get(qr_url, params={
+            'f': 'PNG',
+            's': 'XL',
+            'c': f'https://payconiq.com/l/1/{self.bancontact_ppid}/pm{self.id}',
+        }, timeout=10)
+        response.raise_for_status()
+        return response.content
 
     def _assert_bancontact_http_success(self, response, extra_errors=None):
         errors = {**HTTP_ERRORS, **(extra_errors or {})}

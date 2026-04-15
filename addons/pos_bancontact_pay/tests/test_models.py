@@ -109,7 +109,6 @@ class TestModels(TestBancontactPay, CommonPosTest):
                 "payment_method_type": "external_qr",
                 "payment_provider": "bancontact_pay",
                 "bancontact_usage": "sticker",
-                "bancontact_sticker_size": "L",
                 "company_id": self.company.id,
                 "journal_id": self.bancontact_journal.id,
                 "bancontact_api_key": "sticker_api_key",
@@ -142,7 +141,7 @@ class TestModels(TestBancontactPay, CommonPosTest):
 
         with self.mock_bancontact_call(bancontact_id=generated_bancontact_id, qr_code=generated_qr_code):
             result = self.payment_method_display.create_bancontact_payment({})
-            self.assertEqual(result, {"bancontact_id": generated_bancontact_id, "qr_code": generated_qr_code})
+            self.assertEqual(result, {"bancontact_id": generated_bancontact_id, "qr_code": generated_qr_code + "&f=SVG"})
 
     def test_create_bancontact_payment_api_error(self):
         codes = [(400, MissingError), (401, AccessDenied), (403, AccessDenied),
@@ -177,7 +176,9 @@ class TestModels(TestBancontactPay, CommonPosTest):
     # Prepare Bancontact Payment Request
     # --------------------------------------
     def test_prepare_display_payment_request(self):
+        uuid_str = str(uuid.uuid4())
         actual = self.payment_method_display._prepare_display_payment_request({
+            "uuid": uuid_str,
             "configId": 1,
             "amount": 10.00,
             "currency": "EUR",
@@ -186,6 +187,7 @@ class TestModels(TestBancontactPay, CommonPosTest):
         expected = [
             f"{const.API_URLS['preprod']['merchant']}/v3/payments",
             {
+                "reference": uuid_str.replace("-", ""),
                 "amount": 1000,
                 "currency": "EUR",
                 "description": "sample description",
@@ -196,7 +198,9 @@ class TestModels(TestBancontactPay, CommonPosTest):
         self.assertEqual(actual, expected)
 
     def test_prepare_sticker_payment_request(self):
+        uuid_str = str(uuid.uuid4())
         actual = self.payment_method_sticker_1._prepare_sticker_payment_request({
+            "uuid": uuid_str,
             "configId": 1,
             "amount": 10.00,
             "currency": "EUR",
@@ -206,6 +210,7 @@ class TestModels(TestBancontactPay, CommonPosTest):
         expected = [
             f"{const.API_URLS['preprod']['merchant']}/v3/payments/pos",
             {
+                "reference": uuid_str.replace("-", ""),
                 "amount": 1000,
                 "currency": "EUR",
                 "description": "sample description",

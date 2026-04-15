@@ -4,7 +4,7 @@ export const followInstructionsTerminalStep = () => ({
 });
 export const scanQrCodeStep = () => ({
     content: "Check that the payment page shows the QR code to pay",
-    trigger: ".payment-state-container h1:contains('Scan the QR code to pay')",
+    trigger: ".payment-state-container .o_bancontact_frame",
 });
 export const processingPaymentStep = () => ({
     content: "Check that the payment page shows the processing payment message",

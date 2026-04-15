@@ -13,7 +13,6 @@
                             <field name="bancontact_ppid" invisible="payment_provider != 'bancontact_pay'" required="payment_provider == 'bancontact_pay'"/>
                             <field name="bancontact_usage" invisible="payment_provider != 'bancontact_pay'"/>
                             <field name="bancontact_test_mode" invisible="payment_provider != 'bancontact_pay'" required="payment_provider == 'bancontact_pay'"/>
-                            <field name="bancontact_sticker_size" invisible="payment_provider != 'bancontact_pay' or bancontact_usage != 'sticker'"/>
                             <button name="download_bancontact_sticker" type="object" string="Download Sticker" class="btn btn-primary" invisible="payment_provider != 'bancontact_pay' or bancontact_usage != 'sticker'"/>
                         </group>
                     </page>

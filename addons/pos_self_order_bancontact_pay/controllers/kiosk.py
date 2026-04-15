@@ -7,7 +7,7 @@ from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 
 class PosSelfOrderControllerBancontactPay(PosSelfOrderController):
     @http.route("/pos-self-order/create-bancontact-pay-payment", auth="public", type="jsonrpc", website=True)
-    def bancontact_pay_create_payment_from_kiosk(self, access_token, payment_method_id, order_uuid):
+    def bancontact_pay_create_payment_from_kiosk(self, access_token, payment_method_id, line_uuid, order_uuid):
         pos_config = self._verify_pos_config(access_token)
         order = pos_config.env["pos.order"].search([["uuid", "=", order_uuid]], limit=1)
         payment_method = pos_config.env["pos.payment.method"].browse(payment_method_id)
@@ -16,6 +16,7 @@ class PosSelfOrderControllerBancontactPay(PosSelfOrderController):
             raise Unauthorized()
 
         return payment_method.sudo().create_bancontact_payment({
+            "uuid": line_uuid,
             "configId": pos_config.id,
             "amount": order.amount_total,
             "currency": order.currency_id.name,

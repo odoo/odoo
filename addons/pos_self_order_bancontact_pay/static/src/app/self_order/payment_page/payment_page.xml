@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_bancontact_pay.PaymentPage" t-inherit="pos_self_order.PaymentPage" t-inherit-mode="extension">
+        <xpath expr="//t[@name='external_qr']" position="before">
+            <div t-elif="showBancontact" class="o_bancontact_qr_code_container w-100 h-100">
+                <div class="o_bancontact_qr_code_container position-relative d-flex align-items-center justify-content-center flex-column w-100 h-100">
+                    <img class="o_bancontact_frame w-100 h-100" t-attf-src="/pos_bancontact_pay/static/img/frames/frame_{{frameLanguage}}.svg" style="max-height: 60vh;"/>
+                    <img class="o_bancontact_qr_code position-absolute top-50 start-50 translate-middle loaded" style="width: 60%; max-width: 23vh" t-att-src="state.qrCode" alt="QR Code"/>
+                </div>
+
+                <div class="qr-code-amount mt-2 text-center fw-bold fs-1">
+                    <t t-out="amount" />
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

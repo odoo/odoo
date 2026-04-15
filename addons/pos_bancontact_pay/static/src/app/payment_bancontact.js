@@ -20,6 +20,7 @@ export class PaymentBancontact extends PaymentInterface {
                 [
                     line.payment_method_id.id,
                     {
+                        uuid: line.uuid,
                         amount: line.amount,
                         currency: this.pos.currency.name,
                         configId: this.pos.config.id,
