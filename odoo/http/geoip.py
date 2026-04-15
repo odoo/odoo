@@ -23,14 +23,6 @@ GEOIP_EMPTY_COUNTRY = geoip2.models.Country({})
 GEOIP_EMPTY_CITY = geoip2.models.City({})
 
 
-class EmptyGeoDB:
-    def country(self, ip):
-        raise geoip2.errors.AddressNotFoundError(ip)
-
-    def city(self, ip):
-        raise geoip2.errors.AddressNotFoundError(ip)
-
-
 @functools.cache
 def _geoip_city_db():
     try:
@@ -40,7 +32,7 @@ def _geoip_city_db():
             "Couldn't load Geoip City file at %s. IP Resolver disabled.",
             config['geoip_city_db'], exc_info=True,
         )
-        return EmptyGeoDB()
+        raise
 
 
 @functools.cache
@@ -49,7 +41,7 @@ def _geoip_country_db():
         return geoip2.database.Reader(config['geoip_country_db'])
     except (OSError, InvalidGeoipDatabase) as exc:
         _logger.debug("Couldn't load Geoip Country file (%s). Fallbacks on Geoip City.", exc)
-        return EmptyGeoDB()
+        raise
 
 
 class GeoIP(Mapping):
@@ -86,6 +78,8 @@ class GeoIP(Mapping):
     def _city_record(self):
         try:
             return _geoip_city_db().city(self.ip)
+        except (OSError, InvalidGeoipDatabase):
+            return GEOIP_EMPTY_CITY
         except geoip2.errors.AddressNotFoundError:
             return GEOIP_EMPTY_CITY
 
@@ -97,6 +91,8 @@ class GeoIP(Mapping):
             return self._city_record
         try:
             return _geoip_country_db().country(self.ip)
+        except (OSError, InvalidGeoipDatabase):
+            return self._city_record
         except geoip2.errors.AddressNotFoundError:
             return GEOIP_EMPTY_COUNTRY
 
