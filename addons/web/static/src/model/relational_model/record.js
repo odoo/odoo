@@ -1157,10 +1157,10 @@ export class Record extends DataPoint {
             if (nextId) {
                 return this.model.load({ resId: nextId });
             }
-            this._changes = markRaw({});
             // toRaw to prevent effect
+            toRaw(this)._changes = markRaw({});
             toRaw(this).data = { ...this._values };
-            this.dirty = false;
+            toRaw(this).dirty = false;
             return true;
         }
         if (
