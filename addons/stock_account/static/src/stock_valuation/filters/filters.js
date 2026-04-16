@@ -1,6 +1,7 @@
 import { Component, useRef } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
+import { formatDate } from "@web/core/l10n/dates";
 
 export class StockValuationReportFilters extends Component {
     static template = "stock_account.StockValuationReport.Filters";
@@ -37,6 +38,6 @@ export class StockValuationReportFilters extends Component {
     }
 
     get date() {
-        return this.env.controller.state.date.toLocaleString();
+        return formatDate(this.env.controller.state.date);
     }
 }
