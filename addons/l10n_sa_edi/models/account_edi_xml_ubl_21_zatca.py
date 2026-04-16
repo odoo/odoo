@@ -50,6 +50,11 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
         super()._add_invoice_base_lines_vals(vals)
         invoice = vals['invoice']
 
+        vals['base_lines'] = [
+            base_line
+            for base_line in vals['base_lines']
+            if not base_line['record']._l10n_sa_is_gift_card_or_ewallet_line()
+        ]
         # Filter out prepayment lines of final invoices
         if not invoice._is_downpayment():
             vals['base_lines'] = [
@@ -69,7 +74,11 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
         prepayment_moves_base_lines = {}
         for prepayment_move in prepayment_moves:
             prepayment_move_base_lines, _dummy = prepayment_move._get_rounded_base_and_tax_lines()
-            prepayment_moves_base_lines[prepayment_move] = prepayment_move_base_lines
+            prepayment_moves_base_lines[prepayment_move] = [
+                base_line
+                for base_line in prepayment_move_base_lines
+                if not base_line['record']._l10n_sa_is_gift_card_or_ewallet_line()
+            ]
 
         vals['prepayment_moves_base_lines'] = prepayment_moves_base_lines
 
