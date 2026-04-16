@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:37+0000\n"
-"PO-Revision-Date: 2026-04-11 09:05+0000\n"
+"PO-Revision-Date: 2026-04-14 08:19+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-18/hr_attendance/zh_Hant/>\n"
@@ -263,7 +263,7 @@ msgstr "出勤"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Attendance Error"
-msgstr ""
+msgstr "考勤錯誤"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -630,7 +630,7 @@ msgstr "連線至 RFID（射頻識別）讀取器，並掃瞄標籤。"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Connection lost. Check in/out could not be recorded."
-msgstr ""
+msgstr "連線中斷，未能記錄簽到/簽退。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_country_name
@@ -737,6 +737,8 @@ msgid ""
 "Do not have access, user cannot edit the attendances that are not their own "
 "or if they are not the attendance manager of the employee."
 msgstr ""
+"沒有存取權限。使用者不可編輯非自己的考勤記錄。若使用者並非員工的考勤管理者，"
+"亦不能編輯該員工的考勤記錄。"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -988,6 +990,8 @@ msgid ""
 "Invalid domain, use 'name' and/or 'department_id' fields with '=' and/or "
 "'ilike' operators."
 msgstr ""
+"篩選範圍無效。請使用姓名 (name) 及/或部門識別碼 (department_id) 欄位，以及"
+"「=」及/或「ilike」運算符。"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1532,7 +1536,7 @@ msgstr "有利於公司的容忍時間"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Tolerance Time In Favor Of Employee"
-msgstr "有利於員工的容忍時間"
+msgstr "有利員工的容差時間值"
 
 #. module: hr_attendance
 #. odoo-javascript
