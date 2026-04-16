@@ -452,7 +452,7 @@ class StockWarehouseOrderpoint(models.Model):
             ('route_id.active', '!=', False)
         ], ['location_dest_id', 'route_id'])
         for location_dest, route in rules_groups:
-            if route in (self.product_id.route_ids | self.product_id.categ_id.route_ids) and self.location_id == location_dest:
+            if route in (self.product_id.route_ids | self.product_id.categ_id.route_ids | self.warehouse_id.route_ids) and self.location_id == location_dest:
                 return route
         return self.env['stock.route']
 

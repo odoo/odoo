@@ -375,7 +375,7 @@ class TestReports(TestReportsCommon):
         """ Checks the predicted quantity works in a multi-step setup.
         """
         now = datetime.now()
-        customer_loc, supplier_loc = self.env['stock.warehouse']._get_partner_locations()
+        customer_loc, supplier_loc, __ = self.env['stock.warehouse']._get_partner_locations()
         self.wh_2.write({'reception_steps': 'two_steps', 'delivery_steps': 'pick_ship'})
 
         # Pick move for delivery of 5 units in 2 days
@@ -1428,7 +1428,7 @@ class TestReports(TestReportsCommon):
     def test_report_forecast_14_ongoing_multi_step_delivery(self):
         """ Check that an ongoing multi-step delivery is properly picked up by the forecast report.
         """
-        customer_loc, __ = self.env['stock.warehouse']._get_partner_locations()
+        customer_loc, __, __ = self.env['stock.warehouse']._get_partner_locations()
         self.wh_2.write({'delivery_steps': 'pick_ship'})
 
         # Pick move for future delivery

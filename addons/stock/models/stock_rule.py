@@ -65,8 +65,7 @@ class StockRule(models.Model):
         default='pull', required=True, index=True)
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
-        default=lambda self: self.env.company,
-        domain="[('id', '=?', route_company_id)]", index=True)
+        default=lambda self: self.env.company, index=True)
     location_dest_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True, index=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True, index=True)
     location_dest_from_rule = fields.Boolean(
@@ -117,18 +116,6 @@ class StockRule(models.Model):
             for rule, vals in zip(self, vals_list):
                 vals['name'] = _("%s (copy)", rule.name)
         return vals_list
-
-    @api.constrains('company_id')
-    def _check_company_consistency(self):
-        for rule in self:
-            route = rule.route_id
-            if route.company_id and rule.company_id.id != route.company_id.id:
-                raise ValidationError(_(
-                    "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %(route_company)s.",
-                    rule=rule.display_name,
-                    rule_company=rule.company_id.display_name,
-                    route_company=route.company_id.display_name,
-                ))
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
@@ -245,6 +232,7 @@ class StockRule(models.Model):
             'procure_method': 'make_to_order',
             'move_orig_ids': [Command.link(move_to_copy.id)],
             'move_dest_ids': [Command.link(move_dest.id) for move_dest in move_to_copy.move_dest_ids],
+            'partner_id': self.partner_address_id.id or move_to_copy.partner_id.id,
         }
         return new_move_vals
 
@@ -609,10 +597,6 @@ class StockRule(models.Model):
     @api.model
     def _get_rule_domain(self, locations, values):
         location_ids = locations.ids
-        # If the method is called to find rules towards the Inter-company location, also add the 'Customer' location in the domain.
-        # This is to avoid having to duplicate every rules that deliver to Customer to have the Inter-company part.
-        if self._check_intercomp_location(locations):
-            location_ids.append(self.env.ref('stock.stock_location_customers', raise_if_not_found=False).id)
         domain = Domain('location_dest_id', 'in', location_ids) & Domain('action', '!=', 'push')
         # In case the method is called by the superuser, we need to restrict the rules to the
         # ones of the company. This is not useful as a regular user since there is a record
