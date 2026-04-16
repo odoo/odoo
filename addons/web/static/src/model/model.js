@@ -7,7 +7,14 @@ import { useSetupAction } from "@web/search/action_hook";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "./sample_server";
 
-import { EventBus, onWillStart, onWillUnmount, onWillUpdateProps, status } from "@odoo/owl";
+import {
+    EventBus,
+    markRaw,
+    onWillStart,
+    onWillUnmount,
+    onWillUpdateProps,
+    status,
+} from "@odoo/owl";
 
 /**
  * @typedef {import("@web/env").OdooEnv} OdooEnv
@@ -109,7 +116,7 @@ export function useModel(ModelClass, params, options = {}) {
         model.whenReady.resolve();
     });
     onWillUpdateProps((nextProps) => model.load(getSearchParams(nextProps)));
-    return model;
+    return markRaw(model);
 }
 
 /**
@@ -215,7 +222,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
         getLocalState: () => ({ sampleORM }),
     });
 
-    return model;
+    return markRaw(model);
 }
 
 export function _makeFieldFromPropertyDefinition(name, definition, relatedPropertyField) {

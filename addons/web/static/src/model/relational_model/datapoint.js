@@ -1,5 +1,4 @@
-import { markRaw } from "@odoo/owl";
-import { Reactive } from "@web/core/utils/reactive";
+import { markRaw, signal } from "@odoo/owl";
 import { getId } from "./utils";
 
 /**
@@ -9,7 +8,7 @@ import { getId } from "./utils";
  * @typedef {import("./relational_model").RelationalModelConfig} RelationalModelConfig
  */
 
-export class DataPoint extends Reactive {
+export class DataPoint {
     /**
      * @param {RelationalModel} model
      * @param {RelationalModelConfig} config
@@ -17,13 +16,16 @@ export class DataPoint extends Reactive {
      * @param {unknown} [options]
      */
     constructor(model, config, data, options) {
-        super(...arguments);
         this.id = getId("datapoint");
         this.model = model;
         markRaw(config.activeFields);
         markRaw(config.fields);
         /** @type {RelationalModelConfig} */
-        this._config = config;
+        const _config = signal.Object(config);
+        Object.defineProperty(this, "_config", {
+            get: _config,
+            set: _config.set,
+        });
         this.setup(config, data, options);
     }
 
