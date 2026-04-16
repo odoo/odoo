@@ -150,6 +150,7 @@ export class ReplaceMediaAction extends BuilderAction {
 
     setup() {
         this.canTimeout = false;
+        this.preview = false;
     }
 
     async apply({ editingElement: mediaEl }) {
