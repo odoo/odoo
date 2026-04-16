@@ -158,7 +158,7 @@
                                     <field name="selected_payment_method_codes" invisible="1"/>
                                     <group name="outgoing_payment" />
                             </page>
-                            <page name="advanced_settings" string="Advanced Settings" invisible="type in ['bank', 'cash']">
+                            <page name="advanced_settings" string="Advanced Settings">
                                 <group>
                                     <group string="Automation" groups="account.group_account_manager">
                                         <field name="restrict_mode_hash_table" groups="account.group_account_readonly" invisible="type not in ['sale', 'purchase', 'general']"
@@ -166,15 +166,20 @@
                                         <field name="is_self_billing" invisible="type != 'purchase'"/>
                                     </group>
                                     <group string="Emails" name="group_email_alias"
-                                           invisible="type not in ('general', 'sale', 'purchase')">
+                                           invisible="type not in ('general', 'sale', 'purchase', 'cash', 'credit', 'bank')">
                                         <field name="display_alias_fields" invisible="1"/>
                                         <div class="o_row" colspan="2" invisible="display_alias_fields">
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button">
                                                 <i class="oi oi-fw o_button_icon oi-arrow-right"/> Configure Alias Domain
                                             </a>
                                         </div>
-                                        <div class="o_row" colspan="2" dir="ltr" invisible="not display_alias_fields">
-                                            <label string="Email Alias" for="alias_name" class="fw-medium"/>
+                                        <div colspan="2" invisible="not display_alias_fields or type not in ('bank', 'cash', 'credit')">
+                                            <p class="text-muted mb-2">
+                                                CSV, XLS and XLSX files cannot be imported automatically.
+                                            </p>
+                                        </div>
+                                        <label string="Email Alias" for="alias_name" class="fw-medium" invisible="not display_alias_fields"/>
+                                        <div class="o_row" dir="ltr" invisible="not display_alias_fields">
                                             <field name="alias_name" placeholder="alias" class="o_field_highlight"/>@
                                             <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}" class="o_field_highlight"/>
                                             <div class="w-25">

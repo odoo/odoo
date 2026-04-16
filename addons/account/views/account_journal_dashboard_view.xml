@@ -49,7 +49,7 @@
                                 <span class="small fw-bold ms-1"> - <field name="company_id"/></span>
                             </t>
                         </span>
-                        <div t-att-title="dashboard.title" t-if="journal_type == 'purchase' &amp;&amp; record.alias_domain_id.raw_value &amp;&amp; !journal_is_empty">
+                        <div t-att-title="dashboard.title" t-if="['bank', 'cash', 'credit', 'purchase'].includes(journal_type) &amp;&amp; record.alias_domain_id.raw_value &amp;&amp; !journal_is_empty">
                             <field name="alias_id"/>
                         </div>
                         <t t-if="journal_is_empty" name="empty_journal_helper">
