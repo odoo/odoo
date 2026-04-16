@@ -282,36 +282,6 @@ class TestHrEmployee(TestHrCommon):
         })
         self.assertFalse(self.env['res.users'].search([('login', '=', 'test_user')]).employee_id)
 
-    def test_employee_update_work_contact_id(self):
-        """
-            Check that the `work_contact_id` information is no longer
-            updated when an employee's `user_id` is added to another employee.
-        """
-        user = self.env['res.users'].create({
-            'name': 'Test',
-            'login': 'test',
-            'email': 'test@example.com',
-        })
-        employee_A, employee_B = self.env['hr.employee'].create([
-            {
-                'name': 'Employee A',
-                'user_id': user.id,
-                'work_email': 'employee_A@example.com',
-            },
-            {
-                'name': 'Employee B',
-                'user_id': False,
-                'work_email': 'employee_B@example.com',
-            }
-        ])
-        employee_A.user_id = False
-        employee_B.user_id = user.id
-        employee_B.work_email = 'new_email@example.com'
-        self.assertEqual(employee_A.work_email, 'employee_A@example.com')
-        self.assertEqual(employee_B.work_email, 'new_email@example.com')
-        self.assertFalse(employee_A.work_contact_id)
-        self.assertEqual(employee_B.work_contact_id, user.partner_id)
-
     def test_availability_user_infos_employee(self):
         """ Ensure that all the user infos needed to display the avatar popover card
             are available on the model hr.employee.
@@ -394,48 +364,14 @@ class TestHrEmployee(TestHrCommon):
         with Form(test_employee) as employee_form:
             employee_form.user_id = test_user
 
-    def test_change_user_on_employee_keep_partner(self):
-        """
-            Check that removing user from employee keeps the link in
-            work_contact_id until the user is assigned to another employee.
-        """
-        user = self.env['res.users'].create({
-            'name': 'Test User',
-            'login': 'test_user',
-        })
-        employee = self.env['hr.employee'].create({
-            'name': 'Test User - employee',
-            'user_id': user.id,
-        })
-        # remove user
-        employee.user_id = None
-        self.assertEqual(employee.work_contact_id, user.partner_id)
-        self.assertFalse(employee.user_id)
-        # create new employee from user
-        user._compute_company_employee()
-        user.action_create_employee()
-        self.assertTrue(len(user.employee_ids) == 1, "Test user should have exactly one employee associated with it")
-        # previous employee shouldn't have a work_contact_id anymore, as the partner is reassigned
-        self.assertFalse(employee.work_contact_id)
-        # the new employee should be associated to both the user and its partner
-        new_employee = user.employee_ids
-        self.assertEqual(new_employee.work_contact_id, user.partner_id)
-        self.assertEqual(new_employee.user_id, user)
-
-    def test_change_user_on_employee_multi_company(self):
-        """
-            Removing user from employee keeps the link in work_contact_id in the correct company until the user
-            is assigned to another employee, and does not affect employees in other companies. When the unique
-            constraint of one employee per user in one company is triggered, the work_contact_id for the
-            existing employee is nor removed, and employees in other companies are not affected.
-        """
+    def test_user_backs_one_employee_per_company(self):
+        """A single user can back one employee in each company it belongs to."""
         company_A = self.env['res.company'].create({'name': 'company_A'})
         company_B = self.env['res.company'].create({'name': 'company_B'})
         user = self.env['res.users'].create({
             'name': 'Test User',
             'login': 'test_user',
         })
-        partner = user.partner_id
         employee_A = self.env['hr.employee'].create({
             'name': 'employee_A',
             'user_id': user.id,
@@ -444,37 +380,13 @@ class TestHrEmployee(TestHrCommon):
         employee_B = self.env['hr.employee'].create({
             'name': 'employee_B',
             'user_id': user.id,
-            'company_id': company_B.id
+            'company_id': company_B.id,
         })
-        # Creating an employee in one company does not remove the link with employee in the other company
+        # the same user backs one employee in each company
         self.assertEqual(user.with_company(company_A).employee_id, employee_A)
         self.assertEqual(user.with_company(company_B).employee_id, employee_B)
-        # Partner is linked to both employees
-        partner.with_company(company_A).with_company(company_B)._compute_employees_count()
-        self.assertEqual(partner.employees_count, 2)
-        # Remove user from employee in one company does not affect link user-employee in the other company
-        employee_A.user_id = None
-        self.assertEqual(user.with_company(company_A).employee_id.ids, [])
-        self.assertEqual(user.with_company(company_B).employee_id, employee_B)
-        # Partner still linked to both employees
-        partner.with_company(company_A).with_company(company_B)._compute_employees_count()
-        self.assertEqual(partner.employees_count, 2)
-        # Creating a new employee for a user in company A does not affect link user-employee in the other company
-        new_employee_A = self.env['hr.employee'].create({
-            'name': 'new_employee_A',
-            'user_id': user.id,
-            'company_id': company_A.id,
-        })
-        # User cannot be assigned to more than one employee in the same company. work_contact_id should not be removed.
-        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.assertRaises(ValidationError):
-            self.env['hr.employee'].create({
-                'name': 'new_employee_B',
-                'user_id': user.id,
-                'company_id': company_B.id,
-            })
-        self.assertEqual(user.with_company(company_A).employee_id, new_employee_A)
-        self.assertEqual(user.with_company(company_B).employee_id, employee_B)
-        self.assertEqual(partner.employee_ids, employee_B + new_employee_A)
+        self.assertEqual(user.partner_id.with_context(active_test=False).employee_ids,
+                         employee_A + employee_B)
 
     def test_avatar(self):
         # Check simple employee has a generated image (initials)
@@ -598,62 +510,46 @@ class TestHrEmployee(TestHrCommon):
             self.assertEqual(employee_form.job_title, first_job.name)
 
     def test_user_creation_from_employee_with_invalid_email(self):
+        # An unparseable work email no longer blocks creation: the employee still
+        # gets a self-service user, with a synthetic (non-email) login.
         employee = self.env['hr.employee'].create({
             'name': 'Test Employee',
-            'work_email': 'test'
+            'work_email': 'not-an-email',
         })
+        self.assertTrue(employee.user_id)
+        self.assertTrue(employee.user_id.login.startswith('__emp_'))
+        self.assertEqual(employee.user_id.role, 'light')
 
-        action = employee.action_create_users()
-        self.assertEqual(action['params']['message'], f'You need to set a valid work email address for {employee.name}')
-        self.assertFalse(employee.user_id)
+    def test_user_creation_from_employee_emails(self):
+        # A new email creates a lite user with that login.
+        new_emp = self.env['hr.employee'].create({
+            'name': 'New Employee', 'work_email': 'newuser@example.com'})
+        self.assertEqual(new_emp.user_id.login, 'newuser@example.com')
+        self.assertFalse(new_emp.user_id.share)
 
-    def test_user_creation_from_employee_multi_emails(self):
-        employees = self.env['hr.employee'].create([
-            {
-                'name': 'Existing Email Employee',
-                'work_email': self.user_without_image.email,
-            }, {
-                'name': 'New Employee',
-                'work_email': 'newuser@example.com',
-            }, {
-                'name': 'Invalid Email Employee',
-                'work_email': 'invalid-email',
-            }, {
-                'name': 'Without Email Employee',
-                'work_email': False,
-            }, {
-                'name': 'Formatted Email Employee',
-                'work_email': f'"John Doe" <{self.user_without_image.email_normalized}>',
-            }, {
-                'name': 'Multi Email Employee',
-                'work_email': '"Name1" <name@test.example.com>, "Name 2" <name2@test.example.com>',
-            }, {
-                'name': 'Duplicate Email Employee 1',
-                'work_email': 'duplicate@example.com',
-            }, {
-                'name': 'Duplicate Email Employee 2',
-                'work_email': 'duplicate@example.com',
-            },
-        ])
-        # Add an existing employee who already has a user to the employee list
-        employees += self.employee_without_image
-        context = {'selected_ids': employees.ids}
-        confirmed_employees = self.env['hr.employee'].with_context(context).browse(employees.ids)
-        action = confirmed_employees.action_create_users()
+        # An email matching an existing user that has no employee links to it
+        # (by login or email address) rather than creating a duplicate.
+        free_user = self.env['res.users'].create({
+            'name': 'Free', 'login': 'free_login', 'email': 'free@example.com'})
+        linked_emp = self.env['hr.employee'].create({
+            'name': 'Linked', 'work_email': 'free@example.com'})
+        self.assertEqual(linked_emp.user_id, free_user)
 
-        params = action.get('params')
-        self.assertEqual(params.get('message'), f"The following employees have the same work email address: {employees[6].name}, {employees[7].name}")
-        params = params.get('next').get('params')
-        self.assertEqual(params.get('message'), f"User already exists with the same email for Employees {employees[0].name}, {employees[4].name}")
-        params = params.get('next').get('params')
-        self.assertEqual(params.get('message'), f"You need to set a valid work email address for {employees[2].name}, {employees[5].name}")
-        params = params.get('next').get('params')
-        self.assertEqual(params.get('message'), f"You need to set the work email address for {employees[3].name}")
-        params = params.get('next').get('params')
-        self.assertEqual(params.get('message'), f"User already exists for Those Employees {employees[8].name}")
-        params = params.get('next').get('params')
-        self.assertEqual(params.get('message'), f"Users {employees[1].name} creation successful")
-        self.assertTrue(employees[1].user_id)
+        # An email matching a user that already backs an employee does not reuse
+        # it: a separate user is provisioned for the new employee.
+        other_emp = self.env['hr.employee'].create({
+            'name': 'Other', 'work_email': 'free@example.com'})
+        self.assertTrue(other_emp.user_id)
+        self.assertNotEqual(other_emp.user_id, free_user)
+
+        # A multi/RFC-formatted email uses the first address as the login.
+        multi_emp = self.env['hr.employee'].create({
+            'name': 'Multi', 'work_email': '"N1" <n1@example.com>, "N2" <n2@example.com>'})
+        self.assertEqual(multi_emp.user_id.login, 'n1@example.com')
+
+        # No email at all still yields a user with a synthetic login (no crash).
+        no_email_emp = self.env['hr.employee'].create({'name': 'No Email'})
+        self.assertTrue(no_email_emp.user_id.login.startswith('__emp_'))
 
     def test_user_contact_phone_sync(self):
         partner = self.env['res.partner'].create({'name': 'Partner Test'})

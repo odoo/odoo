@@ -334,7 +334,9 @@ class TestAllocations(TestHrHolidaysCommon):
             This test makes sure that the allocation can be created if the current company doesn't have an employee
             linked to the loggedIn user.
         """
-        self.user_hrmanager.employee_ids = False
+        # archive the manager's employee so the current user has no (active)
+        # employee: an active employee may not be left without a user
+        self.user_hrmanager.employee_ids.write({'active': False})
         allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager))
         self.assertFalse(allocation_form.employee_id)
         allocation_form.employee_id = self.employee
