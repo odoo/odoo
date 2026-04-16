@@ -189,8 +189,11 @@ class StockValuationLayer(models.Model):
             if float_is_zero(candidate.quantity, precision_rounding=rounding):
                 continue
             candidate_quantity = abs(candidate.quantity)
-            returned_qty = sum([sm.product_uom._compute_quantity(sm.quantity, self.uom_id)
-                                for sm in candidate.stock_move_id.returned_move_ids if sm.state == 'done'])
+            returned_qty = sum(
+                sm.product_uom._compute_quantity(sm.quantity, candidate.uom_id)
+                for sm in candidate.stock_move_id.returned_move_ids
+                if sm.state == 'done'
+            )
             candidate_quantity -= returned_qty
             if float_is_zero(candidate_quantity, precision_rounding=rounding):
                 continue
@@ -230,8 +233,11 @@ class StockValuationLayer(models.Model):
             if float_is_zero(svl.quantity, precision_rounding=rounding):
                 continue
             relevant_qty = abs(svl.quantity)
-            returned_qty = sum([sm.product_uom._compute_quantity(sm.quantity, self.uom_id)
-                                for sm in svl.stock_move_id.returned_move_ids if sm.state == 'done'])
+            returned_qty = sum(
+                sm.product_uom._compute_quantity(sm.quantity, svl.uom_id)
+                for sm in svl.stock_move_id.returned_move_ids
+                if sm.state == 'done'
+            )
             relevant_qty -= returned_qty
             if float_is_zero(relevant_qty, precision_rounding=rounding):
                 continue
