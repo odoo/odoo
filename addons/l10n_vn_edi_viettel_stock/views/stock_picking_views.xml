@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_view_form_inherit_l10n_vn_edi_viettel_stock" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.l10n_vn_edi_viettel_stock</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_l10n_vn_send_to_sinvoice"
+                    string="Send to SInvoice"
+                    type="object"
+                    class="btn-primary"
+                    invisible="not l10n_vn_edi_show_send_button"
+                />
+            </xpath>
+            <xpath expr="//page[@name='operations']//field[@name='quantity']" position="after">
+                <field name="l10n_vn_edi_unit_price" optional="show"/>
+                <field name="l10n_vn_edi_total_price" optional="hide"/>
+            </xpath>
+            <xpath expr="//page[@name='extra']" position="after">
+                <page name="l10n_vn_edi_tab" string="E-Transfer Note" invisible="not l10n_vn_edi_show_send_button and not l10n_vn_edi_is_sent">
+                    <group>
+                        <group>
+                            <field name="l10n_vn_edi_symbol_id"
+                                options="{'no_open': True, 'no_create': True}"
+                                readonly="l10n_vn_edi_is_sent"/>
+                            <field name="l10n_vn_edi_issue_date" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="l10n_vn_edi_is_sent" readonly="1"/>
+                            <field name="l10n_vn_edi_invoice_number" readonly="1"/>
+                            <field name="l10n_vn_edi_reservation_code" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_vn_edi_fetch_sinvoice_files" model="ir.actions.server">
+        <field name="name">Fetch SInvoice Files</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                record.l10n_vn_edi_fetch_files()
+        </field>
+    </record>
+</odoo>

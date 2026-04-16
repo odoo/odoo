@@ -269,7 +269,6 @@ class SInvoiceService:
                                 'name': file.filename,
                                 'mimetype': 'application/xml',
                                 'raw': inner_zip.read(file),
-                                'res_field': 'l10n_vn_edi_sinvoice_xml_file',
                             }, None
             return {}, self.env._('No XML file found in the SInvoice ZIP response.')
         except Exception as err:  # noqa: BLE001

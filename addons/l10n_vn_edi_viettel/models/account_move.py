@@ -215,7 +215,10 @@ class AccountMove(models.Model):
                 return {}, error
             if not (file_bytes := zip_data.get('fileToBytes')):
                 return {}, _('XML file not yet available from Viettel.')
-            return sinvoice.extract_xml_from_zip(base64.b64decode(file_bytes))
+            xml_data, error = sinvoice.extract_xml_from_zip(base64.b64decode(file_bytes))
+            if xml_data:
+                xml_data['res_field'] = 'l10n_vn_edi_sinvoice_xml_file'
+            return xml_data, error
 
     def _l10n_vn_edi_fetch_invoice_pdf_file_data(self):
         """
