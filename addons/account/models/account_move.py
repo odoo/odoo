@@ -2242,6 +2242,12 @@ class AccountMove(models.Model):
 
                             if not move.currency_id.is_zero(delta_amount):
                                 first_tax_line.amount_currency -= delta_amount * sign
+                                is_price_include = tax_group.get('is_price_include', first_tax_line.tax_line_id.price_include)
+                                if is_price_include:
+                                    base_lines = move.line_ids.filtered(lambda l: l.display_type == 'product' and first_tax_line.tax_line_id in l.tax_ids)
+                                    if base_lines:
+                                        base_lines[0].amount_currency += delta_amount * sign
+
             self._compute_amount()
 
     def _inverse_amount_total(self):

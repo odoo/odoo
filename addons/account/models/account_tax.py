@@ -2185,6 +2185,7 @@ class AccountTax(models.Model):
                     {
                         'factor': tax_data[f'tax_amount{delta_currency_indicator}'],
                         'tax_data': tax_data,
+                        'base_line': _base_line,
                     }
                     for _base_line, taxes_data in values['base_line_x_taxes_data']
                     for tax_data in taxes_data
@@ -2197,6 +2198,10 @@ class AccountTax(models.Model):
                 for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
                     tax_data = target_factor['tax_data']
                     tax_data[f'tax_amount{delta_currency_indicator}'] += amount_to_distribute
+
+                    if tax_data.get('price_include'):
+                        base_line = target_factor['base_line']
+                        base_line['tax_details'][f'total_excluded{delta_currency_indicator}'] -= amount_to_distribute
 
     @api.model
     def _round_base_lines_tax_details(self, base_lines, company, tax_lines=None):
@@ -2886,6 +2891,7 @@ class AccountTax(models.Model):
                 'display_base_amount': display_base_amount,
                 'group_name': tax_group.name,
                 'group_label': tax_group.pos_receipt_label,
+                'is_price_include': any(t.price_include for t in involved_taxes),
             })
 
         # Subtotals.
