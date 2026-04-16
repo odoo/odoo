@@ -2227,6 +2227,7 @@ class MailThread(models.AbstractModel):
                      partner_ids=None, outgoing_email_to=False,
                      incoming_email_to=False, incoming_email_cc=False,
                      attachments=None, attachment_ids=None, body_is_html=False,
+                     partner_cc_ids=None,
                      **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
 
@@ -2244,8 +2245,8 @@ class MailThread(models.AbstractModel):
           fetch, will force value of subtype_id;
         :param int subtype_id: subtype_id of the message, used mainly for followers
             notification mechanism;
-        :param list(int) partner_ids: partner_ids to notify in addition to partners
-            computed based on subtype / followers matching;
+        :param list(int) partner_ids: partner_ids to notify in addition to partner_cc_ids and
+            partners computed based on subtype / followers matching;
         :param str outgoing_email_to: comma-separated list of emails to notify in
             addition to partner_ids. Experimental support as of Odoo v19;
         :param str incoming_email_to: comma-separated list of emails, already notified
@@ -2260,6 +2261,8 @@ class MailThread(models.AbstractModel):
             composer will be attached to the related document.
         :param bool body_is_html: indicates body should be threated as HTML even if str
             to be used only for RPC calls
+        :param list(int) partner_cc_ids: partner_ids to notify in addition to partner_ids and
+            partners computed based on subtype / followers matching;
 
         Extra keyword arguments will be used either
           * as default column values for the new mail.message record if they match
@@ -2304,12 +2307,25 @@ class MailThread(models.AbstractModel):
                  )
             )
         partner_ids = list(partner_ids or [])
+        if partner_cc_ids and not is_list_of(partner_cc_ids, int):
+            raise ValueError(
+                _('Posting a message should receive copy carbon partners as a list of IDs (received %(pids)s)',
+                  pids=repr(partner_cc_ids),
+                 )
+            )
+        partner_cc_ids = list(partner_cc_ids or [])
 
         # split message additional values from notify additional values
         msg_kwargs = {key: val for key, val in kwargs.items()
                       if key in self.env['mail.message']._fields}
         notif_kwargs = {key: val for key, val in kwargs.items()
                         if key not in msg_kwargs}
+        if partner_cc_ids:
+            notif_kwargs['mail_headers'] = {
+                **notif_kwargs.get('mail_headers', {}),
+                'X-Msg-Cc-Force': ','.join(self.env['res.partner'].browse(
+                    partner_cc_ids).sudo().mapped('email_formatted')),
+            }
 
         # Add lang to context immediately since it will be useful in various flows later
         self = self._fallback_lang()
@@ -2359,7 +2375,7 @@ class MailThread(models.AbstractModel):
             'subject': subject or False,
             'subtype_id': subtype_id,
             # recipients
-            'partner_ids': partner_ids,
+            'partner_ids': partner_ids + partner_cc_ids,
             'incoming_email_to': incoming_email_to,
             'incoming_email_cc': incoming_email_cc,
             'outgoing_email_to': outgoing_email_to,

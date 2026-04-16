@@ -1,3 +1,4 @@
+import { deepEqual } from "@web/core/utils/objects";
 import { onWillRender } from "@web/owl2/utils";
 import { parseEmail } from "@mail/utils/common/format";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -19,6 +20,9 @@ export class RecipientsInput extends Component {
     static components = { AutoComplete, RecipientTag };
     static props = {
         thread: { type: Object },
+        /** recipient init thread fields. threadFields.at(-1) will be updated with additional recipients. */
+        threadFields: { type: Array, element: String },
+        placeholder: { type: String },
     };
 
     setup() {
@@ -190,30 +194,34 @@ export class RecipientsInput extends Component {
                 tooltip,
                 onDelete: () => {
                     this.props.thread[recipientField] = this.props.thread[recipientField].filter(
-                        (additionalOrSuggestedRecipient) =>
-                            additionalOrSuggestedRecipient.partner_id !== recipient.partner_id ||
-                            additionalOrSuggestedRecipient.email !== recipient.email
+                        (r) => r.partner_id !== recipient.partner_id || r.email !== recipient.email
                     );
                 },
                 updateRecipient: this.updateRecipient.bind(this),
                 bus: this.recipientCheckerBus,
             });
         };
-        for (const recipient of this.props.thread.suggestedRecipients) {
-            createTagForRecipient(recipient, "suggestedRecipients");
+        for (const threadField of this.props.threadFields) {
+            for (const recipient of this.props.thread[threadField]) {
+                createTagForRecipient(recipient, threadField);
+            }
         }
-        for (const recipient of this.props.thread.additionalRecipients) {
-            createTagForRecipient(recipient, "additionalRecipients");
+        // Avoid changing the reference if nothing as changed (except the id)
+        // to avoid useRecipientChecker to open emailSetterPopover multiple time on recipient without email.
+        if (
+            deepEqual(
+                tags.map((t) => ({ ...t, id: "tag_0" })),
+                this.tags.map((t) => ({ ...t, id: "tag_0" }))
+            )
+        ) {
+            return this.tags;
         }
         return tags;
     }
 
     /** @return {Array[SuggestedRecipient]}*/
     getAllMailThreadRecipients() {
-        return [
-            ...this.props.thread.suggestedRecipients,
-            ...this.props.thread.additionalRecipients,
-        ];
+        return this.props.threadFields.map((field) => this.props.thread[field]).flat();
     }
 
     /**
@@ -236,14 +244,13 @@ export class RecipientsInput extends Component {
 
     /** @param {SuggestedRecipient} recipient */
     insertAdditionalRecipient(recipient) {
-        this.props.thread.additionalRecipients.push(recipient);
+        this.props.thread[this.props.threadFields.at(-1)].push(recipient);
     }
 
     /** @returns {string} */
     getPlaceholder() {
-        const hasRecipients =
-            this.props.thread.suggestedRecipients.length ||
-            this.props.thread.additionalRecipients.length;
-        return hasRecipients ? "" : _t("Followers only");
+        return this.props.threadFields.some((k) => this.props.thread[k].length)
+            ? ""
+            : this.props.placeholder;
     }
 }

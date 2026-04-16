@@ -80,7 +80,9 @@ export class MailComposerFormRenderer extends formView.Renderer {
         };
 
         onCloseWizardModal(async () => {
-            const selectedPartnerIds = this.props.record.data.partner_ids.currentIds;
+            const selectedPartnerToIds = this.props.record.data.partner_ids.currentIds;
+            const selectedPartnerCcIds = this.props.record.data.partner_cc_ids.currentIds;
+            const selectedPartnerIds = [...selectedPartnerToIds, ...selectedPartnerCcIds];
             const selectedPartners = await this.orm.searchRead(
                 "res.partner",
                 [["id", "in", selectedPartnerIds]],
@@ -107,13 +109,6 @@ export class MailComposerFormRenderer extends formView.Renderer {
                 return recipient;
             };
 
-            /**
-             * @param {SuggestedRecipient} recipient
-             * @returns {boolean}
-             */
-            const isRecipientSelectedFromFullMailComposer = (recipient) =>
-                selectedPartnerIds.includes(recipient.partner_id);
-
             for (const thread of getActiveMailThreads()) {
                 // Update the recipient lists:
                 thread.suggestedRecipients = thread.suggestedRecipients.map(
@@ -122,23 +117,43 @@ export class MailComposerFormRenderer extends formView.Renderer {
                 thread.additionalRecipients = thread.additionalRecipients.map(
                     updateRecipientWithCorrespondingPartner
                 );
+                thread.additionalCcRecipients = thread.additionalCcRecipients.map(
+                    updateRecipientWithCorrespondingPartner
+                );
 
                 // Remove the recipients that got removed from the composer:
-                thread.suggestedRecipients = thread.suggestedRecipients.filter(
-                    isRecipientSelectedFromFullMailComposer
+                thread.suggestedRecipients = thread.suggestedRecipients.filter((r) =>
+                    selectedPartnerToIds.includes(r.partner_id)
                 );
-                thread.additionalRecipients = thread.additionalRecipients.filter(
-                    isRecipientSelectedFromFullMailComposer
+                thread.additionalRecipients = thread.additionalRecipients.filter((r) =>
+                    selectedPartnerToIds.includes(r.partner_id)
+                );
+                thread.additionalCcRecipients = thread.additionalRecipients.filter((r) =>
+                    selectedPartnerCcIds.includes(r.partner_id)
                 );
 
                 // Add the recipients that got added to the composer:
+                const currentToIds = [
+                    ...thread.suggestedRecipients.map((r) => r.partner_id),
+                    ...thread.additionalRecipients.map((r) => r.partner_id),
+                ];
+                const currentCcIds = thread.additionalCcRecipients.map((r) => r.partner_id);
                 for (const partner of selectedPartners) {
-                    const allRecipients = [
-                        ...thread.suggestedRecipients,
-                        ...thread.additionalRecipients,
-                    ];
-                    if (!allRecipients.some((recipient) => recipient.partner_id === partner.id)) {
-                        thread.additionalRecipients.push({
+                    const addTos = [];
+                    if (
+                        !currentCcIds.includes(partner.id) &&
+                        selectedPartnerCcIds.includes(partner.id)
+                    ) {
+                        addTos.push(thread.additionalCcRecipients);
+                    }
+                    if (
+                        !currentToIds.includes(partner.id) &&
+                        selectedPartnerToIds.includes(partner.id)
+                    ) {
+                        addTos.push(thread.additionalRecipients);
+                    }
+                    for (const addTo of addTos) {
+                        addTo.push({
                             display_name: partner.display_name,
                             email: partner.email,
                             lang: partner.lang,

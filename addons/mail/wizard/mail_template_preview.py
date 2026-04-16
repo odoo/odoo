@@ -78,10 +78,11 @@ class MailTemplatePreview(models.TransientModel):
                 preview.error_msg = False
             else:
                 try:
-                    mail_values = mail_template.with_context(template_preview_lang=preview.lang)._generate_template(
-                        [preview.resource_ref.id],
-                        preview._MAIL_TEMPLATE_FIELDS
-                    )[preview.resource_ref.id]
+                    mail_values = self.env['mail.template']._get_adapted_rendered_no_partner_cc(
+                        mail_template.with_context(template_preview_lang=preview.lang)._generate_template(
+                            [preview.resource_ref.id],
+                            preview._MAIL_TEMPLATE_FIELDS
+                        )[preview.resource_ref.id])
 
                     if mail_template.email_layout_xmlid:
                         # Encapsulate body with layout

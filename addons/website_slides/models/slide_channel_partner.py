@@ -229,7 +229,7 @@ class SlideChannelPartner(models.Model):
                 # attachments specific not supported currently, only attachment_ids
                 values.pop('attachments', False)
                 values['body'] = values.get('body_html')  # keep body copy in chatter
-                record_email_values[res_id] = values
+                record_email_values[res_id] = self.env['mail.template']._get_adapted_rendered_no_partner_cc(values)
 
         mail_mail_values = []
         for record in self:

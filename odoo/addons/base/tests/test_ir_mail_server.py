@@ -533,3 +533,69 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             raise AssertionError("Email with non-ASCII .eml attachment could not be serialized") from e
 
         self.assertIsInstance(serialized, bytes)
+
+    def test_mail_force_cc(self):
+        """Check that "To" recipients are turned into "Cc" recipients in the headers when present in X-Msg-Cc-Force."""
+        IrMailServer = self.env['ir.mail_server']
+        mail_from = 'specific_user@test.mycompany.com'
+
+        # Simple use-case to illustrate how it is used in the mail_compose_message wizard:
+        # The wizard adds both "to" and "cc" as partners recipients so they ends up both in the "to" and smtp_to_list.
+        # But configure X-Msg-Cc-Force to move the "cc" partners recipients into fake "cc" through headers.
+        with self.mock_smtplib_connection():
+            smtp_session = IrMailServer._connect__(smtp_from=mail_from)
+            message = self._build_email(
+                mail_from=mail_from,
+                # email_to includes the "cc" recipients
+                email_to=['test-to@ex.com', 'test-cc@ex.com'],
+                email_cc=['test-cc-std@ex.com'],
+                # force the "cc" recipient setup in the "to" to be moved into the "cc" recipient header
+                headers={'X-Msg-Cc-Force': 'test-cc@ex.com'},
+            )
+            IrMailServer.send_email(message, smtp_session=smtp_session)
+        self.assertSMTPEmailsSent(
+            smtp_from=mail_from,
+            message_from=mail_from,
+            mail_server=self.mail_server_user,
+            # Sent directly to the Cc recipient
+            smtp_to_list=['test-to@ex.com', 'test-cc@ex.com', 'test-cc-std@ex.com'],
+            # But the Cc recipient must not appear in the "To" header
+            msg_to_lst=['test-to@ex.com'],
+            # But well in the Cc header
+            msg_cc_lst=['test-cc-std@ex.com', 'test-cc@ex.com'],
+        )
+
+        # Additional checks
+        for (email_to, email_cc, email_cc_force), (expected_to, expected_msg_to, expected_msg_cc) in (
+            # Fake Cc (test-cc@ex.com is present in the headers but not in the smtp_to_list
+            ((['test-to@ex.com'], ['test-cc-std@ex.com'], 'test-cc@ex.com'),
+             (['test-to@ex.com', 'test-cc-std@ex.com'], ['test-to@ex.com'], ['test-cc-std@ex.com', 'test-cc@ex.com'])),
+            # Using formated emails (format of X-Msg-Cc-Force wins)
+            ((['"Formatted To" <test-to@ex.com>', '"Formatted Cc" <test-cc@ex.com>'],
+              ['"Formatted Cc std" <test-cc-std@ex.com>'],
+              '"Formatted Cc mod" <test-cc@ex.com>'),
+             (['test-to@ex.com', 'test-cc@ex.com', 'test-cc-std@ex.com'],
+              ['"Formatted To" <test-to@ex.com>'],
+              ['"Formatted Cc std" <test-cc-std@ex.com>', '"Formatted Cc mod" <test-cc@ex.com>'])),
+            # Multiple Cc forced (one of them not in the smtp_to_list)
+            ((['test-to@ex.com', 'test-cc2@ex.com'], ['test-cc-std@ex.com'], 'test-cc@ex.com, test-cc2@ex.com'),
+             (['test-to@ex.com', 'test-cc2@ex.com', 'test-cc-std@ex.com'],
+              ['test-to@ex.com'],
+              ['test-cc-std@ex.com', 'test-cc@ex.com', 'test-cc2@ex.com'])),
+            # Multiple Cc with format
+            ((['"Formatted To" <test-to@ex.com>', '"Formatted Cc2" <test-cc2@ex.com>'],
+              ['"Formated cc-std" <test-cc-std@ex.com>'],
+              '"Formated cc" <test-cc@ex.com>, test-cc2@ex.com'),
+             (['test-to@ex.com', 'test-cc2@ex.com', 'test-cc-std@ex.com'],
+              ['"Formatted To" <test-to@ex.com>'],
+              ['"Formated cc-std" <test-cc-std@ex.com>', '"Formated cc" <test-cc@ex.com>', 'test-cc2@ex.com'])),
+        ):
+            with self.subTest(email_to=email_to, email_cc=email_cc, email_cc_force=email_cc_force):
+                with self.mock_smtplib_connection():
+                    smtp_session = IrMailServer._connect__(smtp_from=mail_from)
+                    message = self._build_email(mail_from=mail_from, email_to=email_to, email_cc=email_cc,
+                                                headers={'X-Msg-Cc-Force': email_cc_force})
+                    IrMailServer.send_email(message, smtp_session=smtp_session)
+                self.assertSMTPEmailsSent(
+                    smtp_from=mail_from, message_from=mail_from, mail_server=self.mail_server_user,
+                    smtp_to_list=expected_to, msg_to_lst=expected_msg_to, msg_cc_lst=expected_msg_cc)

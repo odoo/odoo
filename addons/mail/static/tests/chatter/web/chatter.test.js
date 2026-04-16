@@ -113,6 +113,70 @@ test("can post a message on a record thread", async () => {
     await expect.waitForSteps(["/mail/message/post"]);
 });
 
+test("can post a message with cc on a record thread", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    let postCallN = 0;
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("/mail/message/post");
+        const expected = {
+            context: args.context,
+            post_data: {
+                body: `hey${postCallN}`,
+                email_add_signature: true,
+                message_type: "comment",
+                partner_emails: ["new-partner@ex.com"],
+                partner_cc_emails: ["new-cc-partner@ex.com"],
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: partnerId,
+            thread_model: "res.partner",
+        };
+        if (postCallN === 1) {
+            // On the second call, the cc field is disabled and must not be sent to the server.
+            delete expected.post_data.partner_cc_emails;
+        }
+        expect(args).toEqual(expected);
+        postCallN++;
+    });
+    async function fillRecipients() {
+        await insertText(
+            ".o-mail-Chatter input[placeholder='Followers only']",
+            "new-partner@ex.com"
+        );
+        await click(".dropdown-item:text('Create new-partner@ex.com')");
+        await contains(".o_tag_badge_text:text('new-partner@ex.com')");
+
+        await click(".btn:text('Cc')");
+        await insertText(
+            ".o-mail-Chatter input[placeholder='Cc recipients']",
+            "new-cc-partner@ex.com"
+        );
+        await click(".dropdown-item:text('Create new-cc-partner@ex.com')");
+        await contains(".o_tag_badge_text:text('new-cc-partner@ex.com')");
+    }
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button:text('Send message')");
+    await contains(".o-mail-Composer", { count: 0 });
+    await click("button:text('Send message')");
+    await contains(".o-mail-Composer");
+    await insertText(".o-mail-Composer-input", "hey0");
+    await contains(".o-mail-Message", { count: 0 });
+    await fillRecipients();
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await contains(".o-mail-Message .o-mail-Message-richBody:text('hey0')");
+
+    await click("button:text('Send message')");
+    await insertText(".o-mail-Composer-input", "hey1");
+    await fillRecipients();
+    await click(".btn:text('Cc')");
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await contains(".o-mail-Message .o-mail-Message-richBody:text('hey1')");
+
+    await expect.waitForSteps(["/mail/message/post", "/mail/message/post"]);
+});
+
 test("can post a note on a record thread", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });

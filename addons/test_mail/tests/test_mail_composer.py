@@ -15,8 +15,8 @@ from odoo.addons.test_mail.models.mail_test_ticket import MailTestTicket
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.fields import Command, Datetime as FieldDatetime, Domain
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import Form, tagged, users
-from odoo.tools import email_normalize, mute_logger, formataddr
+from odoo.tests import Form, RecordCapturer, tagged, users
+from odoo.tools import email_normalize, mute_logger, formataddr, email_normalize_all
 
 
 @tagged('mail_composer')
@@ -1033,7 +1033,7 @@ class TestComposerInternals(TestMailComposer):
                 self.assertEqual(self.test_record.message_partner_ids, self.partner_employee_2)
 
                 batch = bool(batch_mode)
-                test_records = self.test_records if batch else self.test_record
+                test_records = self.test_records.copy() if batch else self.test_record.copy()
                 ctx = {
                     'default_model': test_records._name,
                     'default_composition_mode': composition_mode,
@@ -1084,14 +1084,34 @@ class TestComposerInternals(TestMailComposer):
                 # values come from template
                 if composition_mode == 'comment' and not batch:
                     self.assertEqual(len(new_partners), 2)
-                    self.assertEqual(composer.partner_ids, self.partner_1 + new_partners, 'Template took customer_id as set on record')
+                    self.assertEqual(composer.partner_ids, self.partner_1, 'Template took customer_id as set on record')
+                    self.assertEqual(composer.partner_cc_ids, new_partners)
                     self.assertEqual(composer.reply_to, 'info@test.example.com', 'Template was rendered')
                     self.assertTrue(composer.reply_to_force_new)
                 else:
                     self.assertEqual(len(new_partners), 0)
                     self.assertEqual(composer.partner_ids, base_recipients, 'Mass mode: kept original values')
+                    self.assertFalse(composer.partner_cc_ids)
                     self.assertEqual(composer.reply_to, self.template.reply_to, 'Mass mode: raw template value')
                     self.assertTrue(composer.reply_to_force_new, 'Mass mode: reply_to -> consider this is for new threads')
+
+                # Check Cc recipients
+                with (self.mock_mail_gateway(),
+                      RecordCapturer(self.env['mail.message.schedule'].sudo()) as scheduled_messages):
+                    composer._action_send_mail()
+                if composition_mode == 'comment':
+                    mail_headers = [json.loads(p).get('mail_headers', {})
+                                    for p in scheduled_messages.records.mapped('notification_parameters')]
+                else:
+                    mail_headers = [literal_eval(h) for h in self._new_mails.mapped('headers')]
+                self.assertTrue(mail_headers)
+                if composition_mode == 'comment' and not batch:
+                    self.assertTrue(all(h.get('X-Msg-Cc-Force') for h in mail_headers))
+                    self.assertEqual(
+                        [set(email_normalize_all(h.get('X-Msg-Cc-Force'))) for h in mail_headers],
+                        [{p.email_normalized for p in new_partners} for _ in mail_headers])
+                else:
+                    self.assertFalse(any(h.get('X-Msg-Cc-Force') for h in mail_headers))
 
                 # manual values is kept over template
                 composer.write({'partner_ids': [(5, 0), (4, self.partner_admin.id)]})
@@ -1118,7 +1138,8 @@ class TestComposerInternals(TestMailComposer):
 
                 # values come from template
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.partner_ids, self.partner_1 + new_partners)
+                    self.assertEqual(composer.partner_ids, self.partner_1)
+                    self.assertEqual(composer.partner_cc_ids, new_partners)
                 else:
                     self.assertFalse(composer.partner_ids)
                 if composition_mode == 'comment' and not batch:
@@ -1136,7 +1157,8 @@ class TestComposerInternals(TestMailComposer):
 
                 # values come from template
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.partner_ids, self.partner_1 + new_partners)
+                    self.assertEqual(composer.partner_ids, self.partner_1)
+                    self.assertEqual(composer.partner_cc_ids, new_partners)
                 else:
                     self.assertFalse(composer.partner_ids)
                 if composition_mode == 'comment' and not batch:
