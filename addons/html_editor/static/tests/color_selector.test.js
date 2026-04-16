@@ -1,4 +1,5 @@
 import {
+    advanceTime,
     animationFrame,
     click,
     describe,
@@ -1453,6 +1454,9 @@ test("Should not close the color picker on icon color change", async () => {
     await waitFor('[data-color="o-color-1"]');
     await hover('[data-color="o-color-1"]');
     expectElementCount('[data-color="o-color-1"]', 1);
+    await advanceTime(200);
+    await animationFrame();
+    await waitFor('.o_font_color_selector [data-color="o-color-2"]');
     await hover('[data-color="o-color-2"]');
     // Color picker should stay open
     expectElementCount('[data-color="o-color-2"]', 1);
