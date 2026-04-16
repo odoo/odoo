@@ -1591,6 +1591,7 @@ class StockPicking(models.Model):
             'move_ids': [],
             'move_line_ids': [],
             'backorder_id': self.id,
+            'return_id': self.return_id.id,
         })
 
     def _create_backorder(self, backorder_moves=None):
