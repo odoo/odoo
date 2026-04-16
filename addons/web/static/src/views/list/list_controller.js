@@ -1,11 +1,4 @@
-import {
-    render,
-    onWillRender,
-    useLayoutEffect,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@web/owl2/utils";
+import { render, onWillRender, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
@@ -82,9 +75,7 @@ export class ListController extends Component {
         this.onOpenFormView = this.openRecord.bind(this);
         this.editable = (!this.props.readonly && this.archInfo.editable) || false;
         this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
-        this.model = useState(
-            useModelWithSampleData(this.props.Model, this.modelParams, this.modelOptions)
-        );
+        this.model = useModelWithSampleData(this.props.Model, this.modelParams, this.modelOptions);
 
         // In multi edition, we save or notify invalidity directly when a field is updated, which
         // occurs on the change event for input fields. But we don't want to do it when clicking on

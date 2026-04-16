@@ -5,7 +5,7 @@ import { completeActiveFields } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
 
-import { markRaw } from "@odoo/owl";
+import { markRaw, signal } from "@odoo/owl";
 
 /**
  * @typedef {import("./record").Record} RelationalRecord
@@ -88,6 +88,11 @@ export class StaticList extends DataPoint {
         this._parent = options.parent;
         this._onUpdate = options.onUpdate;
 
+        const _records = signal.Array([]);
+        Object.defineProperty(this, "records", {
+            get: _records,
+            set: _records.set,
+        });
         this._cache = markRaw({});
         this._commands = [];
         this._initialCommands = [];

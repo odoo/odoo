@@ -1,4 +1,4 @@
-import { markRaw, markup, toRaw } from "@odoo/owl";
+import { markRaw, markup, signal, toRaw } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -56,11 +56,38 @@ export class Record extends DataPoint {
 
         // Be careful that pending changes might not have been notified yet, so the "dirty" flag may
         // be false even though there are changes in a field. Consider calling "isDirty()" instead.
-        this.dirty = false;
-        this.selected = false;
+        const _dirty = signal(false);
+        Object.defineProperty(this, "dirty", {
+            get: _dirty,
+            set: _dirty.set,
+        });
+        const _selected = signal(false);
+        Object.defineProperty(this, "selected", {
+            get: _selected,
+            set: _selected.set,
+        });
+        const _data = signal.Object({});
+        Object.defineProperty(this, "data", {
+            get: _data,
+            set: _data.set,
+        });
+        const _evalContext = signal.Object({});
+        Object.defineProperty(this, "evalContext", {
+            get: _evalContext,
+            set: _evalContext.set,
+        });
+        const _evalContextWithVirtualIds = signal.Object({});
+        Object.defineProperty(this, "evalContextWithVirtualIds", {
+            get: _evalContextWithVirtualIds,
+            set: _evalContextWithVirtualIds.set,
+        });
 
         /** @type {Set<string>} */
-        this._invalidFields = new Set();
+        const _invalidFields = signal.Set(new Set());
+        Object.defineProperty(this, "_invalidFields", {
+            get: _invalidFields,
+            set: _invalidFields.set,
+        });
         /** @type {Set<string>} */
         this._unsetRequiredFields = markRaw(new Set());
         this._closeInvalidFieldsNotification = () => {};
@@ -1158,9 +1185,9 @@ export class Record extends DataPoint {
                 return this.model.load({ resId: nextId });
             }
             // toRaw to prevent effect
-            toRaw(this)._changes = markRaw({});
-            toRaw(this).data = { ...this._values };
-            toRaw(this).dirty = false;
+            this._changes = markRaw({});
+            this.data = { ...this._values };
+            this.dirty = false;
             return true;
         }
         if (

@@ -204,7 +204,7 @@ export class FormController extends Component {
             this.model.config.activeFields = activeFields;
             this.model.config.fields = fields;
         };
-        this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
+        this.model = useModel(this.props.Model, this.modelParams, { beforeFirstLoad });
         useSubEnv({ model: this.model });
         useEffect(() => {
             this.model.root?.resId; // consume signal
