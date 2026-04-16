@@ -303,7 +303,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             self._db_readonly = sql_db.db_connect(db_name, readonly=True)
 
         # field dependencies
-        self.field_depends: Collector[Field, Field] = Collector()
+        self.field_depends: Collector[Field, str] = Collector()
         self.field_depends_context: Collector[Field, str] = Collector()
 
         # field inverses
@@ -319,10 +319,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         # constraint checks
         self.not_null_fields: set[Field] = set()
-
-        # cache of methods get_field_trigger_tree() and is_modifying_relations()
-        self._field_trigger_trees: dict[Field, TriggerTree] = {}
-        self._is_modifying_relations: dict[Field, bool] = {}
 
         # Inter-process signaling:
         # The `orm_signaling_registry` sequence indicates the whole registry
@@ -422,8 +418,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             cache.clear()
 
         reset_cached_properties(self)
-        self._field_trigger_trees.clear()
-        self._is_modifying_relations.clear()
 
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
@@ -459,8 +453,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             cache.clear()
 
         reset_cached_properties(self)
-        self._field_trigger_trees.clear()
-        self._is_modifying_relations.clear()
         self.registry_invalidated = True
 
         # model classes on which to *not* recompute field_depends[_context]
@@ -629,14 +621,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # custom fields those may not have the entire dependency setup, and
             # may be missing from these maps
             self.field_depends.pop(f, None)
+            self.field_depends_context.pop(f, None)
 
-        # discard fields from field triggers
-        self.__dict__.pop('_field_triggers', None)
-        self._field_trigger_trees.clear()
-        self._is_modifying_relations.clear()
+        # discard fields from all cached properties
+        reset_cached_properties(self)
 
-        # discard fields from field inverses
-        self.field_inverses.discard_keys_and_values(fields)
+    @functools.cached_property
+    def _field_trigger_trees(self) -> dict[Field, TriggerTree]:
+        return {}
 
     def get_field_trigger_tree(self, field: Field) -> TriggerTree:
         """ Return the trigger tree of a field by computing it from the transitive
@@ -713,6 +705,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
                         triggers[dep_field][tuple(reversed(path))].add(field)
 
         return triggers
+
+    @functools.cached_property
+    def _is_modifying_relations(self) -> dict[Field, bool]:
+        return {}
 
     def is_modifying_relations(self, field: Field) -> bool:
         """ Return whether ``field`` has dependent fields on some records, and
