@@ -16,7 +16,7 @@ class TestResConfig(TransactionCase):
         Settings = self.env['res.config.settings'].with_user(self.user.id)
         self.config = Settings.create({})
 
-    def test_create_user_default_user_groups(self):
+    def test_create_user_default_user_regular_groups(self):
         # Add a group to the default user groups
 
         company = self.env['res.company'].create({'name': 'My Last Company'})
@@ -34,7 +34,7 @@ class TestResConfig(TransactionCase):
 
         self.assertTrue(user not in group_system.all_user_ids)
 
-        self.env.ref('base.default_user_group').implied_ids |= group_system
+        self.env.ref('base.default_user_regular_group').implied_ids |= group_system
 
         new_partner = self.env['res.partner'].create({'name': 'New User'})
         new_user = self.env['res.users'].create({

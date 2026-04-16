@@ -19,4 +19,8 @@
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
+        <record id="base.default_user_group" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('lunch.group_lunch_user'))]"/>
+        </record>
+
     </odoo>
