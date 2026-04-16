@@ -134,6 +134,10 @@ class TestExprEval(BaseCase):
             '{1, 2, 3}': {1, 2, 3},
             '{}': {},
             'set()': set(),
+            'float("-inf")': float('-inf'),
+            'float("+inf")': float('+inf'),
+            'float("1e-003")': float('1e-003'),
+            'float("-Infinity")': float('-Infinity'),
             '{"a": 1, "b": 2}': {'a': 1, 'b': 2},
             '[("name", "=", "x")]': [('name', '=', 'x')],
         }

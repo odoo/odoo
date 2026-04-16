@@ -53,11 +53,14 @@ _COMPARE_OPS = {
 }
 
 _ALLOWED_CALLS = {
-    'min': min,
+    # funcs
     'max': max,
-    'set': OrderedSet,
-    'int': int,
+    'min': min,
     'round': round,
+    # types
+    'float': float,
+    'int': int,
+    'set': OrderedSet,
 }
 
 
