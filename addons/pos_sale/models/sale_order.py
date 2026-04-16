@@ -107,12 +107,14 @@ class SaleOrderLine(models.Model):
             refund_lines = sale_line.pos_order_line_ids.refund_orderline_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
             update_qty_delivered_from_pickings(sale_line, refund_lines)
 
-    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.state')
+    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.state', 'pos_order_line_ids.refund_orderline_ids.order_id.state')
     def _compute_qty_invoiced(self):
         super()._compute_qty_invoiced()
         for sale_line in self:
             pos_lines = sale_line.pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
-            sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines], 0)
+            sale_line.qty_invoiced += sum(self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines)
+            refund_lines = sale_line.pos_order_line_ids.refund_orderline_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+            sale_line.qty_invoiced += sum(self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in refund_lines)
 
     def _get_sale_order_fields(self):
         return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment"]
