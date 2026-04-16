@@ -115,7 +115,7 @@ export class MoOverview extends Component {
     }
 
     formatCost(cost) {
-        return formatMonetary(cost, { currencyId: this.state.data.summary.currency_id });
+        return formatMonetary(cost, { currencyId: this.state.data.summary.currency.id });
     }
 
     //---- Getters ----

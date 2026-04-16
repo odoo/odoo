@@ -61,7 +61,7 @@ export class MoOverviewOperationsBlock extends Component {
     //---- Helpers ----
 
     formatMonetary(val) {
-        return formatMonetary(val, { currencyId: this.props.summary.currency_id });
+        return formatMonetary(val, { currencyId: this.props.summary.currency.id });
     }
 
     getColorClass(decorator) {
