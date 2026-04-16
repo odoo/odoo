@@ -560,4 +560,13 @@
         <field name="attribute_id" ref="pa_shoe_size"/>
     </record>
 
+    <!-- Sides (used by pos_restaurant, archived until pos_restaurant activates it) -->
+    <record id="pa_sides" model="product.attribute">
+        <field name="name">Sides</field>
+        <field name="create_variant">no_variant</field>
+        <field name="display_type">pills</field>
+        <field name="sequence">100</field>
+        <field name="active" eval="False"/>
+    </record>
+
 </odoo>
