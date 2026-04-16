@@ -26,17 +26,6 @@ import { getMockEnv, makeMockEnv } from "./env_test_helpers";
  * @typedef {import("@odoo/owl").ComponentConstructor<P, E>} ComponentConstructor
  */
 
-/**
- * @param {ComponentConstructor} ComponentClass
- * @param {HTMLElement | ShadowRoot} targetEl
- * @param {AppConfig} config
- */
-const mountComponentWithCleanup = (ComponentClass, targetEl, config) => {
-    const app = new App(config);
-    after(() => destroy(app));
-    return app.createRoot(ComponentClass, config).mount(targetEl);
-};
-
 patch(MainComponentsContainer.prototype, {
     setup() {
         super.setup();
@@ -128,20 +117,6 @@ export async function mountWithCleanup(ComponentClass, options) {
         translateFn = appTranslateFn,
     } = options || {};
 
-    // Common component configuration
-    const commonConfig = {
-        customDirectives,
-        getTemplate,
-        globalValues,
-        templates,
-        translatableAttributes,
-        translateFn,
-        // The following keys are forced to ensure validation of all tested components
-        dev: false,
-        test: true,
-        warnIfNoStaticProps: true,
-    };
-
     // Fixture
     const fixture = getFixture();
     const targetEl = target ? queryOne(target) : fixture;
@@ -160,24 +135,35 @@ export async function mountWithCleanup(ComponentClass, options) {
     }
 
     const commonEnv = env || getMockEnv() || (await makeMockEnv());
-    const componentConfig = {
-        ...commonConfig,
-        env: Object.assign(Object.create(commonEnv), componentEnv),
-        name: `TEST: ${ComponentClass.name}`,
-        props,
-    };
 
+    const app = new App({
+        customDirectives,
+        getTemplate,
+        globalValues,
+        name: `TEST: ${ComponentClass.name}`,
+        templates,
+        translatableAttributes,
+        translateFn,
+        // The following keys are forced to ensure validation of all tested components
+        dev: false,
+        test: true,
+        warnIfNoStaticProps: true,
+    });
+    after(() => destroy(app));
+
+    const componentRoot = app.createRoot(ComponentClass, {
+        env: Object.assign(Object.create(commonEnv), componentEnv),
+        props,
+    });
     /** @type {InstanceType<C>} */
-    const component = await mountComponentWithCleanup(ComponentClass, targetEl, componentConfig);
+    const component = await componentRoot.mount(targetEl);
 
     if (!noMainContainer && !hasMainComponent) {
-        const containerConfig = {
-            ...commonConfig,
+        const mainContainerRoot = app.createRoot(MainComponentsContainer, {
             env: Object.assign(Object.create(commonEnv), containerEnv),
-            name: `TEST: ${ComponentClass.name} (main container)`,
             props: {},
-        };
-        await mountComponentWithCleanup(MainComponentsContainer, targetEl, containerConfig);
+        });
+        await mainContainerRoot.mount(targetEl);
     }
 
     return component;
