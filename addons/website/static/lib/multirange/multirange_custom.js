@@ -78,7 +78,7 @@ export class Multirange {
 
         /* Wrap the input and add its ghost */
         this.rangeDiv = document.createElement("div");
-        this.rangeDiv.classList.add("multirange-wrapper", "position-relative", "mb-5");
+        this.rangeDiv.classList.add("multirange-wrapper", "position-relative", "mb-3");
         this.countersWrapper = document.createElement("small");
         this.countersWrapper.classList.add("d-flex", "justify-content-between", "mt-2");
         this.rangeDiv.appendChild(this.countersWrapper);
