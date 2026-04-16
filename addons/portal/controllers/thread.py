@@ -39,12 +39,14 @@ class PortalWebClientController(WebclientController):
         thread_model,
         thread_id,
         fetch_params=None,
+        access_params=None,
         **params,
     ):
+        access_params = access_params or {}
         thread = ThreadController._get_thread_with_access(
             thread_model,
             thread_id,
-            token=params.get('token'),
+            token=access_params.get('token'),
         )
         if not thread:
             return
@@ -52,7 +54,7 @@ class PortalWebClientController(WebclientController):
             thread,
             _hash=None,
             pid=None,
-            token=params.get("token"),
+            token=access_params.get("token"),
         ):
             request.update_context(
                 portal_data={"portal_partner": portal_partner, "portal_thread": thread},
@@ -79,7 +81,6 @@ class PortalWebClientController(WebclientController):
         thread_id,
         thread_model,
         access_params=None,
-        **params,
     ):
         access_params = access_params or {}
         store.add_global_values(request.env.user.sudo(False)._store_init_global_fields)
