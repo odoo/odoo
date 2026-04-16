@@ -8,7 +8,6 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
-import { useRecordObserver } from "@web/model/relational_model/utils";
 import { Field } from "@web/views/fields/field";
 import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -20,7 +19,7 @@ import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, computed, onWillUpdateProps } from "@odoo/owl";
 
 const { COLORS } = ColorList;
 
@@ -181,6 +180,8 @@ export class KanbanRecord extends Component {
     static menuTemplate = "web.KanbanRecordMenu";
     static template = "web.KanbanRecord";
 
+    _record = computed(() => getFormattedRecord(this.props.record));
+
     setup() {
         this.LONG_TOUCH_THRESHOLD = this.props.canResequence ? 600 : TOUCH_SELECTION_THRESHOLD;
         this.evaluateBooleanExpr = evaluateBooleanExpr;
@@ -197,12 +198,9 @@ export class KanbanRecord extends Component {
 
         this.showMenu = this.constructor.KANBAN_MENU_ATTRIBUTE in templates;
 
-        this.dataState = useState({ record: {}, widget: {} });
+        this.dataState = useState({ widget: {} });
         this.createWidget(this.props);
         onWillUpdateProps(this.createWidget);
-        useRecordObserver((record) =>
-            Object.assign(this.dataState.record, getFormattedRecord(record))
-        );
         this.rootRef = useRef("root");
 
         this.longTouchTimer = null;
@@ -210,7 +208,7 @@ export class KanbanRecord extends Component {
     }
 
     get record() {
-        return this.dataState.record;
+        return this._record();
     }
 
     getFormattedValue(fieldId) {
@@ -404,7 +402,7 @@ export class KanbanRecord extends Component {
             context: this.props.record.context,
             JSON,
             luxon,
-            record: this.dataState.record,
+            record: this.record,
             selection_mode: this.props.forceGlobalClick,
             widget: this.dataState.widget,
             __comp__: Object.assign(Object.create(this), { this: this }),
