@@ -287,7 +287,8 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                     'ItemWord': 'Units',
                     'ItemPrice': 1000.0,
                     'ItemTaxType': '1',
-                    'ItemAmount': 1000.0
+                    'ItemAmount': 1000.0,
+                    'ItemRemark': "商品單位: Units"
                 },
                 {
                     'ItemSeq': 2,
@@ -296,7 +297,8 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                     'ItemWord': False,
                     'ItemPrice': -10.0,
                     'ItemTaxType': '1',
-                    'ItemAmount': -10.0
+                    'ItemAmount': -10.0,
+                    'ItemRemark': ""
                 },
             ],
         )
