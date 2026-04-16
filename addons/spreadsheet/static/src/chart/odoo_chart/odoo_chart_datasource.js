@@ -15,7 +15,7 @@ const { CHART_TYPES } = constants;
 const EXCLUDED_CHART_TYPES = ["scorecard", "gauge", "calendar"];
 
 function generateDataSetId(dataSource, dataSet) {
-    const identifiers = JSON.parse([...dataSet.identifiers][0]);
+    const identifiers = JSON.parse([...dataSet.identifiers][0] ?? "[]");
     const mainAxis = dataSource.metaData.groupBy[0];
     const dataSetId = identifiers
         .slice(1) // first groupBy is the horizontal axis

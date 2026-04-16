@@ -1265,6 +1265,39 @@ test("See records when clicking on a sunburst chart slice", async () => {
     ]);
 });
 
+test("treemap without any data", async () => {
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [];
+    const { model } = await createSpreadsheetWithChart({
+        type: "treemap",
+        serverData,
+        definition: {
+            type: "treemap",
+            dataSource: {
+                type: "odoo",
+                metaData: {
+                    groupBy: ["date:month", "bar"],
+                    measure: "probability",
+                    order: null,
+                    resModel: "partner",
+                },
+                searchParams: { context: {}, domain: [], groupBy: [], orderBy: [] },
+            },
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect(runtime.chartJsConfig.data).toMatchObject({
+        labels: [],
+        datasets: [{ data: [], tree: [] }],
+    });
+});
+
 test("See records when clicking on a treemap chart item", async () => {
     let lastActionCalled = undefined;
     const fakeActionService = {
