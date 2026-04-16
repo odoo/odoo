@@ -312,6 +312,43 @@ class AccountMove(models.Model):
             items.append(invoice_line_values)
             taxes += taxes_output
             taxes_withheld += tax_withheld_output
+        # Aggregate subtotals and recalculate taxes for these subtotals to avoid rounding mismatches
+        subtotals_taxes = {}
+        for item in taxes:
+            key = (item['tax_record'].l10n_es_edi_facturae_tax_type, item['TaxRate'])
+            if key in subtotals_taxes:
+                subtotals_taxes[key]['TaxableBase']['TotalAmount'] += item['TaxableBase']['TotalAmount']
+                subtotals_taxes[key]['TaxableBase']['EquivalentInEuros'] += item['TaxableBase']['EquivalentInEuros']
+                subtotals_taxes[key]['TaxAmount']['TotalAmount'] += item['TaxAmount']['TotalAmount']
+                subtotals_taxes[key]['TaxAmount']['EquivalentInEuros'] += item['TaxAmount']['EquivalentInEuros']
+            else:
+                subtotals_taxes[key] = item.copy()
+                subtotals_taxes[key]['TaxableBase'] = subtotals_taxes[key]['TaxableBase'].copy()
+                subtotals_taxes[key]['TaxAmount'] = subtotals_taxes[key]['TaxAmount'].copy()
+        for key, value in subtotals_taxes.items():
+            value['TaxAmount']['TotalAmount'] = value['tax_record']._compute_amount(
+                value['TaxableBase']['TotalAmount'], value['TaxableBase']['TotalAmount'])
+            value['TaxAmount']['EquivalentInEuros'] = value['tax_record']._compute_amount(
+                value['TaxableBase']['EquivalentInEuros'], value['TaxableBase']['EquivalentInEuros'])
+        taxes = subtotals_taxes.values()
+        subtotals_taxes_withheld = {}
+        for item in taxes_withheld:
+            key = (item['tax_record'].l10n_es_edi_facturae_tax_type, item['TaxRate'])
+            if key in subtotals_taxes_withheld:
+                subtotals_taxes_withheld[key]['TaxableBase']['TotalAmount'] += item['TaxableBase']['TotalAmount']
+                subtotals_taxes_withheld[key]['TaxableBase']['EquivalentInEuros'] += item['TaxableBase']['EquivalentInEuros']
+                subtotals_taxes_withheld[key]['TaxAmount']['TotalAmount'] += item['TaxAmount']['TotalAmount']
+                subtotals_taxes_withheld[key]['TaxAmount']['EquivalentInEuros'] += item['TaxAmount']['EquivalentInEuros']
+            else:
+                subtotals_taxes_withheld[key] = item.copy()
+                subtotals_taxes_withheld[key]['TaxableBase'] = subtotals_taxes_withheld[key]['TaxableBase'].copy()
+                subtotals_taxes_withheld[key]['TaxAmount'] = subtotals_taxes_withheld[key]['TaxAmount'].copy()
+        for key, value in subtotals_taxes_withheld.items():
+            value['TaxAmount']['TotalAmount'] = value['tax_record']._compute_amount(
+                value['TaxableBase']['TotalAmount'], value['TaxableBase']['TotalAmount'])
+            value['TaxAmount']['EquivalentInEuros'] = value['tax_record']._compute_amount(
+                value['TaxableBase']['EquivalentInEuros'], value['TaxableBase']['EquivalentInEuros'])
+        taxes_withheld = subtotals_taxes_withheld.values()
         return items, taxes, taxes_withheld, totals
 
     def _l10n_es_edi_facturae_export_facturae(self):
