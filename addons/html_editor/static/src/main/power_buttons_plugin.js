@@ -223,7 +223,7 @@ export class PowerButtonsPlugin extends Plugin {
                 blockRect.left - (overlayRect.left - referenceRect.left) + placeholderWidth + 30;
             if (
                 newButtonContainerLeft + this.powerButtonsContainer.offsetWidth >
-                editableRect.width
+                editableRect.right + referenceRect.left
             ) {
                 this.powerButtonsContainer
                     .querySelectorAll(".power_button:not(:last-child)")
