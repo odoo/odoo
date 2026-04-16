@@ -32,7 +32,7 @@ class ResConfigSettings(models.TransientModel):
         string="Loss Exchange Rate Account",
         readonly=False,
         check_company=True,
-        domain="[('account_type', '=', 'expense')]")
+        domain="[('account_type', 'in', ('expense', 'expense_other'))]")
     expense_currency_exchange_account_active = fields.Boolean(related='expense_currency_exchange_account_id.active', string="Loss Exchange Rate Account Active")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template = fields.Selection(selection=lambda self: self.env.company._chart_template_selection(), default=lambda self: self.env.company.chart_template)
@@ -174,7 +174,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         related='company_id.account_journal_early_pay_discount_loss_account_id',
         check_company=True,
-        domain="[('account_type', 'in', ('expense', 'income', 'income_other'))]",
+        domain="[('account_type', 'in', ('expense', 'expense_other', 'income', 'income_other'))]",
     )
     account_journal_early_pay_discount_loss_account_active = fields.Boolean(related='account_journal_early_pay_discount_loss_account_id.active', string="Early Discount Loss Account Active")
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(
@@ -184,7 +184,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         check_company=True,
         related='company_id.account_journal_early_pay_discount_gain_account_id',
-        domain="[('account_type', 'in', ('income', 'income_other', 'expense'))]",
+        domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
     )
     account_journal_early_pay_discount_gain_account_active = fields.Boolean(related='account_journal_early_pay_discount_gain_account_id.active', string="Early Discount Gain Account Active")
 
