@@ -38,7 +38,11 @@
             preview="this.preview"
             clampValue.bind="this.clampValue"
             onKeydown.bind="this.onKeydownNumber"
-            selectTextOnFocus="true">
+            selectTextOnFocus="true"
+            min="this.min"
+            max="this.max"
+            step="this.props.step"
+        >
             <span class="o-hb-input-field-unit" t-out="this.props.unit"/>
         </BuilderNumberInputBase>
     </BuilderComponent>

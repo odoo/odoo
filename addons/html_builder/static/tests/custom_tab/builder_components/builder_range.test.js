@@ -234,6 +234,52 @@ test("should syncronize previews", async () => {
     await expect(".options-container input[type='number']").toHaveProperty("value", 10);
 });
 
+test("number input should have the same min, max and step as the range input", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.textContent;
+            }
+            apply({ editingElement, value }) {
+                expect.step(`customAction ${value}`);
+                editingElement.textContent = value;
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderRange withNumberInput="true" action="'customAction'" min="0" max="5" step="2"/>`,
+    });
+    await setupHTMLBuilder(`
+        <div class="test-options-target">2</div>
+    `);
+
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input[type='number']").keyDown("ArrowUp");
+
+    // Check that step=2
+    expect(".options-container input[type='number']").toHaveProperty("value", 4);
+    expect(":iframe .test-options-target").toHaveInnerHTML("4");
+    expect.verifySteps(["customAction 4"]);
+
+    await contains(".options-container input[type='number']").keyDown("ArrowUp");
+
+    // Check that max=5
+    expect(".options-container input[type='number']").toHaveProperty("value", 5);
+    expect(":iframe .test-options-target").toHaveInnerHTML("5");
+    expect.verifySteps(["customAction 5"]);
+
+    await contains(".options-container input[type='number']").keyDown("ArrowDown");
+    await contains(".options-container input[type='number']").keyDown("ArrowDown");
+    await contains(".options-container input[type='number']").keyDown("ArrowDown");
+
+    // Check that min=0
+    expect(".options-container input[type='number']").toHaveProperty("value", 0);
+    expect(":iframe .test-options-target").toHaveInnerHTML("0");
+    expect.verifySteps(["customAction 3", "customAction 1", "customAction 0"]);
+});
+
 describe("unit & saveUnit", () => {
     test("should handle unit", async () => {
         addBuilderAction({
