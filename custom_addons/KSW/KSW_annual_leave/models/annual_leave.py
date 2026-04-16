@@ -56,7 +56,13 @@ class KswAnnualLeave(models.Model):
         'Only one annual leave record per employee is allowed.',
     )
 
-    @api.depends('employee_id')
+    @api.depends(
+        'employee_id',
+        'employee_id.version_ids.contract_date_start',
+        'employee_id.version_ids.wage',
+        'employee_id.version_ids.date_version',
+        'employee_id.version_ids.active',
+    )
     def _compute_leave_data(self):
         today = fields.Date.context_today(self)
         for rec in self:
@@ -236,3 +242,181 @@ class KswAnnualLeave(models.Model):
         """Daily cron to auto-create missing records and recompute."""
         self.action_generate_all()
 
+    # ------------------------------------------------------------------
+    # FIFO Historical Vacation Value
+    # ------------------------------------------------------------------
+
+    def _get_version_accrual_segments(self, employee, as_of_date=None):
+        """Build per-version accrual segments with wage rates.
+
+        Returns a list of dicts sorted oldest-first::
+
+            [
+                {
+                    'version_id': <id>,
+                    'date_from': <date>,
+                    'date_to': <date>,
+                    'calendar_days': <int>,
+                    'accrual_days': <float>,
+                    'daily_wage': <float>,      # version.wage / 30
+                },
+                ...
+            ]
+
+        The two-tier accrual logic (21/365 for first 1825 calendar days
+        from joining, 30/365 after) is applied across segments in
+        chronological order.
+        """
+        if not as_of_date:
+            as_of_date = fields.Date.context_today(self)
+
+        versions = employee.sudo().version_ids.filtered(
+            lambda v: v.contract_date_start and v.active
+        ).sorted('date_version')
+
+        if not versions:
+            return []
+
+        joining = min(versions.mapped('contract_date_start'))
+        five_years_days = 5 * 365
+
+        segments = []
+        for i, version in enumerate(versions):
+            seg_start = version.date_version
+            if seg_start < joining:
+                seg_start = joining
+
+            # Segment ends the day before the next version starts,
+            # or as_of_date for the last version.
+            if i + 1 < len(versions):
+                next_start = versions[i + 1].date_version
+                seg_end = next_start - relativedelta(days=1)
+            else:
+                seg_end = as_of_date
+
+            if seg_end < seg_start:
+                continue
+
+            cal_days_in_seg = (seg_end - seg_start).days + 1
+
+            # How many calendar days elapsed from joining to the START
+            # of this segment — determines tier-1/tier-2 boundary.
+            days_before_seg = (seg_start - joining).days
+
+            # Tier-1 calendar days within this segment
+            tier1_remaining = max(five_years_days - days_before_seg, 0)
+            tier1_in_seg = min(cal_days_in_seg, tier1_remaining)
+            tier2_in_seg = cal_days_in_seg - tier1_in_seg
+
+            accrual_days = (
+                tier1_in_seg * (21.0 / 365.0)
+                + tier2_in_seg * (30.0 / 365.0)
+            )
+
+            segments.append({
+                'version_id': version.id,
+                'date_from': seg_start,
+                'date_to': seg_end,
+                'calendar_days': cal_days_in_seg,
+                'accrual_days': round(accrual_days, 6),
+                'daily_wage': (version.wage or 0.0) / 30.0,
+            })
+
+        return segments
+
+    @api.model
+    def _compute_historical_vacation_value(self, employee, vacation_days,
+                                           exclude_days=0.0):
+        """Compute the FIFO-weighted vacation balance settlement value.
+
+        Walk through the employee's version history, build accrual
+        segments, deduct previously-taken vacation days FIFO from the
+        oldest segments, then consume ``vacation_days`` FIFO and sum
+        ``segment_days × segment_daily_wage`` for each portion.
+
+        Args:
+            employee: hr.employee record
+            vacation_days: float — number of accrual days to consume
+            exclude_days: float — days to subtract from leaves_taken
+                before FIFO deduction.  Use this when the current leave's
+                days are already included in ``allocation.leaves_taken``
+                (e.g. when recomputing after validation) to avoid
+                double-counting.
+
+        Returns:
+            dict with:
+                'total': float — total monetary value
+                'breakdown': list of (days, daily_wage, amount) tuples
+                'label': str — human-readable breakdown for payslip name
+        """
+        ksw_rec = self.sudo().search([
+            ('employee_id', '=', employee.id),
+        ], limit=1)
+
+        segments = ksw_rec._get_version_accrual_segments(employee) if ksw_rec else []
+
+        if not segments:
+            # Fallback: use current wage
+            daily_wage = (employee.current_version_id.wage or 0.0) / 30.0
+            total = vacation_days * daily_wage
+            return {
+                'total': total,
+                'breakdown': [(vacation_days, daily_wage, total)],
+                'label': '%.2f days × %.2f/day' % (vacation_days, daily_wage),
+            }
+
+        # Get previously taken vacation days (excluding current leave)
+        taken = 0.0
+        if ksw_rec and ksw_rec.allocation_id:
+            taken = ksw_rec.allocation_id.sudo().leaves_taken or 0.0
+        taken = max(taken - exclude_days, 0.0)
+
+        # Deduct previously-taken days FIFO from oldest segments.
+        # Each taken vacation day removes 1 accrual day from the segment.
+        remaining_taken = taken
+        remaining_segments = []
+        for seg in segments:
+            if remaining_taken <= 0:
+                remaining_segments.append(dict(seg))
+                continue
+
+            if remaining_taken >= seg['accrual_days']:
+                remaining_taken -= seg['accrual_days']
+                continue
+            else:
+                leftover = seg['accrual_days'] - remaining_taken
+                remaining_taken = 0
+                new_seg = dict(seg)
+                new_seg['accrual_days'] = round(leftover, 6)
+                remaining_segments.append(new_seg)
+
+        # Now consume vacation_days FIFO from remaining segments
+        to_consume = vacation_days
+        breakdown = []
+        total = 0.0
+
+        for seg in remaining_segments:
+            if to_consume <= 0:
+                break
+
+            days_from_seg = min(to_consume, seg['accrual_days'])
+            amount = days_from_seg * seg['daily_wage']
+            breakdown.append((
+                round(days_from_seg, 4),
+                round(seg['daily_wage'], 2),
+                round(amount, 2),
+            ))
+            total += amount
+            to_consume -= days_from_seg
+
+        # Build label
+        parts = []
+        for days, rate, _amt in breakdown:
+            parts.append('%.2f d × %.2f' % (days, rate))
+        label = ' + '.join(parts) if parts else '0 days'
+
+        return {
+            'total': round(total, 2),
+            'breakdown': breakdown,
+            'label': label,
+        }

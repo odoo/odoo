@@ -11,6 +11,7 @@ from . import test_vacation_monthly_overlap
 from . import test_mid_month_vacation_scenarios
 from . import test_cross_month_vacation
 from . import test_combined_leave
+from . import test_historical_vacation_value
 
 
 

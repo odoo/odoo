@@ -141,6 +141,10 @@ class HrPayslip(models.Model):
         for payslip in self:
             self._check_unresolved_vacation(payslip)
 
+            # Refresh VACATION_BAL on vacation payslips so that contract
+            # date / wage changes are reflected when recomputing.
+            self._refresh_vacation_bal_input(payslip)
+
             # If a vacation return exists, force re-generation of worked
             # days from the return date (not the payslip start).
             return_date = self._get_vacation_return_date(payslip)
@@ -152,6 +156,46 @@ class HrPayslip(models.Model):
 
             self._inject_prior_hra_input(payslip)
         return super().compute_sheet()
+
+    # ------------------------------------------------------------------
+    # Refresh VACATION_BAL input on vacation payslips
+    # ------------------------------------------------------------------
+
+    def _refresh_vacation_bal_input(self, payslip):
+        """Recompute the VACATION_BAL input line on a vacation payslip.
+
+        This ensures that contract-date or wage changes on hr.version
+        are reflected when the payslip is recomputed.  Only applies to
+        vacation payslips (those linked to an annual leave via x_leave_id).
+        """
+        leave = payslip.x_leave_id
+        if not leave:
+            return
+
+        employee = payslip.employee_id
+        if not employee:
+            return
+
+        # Delegate to hr.leave._build_vacation_input_lines which knows
+        # how to determine vacation_days from the leave type/flags.
+        HrLeave = self.env['hr.leave'].sudo()
+        new_vals = HrLeave._build_vacation_input_lines(leave, employee, payslip)
+
+        # Extract the new VACATION_BAL entry
+        new_vac = next((v for v in new_vals if v.get('code') == 'VACATION_BAL'), None)
+
+        # Find the existing VACATION_BAL input line
+        existing_vac = payslip.input_line_ids.filtered(lambda i: i.code == 'VACATION_BAL')
+
+        if new_vac and existing_vac:
+            existing_vac.sudo().write({
+                'name': new_vac['name'],
+                'amount': new_vac['amount'],
+            })
+        elif new_vac and not existing_vac:
+            self.env['hr.payslip.input'].sudo().create(new_vac)
+        elif not new_vac and existing_vac:
+            existing_vac.sudo().unlink()
 
     # ------------------------------------------------------------------
     # Prevent double-payment of HRA across multiple payslips in a month

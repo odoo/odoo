@@ -117,30 +117,31 @@ class HrLeave(models.Model):
         vals_list = []
         version_id = payslip.version_id.id
 
-        # 1. Vacation Balance Settlement
-        daily_wage = (employee.current_version_id.wage or 0.0) / 30.0
-
+        # 1. Vacation Balance Settlement (FIFO historical wage slicing)
         if leave.x_is_full_clearance:
-            # Full clearance → consume the entire remaining balance
             vacation_days = self._get_remaining_balance(leave)
-            label = 'Vacation Balance Settlement — Full Clearance'
+            label_prefix = 'Vacation Balance Settlement — Full Clearance'
         elif leave.x_excess_days_accepted and leave.x_annual_portion_days > 0:
-            # Combined leave → only the annual portion settles
             vacation_days = leave.x_annual_portion_days
-            label = 'Vacation Balance Settlement — Annual Portion'
+            label_prefix = 'Vacation Balance Settlement — Annual Portion'
         else:
-            # Normal vacation → calendar days from request dates
             vacation_days, _hours = self._annual_cal_days(leave)
-            label = 'Vacation Balance Settlement'
+            label_prefix = 'Vacation Balance Settlement'
 
-        vacation_balance_value = vacation_days * daily_wage
+        AnnualLeave = self.env['ksw.annual.leave']
+        # If the leave is already validated, its days are included in
+        # allocation.leaves_taken.  Pass them as exclude_days so the
+        # FIFO calculation doesn't double-count them.
+        exclude = leave.number_of_days if leave.state == 'validate' else 0.0
+        vac_result = AnnualLeave._compute_historical_vacation_value(
+            employee, vacation_days, exclude_days=exclude)
+        vacation_balance_value = vac_result['total']
 
         if vacation_balance_value > 0:
             vals_list.append({
                 'payslip_id': payslip.id,
                 'version_id': version_id,
-                'name': '%s (%.2f days × %.2f/day)' % (
-                    label, vacation_days, daily_wage),
+                'name': '%s (%s)' % (label_prefix, vac_result['label']),
                 'code': 'VACATION_BAL',
                 'amount': vacation_balance_value,
             })
