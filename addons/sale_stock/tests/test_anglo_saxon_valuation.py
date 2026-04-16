@@ -1194,16 +1194,16 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         amls = reverse_invoice.line_ids
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
-        self.assertEqual(stock_out_aml.debit, 30, 'Should be to the value of the returned product')
+        self.assertEqual(stock_out_aml.debit, 20, 'Should be to the value of the returned product')
         self.assertEqual(stock_out_aml.credit, 0)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
         self.assertEqual(cogs_aml.debit, 0)
-        self.assertEqual(cogs_aml.credit, 30, 'Should be to the value of the returned product')
+        self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned product')
 
         closing_move = self._close()
         self.assertRecordValues(closing_move.line_ids, [
-            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 180.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 180.0, 'credit': 0.0},
+            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 190.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 190.0, 'credit': 0.0},
         ])
 
     def test_fifo_return_and_create_invoice(self):
@@ -1563,6 +1563,45 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertRecordValues(cogs_aml, [
             {'account_id': self.account_stock_valuation.id, 'debit': 90.0, 'credit': 0.0},
             {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 90.0},
+        ])
+
+    def test_avco_credit_note_same_unit_price(self):
+        """ Check that when a credit note is created from the sale order for an avco product,
+        the unit price for the cogs is the same as on the invoice (same as if the credit not
+        was created from the invoice)
+        """
+        self.product_avco_auto.invoice_policy = 'delivery'
+        # in move to make avco price 10
+        self._make_in_move(self.product_avco_auto, 10, 10)
+
+        # SO + deliver
+        sale_order = self._so_deliver(self.product_avco_auto, 5, 100)
+        sale_order.picking_ids.button_validate()
+
+        # validate invoice
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        cogs_aml = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 50.0},
+            {'account_id': self.account_expense.id, 'debit': 50.0, 'credit': 0.0},
+        ])
+        # in move to make avco price 20
+        self._make_in_move(self.product_avco_auto, 5, 30)
+
+        # Return 1 quantity
+        return_picking = sale_order.picking_ids[0]._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_assign()
+        return_picking.button_validate()
+
+        # create credit note from SO and confirm
+        credit_note = sale_order._create_invoices(final=True)
+        credit_note.action_post()
+        credit_note_cogs_aml = credit_note.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(credit_note_cogs_aml, [
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 10.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 10.0, 'credit': 0.0},
         ])
 
     def test_backorder_cogs_different_uom(self):
