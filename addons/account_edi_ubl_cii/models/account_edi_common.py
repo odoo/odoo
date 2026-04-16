@@ -883,6 +883,7 @@ class AccountEdiCommon(models.AbstractModel):
                 ('amount_type', '=', 'percent'),
                 ('type_tax_use', '=', invoice_line.move_id.journal_id.type),
                 ('amount', '=', amount),
+                ('country_id', '=', invoice_line.move_id.tax_country_id.id),
             ]
 
             tax = False
