@@ -675,9 +675,18 @@ class TestUi(TestPointOfSaleHttpCommon):
         for order in self.env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
 
-        # check if email from FeedbackScreenTour is properly sent
-        email_count = self.env['mail.mail'].search_count([('email_to', '=', 'test@feedbackscreen.com')])
-        self.assertEqual(email_count, 1)
+        with patch.object((self.env.registry['pos.order']), 'order_receipt_generate_image', return_value=b'Receipt'):
+            order = self.env['pos.order'].search([('amount_total', '=', 72.0)])
+            order.action_send_receipt('test1@example.com')
+            message = self.env['mail.message'].search([('model', '=', 'pos.order'), ('res_id', '=', order.id)], limit=1)
+            self.assertEqual(len(message.attachment_ids), 1, "Should have 1 attachment when basic receipt is False")
+
+            message.unlink()
+
+            self.main_pos_config.basic_receipt = True
+            order.action_send_receipt('test2@example.com')
+            message = self.env['mail.message'].search([('model', '=', 'pos.order'), ('res_id', '=', order.id)], limit=1)
+            self.assertEqual(len(message.attachment_ids), 2, "Should have 2 attachments when basic receipt is True")
 
     @skip('Temporary to fast merge new valuation')
     def test_02_pos_with_invoiced(self):
