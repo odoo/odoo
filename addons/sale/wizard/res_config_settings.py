@@ -62,6 +62,9 @@ class ResConfigSettings(models.TransientModel):
     sale_automatic_invoice = fields.Boolean(
         related="company_id.sale_automatic_invoice", readonly=False
     )
+    show_sol_numbers = fields.Boolean(
+        string="Line Numbers", related="company_id.show_sol_numbers", readonly=False
+    )
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")

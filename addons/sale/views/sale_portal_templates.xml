@@ -687,11 +687,17 @@
                 <t t-set="display_discount" t-value="any(line.discount > 0 for line in lines_to_report)"/>
                 <t t-set="hide_taxes_details" t-value="False"/>
                 <t t-set="display_taxes" t-value="not hide_taxes_details and any(line._has_taxes() for line in lines_to_report)"/>
-
+                <t t-if="sale_order.company_id.show_sol_numbers" t-set="line_counter" t-value="1"/>
                 <div name="sol_table" class="table-responsive">
                     <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table" id="sales_order_table">
                         <thead>
                             <tr>
+                                <th
+                                    t-if="line_counter"
+                                    id="line_number_header"
+                                    class="text-start"
+                                    style="width: 1%; white-space: nowrap;">#
+                                </th>
                                 <th class="text-start" id="product_name_header">Description</th>
                                 <th class="text-end" id="product_qty_header">Quantity</th>
                                 <th t-attf-class="text-end text-nowrap {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}" id="product_unit_price_header">
@@ -779,6 +785,14 @@
                                         <!-- Some columns (e.g. Discount and Unit Price)
                                         are not displayed on smaller viewports -->
                                         <td
+                                            t-if="line_counter"
+                                            name="td_section_line_no"
+                                            class="text-start"
+                                        >
+                                            <span t-out="line_counter"/>
+                                            <t t-set="line_counter" t-value="line_counter + 1"/>
+                                        </td>
+                                        <td
                                             name="td_section_name_xs"
                                             t-att-colspan="section_name_colspan - 1 - (1 if display_discount else 0) - (1 if display_taxes else 0)"
                                             class="d-sm-none"
@@ -817,6 +831,14 @@
                                     </tr>
                                     <tr t-elif="is_note" name="tr_note" class="fst-italic o_line_note">
                                         <td
+                                            t-if="line_counter"
+                                            name="td_note_line_no"
+                                            class="text-start fst-normal"
+                                        >
+                                            <span t-out="line_counter"/>
+                                            <t t-set="line_counter" t-value="line_counter + 1"/>
+                                        </td>
+                                        <td
                                             name="td_note_name"
                                             colspan="99"
                                             t-att-style="padding_style"
@@ -825,6 +847,14 @@
                                         </td>
                                     </tr>
                                     <tr t-elif="is_combo" name="tr_combo" class="fw-bold">
+                                        <td
+                                            t-if="line_counter"
+                                            name="td_combo_line_no"
+                                            class="text-start"
+                                        >
+                                            <span t-out="line_counter"/>
+                                            <t t-set="line_counter" t-value="line_counter + 1"/>
+                                        </td>
                                         <td
                                             name="td_combo_name"
                                             t-att-style="padding_style"
@@ -857,6 +887,14 @@
                                         </td>
                                     </tr>
                                     <tr t-else="" name="tr_product">
+                                        <td
+                                            t-if="line_counter"
+                                            name="td_product_line_no"
+                                            class="text-start"
+                                        >
+                                            <span t-out="line_counter"/>
+                                            <t t-set="line_counter" t-value="line_counter + 1"/>
+                                        </td>
                                         <td
                                             name="td_product_name"
                                             t-att-style="padding_style"
@@ -925,6 +963,14 @@
                                         t-as="section_line"
                                         name="tr_section_group"
                                     >
+                                        <td
+                                            t-if="line_counter"
+                                            name="td_section_group_line_no"
+                                            class="text-start"
+                                        >
+                                            <span t-out="line_counter"/>
+                                            <t t-set="line_counter" t-value="line_counter + 1"/>
+                                        </td>
                                         <td name="td_section_group_name" t-att-style="padding_style">
                                             <span t-field="line.name">
                                                 Section Summary

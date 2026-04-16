@@ -385,7 +385,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         const existingClasses = super.getRowClass(record);
         let newClasses = `${existingClasses} o_is_${record.data.display_type}`;
         if (this.props.hideComposition && this.shouldCollapse(record, 'collapse_composition')) {
-            newClasses += " text-muted";
+            newClasses += " text-muted o_hide_composition";
         }
         return newClasses;
     }

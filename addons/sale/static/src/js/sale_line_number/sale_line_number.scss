@@ -1,0 +1,42 @@
+.o_field_widget[name="order_line"] {
+    --LineNumber-width: 29px;
+
+    table tbody {
+        counter-reset: sale_line_counter;
+    }
+
+    .o_data_row:not(.o_hide_composition) .o_line_number::before {
+        content: counter(sale_line_counter);
+        counter-increment: sale_line_counter;
+    }
+
+    &:has(.o_line_number) tr.o_data_row {
+        &.o_is_line_section,
+        &.o_is_line_subsection,
+        &.o_is_line_note {
+            td.o_handle_cell + td {
+                position: relative;
+                padding-left: calc(var(--LineNumber-width) + #{$table-cell-padding-x-sm} * 3);
+            }
+        }
+
+        &.o_is_line_section,
+        &.o_is_line_subsection:not(.o_hide_composition),
+        &.o_is_line_note:not(.o_hide_composition) {
+            td.o_handle_cell + td::before {
+                @include o-position-absolute($top: 0, $left: 0);
+
+                content: counter(sale_line_counter);
+                counter-increment: sale_line_counter;
+
+                width: calc(var(--LineNumber-width) + #{$table-cell-padding-x-sm} * 2);
+                padding: $table-cell-padding-y-sm $table-cell-padding-x-sm;
+                white-space: nowrap;
+                overflow: hidden;
+
+                font-weight: normal !important;
+                font-style: normal !important;
+            }
+        }
+    }
+}

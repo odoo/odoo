@@ -709,6 +709,12 @@
 
                                 <!-- Standard fields -->
                                 <field name="sequence" invisible="combo_item_id" widget="handle"/>
+                                <widget
+                                    name="line_number"
+                                    nolabel="1"
+                                    column_invisible="not parent.show_sol_numbers"
+                                    width="29px"
+                                />
                                 <field
                                     name="product_id"
                                     string="Product Variant"

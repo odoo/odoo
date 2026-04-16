@@ -49,7 +49,7 @@ This module contains all the common features of Sales Management and eCommerce.
         "views/sale_portal_templates.xml",
         "views/utm_campaign_views.xml",
         "views/sale_menus.xml",  # Last because referencing actions defined in previous files,
-        'security/ir.access.csv',
+        "security/ir.access.csv",
     ],
     "demo": ["data/product_demo.xml", "data/sale_demo.xml"],
     "assets": {
@@ -67,6 +67,7 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/src/js/product_template_attribute_line/*",
             "sale/static/src/js/quantity_availability/*",
             "sale/static/src/js/quantity_buttons/*",
+            "sale/static/src/js/sale_line_number/*",
             "sale/static/src/js/sale_order_line_field/*",
             "sale/static/src/js/sale_progressbar_field.js",
             "sale/static/src/js/tours/sale.js",
