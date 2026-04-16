@@ -33,6 +33,7 @@ PAYMENT_METHODS_MAPPING = {
     "pse": "apmgw_PSE",
     "spei": "apmgw_SPEI",
     "webpay": "apmgw_Webpay",
+    "wero": "apmgw_Wero",
 }
 
 # The keys of the values to use in the calculation of the signature.
