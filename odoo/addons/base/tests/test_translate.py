@@ -1756,6 +1756,29 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view1_us.arch_db, xml % ('Soccer', 'Clbus', 'Ranking'))  # "Rakning" should be fixed in en_US
         self.assertEqual(view1_gb.arch_db, xml % ('Football', 'Clubs', 'Rakning'))  # "Rakning" isn't fixed in en_GB
         self.assertEqual(view1_us.arch_db, xml % ('Soccer', 'Clbus', 'Ranking'))  # fr_FR should fall back to en_US
+    
+    def test_delay_translations_update_field_translations(self):
+        archf1 = '<form string="%s"><div>%s</div></form>'
+        terms_en1 = ('Knife', 'Fork')
+        terms_fr1 = ('Couteau', 'Fourchette')
+        view = self.create_view(archf1, terms_en1, fr_FR=terms_fr1)
+
+        archf2 = '<form string="%s"><div>%s</div><div>%s</div></form>'
+        terms_en2 = ('New Knife', 'Fork', 'Spoon')  # first term is modified, second term is kept, third term is added
+        view.with_context(lang='en_US', delay_translations=True).arch_db = archf2 % terms_en2
+
+        self.assertEqual(view.with_context(lang='en_US').arch_db, archf2 % terms_en2)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf1 % terms_fr1)
+        self.assertEqual(view.with_context(lang='fr_FR', check_translations=True).arch_db, archf2 % ('New Knife', 'Fourchette', 'Spoon'))
+
+        view.with_context(lang='en_US', delay_translations=True).update_field_translations(
+            'arch_db',
+            {'fr_FR': {'Spoon': 'Cuiller'}},
+            source_lang='en_US',
+        )
+        self.assertEqual(view.with_context(lang='en_US').arch_db, archf2 % terms_en2)
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf1 % terms_fr1)
+        self.assertEqual(view.with_context(lang='fr_FR', check_translations=True).arch_db, archf2 % ('New Knife', 'Fourchette', 'Cuiller'))
 
 
 class TestXMLDuplicateTranslations(TransactionCase):

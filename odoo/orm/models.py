@@ -3615,10 +3615,6 @@ class BaseModel(metaclass=MetaModel):
             if not old_values:
                 return False
 
-            for lang in translations:
-                # for languages to be updated, use the unconfirmed translated value to replace the language value
-                if f'_{lang}' in old_values:
-                    old_values[lang] = old_values.pop(f'_{lang}')
             translations = {lang: _translations for lang, _translations in translations.items() if _translations}
 
             old_source_lang_value = old_values[next(
@@ -3626,8 +3622,8 @@ class BaseModel(metaclass=MetaModel):
                 for lang in [f'_{source_lang}', source_lang, '_en_US', 'en_US']
                 if lang in old_values)]
             old_values_to_translate = {
-                lang: value
-                for lang, value in old_values.items()
+                lang: old_values.get(f'_{lang}', old_values[lang])
+                for lang in old_values
                 if lang != source_lang and lang in translations
             }
             old_translation_dictionary = field.get_translation_dictionary(old_source_lang_value, old_values_to_translate)
@@ -3647,11 +3643,17 @@ class BaseModel(metaclass=MetaModel):
                     for lang, lang_translations in translations.items()
                 }
 
-            new_values = old_values
+            delay_translations = self.env.context.get('delay_translations')
+            new_values = old_values.copy() if delay_translations else {
+                lang: value
+                for lang, value in old_values.items()
+                if not lang.startswith('_') or not lang[1:] in translations
+            }
             for lang, _translations in translations.items():
                 _old_translations = {src: values[lang] for src, values in old_translation_dictionary.items() if lang in values}
                 _new_translations = {**_old_translations, **_translations}
-                new_values[lang] = field.convert_to_cache(field.translate(_new_translations.get, old_source_lang_value), self)
+                lang_ = '_' + lang if delay_translations and lang in new_values else lang
+                new_values[lang_] = field.convert_to_cache(field.translate(_new_translations.get, old_source_lang_value), self)
             field._update_cache(self.with_context(prefetch_langs=True), new_values, dirty=True)
 
         # the following write is incharge of
