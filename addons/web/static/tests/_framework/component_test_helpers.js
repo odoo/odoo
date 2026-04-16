@@ -11,6 +11,7 @@ import {
     globalValues as defaultGlobalValues,
 } from "@web/env";
 import { getMockEnv, makeMockEnv } from "./env_test_helpers";
+import { patchWithCleanup } from "./patch_test_helpers";
 
 /**
  * @typedef {import("@odoo/hoot").Target} Target
@@ -42,13 +43,19 @@ let hasMainComponent = false;
 //-----------------------------------------------------------------------------
 
 /**
- * @param {App | Component} parent
+ * @param {App | Component} appOrComponent
  * @param {(component: Component) => boolean} predicate
  * @returns {Component | null}
  */
-export function findComponent(parent, predicate) {
-    const rootNode = parent instanceof App ? parent.root : parent.__owl__;
-    const queue = [rootNode, ...Object.values(rootNode.children)];
+export function findComponent(appOrComponent, predicate) {
+    let compNode;
+    if (appOrComponent instanceof App) {
+        const [firstRoot] = appOrComponent.roots;
+        compNode = firstRoot?.node;
+    } else {
+        compNode = appOrComponent.__owl__;
+    }
+    const queue = [compNode, ...Object.values(compNode.children)];
     while (queue.length) {
         const { children, component } = queue.pop();
         if (predicate(component)) {
@@ -169,31 +176,31 @@ export async function mountWithCleanup(ComponentClass, options) {
     return component;
 }
 
-export async function waitUntilIdle(apps = [...App.apps]) {
-    const isOwlIdle = () => apps.every((app) => app.scheduler.tasks.size === 0);
+/**
+ * @param {App | Component} appOrComponent
+ */
+export async function waitUntilIdle(appOrComponent) {
+    function isIdle() {
+        return scheduler.tasks.size === 0;
+    }
 
-    if (isOwlIdle()) {
-        return Promise.resolve();
+    const { scheduler } =
+        appOrComponent instanceof App ? appOrComponent : appOrComponent.__owl__.app;
+
+    if (isIdle()) {
+        return Promise.resolve(true);
     }
 
     return new Promise((resolve) => {
-        function cleanup() {
-            for (const cb of unpatch) {
-                cb();
-            }
-            unpatch = [];
-        }
-        after(cleanup);
-        let unpatch = apps.map((app) =>
-            patch(app.scheduler, {
-                processTasks() {
-                    super.processTasks();
-                    if (isOwlIdle()) {
-                        cleanup();
-                        resolve();
-                    }
-                },
-            })
-        );
+        const unpatch = patchWithCleanup(scheduler, {
+            processTasks() {
+                const result = super.processTasks(...arguments);
+                if (isIdle()) {
+                    unpatch();
+                    resolve(true);
+                }
+                return result;
+            },
+        });
     });
 }
