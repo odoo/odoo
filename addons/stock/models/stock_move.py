@@ -327,6 +327,9 @@ class StockMove(models.Model):
         for move in self:
             move.reference = move.picking_id.name if move.picking_id else move.name
 
+    def _should_count_for_quantity_received(self):
+        return self.location_usage in ('supplier', 'transit')
+
     @api.depends('move_line_ids')
     def _compute_move_lines_count(self):
         for move in self:
