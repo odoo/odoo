@@ -285,6 +285,24 @@ test("all measures should be displayed with a pivot_measures context", async () 
     expect(measures).toEqual(["bouh", "Computed and not stored", "Foo", "Count"]);
 });
 
+test("measures with help text should have a tooltip attribute", async () => {
+    Partner._fields.bouh = fields.Integer({ string: "bouh", aggregator: "sum", help: "bouh help" });
+
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot string="Partners">
+				<field name="bouh" type="measure"/>
+			</pivot>
+			`,
+    });
+
+    await contains("button:contains(Measures)").click();
+    expect(".o-dropdown--menu.o-dropdown--menu.dropdown-menu").toHaveCount(1);
+    expect('.o-dropdown-item:contains("bouh")').toHaveAttribute("data-tooltip", "bouh help");
+});
+
 test("pivot rendering with widget", async () => {
     await mountView({
         type: "pivot",

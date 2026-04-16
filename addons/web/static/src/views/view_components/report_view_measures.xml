@@ -14,6 +14,7 @@
               closingMode="this.props.multiSelect ? 'none' : 'all'"
               t-out="this.props.measures[measure].string"
               onSelected="() => this.props.onMeasureSelected({ measure: measure_value.name })"
+              attrs="{ 'data-tooltip': this.props.measures[measure].help }"
             />
           </t>
         </t>
