@@ -2,6 +2,9 @@
 
 from odoo.http import Controller, request, route
 
+from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website_sale.const import SHOP_PATH
+
 
 class WebsiteSaleVariantController(Controller):
     @route(
@@ -66,7 +69,11 @@ class WebsiteSaleVariantController(Controller):
             all_tags = product.all_product_tag_ids if product else product_template.product_tag_ids
             combination_info["product_tags"] = request.env["ir.ui.view"]._render_template(
                 "website_sale.product_tags",
-                values={"all_product_tags": all_tags.filtered("visible_to_customers")},
+                values={
+                    "all_product_tags": all_tags.filtered("visible_to_customers"),
+                    "keep": QueryURL(SHOP_PATH),
+                    "shop_path": SHOP_PATH,
+                },
             )
 
         combination_info["packaging_selector"] = request.env["ir.ui.view"]._render_template(
