@@ -93,7 +93,7 @@ FIELD_TRANSLATE = {
 
 
 def _get_frame(stack_level: int = 0) -> types.FrameType | None:
-    from odoo.tools.safe_eval import safe_call as wrapper_func  # noqa: PLC0415
+    from odoo.tools.safe_eval.runtime import safe_call as wrapper_func  # noqa: PLC0415
 
     stack_level += 1  # +1 to skip this function
     frame = origin_frame = inspect.currentframe()
@@ -109,6 +109,7 @@ def _get_frame(stack_level: int = 0) -> types.FrameType | None:
         'Impossible to retrieve frame for translation language, skipping translation %s',
         origin_frame, stack_info=True,
     )
+    return None
 
 
 def is_translatable_attrib(key, node):

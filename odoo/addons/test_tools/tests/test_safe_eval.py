@@ -8,16 +8,18 @@ from odoo.tools import mute_logger
 from odoo.tools.misc import OrderedSet
 from odoo.tools.safe_eval import (
     _BUILTINS,
+    const_eval,
+    safe_checker,
+    safe_eval,
+)
+from odoo.tools.safe_eval.runtime import (
     _SafeGenerator,
+    UnsafePolicy,
     UnsafeClassError,
     UnsafeFunctionError,
     UnsafeInstanceError,
     UnsafeModuleError,
-    UnsafePolicy,
-    const_eval,
     safe_call,
-    safe_checker,
-    safe_eval
 )
 
 
@@ -177,7 +179,7 @@ class TestSafeEval(BaseCase):
 
         with (
             self.assertRaises(ValueError),
-            mute_logger('odoo.tools.safe_eval.evaluation.runtime')  # Warning because of `async`
+            mute_logger('odoo.tools.safe_eval.runtime')  # Warning because of `async`
         ):
             # async generator comprehension
             safe_eval("res = tuple(val + 1 async for val in (1, 2))", mode="exec")
@@ -206,7 +208,7 @@ class TestSafeEvalRuntime(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.startClassPatcher(patch(
-            'odoo.tools.safe_eval.evaluation.unsafe_policy',
+            'odoo.tools.safe_eval.runtime.unsafe_policy',
             lambda: UnsafePolicy.RAISE
         ))
 
@@ -291,13 +293,13 @@ class TestSafeEvalRuntime(TransactionCase):
             res = list(func_gen())
         """
         with patch(
-            'odoo.tools.safe_eval.evaluation.safe_call',
+            'odoo.tools.safe_eval.runtime.safe_call',
             wraps=safe_call,
         ) as mock_safe_call:
             safe_eval(dedent(expr), {}, mode='exec')
             self.assertEqual(mock_safe_call.call_count, 1)
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_callee(self):
         expr = """
             UnsafeClass()
@@ -305,7 +307,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_args(self):
         expr = """
             callee = lambda *args, **kwargs: ...
@@ -314,7 +316,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_kwargs(self):
         expr = """
             callee = lambda *args, **kwargs: ...
@@ -323,7 +325,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_structure(self):
         expr = """
             callee = lambda *args, **kwargs: ...
@@ -341,7 +343,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_builtin_callee(self):
         expr = """
             map(UnsafeClass, ['foo'])
@@ -361,7 +363,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_callee_qweb(self):
         arch = '''
             <t t-name="template">
@@ -390,7 +392,7 @@ class TestSafeEvalRuntime(TransactionCase):
         # because after transformer, the code becomes:
         # `_safe_eval_call = lambda callee, *args, **kwargs: _safe_eval_call(callee, *args, **kwargs)`
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_prevent_bare_except(self):
         expr = """
             try:
@@ -401,7 +403,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaises(SyntaxError):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_prevent_async_function(self):
         expr = """
             async def func(): ...
@@ -409,7 +411,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaises(SyntaxError):
             safe_eval(dedent(expr), {}, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_prevent_async_comprehension(self):
         expr = """
             (x async for x in [0])
@@ -417,7 +419,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaises(SyntaxError):
             safe_eval(dedent(expr), {}, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_prevent_async_for(self):
         expr = """
             async def bar():
@@ -427,7 +429,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaises(SyntaxError):
             safe_eval(dedent(expr), {}, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_01(self):
         # Not listen events for external generator
         expr = """
@@ -442,7 +444,7 @@ class TestSafeEvalRuntime(TransactionCase):
         safe_eval(dedent(expr), safe_ctx, mode='exec')
         list(safe_ctx['g'])
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_02(self):
         # Attempt to use a dangerous object (caught in `safe_call`)
         expr = """
@@ -452,7 +454,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaises(UnsafeClassError):
             list(self.unsafe_context['g'])
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_03(self):
         # Attempt to hide a dangerous object
         expr = """
@@ -467,7 +469,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_04(self):
         # Attempt to alter the generator's context by modifying globals
         expr = """
@@ -483,7 +485,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_05(self):
         # Attempt to alter the generator's context by modifying locals
         expr = """
@@ -500,7 +502,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_06(self):
         # Attempt to alter the generator's context by modifying builtins
         # and shadow them in globals
@@ -523,7 +525,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_07(self):
         # Attempt to escape unsafe context using `StopIteration` (`return`)
         expr = """
@@ -543,7 +545,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_08(self):
         # Attempt to escape unsafe context using exception
         expr = """
@@ -566,7 +568,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_09(self):
         # Attempt to escape unsafe context using exception injection
         expr = """
@@ -589,7 +591,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_10(self):
         # Attempt to escape unsafe context using intermediate yield
         expr = """
@@ -610,7 +612,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_11(self):
         # Attempt to escape unsafe context using exceptions bypass
         expr = """
@@ -634,7 +636,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_12(self):
         # Attempt to escape unsafe context using iterator
         expr = """
@@ -656,7 +658,7 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), safe_ctx, mode='exec')
 
-    @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
+    @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_generator_13(self):
         # Attempt to escape unsafe context without re-call the generator
         expr = """
