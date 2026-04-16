@@ -210,7 +210,7 @@ class ResConfigSettings(models.TransientModel):
                     raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
                 if not hasattr(field, 'implied_group'):
                     raise Exception("Field %s without attribute 'implied_group'" % field)
-                field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
+                field_group_xmlids = getattr(field, 'group', 'base.group_user_lite').split(',')
                 field_groups = Groups.concat(ref(it) for it in field_group_xmlids)
                 groups.append((name, field_groups, ref(field.implied_group)))
             elif name.startswith('module_'):

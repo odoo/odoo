@@ -277,13 +277,13 @@ class TestGroupsOdoo(common.TransactionCase):
 
         user.group_ids = self.env.ref('base.group_user') + self.test_group
 
-        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user', 'base.group_no_one', 'base.group_everyone'})
+        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user_lite', 'base.group_user', 'base.group_no_one', 'base.group_everyone'})
 
         # update res.group implied_ids having the effect that users have distinct groups
         with self.assertRaises(ValidationError, msg="The user cannot have more than one user types."):
             self.test_group.implied_ids += self.env.ref('base.group_public')
 
-        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user', 'base.group_no_one', 'base.group_everyone'})
+        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user_lite', 'base.group_user', 'base.group_no_one', 'base.group_everyone'})
 
         with self.assertRaises(ValidationError, msg="The user cannot have more than one user types."):
             self.env.ref('base.group_public').implied_by_ids = self.test_group
