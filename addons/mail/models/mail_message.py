@@ -518,7 +518,7 @@ class MailMessage(models.Model):
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
             return Domain.TRUE
-        return Domain('is_internal', '=', False) & Domain('subtype_id.internal', '=', False)
+        return Domain('message_type', '!=', 'tracking') & Domain('is_internal', '=', False) & Domain('subtype_id.internal', '=', False)
 
     def _filter_accessible_from_query(self, query: models.Query, operation: str) -> Self:
         """ Return the subset of ``self`` that satisfies the specific conditions
