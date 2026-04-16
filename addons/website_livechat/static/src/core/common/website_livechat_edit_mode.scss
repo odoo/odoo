@@ -5,6 +5,6 @@ body.editor_enable .o-livechat-root {
     }
 }
 
-body:has(.o_website_preview):not(.o_builder_open) .o-mail-ChatHub {
+body:has(.o_website_preview):not(.o_builder_open):not(:has(.oe_seo_configuration)) .o-mail-ChatHub {
     visibility: hidden;
 }
