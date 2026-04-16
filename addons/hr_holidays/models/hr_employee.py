@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 import pytz
 
 from odoo import _, api, fields, models
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 
 class HrEmployee(models.Model):
@@ -142,5 +143,7 @@ class HrEmployee(models.Model):
         ''' Return 24H to handle the case of Fully Flexible (ones without a working calendar)'''
         if not self:
             return 0
+        if self.is_fully_flexible:
+            return 24
         calendars = self._get_calendars(date_from)
-        return calendars[self.id].hours_per_day if calendars[self.id] else 24
+        return calendars[self.id].hours_per_day if calendars[self.id] and calendars[self.id].hours_per_day else HOURS_PER_DAY

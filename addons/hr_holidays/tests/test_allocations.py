@@ -583,3 +583,24 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': '2023-12-25'
         })
         self.assertEqual(1, self.leave_type.allocation_count)
+
+    def test_allocation_hours_display_with_zero_hours_per_day(self):
+        """
+        Test allocation hours for employee with calendar havinhg 0 average hours per day.
+        """
+        with Form(self.calendar_35h) as calendar_form:
+            attendance_count = len(calendar_form.attendance_ids)
+            for index in range(attendance_count):
+                with calendar_form.attendance_ids.edit(index) as attendance:
+                    attendance.date_from = '2025-01-01'
+        self.assertEqual(self.calendar_35h.hours_per_day, 0.0)
+        self.employee.resource_calendar_id = self.calendar_35h
+        self.leave_type.request_unit = 'hour'
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+            'allocation_type': 'regular',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type.id,
+        })
+        self.assertEqual(allocation.number_of_hours_display, 8)
+        allocation.number_of_hours_display = 12
+        self.assertEqual(allocation.number_of_hours_display, 12)
