@@ -233,6 +233,12 @@ class TestReturnPicking(TestStockCommon):
         self.assertListEqual(exchange_picking.move_line_ids.lot_id.ids, [])
         self.assertEqual(exchange_picking.move_ids.display_assign_serial, True)
 
+        # Return 1 unit and backorder, check that the backorder is part of the returns
+        return_picking.move_ids.quantity = 1
+        Form.from_action(self.env, return_picking.button_validate()).save().process()
+        return_backorder = return_picking.backorder_ids
+        self.assertEqual(original_picking.return_ids, return_picking | return_backorder)
+
     def test_product_quantities_in_return_for_exchange(self):
         """ Ensure that on-hand and forecast quantities are correctly computed
         whe doing an exchange on an incoming picking. """
