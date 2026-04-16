@@ -82,4 +82,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_expense_id': 'cuenta505_01',
                 'account_stock_variation_id': 'cuenta501_02',
             },
+            'cuenta153_01_01': {'asset_depreciation_account_id': 'cuenta171_02_01', 'asset_expense_account_id': 'cuenta613_02_01'},
+            'cuenta154_01_01': {'asset_depreciation_account_id': 'cuenta171_03_01', 'asset_expense_account_id': 'cuenta613_03_01'},
+            'cuenta155_01_01': {'asset_depreciation_account_id': 'cuenta171_04_01', 'asset_expense_account_id': 'cuenta613_04_01'},
+            'cuenta156_01_01': {'asset_depreciation_account_id': 'cuenta171_05_01', 'asset_expense_account_id': 'cuenta613_05_01'},
+            'cuenta168_01_01': {'asset_depreciation_account_id': 'cuenta171_16_01', 'asset_expense_account_id': 'cuenta613_16_01'},
+            'cuenta169_01_01': {'asset_depreciation_account_id': 'cuenta171_18_01', 'asset_expense_account_id': 'cuenta613_18_01'},
+            'cuenta170_01_01': {'asset_depreciation_account_id': 'cuenta171_17_01', 'asset_expense_account_id': 'cuenta613_17_01'},
+            'cuenta173_01': {'asset_depreciation_account_id': 'cuenta183_01_01', 'asset_expense_account_id': 'cuenta614_01_01'},
+            'cuenta179_01_01': {'asset_depreciation_account_id': 'cuenta183_07_01', 'asset_expense_account_id': 'cuenta614_07_01'},
         }
