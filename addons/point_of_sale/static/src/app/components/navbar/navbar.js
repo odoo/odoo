@@ -50,7 +50,85 @@ export class Navbar extends Component {
         this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming);
     }
 
+<<<<<<< e262ef9a943c4d551f8ca49a9d6cd0f4204b9865
     openLnaPopup() {
+||||||| 5f4ce8477991b919c8f77466614e4e0ff4c283f6
+    async openLnaPopup() {
+        let localPrinterIp;
+        if (isPrivateIp(this.pos.config.epson_printer_ip)) {
+            localPrinterIp = this.pos.config.epson_printer_ip;
+        }
+        if (!localPrinterIp) {
+            for (const printer of this.pos.config.printer_ids) {
+                if (isPrivateIp(printer.epson_printer_ip)) {
+                    localPrinterIp = printer.epson_printer_ip;
+                }
+            }
+        }
+        if (localPrinterIp) {
+            try {
+                const protocol = "http:";
+                const url = protocol + "//" + localPrinterIp;
+                this.address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
+                const params = {
+                    method: "POST",
+                    body: `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                            <s:Body>
+                                <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
+                                    <feed line="1" />
+                                    <text align="center">This is a test receipt&#10;</text>
+                                    <feed line="3" />
+                                    <cut type="feed" />
+                                </epos-print>
+                            </s:Body>
+                        </s:Envelope>`,
+                    signal: AbortSignal.timeout(15000),
+                };
+                await fetch(this.address, params);
+                return;
+            } catch {
+                console.error("Could not connect to printer");
+            }
+        }
+=======
+    async openLnaPopup() {
+        let localPrinterIp;
+        const printerIds = new Set([
+            ...this.pos.config.receipt_printer_ids,
+            ...this.pos.config.preparation_printer_ids,
+        ]);
+        for (const printer of printerIds) {
+            if (isPrivateIp(printer.epson_printer_ip)) {
+                localPrinterIp = printer.epson_printer_ip;
+                break;
+            }
+        }
+        if (localPrinterIp) {
+            try {
+                const protocol = "http:";
+                const url = protocol + "//" + localPrinterIp;
+                this.address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
+                const params = {
+                    method: "POST",
+                    body: `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                            <s:Body>
+                                <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
+                                    <feed line="1" />
+                                    <text align="center">This is a test receipt&#10;</text>
+                                    <feed line="3" />
+                                    <cut type="feed" />
+                                </epos-print>
+                            </s:Body>
+                        </s:Envelope>`,
+                    signal: AbortSignal.timeout(15000),
+                };
+                await fetch(this.address, params);
+                return;
+            } catch {
+                console.error("Could not connect to printer");
+            }
+        }
+>>>>>>> d9378f6161bc7ca60e00b32d5e6cc7d6e92920b2
         this.dialog.add(AlertDialog, {
             title: _t("LNA Permission status"),
             body: this.pos.lnaState.message,
