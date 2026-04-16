@@ -6,20 +6,28 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="sale_project.view_edit_project_inherit_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_view_tasks']" position="before">
+            <xpath expr="//button[@name='action_real_margin']" position="before">
                 <t groups="sales_team.group_sale_salesman_all_leads">
-                    <button class="oe_stat_button" name="action_projected_margin" type="object" groups="project.group_project_manager" context="{'active_id': id}" invisible="is_template or not allow_billable">
-                        <i class="fa fa-fw o_button_icon fa-dollar text-success" invisible="projected_margin &lt; 0" title="On Track"/>
-                        <i class="fa fa-fw o_button_icon fa-dollar text-danger" invisible="projected_margin &gt;= 0" title="Off Track"/>
-                        <div class="o_stat_info">
-                            <span class="o_stat_text">Projected Margin</span>
-                            <field name="currency_id" invisible="1"/> <!-- Needed for widget bellow-->
-                            <field name="projected_margin" class="o_stat_value" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                        </div>
+                    <button name="action_estimated_margin"
+                        type="object"
+                        invisible="is_template or not allow_billable"
+                        groups="project.group_project_manager"
+                        class="oe_stat_button">
+                        <field name="estimated_cost" invisible="1"/> <!-- Used for `estimated_cost_ratio` costs_percentpie cost_field_name -->
+                        <field name="estimated_cost_ratio" widget="costs_percentpie" string="Estimated Costs" cost_field_name="estimated_cost"/>
                     </button>
                 </t>
             </xpath>
         </field>
+    </record>
+
+    <record id="project_embedded_action_project_projected_margin" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">135</field>
+        <field name="name">Estimated Margin</field>
+        <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]"/>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_estimated_margin</field>
     </record>
 
 </odoo>

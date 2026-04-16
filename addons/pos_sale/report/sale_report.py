@@ -36,27 +36,21 @@ class SaleReport(models.Model):
             CASE WHEN pos.account_move IS NULL THEN SUM(l.qty) ELSE 0 END AS qty_to_invoice,
             AVG(l.price_unit)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('account_currency_table.rate')}
             AS price_unit,
             SUM(SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal_incl))
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('account_currency_table.rate')}
             AS price_total,
             SUM(SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal))
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('account_currency_table.rate')}
             AS price_subtotal,
             (CASE WHEN pos.account_move IS NULL THEN SUM(l.price_subtotal) ELSE 0 END)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('account_currency_table.rate')}
             AS amount_to_invoice,
             (CASE WHEN pos.account_move IS NOT NULL THEN SUM(l.price_subtotal) ELSE 0 END)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('account_currency_table.rate')}
             AS amount_invoiced,
             (CASE WHEN pos.account_move IS NOT NULL THEN SUM(l.price_unit * l.qty_delivered) ELSE 0 END)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('account_currency_table.rate')}
             AS untaxed_delivered_amount,
             count(*) AS nbr,
             pos.name AS name,
@@ -83,8 +77,7 @@ class SaleReport(models.Model):
             (SUM(p.volume) * l.qty) AS volume,
             l.discount AS discount,
             SUM((l.price_unit * l.discount * l.qty / 100.0
-                / {self._case_value_or_one('pos.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}))
+                / {self._case_value_or_one('pos.currency_rate')}))
             AS discount_amount,
             {self.env.company.currency_id.id} AS currency_id,
             concat('pos.order', ',', pos.id) AS order_reference"""

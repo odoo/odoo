@@ -84,43 +84,29 @@ class ProjectProject(models.Model):
     @api.depends('allow_timesheets', 'total_timesheet_time', 'allocated_hours', 'timesheet_encode_uom_id')
     def _compute_timesheet_stat_values(self):
         for project in self:
-            if not project.allow_timesheets or not self.env.user.has_group("hr_timesheet.group_hr_timesheet_user"):
-                project.stat_timesheet_value = False
-                project.stat_extra_time_value = False
-                project.stat_success_rate = False
-                continue
             encode_uom = project.timesheet_encode_uom_id
             uom_ratio = self.env.ref('uom.product_uom_hour').factor / encode_uom.factor
-
-            allocated = project.allocated_hours * uom_ratio
-            effective = project.total_timesheet_time
 
             stat_timesheet_value = False
             stat_extra_time_value = False
             success_rate = False
+
+            allocated = project.allocated_hours * uom_ratio
+            effective = project.total_timesheet_time
             if allocated:
-                stat_timesheet_value = f"{round(effective)} / {round(allocated)} {encode_uom.name}"
                 success_rate = round(100 * effective / allocated)
-                if success_rate > 100:
-                    stat_timesheet_value = self.env._(
+                stat_timesheet_value = self.env._(
                         "%(effective)s / %(allocated)s %(uom_name)s",
                         effective=round(effective),
                         allocated=round(allocated),
                         uom_name=encode_uom.name,
                     )
+                if success_rate > 100:
                     stat_extra_time_value = self.env._(
                         "%(exceeding_hours)s %(uom_name)s (+%(exceeding_rate)s%%)",
                         exceeding_hours=round(effective - allocated),
                         uom_name=encode_uom.name,
                         exceeding_rate=round(100 * (effective - allocated) / allocated),
-                    )
-                else:
-                    stat_timesheet_value = self.env._(
-                        "%(effective)s / %(allocated)s %(uom_name)s (%(success_rate)s%%)",
-                        effective=round(effective),
-                        allocated=round(allocated),
-                        uom_name=encode_uom.name,
-                        success_rate=success_rate,
                     )
             else:
                 stat_timesheet_value = self.env._(

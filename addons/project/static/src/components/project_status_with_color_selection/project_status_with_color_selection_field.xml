@@ -5,8 +5,7 @@
         <xpath expr="//t[@t-if='this.props.readonly']/span" position="replace">
             <div class="d-flex align-items-center">
                 <span t-if="!this.props.hideIcon" t-attf-class="o_status {{ this.statusColor(this.currentValue) }} d-inline-block"/>
-                <div class="ps-2">
-                    <div class="o_stat_text" t-if="this.props.statusLabel" t-out="this.props.statusLabel"/>
+                <div t-attf-class="ps-{{ this.props.initialPadding }}">
                     <div class="o_stat_value" t-if="!this.props.hideValue" t-out="this.string" t-att-raw-value="this.value"/>
                 </div>
             </div>

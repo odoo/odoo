@@ -57,27 +57,6 @@
                     class="oe_stat_button"
                     type="object"
                     name="action_view_sos"
-                    icon="fa-dollar"
-                    invisible="not display_sales_stat_buttons or sale_order_count == 0 or is_template"
-                    groups="sales_team.group_sale_salesman_all_leads"
-                    context="{
-                        'create_for_project_id': id,
-                        'default_project_id': id,
-                        'default_partner_id': partner_id
-                    }">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="sale_order_count" nolabel="1"/>
-                        </span>
-                        <span class="o_stat_text">
-                            Sales Orders
-                        </span>
-                    </div>
-                </button>
-                <button
-                    class="oe_stat_button"
-                    type="object"
-                    name="action_view_sos"
                     icon="fa-id-card-o"
                     invisible="not display_sales_stat_buttons or sale_order_count != 0 or is_template"
                     groups="sales_team.group_sale_salesman_all_leads"
@@ -105,14 +84,35 @@
                 </button>
             </xpath>
             <xpath expr="//button[@name='action_view_tasks']" position="before">
-                <button class="oe_stat_button" name="action_actual_margin" type="object" groups="project.group_project_manager" context="{'active_id': id}" invisible="is_template or not allow_billable">
-                    <i class="fa fa-fw o_button_icon fa-dollar text-success" invisible="actual_margin &lt; 0" title="On Track"/>
-                    <i class="fa fa-fw o_button_icon fa-dollar text-danger" invisible="actual_margin &gt;= 0" title="Off Track"/>
-                    <div class="o_stat_info">
-                        <span class="o_stat_text">Actual Margin</span>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="actual_margin" class="o_stat_value" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <button
+                    class="oe_stat_button"
+                    type="object"
+                    name="action_view_sos"
+                    icon="fa-money"
+                    invisible="not display_sales_stat_buttons or sale_order_count == 0 or is_template"
+                    groups="sales_team.group_sale_salesman_all_leads"
+                    context="{
+                        'create_for_project_id': id,
+                        'default_project_id': id,
+                        'default_partner_id': partner_id,
+                    }">
+                    <div class="o_stat_info d-flex flex-column">
+                        <span class="o_stat_text">
+                            <field name="sale_order_count" nolabel="1" class="d-inline"/> Sales
+                        </span>
+                        <span class="o_stat_value">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="sale_order_amount_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </span>
                     </div>
+                </button>
+                <button name="action_real_margin"
+                    type="object"
+                    invisible="is_template or not allow_billable"
+                    groups="project.group_project_manager"
+                    class="oe_stat_button">
+                    <field name="real_cost" invisible="1"/>
+                    <field name="real_cost_ratio" widget="costs_percentpie" string="Real Costs" cost_field_name="real_cost"/>
                 </button>
             </xpath>
             <xpath expr="//button[@name='action_project_task_burndown_chart_report']" position="after">
@@ -167,6 +167,15 @@
                 <field name="sale_order_state" invisible="1"/>
             </xpath>
         </field>
+    </record>
+
+    <record id="project_embedded_action_project_actual_margin" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">132</field>
+        <field name="name">Real Margin</field>
+        <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]"/>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_real_margin</field>
     </record>
 
     <record id="view_sale_project_quick_create_task_form" model="ir.ui.view">

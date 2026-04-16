@@ -45,11 +45,18 @@
                             <div class="o_field_widget o_stat_info">
                                 <field class="o_stat_text" name="label_tasks" readonly="1"/>
                                 <span class="o_stat_value">
-                                    <field name="closed_task_count"/><span class="o_field_widget"> / </span><field name="task_count"/> 
+                                    <field name="closed_task_count"/><span class="o_field_widget"> / </span><field name="task_count"/>
                                     <span class="o_field_widget ps-1" invisible="closed_task_count == 0">(</span>
                                     <field name="task_completion_percentage" invisible="closed_task_count == 0" widget="percentage" options="{'digits': [1, 0]}"/>
                                     <span class="o_field_widget" invisible="closed_task_count == 0"> ) </span>
                                 </span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="project_update_all_action" type="object" groups="project.group_project_user" context="{'active_id': id}" invisible="is_template">
+                            <field name="last_update_status" readonly="1" class="ps-md-1" widget="status_with_color" hide_value="1"/>
+                            <div class="o_stat_info flex-column">
+                                <span class="o_stat_text">Status</span>
+                                <field name="last_update_status" class="o_stat_value" readonly="1" widget="status_with_color" hide_icon="1" initial_padding="0"/>
                             </div>
                         </button>
                         <button class="oe_stat_button" name="action_get_list_view" type="object" groups="project.group_project_milestone" invisible="not allow_milestones or milestone_count &lt;= 0 or is_template">
@@ -59,23 +66,18 @@
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Milestones</span>
                                 <span class="o_stat_value">
-                                    <field name="milestone_count_reached"/><span class="o_field_widget"> / </span><field name="milestone_count"/>  
-                                       <span class="o_field_widget ps-1">(</span>
-                                       <field name="milestone_progress" options="{'digits': [1, 0]}"/>
-                                       <span class="o_field_widget">%)</span>
+                                    <field name="milestone_count_reached"/><span class="o_field_widget"> / </span><field name="milestone_count"/>
+                                    <span class="o_field_widget ps-1">(</span>
+                                    <field name="milestone_progress" options="{'digits': [1, 0]}"/>
+                                    <span class="o_field_widget">%)</span>
                                 </span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="project_update_all_action" type="object" groups="project.group_project_user" context="{'active_id': id}" invisible="is_template">
-                            <field name="last_update_status" class="o_stat_info ps-1" readonly="1" status_label="Status" widget="status_with_color" hide_value="1" hide_icon=""/>
-                            <span class="o_field_widget ps-1">(</span>
-                            <field name="last_update_status" class="o_stat_info" readonly="1" widget="status_with_color" hide_value="" hide_icon="1"/>
-                            <span class="o_field_widget ps-2">)</span>
-                        </button>
                         <button class="oe_stat_button" type="object" name="action_project_task_burndown_chart_report"
                             icon="fa-area-chart" groups="project.group_project_user">
-                            <div class="o_stat_info">
-                                <span class="o_stat_text">Burndown<br/> Chart</span>
+                            <div class="o_stat_info flex-row flex-md-column">
+                                <span class="o_stat_text">Burndown</span>
+                                <span class="o_stat_text">Chart</span>
                             </div>
                         </button>
                         <button name="action_view_all_rating" type="object" class="oe_stat_button" icon="" invisible="rating_count == 0">
@@ -92,33 +94,35 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <widget name="web_ribbon" title="Template" bg_color="text-bg-info" invisible="not (is_template and active)"/>
-                    <div class="oe_title">
-                        <label for="name" string="Project name" class="d-md-none"/>
-                        <h1 class="o_outlined d-flex align-items-center gap-2">
-                            <field name="is_favorite" nolabel="1" widget="project_is_favorite" options="{'autosave': False}"/>
-                            <field name="name" options="{'line_breaks': False}" widget="text" class="o_text_overflow" placeholder="e.g. Office Party"/>
-                        </h1>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="oe_title flex-grow-1 ms-md-3">
+                            <label for="name" string="Project name" class="d-md-none"/>
+                            <h1 class="o_outlined">
+                                <field name="name" options="{'line_breaks': False}" widget="text" class="o_text_overflow" placeholder="e.g. Office Party"/>
+                            </h1>
+                        </div>
+                        <field name="is_favorite" nolabel="1" widget="project_is_favorite" class="ms-2" style="--Favorite-font-size: 2rem;" options="{'autosave': False}"/>
                     </div>
                     <group>
                         <group>
                             <label for="partner_id" class="d-md-none"/>
                             <div class="d-flex align-items-baseline">
-                                <i class="d-none d-md-inline fa fa-user me-2" title="Customer" name="partner_id"/>
+                                <i class="d-none d-md-inline fa fa-fw fa-user me-2" title="Customer" name="partner_id"/>
                                 <field name="partner_id" nolabel="1" widget="res_partner_many2one" placeholder="Select Customer" context="{'show_address': True}"/>
                             </div>
                             <label for="partner_phone" class="d-md-none" invisible="not partner_phone"/>
                             <div class="d-flex align-items-baseline" invisible="not partner_phone">
-                                <i class="d-none d-md-inline fa fa-user me-2 fa fa-phone" title="Phone"/>
+                                <i class="d-none d-md-inline fa fa-fw fa-user me-2 fa fa-phone" title="Phone"/>
                                 <field name="partner_phone" nolabel="1" widget="phone"/>
                             </div>
                             <label for="partner_email" class="d-md-none" invisible="not partner_email"/>
                             <div class="d-flex align-items-baseline" invisible="not partner_email">
-                                <i class="d-none d-md-inline fa fa-user me-2 fa fa-envelope" title="Email"/>
+                                <i class="d-none d-md-inline fa fa-fw fa-user me-2 fa fa-envelope" title="Email"/>
                                 <field name="partner_email" nolabel="1" widget="email"/>
                             </div>
                             <label for="tag_ids" class="d-md-none"/>
                             <div class="d-flex align-items-baseline">
-                                <i class="d-none d-md-inline fa fa-user me-2 fa fa-tag" title="Tags"/>
+                                <i class="d-none d-md-inline fa fa-fw fa-user me-2 fa fa-tag" title="Tags"/>
                                 <field name="tag_ids" nolabel="1" widget="many2many_tags" placeholder="Select Tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             </div>
                         </group>

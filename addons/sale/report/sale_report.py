@@ -129,32 +129,26 @@ class SaleReport(models.Model):
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_to_invoice * u.factor / u2.factor) ELSE 0 END AS qty_to_invoice,
             CASE WHEN l.product_id IS NOT NULL THEN AVG(l.price_unit
                 / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS price_unit,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_total
                 / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS price_total,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_subtotal
                 / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS price_subtotal,
             CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM(l.untaxed_amount_to_invoice
                 / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS untaxed_amount_to_invoice,
             CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM(l.untaxed_amount_invoiced
                 / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS untaxed_amount_invoiced,
             CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM((l.price_unit * l.qty_delivered)
                 / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS untaxed_delivered_amount,
             COUNT(*) AS nbr,
@@ -183,7 +177,6 @@ class SaleReport(models.Model):
             l.discount AS discount,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_unit * l.product_uom_qty * l.discount / 100.0
                 / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
                 ) ELSE 0
             END AS discount_amount,
             {self.env.company.currency_id.id} AS currency_id,

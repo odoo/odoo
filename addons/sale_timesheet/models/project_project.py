@@ -166,6 +166,7 @@ class ProjectProject(models.Model):
         non_billable_projects = self - billable_projects
         non_billable_projects.sale_order_line_count = 0
         non_billable_projects.sale_order_count = 0
+        non_billable_projects.sale_order_amount_total = 0
 
     @api.depends('allow_billable', 'allow_timesheets')
     def _compute_billing_type(self):

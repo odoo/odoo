@@ -37,6 +37,7 @@ class ProjectProject(models.Model):
     has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice', export_string_translation=False)
     sale_order_line_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman', export_string_translation=False)
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman', export_string_translation=False)
+    sale_order_amount_total = fields.Monetary(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman', export_string_translation=False)
     has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice', export_string_translation=False)
     invoice_count = fields.Integer(compute='_compute_invoice_count', groups='account.group_account_readonly', export_string_translation=False)
     vendor_bill_count = fields.Integer(related='account_id.vendor_bill_count', groups='account.group_account_readonly', compute_sudo=False, export_string_translation=False)
@@ -46,7 +47,8 @@ class ProjectProject(models.Model):
     reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="['|', ('partner_id', '=', partner_id), ('partner_id.commercial_partner_id.id', 'parent_of', partner_id)]", index='btree_not_null',
         help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
     )
-    actual_margin = fields.Monetary(compute='_compute_actual_margin', export_string_translation=False)
+    real_cost = fields.Monetary(compute='_compute_real_cost', export_string_translation=False)
+    real_cost_ratio = fields.Float(compute='_compute_real_cost', export_string_translation=False)
 
     @api.model
     def default_get(self, fields):
@@ -127,7 +129,9 @@ class ProjectProject(models.Model):
             project.sale_order_line_count = len(sale_order_lines)
 
             # Use sudo to avoid AccessErrors when the SOLs belong to different companies.
-            project.sale_order_count = len(sale_order_lines.sudo().order_id or project.reinvoiced_sale_order_id)
+            all_sale_orders = sale_order_lines.sudo().order_id or project.reinvoiced_sale_order_id
+            project.sale_order_count = len(all_sale_orders)
+            project.sale_order_amount_total = sum(all_sale_orders.mapped('amount_total'))
 
     def _compute_invoice_count(self):
         data = self.env['account.move.line']._read_group(
@@ -144,14 +148,21 @@ class ProjectProject(models.Model):
         for project in self:
             project.display_sales_stat_buttons = project.allow_billable and project.partner_id
 
-    def _compute_actual_margin(self):
-        margin_per_account = dict(self.env['account.analytic.line']._read_group(
-            domain=[('account_id', 'in', self.account_id.ids)],
+    def _compute_real_cost(self):
+        cost_per_account = dict(self.env['account.analytic.line']._read_group(
+            domain=[('account_id', 'in', self.account_id.ids), ('amount', '<', 0)],
+            groupby=['account_id'],
+            aggregates=['amount:sum'],
+        ))
+        revenue_per_account = dict(self.env['account.analytic.line']._read_group(
+            domain=[('account_id', 'in', self.account_id.ids), ('amount', '>=', 0)],
             groupby=['account_id'],
             aggregates=['amount:sum'],
         ))
         for project in self:
-            project.actual_margin = margin_per_account.get(project.account_id, 0.0)
+            project.real_cost = abs(cost_per_account.get(project.account_id, 0))
+            total = project.real_cost + revenue_per_account.get(project.account_id, 0)
+            project.real_cost_ratio = 100 * (project.real_cost / total) if total else 0
 
     def action_customer_preview(self):
         self.ensure_one()
@@ -513,9 +524,10 @@ class ProjectProject(models.Model):
             'from_sale_order_action',
         ]
 
-    def action_actual_margin(self):
+    def action_real_margin(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('sale_project.action_analytic_reporting_inherit_sale_project')
-        action['display_name'] = self.env._("%(name)s's Actual Margins", name=self.name)
+        action['views'] = [(self.env.ref('sale_project.view_account_analytic_line_inherit_sale_project_pivot_single').id, 'pivot')]
+        action['display_name'] = self.env._("%(name)s's Real Margins", name=self.name)
         action['domain'] = [('account_id', 'in', self.account_id.ids)]
         return action

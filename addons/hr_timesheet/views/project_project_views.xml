@@ -42,13 +42,18 @@
                     </setting>
                 </xpath>
                 <xpath expr="//button[@name='project_update_all_action']" position="after">
-                    <button name="action_project_timesheets" type="object" class="oe_stat_button" icon="" groups="hr_timesheet.group_hr_timesheet_user" invisible="not allow_timesheets">
-                        <i class="fa fa-fw o_button_icon fa-clock-o" title="Timesheets" invisible="stat_success_rate"/>
-                        <i class="fa fa-fw o_button_icon fa-clock-o text-success" title="On Due" invisible="not stat_success_rate or stat_success_rate &gt;= 80"/>
-                        <i class="fa fa-fw o_button_icon fa-clock-o text-warning" title="Warning" invisible="not stat_success_rate or stat_success_rate &gt; 100 or stat_success_rate &lt; 80"/>
-                        <i class="fa fa-fw o_button_icon fa-clock-o text-danger" title="Over Due" invisible="not stat_success_rate or stat_success_rate &lt;= 100"/>
-                        <field string="Timesheets" name="stat_timesheet_value" widget="statinfo"/>
-                    </button>
+                    <t groups="hr_timesheet.group_hr_timesheet_user">
+                        <button name="action_project_timesheets" type="object" class="oe_stat_button" icon="" invisible="not allow_timesheets">
+                            <i class="fa fa-fw o_button_icon fa-clock-o" title="Timesheets" invisible="stat_success_rate"/>
+                            <i class="fa fa-fw o_button_icon fa-clock-o text-success" title="On Due" invisible="not stat_success_rate or stat_success_rate &gt;= 80"/>
+                            <i class="fa fa-fw o_button_icon fa-clock-o text-warning" title="Warning" invisible="not stat_success_rate or stat_success_rate &gt; 100 or stat_success_rate &lt; 80"/>
+                            <i class="fa fa-fw o_button_icon fa-clock-o text-danger" title="Over Due" invisible="not stat_success_rate or stat_success_rate &lt;= 100"/>
+                            <div class="o_stat_info flex-column">
+                                <span class="o_stat_text">Timesheets</span>
+                                <field class="o_stat_value" name="stat_timesheet_value"/>
+                            </div>
+                        </button>
+                    </t>
                     <button class="oe_stat_button" type="object" name="action_project_timesheets" icon="fa-warning text-danger"
                         groups="hr_timesheet.group_hr_timesheet_user" invisible="not allow_timesheets or stat_success_rate &lt;= 100">
                         <field string="Extra Time" name="stat_extra_time_value" widget="statinfo"/>
