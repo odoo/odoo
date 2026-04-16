@@ -416,7 +416,8 @@ class Domain:
     def validate(self, model: BaseModel) -> None:
         """Validates that the current domain is correct or raises an exception"""
         # just execute the optimization code that goes through all the fields
-        self._optimize(model, OptimizationLevel.FULL)
+        # the search domain is set to False to avoid performing searches
+        self._optimize(model.with_context(search_domain=Domain.FALSE), OptimizationLevel.FULL)
 
     def _as_predicate[M: BaseModel](self, records: M) -> Callable[[M], bool]:
         """Return a predicate function from the domain (bound to records).
