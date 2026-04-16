@@ -3,16 +3,15 @@
 .o_form_view {
     @include media-breakpoint-down(md) {
         --field-spacing-unit: 8px;
+        --o-box-border-size: 1px;
 
         %-o-field-box {
             border-radius: calc(.5 * var(--field-spacing-unit));
-            border: 1px solid var(--o-input-border-color);
-            outline: 1px solid transparent;
+            border: var(--o-box-border-size) solid var(--o-input-border-color);
             padding: var(--field-spacing-unit) calc(1.5 * var(--field-spacing-unit));
 
             &:focus-within {
                 @include print-variable(o-input-border-color, $o-action);
-                outline: 1px solid var(--o-input-border-color);
             }
 
             .o_input {
@@ -24,7 +23,7 @@
             }
 
             &:has(.o_required_modifier:not(.o_readonly_modifier)) {
-                border: 2px solid var(--o-input-border-color);
+                --o-box-border-size: 2px;
             }
 
             &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
@@ -97,6 +96,10 @@
 
                 .o_form_label {
                     @extend %-o-field-label;
+                }
+
+                &:has(+ * .o_required_modifier:not(.o_readonly_modifier)) {
+                    --o-box-border-size: 2px;
                 }
 
                 &:has(+ *:focus-within) .o_form_label {
