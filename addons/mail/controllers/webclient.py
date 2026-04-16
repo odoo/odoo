@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 
+from odoo.fields import Domain
 from odoo.http import request
 
 from odoo.addons.mail.controllers.thread import ThreadController
+from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.store_handler import store_handler
 
@@ -121,18 +123,35 @@ class WebclientController(ThreadController):
             lost.sudo().unlink()  # no unlink right except admin, ok to remove as lost anyway
         store.add(valid.mail_message_id, "_store_notification_fields")
 
-    @store_handler("/mail/thread/messages", audience="logged_in", readonly=False)
-    def store_get_thread_messages(self, store: Store, thread_model, thread_id, fetch_params=None):
+    @store_handler("/mail/thread/messages", audience="everyone", readonly=False)
+    def store_get_thread_messages(
+        self,
+        store: Store,
+        thread_model,
+        thread_id,
+        fetch_params=None,
+        access_params=None,
+    ):
         request.update_context(add_chatter_fields=True)
         if thread := self._get_thread_with_access(
             thread_model,
             thread_id,
             mode="read",
+            **(access_params or {}),
         ):
+            domain = Domain.TRUE
+            if not request.env.user._is_internal() or not thread.sudo(False).has_access("read"):
+                domain = (
+                    SHARE_DOMAIN
+                    & Domain("message_type", "in", thread._get_customer_portal_message_types())
+                    & ~request.env["mail.message"]._get_empty_domain()
+                )
             messages = self._resolve_messages(
                 store,
+                domain=domain,
                 thread=thread,
                 fetch_params=fetch_params,
+                sudo=thread.env.su,
             )
             if not request.env.user._is_public():
                 messages.set_message_done()
