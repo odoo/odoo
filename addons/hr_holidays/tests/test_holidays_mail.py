@@ -1,16 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from datetime import date
+from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
+from odoo import fields
 from odoo.tools import mute_logger
 
 from .common import TestHrHolidaysCommon
 from odoo.tests import tagged
 
-from odoo.addons.mail.tests.common import MailCase
+from odoo.addons.mail.tests.common import MailCase, MailCommon, freeze_all_time
 
 
 class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
@@ -69,3 +70,44 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
                 admin_emails = self._new_mails.filtered(lambda x: x.partner_ids.employee_ids.id == self.admin_employee.id)
                 self.assertEqual(len(admin_emails), 1, "Mitchell Admin should receive an email")
                 self.assertTrue("has been accepted" in admin_emails.preview)
+
+
+class TestMissedMessagesMail(MailCommon):
+    def test_notify_missed_messages_presence(self):
+        """Test that a partner is considered active if their main user is on leave,
+        and that they are considered inactive when not on leave, based on the presence status."""
+        with freeze_all_time("2026-03-13 18:00:00"):
+            self.env["mail.presence"].sudo().create({
+                "user_id": self.user_employee.id,
+                "last_poll": fields.Datetime.now() - timedelta(days=4),
+                "status": "offline",
+            })
+            work_entry_type = self.env['hr.work.entry.type'].create({
+                'requires_allocation': False,
+                'name': 'Legal Leaves',
+                'code': 'Legal Leaves',
+                'count_as': 'absence',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+            })
+            employee = self.env["hr.employee"].create({
+                "user_id": self.user_employee.id,
+            })
+            leave = self.env["hr.leave"].with_context(leave_skip_state_check=True).create({
+                "request_date_from": fields.Date.today(),
+                "request_date_to": fields.Date.today(),
+                "employee_id": employee.id,
+                "state": "validate",
+                "work_entry_type_id": work_entry_type.id,
+            })
+            self.assertNotIn(
+                self.user_employee.partner_id.id,
+                [p["id"] for p in self.env["res.partner"]._get_inactive_partners_data()],
+                "The employee partner should be considered active due to leave",
+            )
+            leave.unlink()
+            self.assertIn(
+                self.user_employee.partner_id.id,
+                [p["id"] for p in self.env["res.partner"]._get_inactive_partners_data()],
+                "The employee partner should be considered inactive when not on leave",
+            )

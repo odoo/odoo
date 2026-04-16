@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
+import datetime
 
 from markupsafe import Markup
 
+from odoo import fields
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
-from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon, freeze_all_time
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged, users, HttpCase
@@ -470,3 +472,94 @@ class TestMessageValues(MailCommon):
         msg = self.env['mail.message'].create({'model': self.alias_record._name, 'res_id': self.alias_record.id})
         self.assertEqual(msg.message_type, 'comment', 'Message should be comments by default')
 
+
+class TestMissedMessagesMail(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.registry_enter_test_mode_cls()
+
+        cls.test_record = cls.env["mail.test.simple"].create(
+            {"name": "Test", "email_from": "ignasse@example.com"}
+        )
+        cls.user_employee_2 = mail_new_test_user(
+            cls.env,
+            email='eglantine@example.com',
+            groups='base.group_user',
+            login='employee2',
+            notification_type='email',
+            name='Eglantine Employee',
+        )
+        cls.partner_employee_2 = cls.user_employee_2.partner_id
+        date_past = datetime.datetime.now() - datetime.timedelta(days=5)
+        cls.env["mail.presence"].sudo().create(
+            {
+                "user_id": cls.user_employee.id,
+                "last_poll": fields.Datetime.to_datetime(date_past),
+                "status": "offline",
+            }
+        )
+        cls.env.user.partner_id.active = True
+
+    def _send_message_on_record(self, dt, to_partner):
+        with freeze_all_time(dt), self.mock_mail_gateway():
+            self.test_record.message_post(
+                body=f"Hey @{to_partner.name}, you should see this message"
+                    " and get a notification email since you are mentioned.",
+                message_type='comment',
+                partner_ids=to_partner.ids,
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+
+    def test_mentioned_message_missed_sends_mail(self):
+        self._send_message_on_record(
+            fields.Datetime.now() - datetime.timedelta(days=5), self.partner_employee
+        )
+        self.assertNotSentEmail()
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertMailMailWEmails(
+            [self.partner_employee.email],
+            email_values={
+                "email_from": self.env.user.email,
+            },
+            status="sent",
+        )
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertNotSentEmail()
+
+    def test_notification_read_no_mail(self):
+        self._send_message_on_record(
+            fields.Datetime.now() - datetime.timedelta(days=5), self.partner_employee
+        )
+        self.assertNotSentEmail()
+        notification = self.env['mail.notification'].search([
+            ('res_partner_id', '=', self.partner_employee.id),
+            ('mail_message_id', 'in', self.test_record.message_ids.ids),
+        ], limit=1)
+        notification.is_read = True
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertNotSentEmail()
+
+    def test_message_out_of_range_no_mail(self):
+        self._send_message_on_record(
+            fields.Datetime.now() - datetime.timedelta(days=9), self.partner_employee
+        )
+        self.assertNotSentEmail()
+        self._send_message_on_record(
+            fields.Datetime.now() - datetime.timedelta(hours=6), self.partner_employee
+        )
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertNotSentEmail()
+
+    def test_user_mail_notif_settings_no_mail(self):
+        self._send_message_on_record(
+            fields.Datetime.now() - datetime.timedelta(days=5), self.partner_employee_2
+        )
+        with self.mock_mail_gateway():
+            self.env.ref("mail.ir_cron_notify_missed_messages").sudo().method_direct_trigger()
+        self.assertNotSentEmail()

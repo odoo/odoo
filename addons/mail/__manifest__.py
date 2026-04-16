@@ -96,6 +96,7 @@ For more specific needs, you may also assign custom-defined actions
         'data/res_partner_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_templates_chatter.xml',
+        'data/mail_templates_discuss_channel.xml',
         'data/mail_templates_email_layouts.xml',
         'data/mail_templates_mailgateway.xml',
         'data/discuss_channel_data.xml',
