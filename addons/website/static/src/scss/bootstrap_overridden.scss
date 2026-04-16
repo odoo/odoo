@@ -36,8 +36,13 @@ $enable-cssgrid: true !default;
 
 
 // Customize the light and dark text colors for use in our color contrast function.
-$color-contrast-dark: o-color('900') !default;
-$color-contrast-light: o-color('white') !default;
+// Use the palette's polar colors (o-color-4 / o-color-5) so that Bootstrap's
+// color-contrast() produces text colors that are harmonious with the palette.
+// Lightness ordering ensures this works for both standard and inverted (dark) palettes.
+$-c4: o-color('o-color-4');
+$-c5: o-color('o-color-5');
+$color-contrast-dark: if(lightness($-c4) < lightness($-c5), $-c4, $-c5) !default;
+$color-contrast-light: if(lightness($-c4) >= lightness($-c5), $-c4, $-c5) !default;
 
 // Spacing
 //
@@ -70,8 +75,15 @@ $spacers: (
 // var(--body-bg) instead, as the new bootstrap version intended, but it's not
 // really possible as we use those for computing other colors a lot.
 // grep: BOXED_BODY_BG_ODOO
+// Resolve body/link through the shared o-resolve-color-contrast so Bootstrap
+// emits already-contrast-correct --body-*/--link-* CSS vars (no second pass).
+// Thresholds mirror o-cc-resolve-colors. $o-gray-* used instead of $gray-* as
+// the Bootstrap-named grays are not defined yet at this point in the bundle.
 $body-bg: o-color('o-cc1-bg') !default;
-$body-color: o-color('o-cc1-text') or color-contrast($body-bg) !default;
+$body-color: o-resolve-color-contrast(
+    o-color('o-cc1-text'), o-preset-color-key('text', 1),
+    $body-bg, 3.0, $o-gray-800, $o-gray-100
+) !default;
 
 // Bootstrap's default value on hover on some components eg. dropdown-item.
 $body-tertiary-bg: mix(color-contrast($body-bg), $body-bg, 10%) !default;
@@ -80,10 +92,12 @@ $body-tertiary-bg: mix(color-contrast($body-bg), $body-bg, 10%) !default;
 //
 // Style anchor elements.
 
-$-link-color: o-color('o-cc1-link');
-$-link-color: if($-link-color, $-link-color, o-color('primary'));
-$link-color: auto-contrast($-link-color, $body-bg, 'o-cc1-link') !default;
-$link-hover-color: auto-contrast(darken($link-color, 15%), $body-bg, 'o-cc1-link') !default;
+$link-color: o-resolve-color-contrast(
+    o-color('o-cc1-link'), o-preset-color-key('link', 1), $body-bg, 5.0
+) !default;
+$link-hover-color: adjust-color(
+    $link-color, $lightness: if(color-contrast($body-bg, #000, #FFF) == #000, -50%, 50%)
+) !default;
 $link-decoration: if(o-website-value('link-underline') == 'always', underline, none) !default;
 $link-hover-decoration: if(o-website-value('link-underline') != 'never', underline, none) !default;
 

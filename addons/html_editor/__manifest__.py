@@ -27,6 +27,7 @@ This addon provides an extensible, maintainable editor.
             ('include', 'html_editor.assets_media_dialog'),
             ('include', 'html_editor.assets_readonly'),
             'html_editor/static/src/public/**/*',
+            'html_editor/static/src/scss/html_editor.common.cc.scss',
             'html_editor/static/src/scss/html_editor.common.scss',
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
@@ -38,6 +39,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/fields/**/*',
             'html_editor/static/lib/vkbeautify/**/*',
             'html_editor/static/src/scss/base_style.scss',
+            'html_editor/static/src/scss/html_editor.common.cc.scss',
             'html_editor/static/src/scss/html_editor.common.scss',
             'html_editor/static/src/scss/html_editor.backend.scss',
         ],
@@ -103,6 +105,7 @@ This addon provides an extensible, maintainable editor.
         'web.report_assets_common': [
             'html_editor/static/src/scss/base_style.scss',
             'html_editor/static/src/scss/bootstrap_overridden.scss',
+            'html_editor/static/src/scss/html_editor.common.cc.scss',
             'html_editor/static/src/scss/html_editor.common.scss',
         ],
         'web._assets_secondary_variables': [

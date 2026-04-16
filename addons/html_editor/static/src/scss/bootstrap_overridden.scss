@@ -7,6 +7,10 @@ $variable-prefix: '' !default;
 
 // Automatically update bootstrap colors map (unused by BS itself)
 $colors: () !default;
+// Snapshot of explicitly user-set colors (before the palette loop fills the map).
+// Used downstream to distinguish user choices (always respected) from palette/preset
+// defaults (contrast-checked and possibly overridden for readability).
+$o-user-colors: $colors;
 @each $name, $color in $o-color-palette {
     $colors: map-merge(('#{$name}': o-color($color)), $colors);
 }

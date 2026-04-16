@@ -1,3 +1,36 @@
+// Emit combination 1's resolved --o-cc-* and Bootstrap component vars on :root
+// as the global defaults for elements outside any .o_cc{N} wrapper. Body/link
+// --body-*/--link-* are already contrast-correct: bootstrap_overridden.scss now
+// computes $body-bg/$body-color/$link-color through the same resolver, so no
+// correction pass is needed here.
+//
+// Shares o-cc-resolve-colors with the @for loop in html_editor.common.scss, so
+// a threshold change stays consistent. Placed here (not in common.scss) because
+// common.scss is also loaded in backend/report contexts where these global
+// defaults must not be emitted.
+$-cc1-bg: o-color(map-get($colors, 'o-cc1-bg'));
+@include o-cc-resolve-colors(
+    $bg-color: $-cc1-bg,
+    $index: 1,
+    $use-user-palette: true,
+    $btn-fill-threshold: 1.0
+);
+@include o-cc-variables(
+    $resolved-bg-color,
+    $resolved-text-color,
+    $resolved-headings-color,
+    $resolved-link-color,
+    $resolved-link-hover-color,
+    $resolved-btn-primary-color,
+    $resolved-btn-primary-border-color,
+    $resolved-btn-primary-outline-color,
+    $resolved-btn-secondary-color,
+    $resolved-btn-secondary-border-color,
+    $resolved-btn-secondary-outline-color,
+    $scope: ':root',
+    $nested-scope: null
+);
+
 .o_wysiwyg_loader {
     @extend :disabled;
     pointer-events: none;

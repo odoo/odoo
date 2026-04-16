@@ -108,6 +108,7 @@
         # Common style for mass_mailing mail iframes.
         'mass_mailing.assets_iframe_style_base': [
             # useful scss from /html_editor web.assets_frontend
+            'html_editor/static/src/scss/html_editor.common.cc.scss',
             'html_editor/static/src/scss/html_editor.common.scss',
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',

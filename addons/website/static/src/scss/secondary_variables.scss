@@ -176,6 +176,27 @@ $-palette-default: map-get($o-gray-color-palettes, $o-gray-color-palette-name) o
 $-actual-user-gray-color-palette: map-merge($-palette-default, $o-user-gray-color-palette);
 $o-gray-color-palettes: map-merge($o-gray-color-palettes, ('user-palette': $-actual-user-gray-color-palette));
 
+// Polar grayscale: when the user has not saved custom gray values, derive the
+// 100-900 scale by interpolating between the palette's two polar colors
+// (o-color-4 and o-color-5). Lightness ordering guarantees correct directionality
+// for both standard and inverted (dark) palettes.
+$o-grayscale-is-custom: length(map-keys($o-user-gray-color-palette)) > 0;
+@if not $o-grayscale-is-custom {
+    $-c4: map-get($-actual-user-color-palette, 'o-color-4');
+    $-c5: map-get($-actual-user-color-palette, 'o-color-5');
+    @if $-c4 and $-c5 and type-of($-c4) == 'color' and type-of($-c5) == 'color' and $-c4 != transparent and $-c5 != transparent {
+        $-polar-light: if(lightness($-c4) >= lightness($-c5), $-c4, $-c5);
+        $-polar-dark: if(lightness($-c4) < lightness($-c5), $-c4, $-c5);
+        $-polar-grays: ();
+        @for $i from 1 through 9 {
+            $-polar-grays: map-merge($-polar-grays, ('#{$i * 100}': mix($-polar-dark, $-polar-light, $i * 10%)));
+        }
+        $o-gray-color-palettes: map-merge($o-gray-color-palettes, (
+            'user-palette': map-merge($-actual-user-gray-color-palette, $-polar-grays)
+        ));
+    }
+}
+
 // Theme color palette
 // -------------------
 

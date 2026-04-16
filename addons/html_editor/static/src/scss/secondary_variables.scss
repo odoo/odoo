@@ -119,6 +119,44 @@ $o-color-system-initialized: false;
     @return o-related-color($name, $max-recursions: 10, $use-cc-bg: true);
 }
 
+// Returns the raw color-name string (e.g. 'o-color-5') declared for $element in
+// the $index-th color combination of the selected preset. Returns null when the
+// preset does not explicitly specify that slot. Reads from $o-color-combinations
+// BEFORE base-combination defaults are merged, so only intentionally set values
+// are returned — this is what separates a "preset suggestion" from a null default.
+@function o-preset-color-key($element, $index) {
+    @if $index < 1 or $index > length($o-color-combinations) {
+        @return null;
+    }
+    @return map-get(nth($o-color-combinations, $index), $element);
+}
+
+// Resolves the final color slot using a three-tier priority:
+//   1. User-saved value ($user-color) — always respected.
+//   2. Preset-suggested color key, resolved to hex and contrast-checked against
+//      the section bg. Falls back when it fails (irregular palettes).
+//   3. Last resort: highest-contrast polar color against the bg.
+// Defined here (not in html_editor.common.cc.scss) so bootstrap_overridden.scss
+// and o-cc-resolve-colors share a single definition; $_d/$_l defaults reference
+// $color-contrast-light which is resolved at call time.
+@function o-resolve-color-contrast($user-color, $preset-key, $bg, $threshold: 2.0, $_d: $color-contrast-light, $_l: $color-contrast-light ) {
+    // Tier 1: explicit user choice — always respected, no contrast override
+    @if $user-color {
+        @return $user-color;
+    }
+
+    // Tier 2: preset-intended color — use only if it meets sufficient contrast
+    @if $preset-key {
+        $preset-color: o-color($preset-key);
+        @if $preset-color and contrast-ratio($preset-color, $bg) >= $threshold {
+            @return $preset-color;
+        }
+    }
+
+    // Last resort: highest-contrast polar color (according to the grayscale in use)
+    @return color-contrast($bg, $_d, $_l);
+}
+
 // Same as 'increase-contrast' except that the color is not changed if the given
 // related color name is part of the given exclusion list (default to a global
 // exclusion list which can be extended by other apps).
