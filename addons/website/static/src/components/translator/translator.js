@@ -163,8 +163,21 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const $editable = this.getEditableArea();
         const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         let $edited = $();
+        const $savable = $(this.websiteService.pageDocument).find(savableSelector);
         attrs.forEach((attr) => {
-            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]').filter(':empty, input, select, textarea, img');
+            const attrSelector = "[" + attr + "*='data-oe-translation-initial-sha=']";
+            const attrEdit = $editable
+                .filter(attrSelector)
+                .filter(":empty, input, select, textarea, img");
+            const attrRestore = $savable.filter(attrSelector).not(attrEdit);
+            attrRestore.each(function () {
+                const $node = $(this);
+                const match = $node.attr(attr).match(translationRegex);
+                $node.attr(attr, match[2]);
+                if (attr === "value") {
+                    $node[0].value = match[2];
+                }
+            });
             attrEdit.each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
