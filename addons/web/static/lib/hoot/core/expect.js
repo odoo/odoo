@@ -69,10 +69,24 @@ import { Test } from "./test";
  * @typedef {InteractionType | "assertion" | "error" | "step"} CaseEventType
  *
  * @typedef {{
+ *  docLabel: string;
+ *  errors: unknown[];
+ *  label: string;
+ *  options: typeof T_RESOLVER_OPTIONS;
+ * }} ErrorResolver
+ *
+ * @typedef {{
  *  headless: boolean;
  * }} ExpectBuilderParams
  *
  * @typedef {import("../hoot_utils").Label} Label
+ *
+ * @typedef {{
+ *  docLabel: string;
+ *  steps: unknown[];
+ *  label: string;
+ *  options: typeof T_RESOLVER_OPTIONS;
+ * }} StepResolver
  *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
  * @typedef {import("@web/../lib/hoot-dom/hoot_dom_utils").InteractionDetails} InteractionDetails
@@ -82,8 +96,7 @@ import { Test } from "./test";
 
 /**
  * @template T
- * @typedef {T & ReturnType<Promise.withResolvers> & {
- *  options: VERIFIER_OPTIONS_TYPE;
+ * @typedef {T & PromiseWithResolvers & {
  *  timeout: number;
  * }} AsyncResolver
  */
@@ -143,14 +156,14 @@ const T_DOM_RECT = t.object({
     "y?": t.number(),
 });
 
-const T_VERIFIER_OPTIONS = t.and([
+const T_RESOLVER_OPTIONS = t.and([
     T_DEEP_EQUAL_OPTIONS,
     t.object({
         "message?": T_ASSERTION_MESSAGE,
     }),
 ]);
 const T_ASYNC_VERIFIER_OPTIONS = t.and([
-    T_VERIFIER_OPTIONS,
+    T_RESOLVER_OPTIONS,
     t.object({
         "timeout?": t.number(),
     }),
@@ -683,17 +696,14 @@ export function makeExpect(params) {
     }
 
     /**
-     * @param {{
-     *  errors: unknown[];
-     *  options: VERIFIER_OPTIONS_TYPE;
-     * } | null} resolver
+     * @param {ErrorResolver} resolver
      * @param {boolean} forceCheck
      */
     function checkErrors(resolver, forceCheck) {
         if (!resolver) {
             return false;
         }
-        const { errors, options } = resolver;
+        const { label, docLabel, errors, options } = resolver;
         const { currentErrors } = currentResult;
         const pass =
             currentErrors.length === errors.length &&
@@ -711,8 +721,8 @@ export function makeExpect(params) {
                     : "no errors"
                 : "expected the following errors";
             const assertion = {
-                label: "verifyErrors",
-                docLabel: "expect.verifyErrors",
+                label,
+                docLabel,
                 message: options?.message,
                 pass,
                 reportMessage,
@@ -730,17 +740,14 @@ export function makeExpect(params) {
     }
 
     /**
-     * @param {{
-     *  steps: unknown[];
-     *  options: VERIFIER_OPTIONS_TYPE;
-     * } | null} resolver
+     * @param {StepResolver | null} resolver
      * @param {boolean} forceCheck
      */
     function checkSteps(resolver, forceCheck) {
         if (!resolver) {
             return false;
         }
-        const { steps, options } = resolver;
+        const { label, docLabel, steps, options } = resolver;
         const receivedSteps = currentResult.currentSteps;
         const pass = deepEqual(steps, receivedSteps, options);
 
@@ -754,8 +761,8 @@ export function makeExpect(params) {
                     : "no steps"
                 : "expected the following steps";
             const assertion = {
-                label: "verifySteps",
-                docLabel: "expect.verifySteps",
+                label,
+                docLabel,
                 message: options?.message,
                 pass,
                 reportMessage,
@@ -843,7 +850,7 @@ export function makeExpect(params) {
      * `expect.errors(...)` should be called before function
      *
      * @param {unknown[]} errors
-     * @param {typeof T_VERIFIER_OPTIONS} [options]
+     * @param {typeof T_RESOLVER_OPTIONS} [options]
      * @returns {boolean}
      * @example
      *  expect.verifyErrors([/RPCError/, /Invalid domain AST/]);
@@ -852,14 +859,22 @@ export function makeExpect(params) {
         if (!currentResult) {
             throw scopeError("expect.verifyErrors");
         }
-        assertArguments(arguments, [t.array(), T_VERIFIER_OPTIONS]);
+        assertArguments(arguments, [t.array(), T_RESOLVER_OPTIONS]);
         if (errors.length > currentResult.expectedErrors) {
             throw new HootError(
                 `cannot call \`expect.verifyErrors()\` without calling \`expect.errors()\` beforehand`
             );
         }
 
-        return checkErrors({ errors, options }, true);
+        return checkErrors(
+            {
+                label: "verifyErrors",
+                docLabel: "expect.verifyErrors",
+                errors,
+                options,
+            },
+            true
+        );
     }
 
     /**
@@ -868,7 +883,7 @@ export function makeExpect(params) {
      * will reset the list of current steps.
      *
      * @param {unknown[]} steps
-     * @param {typeof T_VERIFIER_OPTIONS} [options]
+     * @param {typeof T_RESOLVER_OPTIONS} [options]
      * @returns {boolean}
      * @example
      *  expect.step("web_read_group");
@@ -879,9 +894,17 @@ export function makeExpect(params) {
         if (!currentResult) {
             throw scopeError("expect.verifySteps");
         }
-        assertArguments(arguments, [t.array(), T_VERIFIER_OPTIONS]);
+        assertArguments(arguments, [t.array(), T_RESOLVER_OPTIONS]);
 
-        return checkSteps({ steps, options }, true);
+        return checkSteps(
+            {
+                label: "verifySteps",
+                docLabel: "expect.verifySteps",
+                steps,
+                options,
+            },
+            true
+        );
     }
 
     /**
@@ -908,20 +931,29 @@ export function makeExpect(params) {
         // Run check for any current resolver (if any)
         checkErrors(currentResult.errorResolver, true);
 
+        /** @type {ErrorResolver} */
+        const resolver = {
+            label: "waitForErrors",
+            docLabel: "expect.waitForErrors",
+            errors,
+            options,
+        };
+
         // Run early check if conditions are already met
-        if (checkErrors({ errors, options }, false)) {
+        if (checkErrors(resolver, false)) {
             return true;
         }
 
-        currentResult.errorResolver = {
-            ...Promise.withResolvers(),
-            errors,
-            options,
-            timeout: setTimeout(
-                () => checkErrors(currentResult.errorResolver, true),
-                options?.timeout ?? 2000
-            ),
-        };
+        currentResult.errorResolver = $assign(
+            resolver,
+            {
+                timeout: setTimeout(
+                    () => checkErrors(currentResult.errorResolver, true),
+                    options?.timeout ?? 2000
+                ),
+            },
+            Promise.withResolvers()
+        );
         return currentResult.errorResolver.promise;
     }
 
@@ -949,20 +981,29 @@ export function makeExpect(params) {
         // Run check for any current resolver (if any)
         checkSteps(currentResult.stepResolver, true);
 
+        /** @type {StepResolver} */
+        const resolver = {
+            label: "waitForSteps",
+            docLabel: "expect.waitForSteps",
+            steps,
+            options,
+        };
+
         // Run early check if conditions are already met
-        if (checkSteps({ steps, options }, false)) {
+        if (checkSteps(resolver, false)) {
             return true;
         }
 
-        currentResult.stepResolver = {
-            ...Promise.withResolvers(),
-            steps,
-            options,
-            timeout: setTimeout(
-                () => checkSteps(currentResult.stepResolver, true),
-                options?.timeout ?? 2000
-            ),
-        };
+        currentResult.stepResolver = $assign(
+            resolver,
+            {
+                timeout: setTimeout(
+                    () => checkSteps(currentResult.stepResolver, true),
+                    options?.timeout ?? 2000
+                ),
+            },
+            Promise.withResolvers()
+        );
         return currentResult.stepResolver.promise;
     }
 
@@ -1039,9 +1080,9 @@ export class CaseResult {
 
     currentErrors = [];
     currentSteps = [];
-    /** @type {AsyncResolver<{ errors: unknown[] }> | null} */
+    /** @type {AsyncResolver<ErrorResolver> | null} */
     errorResolver = null;
-    /** @type {AsyncResolver<{ steps: unknown[] }> | null} */
+    /** @type {AsyncResolver<StepResolver> | null} */
     stepResolver = null;
 
     /**
