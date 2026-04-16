@@ -764,8 +764,8 @@ class AccountMove(models.Model):
     )
     duplicated_ref_ids = fields.Many2many(comodel_name='account.move', compute='_compute_duplicated_ref_ids')
     # used to check if any moves in duplicated_ref_ids are in the 'Draft' state.
-    is_draft_duplicated_ref_ids = fields.Boolean(compute="_compute_is_draft_duplicated_ref_ids")
-    is_exact_move_duplicate = fields.Boolean(compute='_compute_is_draft_duplicated_ref_ids')
+    has_draft_move_duplicate = fields.Boolean(compute="_compute_duplicate_move_status")
+    is_exact_move_duplicate = fields.Boolean(compute='_compute_duplicate_move_status')
     need_cancel_request = fields.Boolean(compute='_compute_need_cancel_request')
 
     show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
@@ -2227,9 +2227,9 @@ class AccountMove(models.Model):
         return to_query
 
     @api.depends('duplicated_ref_ids')
-    def _compute_is_draft_duplicated_ref_ids(self):
+    def _compute_duplicate_move_status(self):
         for move in self:
-            move.is_draft_duplicated_ref_ids = any(duplicate_move.state == 'draft' for duplicate_move in move.duplicated_ref_ids)
+            move.has_draft_move_duplicate = any(duplicate_move.state == 'draft' for duplicate_move in move.duplicated_ref_ids)
             move.is_exact_move_duplicate = any(
                 move.ref and move.ref == dup.ref
                 and move.move_type == dup.move_type

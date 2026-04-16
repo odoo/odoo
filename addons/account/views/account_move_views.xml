@@ -868,7 +868,7 @@
                         <button name="action_delete_duplicates"
                                 type="object"
                                 class="btn btn-link text-danger ms-auto d-flex align-items-center gap-1"
-                                invisible="not is_draft_duplicated_ref_ids">
+                                invisible="not has_draft_move_duplicate">
                             <i class="fa fa-trash text-danger"/>
                             <span class="text-danger" invisible="duplicated_ref_ids.length == 1">Delete all duplicates</span>
                             <span class="text-danger" invisible="duplicated_ref_ids.length &gt; 1">Delete duplicate</span>
@@ -880,7 +880,7 @@
                         <button name="action_delete_duplicates"
                                 type="object"
                                 class="btn btn-link text-danger ms-auto d-flex align-items-center gap-1"
-                                invisible="not is_draft_duplicated_ref_ids">
+                                invisible="not has_draft_move_duplicate">
                             <i class="fa fa-trash text-danger"/>
                             <span class="text-danger" invisible="duplicated_ref_ids.length == 1">Delete all duplicates</span>
                             <span class="text-danger" invisible="duplicated_ref_ids.length &gt; 1">Delete duplicate</span>
