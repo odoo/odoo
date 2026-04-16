@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.SelectableList">
+        <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0">
+            <div t-if="subtitleText" class="smaller p-1 text-muted" t-att-class="{ 'text-warning': maxSelectionLimit and selectedOptions.length >= maxSelectionLimit }">
+                <t t-out="subtitleText"/>
+            </div>
+            <t t-if="store and store.self_user">
+                <div class="input-group mb-2 border rounded">
+                    <input class="o-discuss-SelectableList-search form-control form-control-sm border-0"
+                        t-att-value="search" t-ref="input" t-att-placeholder="searchPlaceholder" t-on-input="onInput"/>
+                    <button class="btn btn-link" t-on-click="clearSearch" aria-label="Clear search">
+                        <i class="fa p-1" t-att-class="{'fa-search': !search, 'fa-times': search}"/>
+                    </button>
+                </div>
+                <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1"
+                    t-att-class="{ 'align-items-center justify-content-center': !options.length }">
+                    <div t-if="!options.length" class="d-flex flex-column align-items-center justify-content-center text-muted">
+                        <i t-if="internalState.isLoading" class="fa fa-2x fa-spin fa-spinner mb-2"/>
+                        <div class="smaller" t-out="emptyStateText"/>
+                    </div>
+                    <t t-if="beforeOptionsTemplate" t-call="{{ beforeOptionsTemplate }}"/>
+                    <t t-foreach="options" t-as="option" t-key="option.id">
+                        <t t-call="{{ selectableItemTemplate or 'discuss.SelectableList-selectableItem' }}">
+                            <t t-set="optionIndex" t-value="option_index"/>
+                        </t>
+                    </t>
+                </ul>
+            </t>
+            <div class="o-discuss-SelectableList-selectedList pt-0 pb-1 bg-inherit">
+                <t t-if="store and store.self_user">
+                    <div t-if="selectedOptions.length > 0" class="pt-2">
+                        <div class="d-flex flex-wrap overflow-auto o-scrollbar-thin">
+                            <t t-foreach="selectedOptions" t-as="selectedOption" t-key="selectedOption.id">
+                                <button class="btn btn-light fw-bolder smaller pe-1" title="Unselect" t-on-click="() => toggleSelection(selectedOption)">
+                                    <t t-out="getOptionDisplayName(selectedOption)"/> <i class="oi oi-close border border-dark-subtle ms-1"/>
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="discuss.SelectableList-selectableItemAvatar">
+        <div class="o-discuss-SelectableList-avatar position-relative d-flex flex-shrink-0 bg-inherit">
+            <t t-if="option.isPartner and option.partner">
+                <img class="w-100 h-100 rounded-3 object-fit-cover" t-att-src="getOptionAvatarUrl(option)"/>
+                <ImStatus persona="option.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
+            </t>
+            <t t-elif="option.email">
+                <div class="w-100 h-100 d-flex align-items-center justify-content-center rounded-3 bg-primary text-white">
+                    <i class="fa fa-envelope"/>
+                </div>
+            </t>
+            <t t-else="">
+                <img class="w-100 h-100 rounded-3 object-fit-cover" t-att-src="getOptionAvatarUrl(option)"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="discuss.SelectableList-selectableItem">
+        <t t-set="isSelected" t-value="isSelected(option)"/>
+        <t t-set="selectablePartner" t-value="option.isPartner and option.partner ? option.partner : null"/>
+        <li class="o-discuss-SelectableList-selectable object-fit-cover d-flex align-items-start px-1 py-0 btn list-group-item border-0 rounded-0 w-100"
+            t-att-class="{ 'o-odd': optionIndex % 2 === 1, 'o-selected': isSelected, 'align-items-center': option.email }"
+            t-on-click="() => toggleSelection(option)">
+            <div class="d-flex align-items-center p-1 bg-inherit">
+                <t t-call="discuss.SelectableList-selectableItemAvatar"/>
+            </div>
+            <div class="d-flex flex-column mx-2 flex-grow-1 overflow-hidden o-mt-0_5">
+                <div class="d-flex overflow-hidden align-items-baseline" name="selectablePartnerName">
+                    <span class="text-truncate" t-out="getOptionDisplayName(option)"/>
+                </div>
+                <t t-if="option.isPartner and option.partner">
+                    <div class="d-flex flex-column flex-grow-1 gap-1" name="selectablePartnerDetail">
+                        <span t-if="option.partner.email" t-out="option.partner.email" class="text-truncate text-start smaller text-600 fw-normal lh-1"/>
+                        <t t-if="additionalItemContentTemplate" t-call="{{ additionalItemContentTemplate }}"/>
+                    </div>
+                </t>
+                <div t-elif="option.email" class="overflow-hidden d-flex flex-column align-items-baseline">
+                        <span class="text-truncate text-start w-100" t-out="option.email"/>
+                        <t t-if="additionalItemContentTemplate" t-call="{{ additionalItemContentTemplate }}"/>
+                </div>
+                <t t-elif="additionalItemContentTemplate" t-call="{{ additionalItemContentTemplate }}"/>
+            </div>
+            <input class="form-check-input flex-shrink-0 me-1" type="checkbox" t-att-checked="isSelected ? 'checked' : undefined"
+                t-att-disabled="maxSelectionLimit and selectedOptions.length >= maxSelectionLimit and !isSelected"/>
+        </li>
+    </t>
+
+</templates>
