@@ -1,6 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo import api
+
+MONTHS_SELECTION = [
+    ('1', 'January'),
+    ('2', 'February'),
+    ('3', 'March'),
+    ('4', 'April'),
+    ('5', 'May'),
+    ('6', 'June'),
+    ('7', 'July'),
+    ('8', 'August'),
+    ('9', 'September'),
+    ('10', 'October'),
+    ('11', 'November'),
+    ('12', 'December'),
+]
 
 
 class HrAttendanceOvertimeRuleset(models.Model):
@@ -30,6 +46,39 @@ class HrAttendanceOvertimeRuleset(models.Model):
             "    e.g.: combined rate for 150% & 120% = 100% (baseline) + (150-100)% + (120-100)% = 170%\n"
         ),
     )
+    max_positive_hours = fields.Float(
+        string="Maximum Positive Hours",
+        default=0.0,
+        help="Maximum number of hours per month that will be counted as positive hours. "
+             "Hours above this limit will not be counted. Set to 0 for unlimited.",
+    )
+    max_negative_hours = fields.Float(
+        string="Maximum Negative Hours",
+        default=0.0,
+        help="Maximum negative hours (undertime) per month allowed without salary deduction. "
+             "Employee keeps full salary if negative hours are within this limit. Set to 0 for unlimited.",
+    )
+    l10n_be_flexibility_type = fields.Selection([
+        ('none', 'None'),
+        ('small_flexibility', 'Small Flexibility'),
+        ('floating', 'Floating Hours'),
+    ], string="Flexibility Type", default='none',
+        help="Select the applicable regime: 'Small Flexibility' for employer-planned high/low cycles "
+             "(constant salary), or 'Floating Hours' for employee autonomy within core hours "
+             "(subject to potential salary deductions).")
+
+    l10n_be_flexibility_reference_month = fields.Selection(
+        MONTHS_SELECTION,
+        string="Reference Month",
+        default='1',
+        help="The month marking the start of the reference period for Small Flexibility.")
+
+    l10n_be_flexibility_reference_period = fields.Selection([
+        ('monthly', 'Monthly'),
+        ('quarterly', 'Quarterly'),
+        ('annually', 'Annually'),
+    ], string="Reference Period", default='quarterly',
+        help="The period at the end of which the flexibility balance is evaluated.")
     rules_count = fields.Integer(compute='_compute_rules_count')
     active = fields.Boolean(default=True, readonly=False)
     version_ids = fields.One2many('hr.version', 'ruleset_id')
@@ -83,3 +132,8 @@ class HrAttendanceOvertimeRuleset(models.Model):
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
         return [dict(vals, name=self.env._("%s (copy)", ruleset.name)) for ruleset, vals in zip(self, vals_list)]
+
+    # @api.onchange('l10n_be_flexibility_type')
+    # def _onchange_l10n_be_flexibility_type(self):
+    #     if self.l10n_be_flexibility_type == 'small_flexibility':
+    #         self.absence_management = True
