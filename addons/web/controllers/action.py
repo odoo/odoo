@@ -23,6 +23,14 @@ class Action(Controller):
     def load(self, action_id, context=None):
         if context:
             request.update_context(**context)
+        if request.env.context['default_action_for_model']:
+            try:
+                Model = request.env[action_id]
+            except Exception as exc:
+                raise MissingActionError(_("The action for the model “%s” does not exist.", action_id)) from exc
+            result = Model.get_default_action()
+            return clean_action(result, env=request.env) if result else False
+
         Actions = request.env['ir.actions.actions']
         try:
             action_id = int(action_id)
@@ -102,8 +110,10 @@ class Action(Controller):
                         else:
                             results.append({'display_name': Model.browse(record_id).display_name})
                     else:
-                        # This case cannot be produced by the web client
-                        raise BadRequest('Actions with a model should also have a resId')
+                        model_string = self.env['ir.model']._get(Model._name).name or Model._description
+                        # We can put the Model._description but it's not translated ! (need to check how)
+                        # But if we put the description we will have a difference between the last or one of the breadcrumb
+                        results.append({'display_name': _(model_string)})
                 else:
                     raise BadRequest('Actions should have either an action (id or path) or a model')
             except (MissingActionError, MissingError, AccessError) as exc:
