@@ -92,27 +92,29 @@ class PosOrder(models.Model):
         else:
             pos_order = existing_order
 
-            # If the order is belonging to another session, it must be moved to the current session first
             if order.get('session_id') and order['session_id'] != pos_order.session_id.id:
                 pos_order.write({'session_id': order['session_id']})
 
-            # Save lines and payments before to avoid exception if a line is deleted
-            # when vals change the state to 'paid'
+            # Process lines and payments separately before the main write.
+            # We use `order[field] = []` to clear them from the `order` dict so they aren't
+            # written twice. We must explicitly set them to `[]` (not `.pop()`) because
+            # downstream overrides like `pos_event` rely on `order.get('lines')` returning an iterable.
             for field in ['lines', 'payment_ids']:
-                if order.get(field):
-                    existing_ids = set(pos_order[field].ids)
-                    pos_order.write({field: order[field]})
-                    added_ids = set(pos_order[field].ids) - existing_ids
-                    if added_ids:
-                        _logger.info("Added %s %s to pos.order #%s", field, list(added_ids), pos_order.id)
+                commands = order.get(field, [])
+                if commands:
+                    self._write_order_field(pos_order, field, commands)
+                if field in order:
                     order[field] = []
 
-            del order['uuid']
-            del order['access_token']
+            order.pop('uuid', None)
+            order.pop('access_token', None)
+
+            # The "paid" state is assigned later by `_process_saved_order`.
             if order.get('state') == 'paid':
-                # The "paid" state will be assigned later by `_process_saved_order`
                 order['state'] = pos_order.state
-            pos_order.write(order)
+
+            if order:
+                pos_order.write(order)
 
         for model_name, mapping in record_uuid_mapping.items():
             owner_records = self.env[model_name].search([('uuid', 'in', mapping.keys())])
@@ -129,6 +131,24 @@ class PosOrder(models.Model):
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
         return pos_order._process_saved_order(draft)
+
+    def _write_order_field(self, pos_order, field, commands):
+        """Write lines or payments to an existing order, handling duplicate UUIDs.
+
+        During a duplicate sync (e.g. network retry), the frontend may resend
+        create commands for records that already exist. This method converts
+        those into update commands to avoid unique constraint violations.
+        """
+        existing_by_uuid = {r.uuid: r.id for r in pos_order[field] if r.uuid}
+        updated_commands = []
+        for op, rec_id, vals in commands:
+            existing_id = existing_by_uuid.get(vals.get('uuid'))
+            if op == 0 and existing_id:
+                updated_commands.append((1, existing_id, vals))
+            else:
+                updated_commands.append((op, rec_id, vals))
+
+        pos_order.write({field: updated_commands})
 
     def _process_saved_order(self, draft):
         self.ensure_one()
