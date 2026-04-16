@@ -83,11 +83,11 @@ defineActions([
 ]);
 
 afterEach(() => {
-    // In the prod environment, we keep a promise with the wkhtmlstatus (e.g. broken, upgrade...).
+    // In the prod environment, we keep a promise with the engine status (e.g. broken, upgrade...).
     // This ensures the request to be done only once. In the test environment, we mock this request
     // to simulate the different status, so we want to erase the promise at the end of each test,
     // otherwise all tests but the first one would use the status in cache.
-    delete downloadReport.wkhtmltopdfStatusProm;
+    delete downloadReport.reportingEngineStatusProm;
 });
 
 test("can execute report actions from db ID", async () => {
@@ -97,7 +97,7 @@ test("can execute report actions from db ID", async () => {
             return Promise.resolve();
         },
     });
-    onRpc("/report/check_wkhtmltopdf", () => "ok");
+    onRpc("/report/get_pdf_engine_state", () => "ok");
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -106,7 +106,7 @@ test("can execute report actions from db ID", async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
-        "/report/check_wkhtmltopdf",
+        "/report/get_pdf_engine_state",
         "/report/download",
         "on_close",
     ]);
@@ -129,7 +129,7 @@ test("report actions can close modals and reload views", async () => {
         },
     });
 
-    onRpc("/report/check_wkhtmltopdf", () => "ok");
+    onRpc("/report/get_pdf_engine_state", () => "ok");
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(5, { onClose: () => expect.step("on_close") });
@@ -161,7 +161,7 @@ test("should trigger a notification if wkhtmltopdf is to upgrade", async () => {
         add: () => expect.step("notify"),
     });
 
-    onRpc("/report/check_wkhtmltopdf", () => "upgrade");
+    onRpc("/report/get_pdf_engine_state", () => "upgrade");
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -170,7 +170,7 @@ test("should trigger a notification if wkhtmltopdf is to upgrade", async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
-        "/report/check_wkhtmltopdf",
+        "/report/get_pdf_engine_state",
         "/report/download",
         "notify",
     ]);
@@ -196,7 +196,7 @@ test("should open the report client action if wkhtmltopdf is broken", async () =
         add: () => expect.step("notify"),
     });
 
-    onRpc("/report/check_wkhtmltopdf", () => "broken");
+    onRpc("/report/get_pdf_engine_state", () => "broken");
     onRpc("/report/html/some_report", async (request) => {
         const search = decodeURIComponent(new URL(request.url).search);
         expect(search).toBe(`?context={"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}`);
@@ -217,7 +217,7 @@ test("should open the report client action if wkhtmltopdf is broken", async () =
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "/web/action/load",
-        "/report/check_wkhtmltopdf",
+        "/report/get_pdf_engine_state",
         "notify",
         "/report/html/some_report",
     ]);
@@ -282,7 +282,7 @@ test("UI unblocks after downloading the report even if it threw an error", async
         },
     });
 
-    onRpc("/report/check_wkhtmltopdf", () => "ok");
+    onRpc("/report/get_pdf_engine_state", () => "ok");
 
     await mountWithCleanup(WebClient);
     const onBlock = () => {
@@ -321,7 +321,7 @@ test("can use custom handlers for report actions", async () => {
         },
     });
 
-    onRpc("/report/check_wkhtmltopdf", () => "ok");
+    onRpc("/report/get_pdf_engine_state", () => "ok");
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -345,7 +345,7 @@ test("can use custom handlers for report actions", async () => {
         "calling custom handler",
         "first doAction finished",
         "falling through to default handler",
-        "/report/check_wkhtmltopdf",
+        "/report/get_pdf_engine_state",
         "/report/download",
     ]);
 });
@@ -368,7 +368,7 @@ test("custom handlers can close modals", async () => {
         },
     });
 
-    onRpc("/report/check_wkhtmltopdf", () => "ok");
+    onRpc("/report/get_pdf_engine_state", () => "ok");
 
     await mountWithCleanup(WebClient);
     registry.category("ir.actions.report handlers").add("custom_handler", async (action) => {
@@ -421,7 +421,7 @@ test("context is correctly passed to the client action report", async (assert) =
         },
     });
 
-    onRpc("/report/check_wkhtmltopdf", () => "ok");
+    onRpc("/report/get_pdf_engine_state", () => "ok");
     onRpc("/report/html", async (request) => {
         const search = decodeURIComponent(new URL(request.url).search);
         expect(search).toBe(`?context={"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}`);
@@ -448,7 +448,7 @@ test("context is correctly passed to the client action report", async (assert) =
     expect.verifySteps(["/report/html/ennio.morricone/99"]);
 
     await contains(".o_control_panel_main_buttons button[title='Print']").click();
-    expect.verifySteps(["/report/check_wkhtmltopdf", "/report/download"]);
+    expect.verifySteps(["/report/get_pdf_engine_state", "/report/download"]);
 });
 
 test("url is valid", async (assert) => {

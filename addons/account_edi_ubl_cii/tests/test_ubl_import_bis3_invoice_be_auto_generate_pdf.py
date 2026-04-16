@@ -8,7 +8,7 @@ from odoo.tests import tagged
 class TestUblImportBis3InvoiceBEAutoGeneratePDF(TestUblImportBis3InvoiceBE):
 
     def test_import_invoice_auto_generate_pdf(self):
-        def _run_wkhtmltopdf(*args, **kwargs):
+        def _run_pdf_engine_without_processing(*args, **kwargs):
             _filename, file_content = self._import_file_content('test_import_invoice_auto_generate_pdf', 'pdf')
             return file_content
 
@@ -21,7 +21,7 @@ class TestUblImportBis3InvoiceBEAutoGeneratePDF(TestUblImportBis3InvoiceBE):
 
         def _import_and_assert(should_generate_pdf):
             # Import the document that doesn't contain an embedded PDF
-            with patch.object(self.env.registry['ir.actions.report'], '_run_wkhtmltopdf', _run_wkhtmltopdf):
+            with patch.object(self.env.registry['ir.actions.report'], '_run_pdf_engine_without_processing', _run_pdf_engine_without_processing):
                 bill = self._import_invoice_as_attachment_on(
                     test_name='test_import_invoice_auto_generate_pdf',
                     journal=self.company_data["default_journal_purchase"].with_context(force_report_rendering=True),

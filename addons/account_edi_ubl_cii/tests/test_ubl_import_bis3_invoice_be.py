@@ -107,11 +107,11 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
         )
 
     def test_generate_pdf_when_xml_does_not_provide_one(self):
-        def _run_wkhtmltopdf(*args, **kwargs):
+        def _run_pdf_engine_without_processing(*args, **kwargs):
             return file_open(f'{self.test_module}/tests/test_files/import/bis3/invoice/be/test_import_invoice_auto_generate_pdf.pdf', 'rb').read()
 
         # Import the document that doesn't contain an embedded PDF
-        with patch.object(self.env.registry['ir.actions.report'], '_run_wkhtmltopdf', _run_wkhtmltopdf):
+        with patch.object(self.env.registry['ir.actions.report'], '_run_pdf_engine_without_processing', _run_pdf_engine_without_processing):
             bill = self._import_invoice_as_attachment_on(
                 test_name='test_import_without_embedded_attachment',
                 journal=self.company_data["default_journal_purchase"].with_context(force_report_rendering=True),

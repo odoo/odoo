@@ -1371,8 +1371,13 @@ export function makeActionManager(env, router = _router) {
         }
         if (action.report_type === "qweb-html") {
             return _executeReportClientAction(action, options);
-        } else if (action.report_type === "qweb-pdf" || action.report_type === "qweb-text") {
-            const type = action.report_type.slice(5);
+        } else if (action.report_type.startsWith("qweb-pdf") || action.report_type === "qweb-text") {
+            let type = action.report_type.slice(5);
+            let engineName;
+            if (type.startsWith("pdf-")) {
+                engineName = type.slice(4);
+                type = "pdf"
+            }
             let success, message;
             env.services.ui.block();
             try {
@@ -1380,7 +1385,7 @@ export function makeActionManager(env, router = _router) {
                 if (action.context) {
                     Object.assign(downloadContext, action.context);
                 }
-                ({ success, message } = await downloadReport(rpc, action, type, downloadContext));
+                ({ success, message } = await downloadReport(rpc, action, type, downloadContext, engineName));
             } finally {
                 env.services.ui.unblock();
             }

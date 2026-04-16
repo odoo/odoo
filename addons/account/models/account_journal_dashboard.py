@@ -986,8 +986,11 @@ class AccountJournal(models.Model):
                 'invoice_date': invoice_date,
                 'invoice_due_date': invoice_date + timedelta(days=30),
             })
-            bodies = self.env['ir.actions.report']._prepare_html(html)[0]
-            content = self.env['ir.actions.report']._run_wkhtmltopdf(bodies)
+            report_service = self.env['ir.actions.report']
+            bodies = report_service._prepare_html(html)[0]
+            report = self.env['account.move.send'].with_company(company)._get_default_pdf_report_id(bill)
+            engine_name = report_service._get_pdf_engine(report)
+            content = report_service._run_pdf_engine_without_processing(engine_name, bodies)
             attachment = self.env['ir.attachment'].create({
                 'type': 'binary',
                 'name': 'INV-%s-0001.pdf' % invoice_date.strftime('%Y-%m'),
