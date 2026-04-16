@@ -754,6 +754,116 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         picking._action_done()
         self.assertEqual(self.env['stock.valuation.layer'].search([('stock_move_id', '=', cross_move.id)]).value, 100)
 
+    def test_consume_mixed_uom_categories(self):
+        """Consuming SVLs from products with different UoM categories must not
+        raise a singleton error on uom.category."""
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        uom_litre = self.env.ref('uom.product_uom_litre')
+        product_kg = self.env['product.product'].create({
+            'name': 'Product KG',
+            'is_storable': True,
+            'uom_id': uom_kg.id,
+            'categ_id': self.product1.categ_id.id,
+        })
+        product_litre = self.env['product.product'].create({
+            'name': 'Product Litre',
+            'is_storable': True,
+            'uom_id': uom_litre.id,
+            'categ_id': self.product1.categ_id.id,
+        })
+
+        picking_in_kg = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        move_kg = self.env['stock.move'].create({
+            'name': 'in kg',
+            'product_id': product_kg.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_uom': uom_kg.id,
+            'product_uom_qty': 10,
+            'price_unit': 5,
+            'picking_type_id': self.picking_type_in.id,
+            'picking_id': picking_in_kg.id,
+        })
+        move_kg._action_confirm()
+        move_kg._action_assign()
+        move_kg.picked = True
+        move_kg._action_done()
+
+        picking_in_litre = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        move_litre = self.env['stock.move'].create({
+            'name': 'in litre',
+            'product_id': product_litre.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_uom': uom_litre.id,
+            'product_uom_qty': 10,
+            'price_unit': 3,
+            'picking_type_id': self.picking_type_in.id,
+            'picking_id': picking_in_litre.id,
+        })
+        move_litre._action_confirm()
+        move_litre._action_assign()
+        move_litre.picked = True
+        move_litre._action_done()
+
+        # Deliver product_kg and return part of it so that the delivery move's
+        # returned_move_ids is non-empty. This is the code flow that triggers the singleton crash.
+        picking_out = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        out_kg = self.env['stock.move'].create({
+            'name': 'out kg',
+            'product_id': product_kg.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_uom': uom_kg.id,
+            'product_uom_qty': 2,
+            'picking_type_id': self.picking_type_out.id,
+            'picking_id': picking_out.id,
+        })
+        out_kg._action_confirm()
+        out_kg._action_assign()
+        out_kg.move_line_ids.quantity = 2
+        out_kg.picked = True
+        out_kg._action_done()
+
+        return_wizard = Form(self.env['stock.return.picking'].with_context(
+            active_ids=[picking_out.id],
+            active_id=picking_out.id,
+            active_model='stock.picking',
+        )).save()
+        return_wizard.product_return_moves.quantity = 1
+        return_action = return_wizard.action_create_returns()
+        return_pick = self.env['stock.picking'].browse(return_action['res_id'])
+        return_pick.move_ids.move_line_ids.quantity = 1
+        return_pick.move_ids.picked = True
+        return_pick._action_done()
+
+        # Use the delivery SVL (which has returned_move_ids) together with the
+        # litre receipt SVL to form a mixed-UoM-category candidate set.
+        svl_out_kg = out_kg.stock_valuation_layer_ids
+        svl_in_litre = move_litre.stock_valuation_layer_ids
+        mixed_svls = svl_out_kg | svl_in_litre
+        self.assertEqual(len(mixed_svls.mapped('uom_id')), 2)
+        self.assertTrue(svl_out_kg.stock_move_id.returned_move_ids)
+
+        # Must not raise ValueError: Expected singleton: uom.category(...)
+        qty_valued, _ = mixed_svls._consume_specific_qty(0, 10)
+        self.assertGreater(qty_valued, 0)
+
+        qty_valued, _ = mixed_svls._consume_all(0, 0, 10)
+        self.assertGreater(qty_valued, 0)
+
 
 class TestStockValuationFIFO(TestStockValuationCommon):
     @classmethod
