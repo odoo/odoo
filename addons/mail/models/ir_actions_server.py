@@ -301,7 +301,7 @@ class IrActionsServer(models.Model):
             warnings.append(_("A next activity can only be planned on models that use activities."))
 
         if self.state in ('followers', 'remove_followers') and self.followers_type == 'generic' and self.followers_partner_field_name:
-            fields, field_chain_str = self._get_relation_chain("followers_partner_field_name")
+            fields, field_chain_str, _property = self._get_relation_chain("followers_partner_field_name")
             if fields and fields[-1].comodel_name != "res.partner":
                 warnings.append(_(
                     "The field '%(field_chain_str)s' is not a partner field.",
@@ -309,7 +309,7 @@ class IrActionsServer(models.Model):
                 ))
 
         if self.state == 'next_activity' and self.activity_user_type == 'generic' and self.activity_user_field_name:
-            fields, field_chain_str = self._get_relation_chain("activity_user_field_name")
+            fields, field_chain_str, _property = self._get_relation_chain("activity_user_field_name")
             if fields and fields[-1].comodel_name != "res.users":
                 warnings.append(_(
                     "The field '%(field_chain_str)s' is not a user field.",

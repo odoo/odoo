@@ -5,7 +5,7 @@ from collections import abc
 from unittest.mock import patch
 
 from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, UserError
 from odoo.fields import Command, Domain
 from odoo.tests import tagged, TransactionCase, users
 from odoo.tools import mute_logger
@@ -1667,19 +1667,29 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(values[0]['attributes'][0]['value'], 'red')
 
     def test_properties_server_action_path_traversal(self):
+        email = self.env['test_orm.emailmessage'].create({
+            'discussion': self.discussion_1.id,
+            'attributes': [{
+                'name': 'discussion_color_code',
+                'type': 'char',
+                'string': 'Color Code',
+                'default': 'blue',
+                'value': 'red',
+            }],
+        })
+
         action = self.env['ir.actions.server'].create({
             'name': 'TestAction',
-            'model_id': self.env['ir.model'].search([
-                ('model', '=', 'test_orm.emailmessage'),
-            ]).id,
+            'model_id': self.env['ir.model']._get_id('test_orm.emailmessage'),
             'model_name': 'test_orm.emailmessage',
             'state': 'object_write',
         })
-        with self.assertRaises(ValidationError) as ve:
-            action.update_path = 'attributes.discussion_color_code'
-        self.assertEqual(ve.exception.args[0],
-            "The path contained by the field 'Field to Update Path' contains a non-relational field (Discussion Properties) that is not the last field in the path. You can't traverse non-relational fields (even in the quantum realm). Make sure only the last field in the path is non-relational.",
-        )
+
+        action.update_path = 'attributes.discussion_color_code'
+        action.value = 'green'
+        self.assertEqual(email['attributes']['discussion_color_code'], 'red')
+        action.with_context(active_id=email.id).run()
+        self.assertEqual(email['attributes']['discussion_color_code'], 'green')
 
     def test_getitem_property(self):
         # read a property that exist nowhere
