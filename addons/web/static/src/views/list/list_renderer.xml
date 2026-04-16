@@ -42,7 +42,13 @@
                                           t-on-dblclick="this.columnWidths.resetWidths"/>
                                 </t>
                             </th>
-                            <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{'o_list_button w-print-0 p-print-0': column.type === 'button_group'}"/>
+                            <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{'o_list_button w-print-0 p-print-0': column.type === 'button_group'}">
+                                <t t-if="column.type === 'widget' and column.label != ''">
+                                    <div t-att-class="{'d-flex': true}">
+                                        <span class="d-block min-w-0 text-truncate flex-grow-1" t-esc="column.label"/>
+                                    </div>
+                                </t>
+                            </th>
                         </t>
                         <th
                             class="o_count_header opacity-trigger-hover w-print-auto"
