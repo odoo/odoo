@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.M2OAndTextAutocomplete" t-inherit="web.Many2XAutocomplete" t-inherit-mode="primary">
+        <xpath expr="//span[@class='o_dropdown_button']" position="replace">
+            <span t-if="this.caretState.isOpen or (this.props.showCaretWhenValue and this.props.value)" class="o_dropdown_button" />
+        </xpath>
+    </t>
+
+    <t t-name="web.M2OAndTextField">
+        <div class="o_m2o_and_text_field" t-ref="root" t-on-keydown="this.onKeydown">
+            <t t-if="!this.props.readonly and !this.props.required and !this.hasM2OSelected and !this.state.showStacked">
+                <M2OAndTextAutocomplete t-props="this.m2oAndTextAutocompleteProps"/>
+            </t>
+            <t t-else="">
+                <RestrictedMany2One t-if="!this.props.readonly and !this.props.required and this.hasM2OSelected"
+                                    t-props="this.restrictedM2OProps"/>
+                <Many2One t-elif="this.props.readonly or this.props.required"
+                          t-props="this.m2oProps"/>
+                <div t-if="!this.props.readonly and (!this.props.required or this.textVisible)"
+                     class="o_m2o_and_text_field_text">
+                    <textarea t-ref="textArea"
+                              class="o_input"
+                              rows="1"
+                              t-on-input="this.onTextareaInput"
+                              t-att-placeholder="this.props.record.fields[this.props.textFieldName].string"/>
+                </div>
+                <div t-elif="this.props.readonly and this.textValue and this.textValue !== this.m2oDisplayName"
+                     class="o_m2o_and_text_field_description"
+                     style="white-space: pre-wrap"
+                     t-out="this.textValue"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,8 @@
+.o_m2o_and_text_field {
+    // Keep the M2O caret visible while the user edits the text area below it..
+    &:has(textarea:focus) .o_field_many2one_selection {
+        .o_external_button, .o_dropdown_button {
+            visibility: visible;
+        }
+    }
+}
