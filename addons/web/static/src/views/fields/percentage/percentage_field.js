@@ -14,6 +14,12 @@ export class PercentageField extends Component {
         ...standardFieldProps,
         digits: { type: Array, optional: true },
         noSymbol: { type: Boolean, optional: true },
+        trailingZeros: { type: Boolean, optional: true },
+    };
+
+    static defaultProps = {
+        noSymbol: false,
+        trailingZeros: false,
     };
 
     setup() {
@@ -22,6 +28,7 @@ export class PercentageField extends Component {
                 formatPercentage(this.props.record.data[this.props.name], {
                     digits: this.props.digits,
                     noSymbol: true,
+                    trailingZeros: this.props.trailingZeros,
                     field: this.props.record.fields[this.props.name],
                 }),
             refName: "numpadDecimal",
@@ -34,6 +41,7 @@ export class PercentageField extends Component {
         return formatPercentage(this.props.record.data[this.props.name], {
             digits: this.props.digits,
             noSymbol: this.props.noSymbol,
+            trailingZeros: this.props.trailingZeros,
             field: this.props.record.fields[this.props.name],
         });
     }
@@ -53,11 +61,13 @@ export const percentageField = {
             digits = options.digits;
         }
 
-        const noSymbol = options.no_symbol || false;
+        const noSymbol = options.no_symbol;
+        const trailingZeros = options.trailing_zeros;
 
         return {
             digits,
             noSymbol,
+            trailingZeros,
         };
     },
 };

@@ -414,11 +414,13 @@ formatMonetary.extractOptions = ({ options }) => ({
  * @param {number | false} value
  * @param {Object} [options]
  * @param {boolean} [options.noSymbol] if true, doesn't concatenate with "%"
+ * @param {boolean} [options.trailingZeros]
  * @returns {string}
  */
 export function formatPercentage(value, options = {}) {
     value = value || 0;
     options = Object.assign({ trailingZeros: false, thousandsSep: "" }, options);
+    options.trailingZeros = options.trailingZeros === true;
     if (!options.digits && options.field) {
         options.digits = options.field.digits;
     }

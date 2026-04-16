@@ -86,3 +86,36 @@ test("PercentageField without no_symbol option shows percentage symbol", async (
     expect(".o_field_widget[name=float_field] span").toHaveCount(1);
     expect(".o_field_widget[name=float_field] span").toHaveText("%");
 });
+
+test("PercentageField with digits option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `<form><field name="float_field" widget="percentage" options="{'digits': [3, 2]}"/></form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=float_field] input").toHaveValue("44.44");
+});
+
+test("PercentageField with digits option but no trailing_zeros", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `<form><field name="float_field" widget="percentage" options="{'digits': [3, 8]}"/></form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=float_field] input").toHaveValue("44.444");
+});
+
+test("PercentageField with digits option and trailing_zeros", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `<form><field name="float_field" widget="percentage" options="{'digits': [3, 8], 'trailing_zeros': True}"/></form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=float_field] input").toHaveValue("44.44400000");
+});
