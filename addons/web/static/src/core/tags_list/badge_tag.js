@@ -27,7 +27,7 @@ export class BadgeTag extends Component {
 
     get cssClass() {
         return mergeClasses(
-            `o_badge badge rounded-pill lh-1 ${this.tagColorClass}`,
+            `o_badge badge rounded-pill ${this.tagColorClass}`,
             { "cursor-pointer": this.props.onClick },
             this.props.cssClass
         );
