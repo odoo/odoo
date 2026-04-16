@@ -121,6 +121,17 @@ class MrpWipAccounting(models.TransientModel):
             if not wizard.line_ids or wizard.mo_ids:
                 wizard.line_ids = [Command.clear()] + wizard._get_line_vals(wizard.mo_ids, datetime.combine(wizard.date, time.max))
 
+    def _prepare_move_line_vals(self, line):
+        return {
+            'name': line.label,
+            'account_id': line.account_id.id,
+            'debit': line.debit,
+            'credit': line.credit,
+        }
+
+    def _prepare_move_line_vals_list(self):
+        return [Command.create(self._prepare_move_line_vals(line)) for line in self.line_ids]
+
     def confirm(self):
         self.ensure_one()
         if self.env.company.currency_id.compare_amounts(sum(self.line_ids.mapped('credit')), sum(self.line_ids.mapped('debit'))) != 0:
@@ -133,14 +144,7 @@ class MrpWipAccounting(models.TransientModel):
             'date': self.date,
             'ref': self.reference,
             'move_type': 'entry',
-            'line_ids': [
-                Command.create({
-                    'name': line.label,
-                    'account_id': line.account_id.id,
-                    'debit': line.debit,
-                    'credit': line.credit,
-                }) for line in self.line_ids
-            ]
+            'line_ids': self._prepare_move_line_vals_list()
         })
         move._post()
         move._reverse_moves(default_values_list=[{
