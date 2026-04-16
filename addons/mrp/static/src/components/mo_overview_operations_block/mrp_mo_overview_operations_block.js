@@ -25,7 +25,6 @@ export class MoOverviewOperationsBlock extends Component {
                 real_cost: { type: Number, optional: true },
                 real_cost_decorator: { type: [String, Boolean], optional: true },
                 uom_name: { type: String, optional: true },
-                currency_id: { type: Number, optional: true },
                 currency: { type: String, optional: true },
                 done: { type: Boolean, optional: true },
             },
@@ -64,7 +63,7 @@ export class MoOverviewOperationsBlock extends Component {
     //---- Helpers ----
 
     formatMonetary(val) {
-        return formatMonetary(val, { currencyId: this.props.summary.currency_id });
+        return formatMonetary(val, { currencyId: this.props.summary.currency.id });
     }
 
     getColorClass(decorator) {

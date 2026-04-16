@@ -7,12 +7,11 @@ from odoo import fields, models
 class ReportMrpReport_Mo_Overview(models.AbstractModel):
     _inherit = 'report.mrp.report_mo_overview'
 
-    def _get_extra_replenishments(self, product):
-        res = super()._get_extra_replenishments(product)
+    def _get_extra_replenishments(self, warehouse, product):
+        res = super()._get_extra_replenishments(warehouse, product)
         domain = [('state', 'in', ['draft', 'sent', 'to approve']), ('product_id', '=', product.id)]
-        warehouse_id = self.env.context.get('warehouse_id', False)
-        if warehouse_id:
-            domain += [('order_id.picking_type_id.warehouse_id', '=', warehouse_id)]
+        if warehouse:
+            domain += [('order_id.picking_type_id.warehouse_id', '=', warehouse.id)]
         po_lines = self.env['purchase.order.line'].search(domain, order='date_planned, id')
 
         for po_line in po_lines:
@@ -61,8 +60,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             return self._format_receipt_date('expected', planned_date)
         return res
 
-    def _get_resupply_data(self, rules, rules_delay, quantity, uom_id, product, production):
-        res = super()._get_resupply_data(rules, rules_delay, quantity, uom_id, product, production)
+    def _get_resupply_data(self, rules, rules_delay, quantity, uom_id, product, production, warehouse):
+        res = super()._get_resupply_data(rules, rules_delay, quantity, uom_id, product, production, warehouse)
         if any(rule for rule in rules if rule.action == 'buy' and product.seller_ids):
             supplier = product._select_seller(quantity=quantity, uom_id=product.uom_id)
             if supplier:
