@@ -6,7 +6,12 @@ export class AccountFiscalPosition extends Base {
 
     getTaxesAfterFiscalPosition(taxes) {
         if (!this.tax_ids?.length) {
-            return [];
+            // Mirror Python's map_tax: only return empty when the taxes themselves
+            // are linked to fiscal positions (tax units pattern). Otherwise pass through.
+            if (taxes.some((tax) => tax.fiscal_position_ids?.length)) {
+                return [];
+            }
+            return taxes;
         }
 
         const newTaxIds = [];

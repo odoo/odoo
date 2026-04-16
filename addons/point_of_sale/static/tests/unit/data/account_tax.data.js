@@ -18,6 +18,7 @@ export class AccountTax extends models.ServerModel {
             "id",
             "sequence",
             "tax_group_id",
+            "fiscal_position_ids",
         ];
     }
 
@@ -35,6 +36,7 @@ export class AccountTax extends models.ServerModel {
             company_id: 250,
             sequence: 1,
             tax_group_id: 1,
+            fiscal_position_ids: [1],
         },
         {
             id: 2,
@@ -49,6 +51,7 @@ export class AccountTax extends models.ServerModel {
             company_id: 250,
             sequence: 1,
             tax_group_id: 3,
+            fiscal_position_ids: [],
         },
         {
             id: 3,
