@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ReferencesCarouselOption">
+    <BuilderRow label.translate="Direction">
+        <BuilderSelect>
+            <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'s_references_carousel_direction_left'">
+                Left
+            </BuilderSelectItem>
+            <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'s_references_carousel_direction_right'">
+                Right
+            </BuilderSelectItem>
+            <BuilderSelectItem id="'references_carousel_direction_none_opt'"
+                    classAction="'s_references_carousel_direction_none'">
+                None
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <t t-if="!this.isActiveItem('references_carousel_direction_none_opt')">
+        <BuilderRow level="1" label.translate="Scroll Speed">
+            <BuilderRange styleAction="'--carousel-animation-speed'"
+                min="1"
+                max="10"
+                step="1"
+                unit="'s'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Hover effect">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_references_carousel_hover_pause'">Pause</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_references_carousel_hover_slow'">Slowdown</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_references_carousel_hover_direction'">Swap Direction</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </t>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <references_carousel_option
+            template="website.ReferencesCarouselOption"
+            selector="section.s_references_carousel"/>
+    </xpath>
+</t>
+
+</templates>
