@@ -294,7 +294,7 @@
                     <tr>
                         <td align="center">
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                   style="background-color: #875A7B; color: #FFFFFF; font-size: 14px; padding: 14px 0; border-radius: 3px;">
+                                   style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; font-size: 14px; padding: 14px 0; border-radius: 3px;">
                                 <tr>
                                     <td align="left" style="padding-left: 16px;">
                                         You have received <t t-if="invoice_count > 1">new electronic invoices!</t><t t-else="">a new electronic invoice!</t>
