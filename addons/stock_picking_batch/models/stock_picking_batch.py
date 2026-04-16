@@ -211,7 +211,7 @@ class StockPickingBatch(models.Model):
         self.ensure_one()
         if not self.picking_ids:
             raise UserError(_("You have to set some pickings to batch."))
-        self.picking_ids.action_confirm()
+        self.picking_ids.filtered(lambda picking: picking.state == 'draft').action_confirm()
         self._check_company()
         self.state = 'in_progress'
         return True
