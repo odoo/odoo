@@ -145,21 +145,42 @@ export class PaymentVivaCom extends PaymentInterface {
         return new Promise((resolve) => {
             const sessionId = paymentLine.uiState.vivaSessionId;
             this.paymentLineResolvers[paymentLine.uuid] = resolve;
+            let connectionLost = false;
             const intervalId = setInterval(async () => {
                 const isPaymentStillValid = () =>
                     this.paymentLineResolvers[paymentLine.uuid] &&
-                    paymentLine.payment_status === "waitingCard" &&
                     sessionId === paymentLine.uiState.vivaSessionId;
                 if (!isPaymentStillValid()) {
                     clearInterval(intervalId);
                     return;
                 }
 
-                const result = await this._call_viva_com(
-                    sessionId,
-                    "viva_com_get_payment_status",
-                    paymentLine
-                );
+                let result;
+                try {
+                    // Use a direct silent ORM call instead of _call_viva_com
+                    // so that _handleOdooConnectionFailure is NOT triggered
+                    // during polling (no error dialog spam).
+                    result = await this.env.services.orm.silent.call(
+                        "pos.payment.method",
+                        "viva_com_get_payment_status",
+                        [[this.payment_method_id.id], sessionId]
+                    );
+                } catch {
+                    // Connection failure during polling — the payment may have
+                    // gone through on Viva's side. Keep polling silently until
+                    // we get a definitive answer.
+                    if (!connectionLost) {
+                        connectionLost = true;
+                        this.env.services.notification.add(
+                            _t(
+                                "No internet connection. Waiting for recovery to confirm the payment..."
+                            ),
+                            { type: "warning" }
+                        );
+                    }
+                    return;
+                }
+                connectionLost = false;
                 if ("success" in result && isPaymentStillValid()) {
                     clearInterval(intervalId);
                     if (this.isPaymentSuccessful(result)) {
