@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { on, queryAll } from "@odoo/hoot-dom";
-import { App, proxy, types as t, useEffect, useListener, validateType } from "@odoo/owl";
+import { App, proxy, types as t, untrack, useEffect, useListener, validateType } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     isInstanceOf,
@@ -118,7 +118,7 @@ const $writeText = $clipboard?.writeText.bind($clipboard);
 
 /** @type {number} */
 export const T_INTEGER = t.customValidator(t.number(), $isInteger, "value is not an integer");
-export const T_NODE = t.instanceOf(Node);
+export const T_NODE = t.customValidator(t.object(), isNode, "value is not a node");
 export const T_REGEX = t.instanceOf(RegExp);
 /** @type {null} */
 export const T_NULL = t.literal(null);
@@ -962,7 +962,7 @@ export function formatTime(value, unit) {
 export function formatValidationIssues(message, issues) {
     const formatted = [message];
     for (const issue of issues) {
-        formatted.push(`- ${issue.message} (received: ${formatHumanReadable(issue.received)})`);
+        formatted.push(` - ${issue.message} (received: ${formatHumanReadable(issue.received)})`);
     }
     return formatted.join("\n");
 }
@@ -1551,6 +1551,17 @@ export function toExplicitString(value) {
         R_INVISIBLE_CHARACTERS,
         (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`
     );
+}
+
+/**
+ * @template {() => any} T
+ * @param {T} fn
+ * @returns {T}
+ */
+export function untracked(fn) {
+    return function (...args) {
+        return untrack(fn.bind(this, ...args));
+    };
 }
 
 /**

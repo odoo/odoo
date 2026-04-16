@@ -165,7 +165,7 @@ test("can recursively open sub registry", () => {
 
 test("can validate the values from a schema", () => {
     serverState.debug = "1";
-    const schema = t.strictObject({ name: t.string, "age?": t.number });
+    const schema = t.strictObject({ name: t.string(), "age?": t.number() });
     const friendsRegistry = new Registry();
     friendsRegistry.addValidation(schema);
     expect(() => friendsRegistry.add("jean", { name: "Jean" })).not.toThrow();
@@ -175,12 +175,14 @@ test("can validate the values from a schema", () => {
     expect(() => friendsRegistry.add("adrien", { name: 23 })).toThrow();
     expect(() => friendsRegistry.add("hubert", { age: 54 })).toThrow();
     expect(() => friendsRegistry.add("chris", { name: "chris", city: "Namur" })).toThrow();
-    expect(() => friendsRegistry.addValidation(t.strictObject({ something: t.number }))).toThrow();
+    expect(() =>
+        friendsRegistry.addValidation(t.strictObject({ something: t.number() }))
+    ).toThrow();
 });
 
 test("can validate by adding a schema after the registry is filled", async () => {
     serverState.debug = "1";
-    const schema = t.strictObject({ name: t.string });
+    const schema = t.strictObject({ name: t.string() });
     const friendsRegistry = new Registry();
     expect(() => friendsRegistry.add("jean", { name: 999 })).not.toThrow();
     expect(() => friendsRegistry.addValidation(schema)).toThrow();
@@ -189,7 +191,7 @@ test("can validate by adding a schema after the registry is filled", async () =>
 test("can validate subclassess", async () => {
     serverState.debug = "1";
     const schema = t.strictObject({
-        component: t.customValidator(t.any, (c) => c.prototype instanceof Component),
+        component: t.customValidator(t.any(), (c) => c.prototype instanceof Component),
     });
     const widgetRegistry = new Registry();
     widgetRegistry.addValidation(schema);
@@ -200,7 +202,7 @@ test("can validate subclassess", async () => {
 });
 
 test("only validate in debug", async () => {
-    const schema = t.strictObject({ name: t.string });
+    const schema = t.strictObject({ name: t.string() });
     const registry = new Registry();
     registry.addValidation(schema);
     expect(() => registry.add("jean", { name: 50 })).not.toThrow({
