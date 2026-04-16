@@ -496,6 +496,7 @@ class AccountMove(models.Model):
             if not is_allowance:
                 line.l10n_tw_edi_ecpay_item_sequence = index
 
+            # ItemRemark is in TW Chinese Characters because the official document uses TW Chinese Characters
             if self.l10n_tw_edi_is_b2b and is_allowance:
                 item_list.append({
                     "OriginalInvoiceNumber": self.l10n_tw_edi_ecpay_invoice_id,
@@ -515,6 +516,7 @@ class AccountMove(models.Model):
                     "ItemPrice": item_price,
                     "ItemTaxType": line.tax_ids[0].l10n_tw_edi_tax_type if tax_type != "4" and line.tax_ids else "",
                     "ItemAmount": item_amount,
+                    "ItemRemark": f"商品單位: {line.product_uom_id.name[:6]}" if line.product_uom_id else ""
                 })
             if self.l10n_tw_edi_is_b2b:
                 sale_amount += item_amount
