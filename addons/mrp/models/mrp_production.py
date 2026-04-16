@@ -1775,7 +1775,7 @@ class MrpProduction(models.Model):
             if as_soon_as_possible:
                 order.date_start = fields.Datetime.now()
             order._plan_workorders()
-            order.message_post(body=self.env._("The manufacturing order has been planned."), subtype_id=self.env.ref('mrp.mrp_mo_planned').id)
+            order.message_post(body=self.env._("The manufacturing order has been planned."), subtype_id=self.env.ref('mrp.mt_mo_state').id)
         return True
 
     def _plan_workorders(self):
@@ -1799,9 +1799,6 @@ class MrpProduction(models.Model):
     def button_unplan(self):
         self._unplan_workorders()
         for order in self:
-            for message in order.message_ids:
-                if message.subtype_id.id == self.env.ref('mrp.mrp_mo_planned').id:
-                    break
             if order.previous_date_start:
                 order.date_start = order.previous_date_start
             order.message_post(body=self.env._("The manufacturing order has been unplanned."))
@@ -3180,16 +3177,8 @@ class MrpProduction(models.Model):
 
     def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
-        if 'state' in track_init_values and self.state == 'confirmed':
-            return self.env.ref('mrp.mrp_mo_in_confirmed')
-        elif 'state' in track_init_values and self.state == 'progress':
-            return self.env.ref('mrp.mrp_mo_in_progress')
-        elif 'state' in track_init_values and self.state == 'to_close':
-            return self.env.ref('mrp.mrp_mo_in_to_close')
-        elif 'state' in track_init_values and self.state == 'done':
-            return self.env.ref('mrp.mrp_mo_in_done')
-        elif 'state' in track_init_values and self.state == 'cancel':
-            return self.env.ref('mrp.mrp_mo_in_cancelled')
+        if 'state' in track_init_values:
+            return self.env.ref('mrp.mt_mo_state')
         return super()._track_log_get_default_subtype(track_init_values)
 
     # -------------------------------------------------------------------------
