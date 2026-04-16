@@ -60,7 +60,7 @@
             <div class="o-mail-DiscussContent-core overflow-auto o-scrollbar-thin d-flex flex-grow-1 w-100" t-custom-ref="core">
                 <t name="core-content">
                     <t t-if="this.thread">
-                        <div t-if="!this.ui.isSmall or !this.threadActions.activeAction?.actionPanelComponentCondition" class="d-flex flex-column flex-grow-1 bg-inherit o-min-width-0">
+                        <div t-if="!this.ui.isSmall or !this.threadActions.activeAction?.actionPanelComponentCondition" class="d-flex flex-column flex-grow-1 bg-inherit min-w-0">
                             <t name="thread"><Thread thread="this.thread" t-key="this.thread.localId" jumpPresent="this.state.jumpThreadPresent"/></t>
                             <Composer t-if="(this.thread.model !== 'mail.box' and !this.thread.channel?.composerHidden) or this.thread.composer.replyToMessage" t-key="this.thread.localId" composer="this.thread.composer" autofocus="true" onDiscardCallback="() => (this.thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="this.root" type="this.thread.composer.replyToMessage ? (this.thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
                             <span t-if="this.thread.channel?.composerHidden" class="bg-200 py-1 text-center fst-italic fw-bold text-muted" t-out="this.thread.channel?.composerHiddenText"/>

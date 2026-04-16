@@ -36,7 +36,7 @@
                             <t t-elif="this.message.is_bookmarked  and !(this.props.thread?.eq(this.store.bookmarkBox))" t-call="mail.Message.sidebarBookmark"/>
                         </t>
                     </div>
-                    <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': this.isEditing }" t-custom-ref="messageContent">
+                    <div class="w-100 min-w-0" t-att-class="{ 'flex-grow-1': this.isEditing }" t-custom-ref="messageContent">
                         <div t-if="!this.props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !this.message.isNote, 'pe-2': this.props.asCard and this.isMobileOS }" name="header">
                             <span t-if="this.message.authorName and this.shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="this.getAuthorAttClass()">
                                 <strong class="me-1 o-fw-600" t-out="this.props.messageSearch?.highlight(this.message.authorName) ?? this.message.authorName"/>
@@ -66,7 +66,7 @@
                             <t t-if="!this.isAlignedRight and !this.message.bubbleColor and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
                         <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': this.isAlignedRight }">
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': this.isEditing, 'opacity-50': this.message.isPending, 'pt-1': !this.showSubject and !this.message.bubbleColor, 'o-mail-Message-pollContent flex-grow-1': this.message.poll, 'o_track': this.message.message_type == 'tracking' }">
+                            <div class="o-mail-Message-content min-w-0" t-att-class="{ 'w-100': this.isEditing, 'opacity-50': this.message.isPending, 'pt-1': !this.showSubject and !this.message.bubbleColor, 'o-mail-Message-pollContent flex-grow-1': this.message.poll, 'o_track': this.message.message_type == 'tracking' }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': this.isEditing }">
                                     <t t-set="showTextVisually" t-value="!this.message.linkPreviewSquash and (this.message.hasTextContent or this.message.subtype_id?.description or this.message.isEmpty)"/>
                                     <t t-if="['notification', 'tracking'].includes(this.message.message_type) and this.message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>

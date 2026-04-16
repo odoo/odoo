@@ -35,7 +35,7 @@
                     <DiscussAvatar channel="this.channel" size="26"/>
                 </div>
                 <div t-if="!this.store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName o-mail-DiscussSidebar-itemName overflow-hidden ms-2 text-start flex-grow-1 z-1" t-att-class="this.itemNameAttClass">
-                    <div class="d-flex align-items-baseline o-min-width-0 gap-2">
+                    <div class="d-flex align-items-baseline min-w-0 gap-2">
                         <span class="text-truncate" t-out="this.channel.displayName" t-custom-ref="displayName"/>
                         <div class="d-flex gap-2 ms-auto" t-custom-ref="displayNameAdditionalContent"/>
                     </div>
