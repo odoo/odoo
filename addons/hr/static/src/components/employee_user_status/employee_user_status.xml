@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.EmployeeUserStatus">
+        <Dropdown t-if="this.status">
+            <button class="btn btn-sm rounded-pill d-inline-flex align-items-center gap-1" t-att-class="this.buttonClass">
+                <i class="fa" t-att-class="this.status.icon"/>
+                <span t-out="this.status.label"/>
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem t-foreach="this.items" t-as="item" t-key="item.key"
+                        onSelected="() => this.onSelect(item)">
+                    <i class="fa me-2" t-att-class="item.icon"/>
+                    <span t-out="item.label"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

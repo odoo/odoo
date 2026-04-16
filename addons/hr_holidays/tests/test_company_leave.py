@@ -286,9 +286,11 @@ class TestCompanyLeave(TransactionCase):
             'date_to': date(2020, 4, 2),
         })
 
-        with self.assertQueryCount(__system__=1950):  # 770 community
-            # Original query count: 1987
+        with self.assertQueryCount(__system__=2317):  # 770 community
+            # Original query count: 1987 (1950 before every employee owned a user)
             # Without tracking/activity context keys: 5154
+            # Each active employee now has a user, so generating company-wide time
+            # off does per-employee user work (mail/activity notifications).
             company_leave.action_generate_time_off()
 
         leaves = self.env['hr.leave'].search([('work_entry_type_id', '=', self.bank_holiday.id)])

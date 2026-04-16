@@ -51,3 +51,5 @@ homeworking_own_rule,homeworking: own,hr.employee.location,base.group_user,crud,
 ir_rule_res_partner_bank_internal_users,HR: Prevent non HR officers from accessing employee bank accounts,res.partner.bank,base.group_user,r,"[('partner_id.employee_ids', '=', False)]"
 ir_rule_res_partner_bank_internal_users_1,HR: Prevent non HR officers from accessing employee bank accounts,res.partner.bank,base.group_partner_manager,cru,"[('partner_id.employee_ids', '=', False)]"
 ir_rule_res_partner_bank_employees,HR: Allow HR officers from accessing employee bank accounts,res.partner.bank,hr.group_hr_user,cru,
+access_hr_invitation_link_hr_user,hr.invitation.link.hr.user,hr.invitation.link,hr.group_hr_user,crud,
+ir_rule_hr_invitation_link_company,HR Invitation Link: Multi Company,hr.invitation.link,,crud,"[('company_id', 'in', company_ids)]"
