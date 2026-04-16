@@ -1,9 +1,12 @@
 import { fields } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
 import { browser } from "@web/core/browser/browser";
+import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
+
+const { DateTime } = luxon;
 
 /** @type {import("models").Store} */
 const StorePatch = {
@@ -64,6 +67,12 @@ const StorePatch = {
             this.activityBroadcastChannel = null;
         }
     },
+    broadcastActivity(data) {
+        return this.activityBroadcastChannel?.postMessage({
+            ts: serializeDateTime(DateTime.now()),
+            ...data,
+        });
+    },
     onUpdateActivityGroups() {},
     /**
      * @param {string} resModel
@@ -104,9 +113,17 @@ const StorePatch = {
     },
     /**
      * @param {object} param0
-     * @param {{ type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<import("models").Activity> }} param0.data
+     * @param {{ type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<import("models").Activity, ts: DateTime> }} param0.data
      */
     _onActivityBroadcastChannelMessage({ data }) {
+        if (data.ts) {
+            /** @type {DateTime} */
+            const ts = deserializeDateTime(data.ts);
+            const diff = DateTime.now().diff(ts, "seconds").seconds;
+            if (diff < 0 || diff > 3) {
+                return; // not real-time activity data change, ignore
+            }
+        }
         switch (data.type) {
             case "INSERT":
                 this.insert(data.payload, { broadcast: false });
