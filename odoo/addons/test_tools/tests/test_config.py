@@ -1,4 +1,5 @@
 import os
+import tempfile
 import unittest
 from unittest.mock import call, patch
 
@@ -774,3 +775,30 @@ class TestConfigManager(TransactionCase):
         # Remove this test once there's a new option that also start with --st
         _, options = self.parse_reset(['--st'])
         self.assertTrue(options['stop_after_init'])
+
+    def test_15_addons_path_glob(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            def make_addons_dir(name):
+                path = os.path.join(temp_dir, name)
+                module = os.path.join(path, 'my_module')
+                os.makedirs(module)
+                open(os.path.join(module, '__init__.py'), 'wb').close()
+                open(os.path.join(module, '__manifest__.py'), 'wb').close()
+                return path
+
+            valid1 = make_addons_dir('valid1')
+            valid2 = make_addons_dir('valid2')
+            not_addons = os.path.join(temp_dir, 'not_addons')
+            os.makedirs(not_addons)  # directory without any valid module
+
+            # Glob expands to all matching subdirs but only keeps valid addons dirs
+            _, options = self.parse_reset(['--addons-path', os.path.join(temp_dir, '*')])
+            self.assertEqual(options['addons_path'], sorted([valid1, valid2]))
+
+            # A literal path to a non-addons directory is still accepted as-is
+            _, options = self.parse_reset(['--addons-path', not_addons])
+            self.assertEqual(options['addons_path'], [not_addons])
+
+            # A glob with no matches silently resolves to an empty list
+            _, options = self.parse_reset(['--addons-path', os.path.join(temp_dir, 'no_match_*')])
+            self.assertEqual(options['addons_path'], [])
