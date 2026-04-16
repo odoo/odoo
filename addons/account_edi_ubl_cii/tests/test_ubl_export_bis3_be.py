@@ -575,7 +575,7 @@ class TestBeExport(TestUblExportBis3BE):
             product_id=self.product_a,
             partner_id=self.partner_be,
         )
-        invoice.commercial_partner_id.property_account_position_id = co_contractant
+        invoice.fiscal_position_id = co_contractant
         invoice.action_post()
         xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
         xml_tree = etree.fromstring(xml_content)
