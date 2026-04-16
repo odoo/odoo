@@ -307,6 +307,22 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             max_dp=currency.decimal_places,
         )
 
+        # Re-derive PayableRoundingAmount from amount_total so Peppol BR-CO-16
+        # (PayableAmount = TaxInclusive - Prepaid + Rounding) holds by
+        # construction. The super derives Rounding from an independent
+        # aggregation of base lines, which can diverge from amount_total by
+        # one cent when the tax-smoothing engine applies (e.g. global
+        # discount or down payment with manual_tax_amounts).
+        tax_inclusive_amount = float(node['cbc:TaxInclusiveAmount']['_text'])
+        payable_rounding_amount = amount_total - tax_inclusive_amount + vals['_ubl_values']['tax_withholding_amount']
+        if not currency.is_zero(payable_rounding_amount):
+            node['cbc:PayableRoundingAmount'] = {
+                '_text': FloatFmt(payable_rounding_amount, min_dp=currency.decimal_places),
+                'currencyID': currency.name,
+            }
+        else:
+            node.pop('cbc:PayableRoundingAmount', None)
+
     def _add_invoice_monetary_total_nodes(self, document_node, vals):
         # OVERRIDE
         invoice = vals.get('invoice')
