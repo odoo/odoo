@@ -2446,6 +2446,52 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         used_points = coupon.history_ids[0].used
         self.assertEqual(used_points, coupon.currency_id.round(used_points))
 
+    def test_non_monetary_points_not_rounded_by_currency(self):
+        """Check that points from non-monetary programs are not rounded using the currency rounding factor.
+
+        When a loyalty program uses reward_point_mode='order' (dimensionless points, not money),
+        its currency's rounding factor must not be applied to point values. A currency with a
+        large rounding factor (e.g. 250) would otherwise collapse 1 point to 0, making rewards
+        with required_points=1 permanently unclaimable.
+        """
+        large_rounding_currency = self.env['res.currency'].create({
+            'name': 'TST',
+            'symbol': 'T',
+            'rounding': 250.0,
+            'active': True,
+        })
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Test 1 point per order',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'currency_id': large_rounding_currency.id,
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'per_order',
+                'discount': 10,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+        order = self.empty_order
+        order.order_line = [Command.create({'product_id': self.largeCabinet.id})]
+        coupon = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': order.partner_id.id,
+            'points': 1,
+        })
+
+        points = order._get_real_points_for_coupon(coupon)
+        self.assertEqual(points, 1, "1 point from an order-based program must not be rounded to 0 by the currency's rounding factor")
+
+        claimable = order._get_claimable_rewards(forced_coupons=coupon)
+        self.assertIn(coupon, claimable, "The reward must be claimable with 1 point")
+
     def test_rounding_program_application(self):
         """Check that the loyalty program is applied with the currency settings of the order."""
         JPY_company = self.env["res.company"].create({
