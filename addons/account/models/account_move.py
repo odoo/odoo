@@ -1451,7 +1451,10 @@ class AccountMove(models.Model):
     @api.depends('suitable_journal_ids')
     def _compute_show_journal(self):
         for move in self:
-            move.show_journal = len(move.suitable_journal_ids) > 1
+            move.show_journal = (
+                len(move.suitable_journal_ids) > 1
+                or move.journal_id and move.journal_id not in move.suitable_journal_ids
+            )
 
     def _compute_payments_widget_to_reconcile_info(self):
 
