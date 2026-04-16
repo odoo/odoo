@@ -486,7 +486,8 @@ class MailMail(models.Model):
         if url_attachments:
             url_attachments.sudo().generate_access_token()
             attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links', {'attachments': url_attachments})
-            body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
+            body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False,
+                                                     before_classes=["o-signature-container", "o_signature"])
             attachments -= url_attachments
 
         # Turn remaining attachments into links if they are too heavy and
@@ -496,14 +497,14 @@ class MailMail(models.Model):
                 lambda a: a.res_model and a.res_id and a.res_model != 'mail.message'):
             estimated_email_size_bytes = self._estimate_email_size(
                 headers, body, [a.file_size for a in attachments.sudo()])
-            max_email_size_bytes = (mail_server or self.env['ir.mail_server']
-                                    ).sudo()._get_max_email_size() * 1024 * 1024
+            max_email_size_bytes = self.env['ir.mail_server'].sudo()._get_max_email_size() * 1024 * 1024
             if estimated_email_size_bytes > max_email_size_bytes:
                 # Remove attachments and prepare downloadable links to be added in the body
                 record_owned_attachments.sudo().generate_access_token()
                 attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links',
                                                                 {'attachments': record_owned_attachments})
-                body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
+                body = tools.mail.append_content_to_html(
+                    body, attachments_links, plaintext=False, before_classes=["o-signature-container", "o_signature"])
                 attachments -= record_owned_attachments
         # attachments sorted by increasing ID to match front-end and upload ordering
         attachments.sudo().fetch(['name', 'raw', 'mimetype'])

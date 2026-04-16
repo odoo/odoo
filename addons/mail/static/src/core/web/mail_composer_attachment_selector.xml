@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="mail.MailComposerAttachmentSelector">
-        <FileUploader multiUpload="true" onUploaded.bind="this.onFileUploaded">
+        <!-- This template is used by mail_attachments_selector without the method inlineAttachmentIfNeeded -->
+        <FileUploader multiUpload="true" onUploaded.bind="this.onFileUploaded"
+            onUploadComplete="() => this.inlineAttachmentIfNeeded?.()">
             <t t-set-slot="toggler">
                 <button class="btn btn-light w-auto" data-hotkey="a" title="Add Attachment">
                     <i class="fa fa-fw fa-paperclip"/>

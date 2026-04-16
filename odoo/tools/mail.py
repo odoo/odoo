@@ -700,7 +700,8 @@ def plaintext2html(text: str, container_tag: str | None = None, with_paragraph: 
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
     return markupsafe.Markup(final)
 
-def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None):
+
+def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None, before_classes=None):
     """ Append extra content at the end of an HTML snippet, trying
         to locate the end of the HTML document (</body>, </html>, or
         EOF), and converting the provided content in html unless ``plaintext``
@@ -723,6 +724,8 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
         :param bool preserve: if content is plaintext, wrap it into a <pre>
             instead of converting it into html
         :param str container_tag: tag to wrap the content into, defaults to `div`.
+        :param List[str] before_classes: try to append before the first div
+            with one of the specified classes (otherwise fallback to standard behavior)
         :rtype: markupsafe.Markup
     """
     if plaintext and preserve:
@@ -735,7 +738,15 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
     # Force all tags to lowercase
     html = re.sub(r'(</?)(\w+)([ >])',
         lambda m: '%s%s%s' % (m[1], m[2].lower(), m[3]), html)
-    insert_location = html.find('</body>')
+    insert_location = -1
+    if before_classes:
+        classes_or = '|'.join(re.escape(cls) for cls in before_classes)
+        pattern = rf'<div\s[^>]*class\s*=\s*["\'][^"\']*({classes_or})[^"\']*["\'][^>]*>'
+        match = re.search(pattern, html, re.IGNORECASE | re.DOTALL)
+        if match:
+            insert_location = match.start()
+    if insert_location == -1:
+        insert_location = html.find('</body>')
     if insert_location == -1:
         insert_location = html.find('</html>')
     if insert_location == -1:
