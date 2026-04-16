@@ -36,7 +36,13 @@ class AccountMove(models.Model):
                 'product_id': l.product_id.id,
                 'name': l.product_id.name,
                 'account_id': l.product_id.product_tmpl_id.get_product_accounts()['expense'].id,
+<<<<<<< ccbccde7008e58bf00556f55e119dc0569301889
                 'price_unit': sign * l.currency_id._convert(l.price_subtotal, l.company_currency_id, l.company_id, self.invoice_date or fields.Date.context_today(l)),
+||||||| cd8f7d3b51e15d2f3c973c857c6e2c0cf894e4c5
+                'price_unit': sign * l.company_currency_id.round(l.price_subtotal * l.currency_rate),
+=======
+                'price_unit': sign * l.company_currency_id.round(l.price_subtotal / l.currency_rate),
+>>>>>>> eee625be655172264bbf319098e6e0048012b873
                 'split_method': l.product_id.split_method_landed_cost or 'equal',
             }) for l in landed_costs_lines],
         })

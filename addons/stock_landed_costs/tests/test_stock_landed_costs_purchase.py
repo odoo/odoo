@@ -927,6 +927,20 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         ])
         landed_cost_amls = landed_cost.account_move_id.line_ids.sorted('credit')
         self.assertRecordValues(landed_cost_amls, [
+<<<<<<< ccbccde7008e58bf00556f55e119dc0569301889
             {'account_id': lc_stock_valuation_account.id, 'debit':  70.0,   'credit':  0.0},
             {'account_id': lc_expense_account.id,         'debit':   0.0,   'credit': 70.0},
+||||||| cd8f7d3b51e15d2f3c973c857c6e2c0cf894e4c5
+            {'account_id': lc_stock_valuation_account.id, 'debit':  35.0,   'credit':  0.0},
+            {'account_id': lc_expense_account.id,         'debit':   0.0,   'credit': 35.0},
+=======
+            {'account_id': lc_stock_valuation_account.id, 'debit':  140.0,   'credit':  0.0},
+            {'account_id': lc_expense_account.id,         'debit':   0.0,   'credit': 140.0},
+>>>>>>> eee625be655172264bbf319098e6e0048012b873
         ])
+<<<<<<< ccbccde7008e58bf00556f55e119dc0569301889
+||||||| cd8f7d3b51e15d2f3c973c857c6e2c0cf894e4c5
+        self.assertEqual(bill.landed_costs_ids.cost_lines.price_unit, 50)
+=======
+        self.assertEqual(bill.landed_costs_ids.cost_lines.price_unit, 200)
+>>>>>>> eee625be655172264bbf319098e6e0048012b873
