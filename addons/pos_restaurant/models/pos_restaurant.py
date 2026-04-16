@@ -7,7 +7,7 @@ from base64 import b64decode
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.mimetypes import guess_mimetype
 
 FLOOR_PLAN_SUPPORTED_IMAGE_MIMETYPES = {
@@ -34,6 +34,15 @@ class RestaurantFloor(models.Model):
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
     floor_plan_layout = fields.Json(string='Floor Plan Layout')
+
+    @api.constrains('pos_config_ids')
+    def _check_single_pos_config(self):
+        for floor in self:
+            if len(floor.pos_config_ids) > 1:
+                raise ValidationError(_(
+                    "The floor '%(floor)s' can only be linked to one Point of Sale.",
+                    floor=floor.name,
+                ))
 
     @api.model
     def _load_pos_data_domain(self, data, config):

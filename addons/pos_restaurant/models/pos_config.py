@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools import convert
 
 
@@ -18,6 +19,16 @@ class PosConfig(models.Model):
         forbidden_keys = super()._get_forbidden_change_fields()
         forbidden_keys.append('floor_ids')
         return forbidden_keys
+
+    @api.constrains('floor_ids')
+    def _check_floor_single_pos_config(self):
+        for config in self:
+            for floor in config.floor_ids:
+                if len(floor.pos_config_ids) > 1:
+                    raise ValidationError(_(
+                        "The floor '%(floor)s' is already linked to another Point of Sale.",
+                        floor=floor.name,
+                    ))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -77,12 +88,6 @@ class PosConfig(models.Model):
         }])
         if not self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False):
             convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_floor.xml', idref=None, mode='init', noupdate=True)
-        config_floors = [(5, 0)]
-        if (floor_main := self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False)):
-            config_floors += [(4, floor_main.id)]
-        if (floor_patio := self.env.ref('pos_restaurant.floor_patio', raise_if_not_found=False)):
-            config_floors += [(4, floor_patio.id)]
-        config.update({'floor_ids': config_floors})
         config._load_bar_demo_data(with_demo_data)
         return {'config_id': config.id}
 
