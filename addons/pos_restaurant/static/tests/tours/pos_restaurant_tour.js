@@ -27,7 +27,6 @@ import {
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -97,6 +96,13 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.totalAmountIs("5.87"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
+            {
+                trigger: ".paymentline:contains(bank):contains(5.87)",
+                async run() {
+                    // Can't explain why we need this delay to ensure the order is then well paid.
+                    await new Promise((r) => setTimeout(r, 50));
+                },
+            },
             PaymentScreen.clickValidate(),
             FeedbackScreen.clickNextOrder(),
 
@@ -119,7 +125,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             // The order ref ends with -00002 because it is actually the 2nd order made in the session.
             // The first order made in the session is a floating order.
             TicketScreen.deleteOrder("002"),
-            Dialog.confirm(),
+            Dialog.proceed({ title: "existing orderlines", button: "ok" }),
             Chrome.closePrintingWarning(),
             Chrome.isSyncStatusConnected(),
             TicketScreen.selectOrder("005"),
@@ -138,7 +144,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
  * This tour should be run after the first tour is done.
  */
 registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // There is one draft synced order from the previous tour
@@ -336,7 +341,6 @@ registry.category("web_tour.tours").add("CategLabelCheck", {
         ].flat(),
 });
 registry.category("web_tour.tours").add("OrderChangeTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

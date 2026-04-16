@@ -801,7 +801,8 @@ export function addInternalNote(note, buttonLabel = "Note") {
     return [
         clickInternalNoteButton(buttonLabel),
         TextInputPopup.inputText(note),
-        Dialog.confirm(),
+        Dialog.proceed({ button: "Apply", title: "add note" }),
+        Dialog.isNot({ title: "add note" }),
     ].flat();
 }
 
