@@ -16,6 +16,7 @@ export class FormActionFieldsOption extends BaseOptionComponent {
             formInfo: {
                 fields: [],
             },
+            shouldShowDropdown: {},
         });
         onWillStart(this.getFormInfo.bind(this));
         onWillUpdateProps(this.getFormInfo.bind(this));
@@ -32,5 +33,23 @@ export class FormActionFieldsOption extends BaseOptionComponent {
             },
             formInfo
         );
+        for (const field of this.state.formInfo.fields) {
+            if (field.type === "many2one" && field.required) {
+                const recordsLength = field.records.length;
+                this.state.shouldShowDropdown[field.name] = recordsLength > 0;
+                const hiddenField = el.querySelector(
+                    `.s_website_form_dnone input[name="${field.name}"]`
+                )?.value;
+                if (!hiddenField && recordsLength > 0) {
+                    this.dependencies.websiteFormOption.addHiddenField(
+                        el,
+                        field.records[0].id,
+                        field.name
+                    );
+                }
+            } else {
+                this.state.shouldShowDropdown[field.name] = true;
+            }
+        }
     }
 }
