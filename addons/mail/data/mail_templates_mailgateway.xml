@@ -41,13 +41,17 @@
         </template>
 
         <template id="mail_attachment_links" name="Attachment links">
-<div style="max-width: 900px; width: 100%;">
-    <hr style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 10px 0px;"/>
-    <div t-foreach="attachments" t-as="attachment">
-        <a t-attf-href="{{attachment.get_base_url()}}/web/content/{{attachment.id}}?download=1&amp;access_token={{attachment.access_token}}"
-           style="font-size: 12px; color: #875A7B; text-decoration:none !important; text-decoration:none; font-weight: 400;">
-            &amp;#128229; <t t-out="attachment.name"/>
-        </a>
+<div class="o-attachments-container" style="margin-top: 10px; margin-bottom: 10px; max-width: 900px; width: 100%;">
+    <div style="display: inline" t-foreach="attachments" t-as="attachment">
+        <div style="padding:0; margin:3px; vertical-align:middle; min-width:425px; width:fit-content; display:inline-block" width="fit-content" tattf-data-attachment-id="attachment.id">
+            <div style="margin:0; padding: 10px; border-style:solid; border-width:0 0 0 3px; border-radius:5px; border-color:#a2dae3; background-color:#d1ecf1; color:#09414a;">
+                <a t-attf-href="{{attachment.get_base_url()}}/web/content/{{attachment.id}}?download=1&amp;access_token={{attachment.access_token}}"
+                    style="margin:0; padding:0; text-decoration:none; border-radius:0; border-style:none; border-color:#008f8c; border-width:0; font-weight:500; width:100%; color:#008f8c; vertical-align: middle; font-size: 15px;"
+                    width="100%" target="_blank">
+                     &amp;#11015; <t t-out="attachment.name"/>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
         </template>
