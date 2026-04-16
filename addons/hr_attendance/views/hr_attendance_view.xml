@@ -234,34 +234,6 @@
         </field>
     </record>
 
-    <record id="hr_attendance_view_graph" model="ir.ui.view">
-        <field name="name">hr.attendance.graph</field>
-        <field name="model">hr.attendance</field>
-        <field name="arch" type="xml">
-            <graph string="Worked Hours" type="line" stacked="0" sample="1">
-                <field name="employee_id" type="row"/>
-                <field name="check_in" interval="week" type="col"/>
-                <field name="overtime_hours" widget="float_time"/>
-                <field name="worked_hours" type="measure" widget="float_time"/>
-            </graph>
-        </field>
-    </record>
-
-    <record id="hr_attendance_view_pivot" model="ir.ui.view">
-        <field name="name">hr.attendance.pivot</field>
-        <field name="model">hr.attendance</field>
-        <field name="arch" type="xml">
-            <pivot string="Worked Hours">
-                <field name="employee_id" type="row"/>
-                <field name="check_in" type="col" interval="month"/>
-                <field name="worked_hours" type="measure" widget="float_time"/>
-                <field name="expected_hours" type="measure" widget="float_time"/>
-                <field name="overtime_hours" string="Difference" type="measure" widget="float_time"/>
-                <field name="validated_overtime_hours" string="Balance" type="measure" widget="float_time"/>
-            </pivot>
-        </field>
-    </record>
-
     <record id="hr_attendance_view_filter" model="ir.ui.view">
         <field name="name">hr_attendance_view_filter</field>
         <field name="model">hr.attendance</field>
@@ -332,28 +304,6 @@
         </field>
         <field name="search_view_id" ref="hr_attendance_view_filter"/>
         <field name="help">
-        </field>
-    </record>
-
-    <record id="hr_attendance_reporting" model="ir.actions.act_window">
-        <field name="name">Attendances</field>
-        <field name="res_model">hr.attendance</field>
-        <field name="path">attendance-report</field>
-        <field name="view_mode">pivot,graph</field>
-        <field name="search_view_id" ref="hr_attendance_view_filter"/>
-        <field name="context">
-            {
-                "search_default_employee": 2,
-                "search_default_activeemployees": 1,
-                "search_default_last_three_months": 1
-            }
-        </field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No attendance records found
-            </p><p>
-                The attendance reporting of your employees will be displayed here.
-            </p>
         </field>
     </record>
 
