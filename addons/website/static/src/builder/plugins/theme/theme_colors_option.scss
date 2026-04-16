@@ -49,3 +49,12 @@
 .hb-sliding-panel .o_cc_preview_wrapper:hover {
     cursor: pointer;
 }
+
+// Known issue: this.isActiveItem('grayscale_custom_opt') is somehow not
+// available/functioning in this context. Hide the options in CSS instead.
+// See theme_colors_options.xml for the checkbox that controls this.
+.hb-row:has(#o_grayscale_custom_flag):not(:has(input:checked)) {
+    ~ [data-label="Hue"], ~ [data-label="Saturation"] {
+        display: none!important;
+    }
+}

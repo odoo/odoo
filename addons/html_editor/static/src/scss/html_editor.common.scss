@@ -11,68 +11,6 @@
         @include print-variable($color, $value);
     }
 
-    // Most of the keys of the color combination color should be null. We have
-    // to indicate their fallback values.
-    @for $index from 1 through length($o-color-combinations) {
-        $-bg-color: o-color(map-get($colors, 'o-cc#{$index}-bg'));
-
-        $-text: map-get($colors, 'o-cc#{$index}-text') or color-contrast(o-color('o-cc#{$index}-bg'));
-        $-headings: map-get($colors, 'o-cc#{$index}-headings') or $-text;
-        $-h2: map-get($colors, 'o-cc#{$index}-h2') or $-headings;
-        $-h3: map-get($colors, 'o-cc#{$index}-h3') or $-headings;
-        $-h4: map-get($colors, 'o-cc#{$index}-h4') or $-headings;
-        $-h5: map-get($colors, 'o-cc#{$index}-h5') or $-headings;
-        $-h6: map-get($colors, 'o-cc#{$index}-h6') or $-headings;
-
-        @if not map-get($colors, 'o-cc#{$index}-text') {
-            @include print-variable('o-cc#{$index}-text', $-text);
-        }
-        @if not map-get($colors, 'o-cc#{$index}-headings') {
-            @include print-variable('o-cc#{$index}-headings', $-headings);
-        }
-        @if not map-get($colors, 'o-cc#{$index}-h2') {
-            @include print-variable('o-cc#{$index}-h2', $-h2);
-        }
-        @if not map-get($colors, 'o-cc#{$index}-h3') {
-            @include print-variable('o-cc#{$index}-h3', $-h3);
-        }
-        @if not map-get($colors, 'o-cc#{$index}-h4') {
-            @include print-variable('o-cc#{$index}-h4', $-h4);
-        }
-        @if not map-get($colors, 'o-cc#{$index}-h5') {
-            @include print-variable('o-cc#{$index}-h5', $-h5);
-        }
-        @if not map-get($colors, 'o-cc#{$index}-h6') {
-            @include print-variable('o-cc#{$index}-h6', $-h6);
-        }
-
-        $-link: map-get($colors, 'o-cc#{$index}-link');
-        $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
-        @include print-variable('o-cc#{$index}-link', auto-contrast($-link-color, $-bg-color, 'o-cc#{$index}-link'));
-
-        $-btn-primary: map-get($colors, 'o-cc#{$index}-btn-primary');
-        @if not $-btn-primary {
-            @include print-variable('o-cc#{$index}-btn-primary', map-get($theme-colors, 'primary'));
-            @include print-variable('o-cc#{$index}-btn-primary-text', color-contrast(map-get($theme-colors, 'primary')));
-        } @else {
-            @include print-variable('o-cc#{$index}-btn-primary-text', color-contrast($-btn-primary));
-        }
-        @if not map-get($colors, 'o-cc#{$index}-btn-primary-border') {
-            @include print-variable('o-cc#{$index}-btn-primary-border', $-btn-primary or map-get($theme-colors, 'primary'));
-        }
-
-        $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
-        @if not $-btn-secondary {
-            @include print-variable('o-cc#{$index}-btn-secondary', map-get($theme-colors, 'secondary'));
-            @include print-variable('o-cc#{$index}-btn-secondary-text', color-contrast(map-get($theme-colors, 'secondary')));
-        } @else {
-            @include print-variable('o-cc#{$index}-btn-secondary-text', color-contrast($-btn-secondary));
-        }
-        @if not map-get($colors, 'o-cc#{$index}-btn-secondary-border') {
-            @include print-variable('o-cc#{$index}-btn-secondary-border', $-btn-secondary or map-get($theme-colors, 'secondary'));
-        }
-    }
-
     @include print-variable('o-grid-gutter-width', $grid-gutter-width);
     @include print-variable('o-md-container-max-width', map-get($container-max-widths, md));
     @include print-variable('o-we-content-to-translate-color', $o-we-content-to-translate-color);
@@ -539,177 +477,50 @@ pre {
     @include text-emphasis-variant(".text-#{$-color-name}", $-color);
 }
 
-// Bg/text color classes generation
-.o_cc {
-    #{$o-color-extras-nesting-selector} {
-        // Re-force dropdown-item colors inside presets otherwise the presets
-        // 'link' colors take over.
-        .dropdown-menu .dropdown-item { // Need to add +1 priority thanks to
-                                        // .dropdown-menu to counter a:not(.btn)
-            &, h6 { // Quick fix: sometimes we use h6 in dropdowns
-                color: $dropdown-link-color !important;
-
-                &:hover, &:focus {
-                    color: $dropdown-link-hover-color !important;
-                }
-                &.active, &:active {
-                    // Restore BS default custom property to allow contextual
-                    // active state. (see bootstrap_review_frontend.scss)
-                    color: var(--dropdown-link-active-color, #{$dropdown-link-active-color}) !important;
-                }
-            }
-            &.disabled,
-            &:disabled {
-                &, h6 { // Quick fix: sometimes we use h6 in dropdowns
-                    color: $dropdown-link-disabled-color !important;
-                }
-            }
-            .btn-link {
-                // Some search autocomplete results use btn-link for extra
-                // information that can be navigated to. (e.g. products give
-                // access to their categories)
-                // These need to be reset in case a dark palette is applied.
-                color: $btn-link-color;
-
-                &:hover {
-                    color: $btn-link-hover-color;
-                }
-                &:disabled {
-                    color: $btn-link-disabled-color;
-                }
-            }
-        }
-        .dropdown-menu .dropdown-item-text .text-muted {
-            a {
-                // Search autocomplete's fuzzy matched term is shown as a link
-                // within an information message.
-                color: $link-color;
-
-                &:hover {
-                    color: $link-hover-color;
-                }
-            }
-        }
-
-        .btn-close {
-            filter: unset;
-        }
-    }
-}
+// Color combinations: emit named :root vars for builder JS and .o_cc{N} classes
+// for page rendering. Resolution and output logic live in o-cc-apply().
 @for $index from 1 through length($o-color-combinations) {
-    $-bg: map-get($colors, 'o-cc#{$index}-bg');
-    $-text: map-get($colors, 'o-cc#{$index}-text');
-    $-headings: map-get($colors, 'o-cc#{$index}-headings');
-    $-h2: map-get($colors, 'o-cc#{$index}-h2');
-    $-h3: map-get($colors, 'o-cc#{$index}-h3');
-    $-h4: map-get($colors, 'o-cc#{$index}-h4');
-    $-h5: map-get($colors, 'o-cc#{$index}-h5');
-    $-h6: map-get($colors, 'o-cc#{$index}-h6');
-    $-link: map-get($colors, 'o-cc#{$index}-link');
-    $-btn-primary: map-get($colors, 'o-cc#{$index}-btn-primary');
-    $-btn-primary-border: map-get($colors, 'o-cc#{$index}-btn-primary-border');
-    $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
-    $-btn-secondary-border: map-get($colors, 'o-cc#{$index}-btn-secondary-border');
-
-    // Those color classes color multiple elements when applied on a snippet.
-    // Those rules are not important so that they can be overridden through
-    // bg and text utility classes. **
-    .o_cc#{$index} {
-        // Background & Text
-        $-bg-color: o-color($-bg);
-        @include o-bg-color($-bg-color, o-color($-text), $important: false, $yiq-min-opacity-threshold: 0);
-
-        // In the future, we might want to use CSS variables to define all
-        // colors for all components of o_cc and use them here. That way there
-        // would be way less CSS rules and more advantages. For now, this only
-        // exposes the background color which is needed in some snippets.
-        --o-cc-bg: #{$-bg-color};
-
-        #{$o-color-extras-nesting-selector} {
-            // Headings
-            h1, h2, h3, h4, h5, h6 {
-                // 'inherit' comes from the o-bg-color mixin
-                color: o-color($-headings);
-            }
-            h2 {
-                color: o-color($-h2);
-            }
-            h3 {
-                color: o-color($-h3);
-            }
-            h4 {
-                color: o-color($-h4);
-            }
-            h5 {
-                color: o-color($-h5);
-            }
-            h6 {
-                color: o-color($-h6);
-            }
-
-            // Links
-            $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
-            $-link-hover-color: darken($-link-color, 15%);
-            a:not(.btn), .btn-link {
-                color: auto-contrast($-link-color, $-bg-color, 'o-cc#{$index}-link');
-
-                &:hover {
-                    color: auto-contrast($-link-hover-color, $-bg-color, 'o-cc#{$index}-link');
-                }
-            }
-
-            // Buttons
-
-            // Primary
-            $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), map-get($theme-colors, 'primary'));
-            $-btn-primary-border-color: if($-btn-primary-border, o-color($-btn-primary-border), $-btn-primary-color);
-            $-btn-primary-outline-color: if($-btn-primary, $-btn-primary-color, increase-contrast($-btn-primary-border-color, $-bg-color));
-            .btn-fill-primary {
-                @include button-variant($-btn-primary-color, $-btn-primary-border-color);
-            }
-            .btn-outline-primary {
-                @include button-outline-variant($-btn-primary-outline-color);
-            }
-
-            // Secondary
-            $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), map-get($theme-colors, 'secondary'));
-            $-btn-secondary-border-color: if($-btn-secondary-border, o-color($-btn-secondary-border), $-btn-secondary-color);
-            $-btn-secondary-outline-color: if($-btn-secondary, $-btn-secondary-color, increase-contrast($-btn-secondary-border-color, $-bg-color));
-            .btn-fill-secondary {
-                @include button-variant($-btn-secondary-color, $-btn-secondary-border-color);
-            }
-            .btn-outline-secondary {
-                @include button-outline-variant($-btn-secondary-outline-color);
-            }
-
-            // 'Active' states. Note: this only emulates very common components
-            // used in snippets. This might need to be more complex the day we
-            // can apply color combinations anywhere (page-item, ...).
-            .nav-pills {
-                .nav-link.active,
-                .show > .nav-link {
-                    background-color: $-btn-primary-color;
-                    color: color-contrast($-btn-primary-color);
-                }
-            }
-            a.list-group-item {
-                color: $-btn-primary-color;
-
-                &.active {
-                    background-color: $-btn-primary-color;
-                    color: color-contrast($-btn-primary-color);
-                    border-color: $-btn-primary-color;
-                }
-            }
-
-            .btn-close {
-                @if lightness($-bg-color) < 50 {
-                    @include btn-close-white();
-                }
-            }
-        }
-    }
+    @include o-cc-apply($index);
 }
+
+// =============================================================================
+// GLOBAL BUTTON CONSUMER RULES
+// =============================================================================
+// These rules are emitted once (at @import time, not per combination). They
+// bridge the per-combination --o-cc-btn-* variables to Bootstrap's --btn-*
+// variables, replacing the previous @include button-variant calls inside the
+// @for loop. Each button class is defined exactly once regardless of how many
+// color combinations exist.
+//
+// Global (not scoped to .o_cc): --o-cc-btn-* vars are now set in :root for
+// combination 1 as the page default, and overridden per .o_cc{N} section.
+// Buttons everywhere therefore consume the correct combination's colors via
+// CSS variable inheritance without needing the .o_cc selector scope.
+
+// ── Fill buttons ──────────────────────────────────────────────────────────────
+// Applied to .btn-fill-primary (not .btn-primary directly) so that
+// bootstrap_review_frontend.scss's loop-3 @extend switch still controls
+// whether .btn-primary renders as fill, outline, or flat.
+
+.btn-fill-primary {
+    @include o-cc-make-btn-primary();
+}
+
+.btn-fill-secondary {
+    @include o-cc-make-btn-secondary();
+}
+
+
+// ── Outline buttons ───────────────────────────────────────────────────────────
+
+.btn-outline-primary {
+    @include o-cc-make-btn-primary-outline();
+}
+
+.btn-outline-secondary {
+    @include o-cc-make-btn-secondary-outline();
+}
+
 
 // Buttons with custom colors
 .btn-custom:hover, .btn-fill-custom:hover {

@@ -1,3 +1,18 @@
+// Align :root CSS vars with combination 1's contrast-checked design tokens.
+// bootstrap_overridden.scss sets $body-bg / $body-color etc. from raw palette
+// values; Bootstrap's _root.scss emits those as --body-* CSS vars — but without
+// our contrast checks. This call corrects them and sets --o-cc-* component vars
+// as global defaults for elements outside any .o_cc{N} wrapper.
+//
+// Uses o-cc-apply($as-body-defaults: true) so the resolution logic and
+// thresholds are shared with the @for loop in html_editor.common.scss —
+// a threshold change in the mixin is automatically reflected here too.
+//
+// Placed here (not in html_editor.common.scss) because html_editor.common.scss
+// is also loaded in backend and report contexts where body defaults must not be
+// overridden.
+@include o-cc-apply(1, $as-body-defaults: true);
+
 .o_wysiwyg_loader {
     @extend :disabled;
     pointer-events: none;

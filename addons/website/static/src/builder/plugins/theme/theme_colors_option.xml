@@ -195,35 +195,48 @@
                                         selectedTab="'custom'"
                                     />
                                 </BuilderRow>
-                                <BuilderRow label.translate="Grays" fullRowToggler="true">
-                                    <div class="o_we_gray_preview d-flex w-100">
+
+                                <BuilderRow label.translate="Grayscale">
+                                    <div class="o_we_gray_preview d-flex w-100 border rounded border-dark-subtle d-flex overflow-hidden">
                                         <t t-foreach="[0,1,2,3,4,5,6,7,8]" t-as="i" t-key="i">
                                             <t t-set="grayCode" t-value="(9 - i) * 100"/>
                                             <span t-att-title="this.getGrayTitle(grayCode)"
-                                                t-attf-variable="#{grayCode}"
-                                                t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"
-                                                t-attf-style="background-color: {{this.grays[grayCode]}} !important"
+                                                  t-attf-data-tooltip="Gray {{grayCode}}"
+                                                  t-attf-variable="#{grayCode}"
+                                                  t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"
+                                                  t-attf-style="background-color: {{this.grays[grayCode]}} !important"
                                             />
                                         </t>
                                     </div>
-                                    <t t-set-slot="collapse">
-                                        <BuilderRow label.translate="Hue" level="1">
-                                            <div class="o_we_slider_tint">
-                                                <BuilderRange action="'customizeGray'" actionParam="'gray-hue'"
-                                                    min="0" max="359.9" step="0.1"
-                                                />
-                                            </div>
-                                        </BuilderRow>
-                                        <BuilderRow label.translate="Saturation" level="1">
-                                            <BuilderRange
-                                                action="'customizeGray'"
-                                                actionParam="'gray-extra-saturation'"
-                                                step="0.1"
-                                                unit="'%'"
-                                                applyWithUnit="false"
-                                                withNumberInput="true" />
-                                        </BuilderRow>
-                                    </t>
+                                </BuilderRow>
+                                <BuilderRow id="test" label.translate="Custom" fullRowToggler="true" level="1">
+                                    <span id="o_grayscale_custom_flag" class="d-none">
+                                    <!--  Known issue: this.isActiveItem() is somehow not available/functioning in this
+                                          context. Hide the options in CSS instead. See theme_colors_options.scss -->
+                                    </span>
+                                    <BuilderCheckbox
+                                        action="'toggleGrayscaleCustom'"
+                                        id="'grayscale_custom_opt'"
+                                    />
+                                </BuilderRow>
+                                <BuilderRow t-if="this.isActiveItem('grayscale_custom_opt')" label.translate="Hue" level="2">
+                                    <div class="o_we_slider_tint">
+                                        <BuilderRange action="'customizeGray'" actionParam="'gray-hue'"
+                                            min="0" max="359.9" step="0.1"
+                                        />
+                                    </div>
+                                </BuilderRow>
+                                <BuilderRow t-if="this.isActiveItem('grayscale_custom_opt')" label.translate="Saturation" level="2">
+                                    <BuilderRange
+                                        action="'customizeGray'"
+                                        actionParam="'gray-extra-saturation'"
+                                        min="-100"
+                                        max="100"
+                                        step="0.1"
+                                        unit="'%'"
+                                        applyWithUnit="false"
+                                        withNumberInput="true"
+                                    />
                                 </BuilderRow>
                             </BuilderOptionsSection>
                         </BuilderContext>

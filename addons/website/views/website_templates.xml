@@ -445,7 +445,7 @@
 </template>
 
 <template id="navbar_nav" name="Navbar Nav">
-    <ul t-att-id="not is_mobile and 'top_menu'" t-attf-class="nav navbar-nav top_menu #{'' if _no_autohide_menu_mobile else 'o_menu_loading'} #{is_vertical_nav and 'o_mega_menu_is_offcanvas mx-n3'} #{_nav_class} #{(_navbar_pills and not is_mobile) and 'nav-pills'}" role="menu">
+    <ul t-att-id="not is_mobile and 'top_menu'" t-attf-class="nav top_menu #{'' if _no_autohide_menu_mobile else 'o_menu_loading'} #{is_vertical_nav and 'o_mega_menu_is_offcanvas mx-n3'} #{_nav_class} #{(_navbar_pills and not is_mobile) and 'nav-pills' or 'navbar-nav'}" role="menu">
         <t t-out="0"/>
     </ul>
 </template>

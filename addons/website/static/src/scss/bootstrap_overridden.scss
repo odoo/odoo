@@ -36,8 +36,13 @@ $enable-cssgrid: true !default;
 
 
 // Customize the light and dark text colors for use in our color contrast function.
-$color-contrast-dark: o-color('900') !default;
-$color-contrast-light: o-color('white') !default;
+// Use the palette's polar colors (o-color-4 / o-color-5) so that Bootstrap's
+// color-contrast() produces text colors that are harmonious with the palette.
+// Lightness ordering ensures this works for both standard and inverted (dark) palettes.
+$-c4: o-color('o-color-4');
+$-c5: o-color('o-color-5');
+$color-contrast-dark: if(lightness($-c4) < lightness($-c5), $-c4, $-c5) !default;
+$color-contrast-light: if(lightness($-c4) >= lightness($-c5), $-c4, $-c5) !default;
 
 // Spacing
 //

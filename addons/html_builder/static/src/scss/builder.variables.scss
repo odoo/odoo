@@ -236,10 +236,10 @@ $o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;
 @mixin o-apply-colors($identifier, $with-extras: true, $background: $body-bg) {
     $-related-color: o-related-color($identifier, $max-recursions: 10);
     @if type-of($-related-color) == 'number' {
-        // This is a preset to be applied, just extend it. This should probably
-        // be avoided and use the class in XML if possible.
-        @extend .o_cc;
-        @extend .o_cc#{$-related-color};
+        // Apply preset styles directly instead of using @extend to avoid
+        // specificity issues. This emits the same CSS vars and properties
+        // that .o_cc#{N} would provide, without the coupling.
+        @include o-cc-emit-styles($-related-color);
     } @else {
         $-color: o-color($-related-color);
         @if $-color {
@@ -251,29 +251,30 @@ $o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;
     }
 }
 
-@function o-make-palette($-primary, $-secondary: null, $-overrides-map: null) {
-    $-o-color-2: $-secondary or increase-contrast(desaturate(mix(complement($-primary), #FFFFFF, 80%), 20%), $-primary);
+@function o-make-palette($-c1, $-c2: null, $-c3: null, $-c4: null, $-c5: null, $-overrides-map: null) {
+    // 1. Define Primary Neutrals (c4 and c5)
+    // These establish the "Light" vs "Dark" polarity of the palette.
+    $-c4: if($-c4 != null, $-c4, #FFFFFF);
+    $-c5: if($-c5 != null, $-c5, change-color(#2e1414, $hue: hue($-c1), $saturation: min(saturation($-c1), saturation(#2e1414))));
 
+    // 2. Define Supporting Colors (c2 and c3)
+    // c2: An accent generated as a desaturated complement to c1, contrast-adjusted.
+    $-c2: if($-c2 != null, $-c2, increase-contrast(desaturate(mix(complement($-c1), #FFFFFF, 80%), 20%), $-c1));
+
+    // c3: A soft surface neutral tinted with the hue of the primary brand color.
+    $-c3: if($-c3 != null, $-c3, change-color(#F5F0F0, $hue: hue($-c1), $saturation: min(saturation($-c1), saturation(#F5F0F0))));
+
+    // 3. Construct the Base Palette
     $-palette: (
-        'o-color-1': $-primary,
-        'o-color-2': $-o-color-2,
-        'o-color-3': change-color(#F5F0F0, $hue: hue($-primary), $saturation: min(saturation($-primary), saturation(#F5F0F0))),
-        'o-color-4': #FFFFFF,
-        'o-color-5': change-color(#2e1414, $hue: hue($-primary), $saturation: min(saturation($-primary), saturation(#2e1414))),
+            'o-color-1': $-c1,
+            'o-color-2': $-c2,
+            'o-color-3': $-c3,
+            'o-color-4': $-c4,
+            'o-color-5': $-c5,
     );
 
-    // Check if primary/dark contrast is enough. If not adapt cc4 & cc5 schemes accordingly
-    @if not (has-enough-contrast(map-get($-palette, 'o-color-5'), map-get($-palette, 'o-color-1'), 300)) {
-        @each $-cc in (4, 5) {
-            $-palette: map-merge($-palette, (
-                'o-cc#{$-cc}-btn-primary': 'o-color-4',
-                'o-cc#{$-cc}-btn-secondary': 'o-color-2',
-                'o-cc#{$-cc}-text': 'o-color-3',
-                'o-cc#{$-cc}-link': 'o-color-4'
-            ));
-        }
-    }
-
+    // 4. Apply Manual Overrides
+    // This allows specific category tags or manual contrast fixes to be injected.
     @if $-overrides-map {
         $-palette: map-merge($-palette, $-overrides-map);
     }
