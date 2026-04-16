@@ -21,6 +21,9 @@ This is the base module to manage the accounting chart for Malaysia in Odoo.
         'data/account.account.tag.csv',
 
         'views/product_template_view.xml',
+        'views/report_invoice.xml',
+        'views/res_company_view.xml',
+        'views/res_partner_view.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
