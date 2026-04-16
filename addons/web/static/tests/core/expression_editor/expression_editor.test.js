@@ -491,37 +491,37 @@ test(`date: "in range" operator`, async () => {
         "Last month",
         "Year to date",
         "Last 365 days",
-        "Custom range",
+        "Date range",
     ]);
 
     const dateRangeTests = [
         {
-            val: "last 7 days",
+            val: "last7Days",
             label: "Last 7 days",
             expr: `date >= ${pyDate("days = -7")} and date < ${pyDate()}`,
         },
         {
-            val: "last 30 days",
+            val: "last30Days",
             label: "Last 30 days",
             expr: `date >= ${pyDate("days = -30")} and date < ${pyDate()}`,
         },
         {
-            val: "month to date",
+            val: "monthToDate",
             label: "Month to date",
             expr: `date >= ${pyDate("day = 1")} and date < ${pyDate("days = 1")}`,
         },
         {
-            val: "last month",
+            val: "lastMonth",
             label: "Last month",
             expr: `date >= ${pyDate("day = 1, months = -1")} and date < ${pyDate("day = 1")}`,
         },
         {
-            val: "year to date",
+            val: "yearToDate",
             label: "Year to date",
             expr: `date >= ${pyDate("day = 1, month = 1")} and date < ${pyDate("days = 1")}`,
         },
         {
-            val: "last 365 days",
+            val: "last365Days",
             label: "Last 365 days",
             expr: `date >= ${pyDate("days = -365")} and date < ${pyDate()}`,
         },
@@ -533,8 +533,8 @@ test(`date: "in range" operator`, async () => {
         expect.verifySteps([formatExpr(expr)]);
     }
 
-    await selectValue("custom range");
-    expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"custom range"');
+    await selectValue("dateRange");
+    expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"dateRange"');
     expect.verifySteps([formatExpr(`date >= "2023-04-20" and date <= "2023-04-20"`)]);
 
     await contains(".o_datetime_input:last").click();
@@ -575,41 +575,41 @@ test(`datetime: "in range" operator`, async () => {
         "Last month",
         "Year to date",
         "Last 365 days",
-        "Custom range",
+        "Date range",
     ]);
 
     const datetimeRangeTests = [
         {
-            val: "last 7 days",
+            val: "last7Days",
             label: "Last 7 days",
             expr: `datetime >= ${pyDatetime("days = -7")} and datetime < ${pyDatetime()}`,
         },
         {
-            val: "last 30 days",
+            val: "last30Days",
             label: "Last 30 days",
             expr: `datetime >= ${pyDatetime("days = -30")} and datetime < ${pyDatetime()}`,
         },
         {
-            val: "month to date",
+            val: "monthToDate",
             label: "Month to date",
             expr: `datetime >= ${pyDatetime("day = 1")} and datetime < ${pyDatetime("days = 1")}`,
         },
         {
-            val: "last month",
+            val: "lastMonth",
             label: "Last month",
             expr: `datetime >= ${pyDatetime("day = 1, months = -1")} and datetime < ${pyDatetime(
                 "day = 1"
             )}`,
         },
         {
-            val: "year to date",
+            val: "yearToDate",
             label: "Year to date",
             expr: `datetime >= ${pyDatetime("day = 1, month = 1")} and datetime < ${pyDatetime(
                 "days = 1"
             )}`,
         },
         {
-            val: "last 365 days",
+            val: "last365Days",
             label: "Last 365 days",
             expr: `datetime >= ${pyDatetime("days = -365")} and datetime < ${pyDatetime()}`,
         },
@@ -621,8 +621,8 @@ test(`datetime: "in range" operator`, async () => {
         expect.verifySteps([formatExpr(expr)]);
     }
 
-    await selectValue("custom range");
-    expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"custom range"');
+    await selectValue("dateRange");
+    expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"dateRange"');
     expect.verifySteps([
         formatExpr(`datetime >= "2023-04-20 00:00:00" and datetime <= "2023-04-20 23:59:59"`),
     ]);

@@ -177,21 +177,21 @@ function boundDatetime(delta) {
 
 const BOUNDS_SMART_DATES = [
     ["today", "today", "today +1d"],
-    ["last 7 days", "today -7d", "today"],
-    ["last 30 days", "today -30d", "today"],
-    ["month to date", "today =1d", "today +1d"],
-    ["last month", "today =1d -1m", "today =1d"],
-    ["year to date", "today =1m =1d", "today +1d"],
-    ["last 365 days", "today -365d", "today"],
+    ["last7Days", "today -7d", "today"],
+    ["last30Days", "today -30d", "today"],
+    ["monthToDate", "today =1d", "today +1d"],
+    ["lastMonth", "today =1d -1m", "today =1d"],
+    ["yearToDate", "today =1m =1d", "today +1d"],
+    ["last365Days", "today -365d", "today"],
 ];
 const DELTAS = [
     ["today", "", "days = 1"],
-    ["last 7 days", "days = -7", ""],
-    ["last 30 days", "days = -30", ""],
-    ["month to date", "day = 1", "days = 1"],
-    ["last month", "day = 1, months = -1", "day = 1"],
-    ["year to date", "day = 1, month = 1", "days = 1"],
-    ["last 365 days", "days = -365", ""],
+    ["last7Days", "days = -7", ""],
+    ["last30Days", "days = -30", ""],
+    ["monthToDate", "day = 1", "days = 1"],
+    ["lastMonth", "day = 1, months = -1", "day = 1"],
+    ["yearToDate", "day = 1, month = 1", "days = 1"],
+    ["last365Days", "days = -365", ""],
 ];
 const BOUNDS_DATE = DELTAS.map(([k, l, r]) => [k, boundDate(l), boundDate(r)]);
 const BOUNDS_DATETIME = DELTAS.map(([k, l, r]) => [k, boundDatetime(l), boundDatetime(r)]);
@@ -247,7 +247,7 @@ function introduceInRangeOperators(tree, options = {}) {
                     "in range",
                     [
                         fieldType,
-                        "custom range",
+                        "dateRange",
                         // @ts-ignore
                         ...normalizeValue([value1, value2]),
                     ],
@@ -275,7 +275,7 @@ function eliminateInRangeOperators(tree, options = {}) {
         const { initialPath, lastPart } = splitPath(path, isProperty);
         const [fieldType, valueType, value1, value2] = value;
         let tree;
-        if (valueType === "custom range") {
+        if (valueType === "dateRange") {
             tree = makeBetween(lastPart, value1, value2, isProperty);
         } else {
             const generateSmartDates =

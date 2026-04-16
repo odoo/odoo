@@ -36,19 +36,19 @@ export class InRange extends Component {
     static template = "web.TreeEditor.InRange";
     static options = [
         ["today", _t("Today")],
-        ["last 7 days", _t("Last 7 days")],
-        ["last 30 days", _t("Last 30 days")],
-        ["month to date", _t("Month to date")],
-        ["last month", _t("Last month")],
-        ["year to date", _t("Year to date")],
-        ["last 365 days", _t("Last 365 days")],
-        ["custom range", _t("Custom range")],
+        ["last7Days", _t("Last 7 days")],
+        ["last30Days", _t("Last 30 days")],
+        ["monthToDate", _t("Month to date")],
+        ["lastMonth", _t("Last month")],
+        ["yearToDate", _t("Year to date")],
+        ["last365Days", _t("Last 365 days")],
+        ["dateRange", _t("Date range")],
     ];
     updateValueType(newValueType) {
         const [fieldType, currentValueType] = this.props.value;
         if (currentValueType !== newValueType) {
             const values =
-                newValueType === "custom range"
+                newValueType === "dateRange"
                     ? this.props.betweenEditorInfo.defaultValue()
                     : [false, false];
             return this.props.update([fieldType, newValueType, ...values]);

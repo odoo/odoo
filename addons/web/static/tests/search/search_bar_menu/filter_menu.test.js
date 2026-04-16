@@ -1116,7 +1116,7 @@ test(`"in range" facets`, async () => {
         ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:contains(Birthday)"
     ).click();
     await addNewRule();
-    await selectValue("custom range");
+    await selectValue("dateRange");
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
         "Birthday between 03/11/2019 and 03/11/2019 or Birthday is in Today",

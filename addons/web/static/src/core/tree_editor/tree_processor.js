@@ -219,7 +219,7 @@ export const treeProcessorService = {
             limit = 5
         ) {
             let { operator, negate, value, path } = node;
-            if (operator === "in range" && value[1] === "custom range") {
+            if (operator === "in range" && value[1] === "dateRange") {
                 operator = "between";
                 value = value.slice(2);
             }
