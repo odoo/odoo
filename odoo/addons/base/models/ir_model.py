@@ -2508,7 +2508,10 @@ class IrModelData(models.Model):
                         field_.setup(model)
                         has_shared_field = True
         if has_shared_field:
-            reset_cached_properties(self.env.registry)
+            registry = self.env.registry
+            reset_cached_properties(registry)
+            registry._field_trigger_trees.clear()
+            registry._is_modifying_relations.clear()
 
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []
