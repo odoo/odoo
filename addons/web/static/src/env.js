@@ -231,7 +231,6 @@ export async function mountComponent(component, target, appConfig = {}) {
         await startServices(env);
     }
     const app = new App({
-        env,
         getTemplate,
         dev: env.debug || session.test_mode,
         warnIfNoStaticProps: !session.test_mode,
@@ -242,7 +241,7 @@ export async function mountComponent(component, target, appConfig = {}) {
         globalValues,
         ...appConfig,
     });
-    const root = await app.createRoot(component, appConfig).mount(target);
+    const root = await app.createRoot(component, { ...appConfig, env }).mount(target);
     if (isRoot) {
         odoo.__WOWL_DEBUG__ = { root };
     }

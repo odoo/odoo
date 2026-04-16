@@ -39,13 +39,12 @@ export class PortalChatterService {
         }
         this.createShadow(root).then((shadow) => {
             const app = new App({
-                env,
                 getTemplate,
                 translatableAttributes: ["data-tooltip"],
                 translateFn: appTranslateFn,
                 dev: env.debug,
             });
-            app.createRoot(PortalChatter, { props }).mount(shadow);
+            app.createRoot(PortalChatter, { env, props }).mount(shadow);
         });
         const thread = this.store["mail.thread"].insert({ model: props.resModel, id: props.resId });
         Object.assign(thread, {

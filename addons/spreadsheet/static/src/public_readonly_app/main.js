@@ -18,7 +18,6 @@ import { appTranslateFn } from "@web/core/l10n/translation";
     await startServices(env);
     await whenReady();
     const app = new App({
-        env,
         getTemplate,
         translateFn: appTranslateFn,
         dev: env.debug,
@@ -26,6 +25,7 @@ import { appTranslateFn } from "@web/core/l10n/translation";
         translatableAttributes: ["data-tooltip"],
     });
     const root = app.createRoot(PublicReadonlySpreadsheet, {
+        env,
         props: session.spreadsheet_public_props,
     });
     const component = await root.mount(document.getElementById("spreadsheet-mount-anchor"));

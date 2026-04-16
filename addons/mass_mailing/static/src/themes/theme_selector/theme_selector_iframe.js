@@ -92,6 +92,7 @@ export class ThemeSelectorIframe extends Component {
                 iframe.contentDocument.head.appendChild(this.renderHeadContent());
                 iframe.contentDocument.body.style.setProperty("direction", localization.direction);
                 this.themeSelectorRoot = this.__owl__.app.createRoot(ThemeSelector, {
+                    env: this.env,
                     props: this.getThemeSelectorProps(),
                 });
                 return Promise.all([
