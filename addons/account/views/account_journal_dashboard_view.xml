@@ -259,16 +259,6 @@
                                     <span dir="ltr"><t t-out="dashboard.account_balance"/></span>
                                 </div>
                             </div>
-                            <t t-if="dashboard.has_at_least_one_statement and dashboard.account_balance != dashboard.last_balance and dashboard.last_statement_visible">
-                                <div class="row" name="latest_statement">
-                                    <div class="col overflow-hidden text-start">
-                                        <span title="Latest Statement">Last Statement</span>
-                                    </div>
-                                    <div class="col-auto text-end">
-                                        <span dir="ltr"><t t-out="dashboard.last_balance"/></span>
-                                    </div>
-                                </div>
-                            </t>
                             <div class="row" t-if="dashboard.nb_lines_outstanding_pay_account_balance > 0">
                                 <div id="dashboard_bank_cash_outstanding_balance" class="col overflow-hidden text-start">
                                     <a
@@ -276,7 +266,7 @@
                                         name="%(account.action_account_all_payments)d"
                                         context="{'search_default_unmatched': True, 'search_default_journal_id': id, 'search_default_state_posted': True, }"
                                     >
-                                        Payments
+                                        Outstanding Payments
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">
@@ -298,7 +288,7 @@
                                        name="open_invalid_statements_action"
                                        title="Invalid Statement(s)"
                                        class="text-danger">
-                                        Invalid Statement(s)
+                                        Invalid Statement
                                     </a>
                                 </div>
                             </t>

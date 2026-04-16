@@ -2877,6 +2877,12 @@ class AccountMove(models.Model):
             ):
                 raise ValidationError(_("The currency rate must be strictly positive."))
 
+    @api.constrains('journal_id')
+    def _check_statement_journal(self):
+        for move in self:
+            if move.statement_id and move.journal_id.type != 'bank':
+                raise ValidationError(_("Bank statements must be linked to a journal of type Bank."))
+
     # -------------------------------------------------------------------------
     # CATALOG
     # -------------------------------------------------------------------------
@@ -6231,6 +6237,8 @@ class AccountMove(models.Model):
             self._post(soft=False)
         if autopost_bills_wizard := self._show_autopost_bills_wizard():
             return autopost_bills_wizard
+        if len(self) == 1 and self in self.env.companies.mapped('account_opening_move_id'):
+            self._create_opening_balance_bank_statements()
         return False
 
     def _get_moves_requiring_confirmation(self):
@@ -7013,6 +7021,63 @@ class AccountMove(models.Model):
             raise UserError(_("There is no template that applies to invoices."))
 
         return available_reports
+
+    def _create_opening_balance_bank_statements(self):
+        """Create bank statement lines for the opening balance move.
+
+        When posting the opening balance move, for each bank/cash journal that has
+        lines in this move, create a corresponding bank statement and statement line,
+        then reconcile the suspense line with the opening move's bank line.
+        """
+        self.ensure_one()
+
+        journals = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.company_id),
+            ('type', 'in', ('bank', 'cash')),
+        ])
+
+        for journal in journals:
+            if not journal.default_account_id:
+                continue
+
+            opening_bank_lines = self.line_ids.filtered(
+                lambda line, acc=journal.default_account_id: line.account_id == acc,
+            )
+            if not opening_bank_lines:
+                continue
+
+            bank_balance = sum(opening_bank_lines.mapped('balance'))
+            if self.company_id.currency_id.is_zero(bank_balance):
+                continue
+
+            if journal.currency_id:
+                amount = sum(opening_bank_lines.mapped('amount_currency'))
+            else:
+                amount = bank_balance
+
+            statement = self.env['account.bank.statement'].create({
+                'name': _("Opening Balance"),
+                'date': self.date,
+                'journal_id': journal.id,
+            })
+            st_line = self.env['account.bank.statement.line'].create({
+                'date': self.date,
+                'payment_ref': _("Opening balance"),
+                'amount': amount,
+                'journal_id': journal.id,
+                'statement_id': statement.id,
+            })
+
+            _liquidity, suspense, _other = st_line._seek_for_lines()
+            if suspense:
+                suspense.with_context(
+                    skip_account_move_synchronization=True,
+                    force_delete=True,
+                    skip_readonly_check=True,
+                ).write({'account_id': journal.default_account_id.id})
+                (suspense + opening_bank_lines).with_context(
+                    no_exchange_difference=True,
+                ).reconcile()
 
     # -------------------------------------------------------------------------
     # TOOLING

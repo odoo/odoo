@@ -1139,7 +1139,7 @@ class AccountJournal(models.Model):
             'name': _("Journal Entries"),
             'res_model': 'account.move',
             'search_view_id': (self.env.ref('account.view_account_move_with_gaps_in_sequence_filter').id, 'search'),
-            'view_mode': 'list,form',
+            'view_mode': 'kanban,form',
             'domain': domain,
             'context': {
                 'search_default_group_by_sequence_prefix': 1,
