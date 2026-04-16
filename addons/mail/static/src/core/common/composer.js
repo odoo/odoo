@@ -751,6 +751,8 @@ export class Composer extends Component {
                             }
                         },
                     });
+                } else if (isDiscard) {
+                    this.saveContentAndUpdateComposer();
                 } else {
                     this.clear();
                 }
@@ -1034,27 +1036,43 @@ export class Composer extends Component {
         if (composer.restoredFromFullComposer && !this.state.isFullComposerOpen) {
             return;
         }
+        this._saveContent();
+    }
+
+    saveContentAndUpdateComposer() {
+        this._saveContent(true);
+    }
+
+    _saveContent(updateComposer = false) {
+        const composer = this.props.composer;
         const saveContentToLocalStorage = ({
             composerHtml,
             emailAddSignature,
             replyToMessageId,
             fromFullComposer = composer.restoredFromFullComposer,
         }) => {
+            if (updateComposer) {
+                if (!isHtmlEmpty(composerHtml)) {
+                    composer.composerHtml = composerHtml;
+                    composer.emailAddSignature = emailAddSignature;
+                }
+                if (Number.isInteger(replyToMessageId)) {
+                    composer.replyToMessage = this.store["mail.message"].insert(replyToMessageId);
+                }
+            }
             if (isHtmlEmpty(composerHtml)) {
                 browser.localStorage.removeItem(composer.localId);
-            } else {
-                browser.localStorage.setItem(
-                    composer.localId,
-                    JSON.stringify({
-                        emailAddSignature,
-                        replyToMessageId,
-                        composerHtml: isMarkup(composerHtml)
-                            ? ["markup", composerHtml]
-                            : composerHtml,
-                        fromFullComposer,
-                    })
-                );
+                return;
             }
+            browser.localStorage.setItem(
+                composer.localId,
+                JSON.stringify({
+                    emailAddSignature,
+                    replyToMessageId,
+                    composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
+                    fromFullComposer,
+                })
+            );
         };
         if (this.state.isFullComposerOpen) {
             this.fullComposerBus.trigger("SAVE_CONTENT", {
