@@ -30,5 +30,9 @@ registry.category("web_tour.tours").add("can_create_channel_from_form_view", {
         {
             trigger: ".o-mail-DiscussSidebarChannel-itemName:contains('Test channel')",
         },
+        // clicking on the channel should open the chat window
+        { trigger: "button[title='View or join channels']:not(:visible)", run: "click" },
+        { trigger: "span:text('Sports')", run: "click" },
+        { trigger: ".o-mail-ChatWindow" },
     ],
 });

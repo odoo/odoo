@@ -353,7 +353,11 @@ export class DiscussChannel extends Record {
             if (this.channelNotifications === "no_notif") {
                 return 0;
             }
-            if (this.channelNotifications === "all" && !this.self_member_id?.mute_until_dt) {
+            if (
+                this.channelNotifications === "all" &&
+                this.self_member_id &&
+                !this.self_member_id.mute_until_dt
+            ) {
                 return this.self_member_id.message_unread_counter_ui;
             }
         }
