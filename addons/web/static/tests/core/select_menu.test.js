@@ -1415,3 +1415,41 @@ test("prevent glitch on open or focusout", async () => {
     expect(queryOne(".o_select_menu_searchbox input")).toBe(searchInput);
     expect(searchInput.placeholder).toBe("searchPlaceholder");
 });
+
+test("Prevents loss of value due to debounce when changing state (rendering)", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+        <SelectMenu
+            choices="this.choices"
+            value="this.state.value"
+            placeholder="this.state.placeholder"
+            searchPlaceholder="this.state.searchPlaceholder"
+        />
+    `;
+        setup() {
+            this.choices = [
+                { label: "Harry Kane", value: "kane" },
+                { label: "Michael Olise", value: "olise" },
+                { label: "Vincent Kompany", value: "Kompany" },
+            ];
+            this.state = useState({
+                value: "",
+                placeholder: "brol",
+                searchPlaceholder: "search",
+            });
+        }
+    }
+    const machin = await mountSingleApp(MyParent);
+    expect(".o_select_menu_toggler").toHaveAttribute("placeholder", "brol");
+    await open();
+    expect(".o_select_menu_toggler").toHaveAttribute("placeholder", "search");
+    await contains(".o_select_menu_input").edit("Michael", { confirm: false });
+    machin.state.searchPlaceholder = "player";
+    await animationFrame();
+    machin.choices.push({ label: "Michael Owen", value: "owen" });
+    expect(".o_select_menu_input").toHaveValue("Michael");
+    await runAllTimers();
+    expect(".o_select_menu-choices .o-dropdown-item").toHaveCount(2);
+});

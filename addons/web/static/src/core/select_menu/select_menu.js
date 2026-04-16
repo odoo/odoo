@@ -146,6 +146,7 @@ export class SelectMenu extends Component {
             }
             const searchString = ev.target.value;
             this.state.searchValue = searchString;
+            delete this.pendingValue;
             this.onInput(searchString);
         }, DEBOUNCED_DELAY);
         this.dropdownState = useDropdownState();
@@ -197,7 +198,15 @@ export class SelectMenu extends Component {
         };
     }
 
+    handleInputDebounced(ev) {
+        this.pendingValue = ev.target.value;
+        this.debouncedOnInput(ev);
+    }
+
     get displayValue() {
+        if (this.pendingValue) {
+            return this.pendingValue;
+        }
         return this.state.searchValue === null
             ? this.selectedChoice?.label || ""
             : this.state.searchValue;

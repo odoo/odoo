@@ -11,7 +11,7 @@
             type="text"
             t-attf-class="o_input {{inputClass}}"
             t-custom-ref="inputRef"
-            t-on-input="this.debouncedOnInput"
+            t-on-input="this.handleInputDebounced"
             t-on-focus="this.onInputFocus"
             t-on-blur="this.onInputBlur"
             t-att-placeholder="this.placeholderValue"
