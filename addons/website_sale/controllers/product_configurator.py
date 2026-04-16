@@ -30,8 +30,10 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         has_optional_products = bool(
             product_template.optional_product_ids.filtered(self._should_show_product)
         )
-        return has_optional_products or not (
-            single_product_variant.get("product_id") or is_product_configured
+        return (
+            has_optional_products
+            or not (single_product_variant.get("product_id") or is_product_configured)
+            or (len(product_template._get_available_uoms()) > 1 and not is_product_configured)
         )
 
     def _get_product_template(self, product_template_id):
