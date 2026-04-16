@@ -29,7 +29,12 @@ export class SuggestionService {
      * @returns {Array<[string, number, number]>}
      */
     getSupportedDelimiters(thread, env) {
-        return [["@"], ["#"], ["::"], [":", undefined, 2]];
+        const delimiters = [["@"], ["#"], ["::"]];
+        // the emoji plugin handles the emoji suggestions already
+        if (!this.composer.htmlEnabled) {
+            delimiters.push([":", undefined, 2]);
+        }
+        return delimiters;
     }
 
     async fetchSuggestions({ delimiter, term }, { thread, abortSignal } = {}) {
