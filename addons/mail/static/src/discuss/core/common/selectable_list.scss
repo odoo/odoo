@@ -1,0 +1,30 @@
+.o-discuss-SelectableList-avatar {
+    width: 32px;
+    aspect-ratio: 1;
+}
+
+.o-discuss-SelectableList-selectable {
+    &:hover {
+        background-color: mix($gray-100, $gray-200) !important;
+    }
+    &.o-selected {
+        background-color: mix($o-view-background-color, $o-action, 85%) !important;
+    }
+}
+
+.o-discuss-SelectableList-selectedList {
+    max-height: 100px;
+
+    button {
+        background-color: mix($o-view-background-color, $o-action, 85%);
+
+        &:not(:hover) .oi-close {
+            border-color: transparent !important;
+        }
+
+        &:hover .oi-close {
+            color: $danger;
+            border-color: $danger !important;
+        }
+    }
+}

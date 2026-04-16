@@ -1123,6 +1123,53 @@ class DiscussChannel(models.Model):
             ]
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
 
+    def _forward_message(
+        self,
+        source_message,
+        optional_msg_body=False,
+        optional_msg_has_link=False,
+        source_msg_has_link=False,
+    ):
+        source_message.ensure_one()
+        attachment_template = []
+        if source_message.attachment_ids:
+            attachment_template = source_message.attachment_ids.copy_data()
+        preview_messages = self.env["mail.message"]
+        for channel in self:
+            if attachment_template:
+                new_attachment_ids = self.env["ir.attachment"].create(
+                    [
+                        dict(vals, res_id=channel.id, res_model="discuss.channel")
+                        for vals in attachment_template
+                    ]
+                ).ids
+            else:
+                new_attachment_ids = []
+            forwarded_msg = channel.message_post(
+                body=source_message.body,
+                message_type="comment",
+                forwarded_from_id=source_message.id,
+                subtype_xmlid="mail.mt_comment",
+                attachment_ids=new_attachment_ids,
+            )
+            if source_msg_has_link:
+                preview_messages |= forwarded_msg
+            if optional_msg_body:
+                optional_msg = channel.message_post(
+                    body=optional_msg_body,
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_comment",
+                    body_is_html=True,
+                )
+                if optional_msg_has_link:
+                    preview_messages |= optional_msg
+        if preview_messages and self.env["mail.link.preview"]._is_link_preview_enabled():
+            # sudo: mail.link.preview requires ERP Manager access, but preview creation
+            # during forwarding must work for all users. Sudo bypasses access restrictions.
+            link_preview_sudo = self.env["mail.link.preview"].sudo()
+            for msg in preview_messages:
+                link_preview_sudo._create_from_message_and_notify(msg)
+
     def _create_attachments_for_post(self, values_list, extra_list):
         # Create voice metadata from meta information
         attachments = super()._create_attachments_for_post(values_list, extra_list)
