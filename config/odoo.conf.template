@@ -1,0 +1,26 @@
+[options]
+admin_passwd = ${ODOO_ADMIN_PASSWD}
+
+db_host = ${DB_HOST}
+db_port = ${DB_PORT}
+db_user = ${DB_USER}
+db_password = ${DB_PASSWORD}
+
+data_dir = /var/lib/odoo
+addons_path = /opt/odoo/odoo/addons,/opt/odoo/addons,/opt/odoo/custom_addons,/opt/odoo/oca_addons
+
+proxy_mode = ${ODOO_PROXY_MODE}
+log_level = ${ODOO_LOG_LEVEL}
+
+; Longpolling / bus (Traefik will route /longpolling to this port)
+longpolling_port = ${ODOO_LONGPOLLING_PORT}
+
+; Production workers
+workers = ${ODOO_WORKERS}
+max_cron_threads = ${ODOO_MAX_CRON_THREADS}
+
+; Resource limits
+limit_time_cpu = ${ODOO_LIMIT_TIME_CPU}
+limit_time_real = ${ODOO_LIMIT_TIME_REAL}
+limit_memory_soft = ${ODOO_LIMIT_MEMORY_SOFT}
+limit_memory_hard = ${ODOO_LIMIT_MEMORY_HARD}
