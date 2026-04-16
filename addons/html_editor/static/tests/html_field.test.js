@@ -2903,3 +2903,19 @@ test("should not open icon toolbar when creating table of contents inside a list
     await advanceTime(200);
     await expectElementCount(".o-we-toolbar", 0);
 });
+
+test("html field is forced readonly in list views", async () => {
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+            <list>
+                <field name="name"/>
+                <field name="txt" widget="html"/>
+            </list>`,
+    });
+
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(2);
+    expect(queryAllTexts(`[name="txt"] .o_readonly`)).toEqual(["first", "second"]);
+});

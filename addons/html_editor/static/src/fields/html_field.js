@@ -353,7 +353,7 @@ export const htmlField = {
     component: HtmlField,
     displayName: _t("Html"),
     supportedTypes: ["html"],
-    extractProps({ attrs, options }, dynamicInfo) {
+    extractProps({ attrs, options, viewType }) {
         const editorConfig = {
             mediaModalParams: {
                 useMediaLibrary: true,
@@ -399,7 +399,8 @@ export const htmlField = {
         if ("debounceHints" in options) {
             editorConfig.debounceHints = Boolean(options.debounceHints);
         }
-        return {
+
+        const props = {
             editorConfig,
             isCollaborative: options.collaborative,
             collaborativeTrigger: options.collaborative_trigger,
@@ -412,6 +413,12 @@ export const htmlField = {
             cssReadonlyAssetId: options.cssReadonly,
             codeview: Boolean(odoo.debug && options.codeview),
         };
+
+        if (viewType === "list") {
+            props.readonly = true;
+        }
+
+        return props;
     },
 };
 
