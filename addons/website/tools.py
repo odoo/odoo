@@ -128,12 +128,7 @@ def add_form_signature(html_fragment, env_sudo):
             continue
 
         email_to_value = form_values['email_to'].attrib.get('value')
-        if (not email_to_value
-            or (email_to_value == 'info@yourcompany.example.com'
-                and html_fragment.xpath('//span[@data-for="contactus_form"]')
-                and html_fragment.xpath('//form[@id="contactus_form"]'))):
-            # This means that the mail will be sent to the value of the dataFor
-            # which is the company email.
+        if not email_to_value:
             email_to_value = env_sudo.company.email or ''
 
         has_cc = {'email_cc', 'email_bcc'} & form_values.keys()

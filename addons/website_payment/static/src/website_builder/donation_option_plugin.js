@@ -1,9 +1,11 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
+import { getDefaultEmailTo } from "@website/js/send_mail_form";
 
 export class DonationOption extends BaseOptionComponent {
     static id = "donation_option";
@@ -32,7 +34,30 @@ export class DonationOptionPlugin extends Plugin {
             SetSliderStepAction,
         },
         submit_button_selectors: [".s_donation_donate_btn"],
+        on_will_save_handlers: this.onWillSave.bind(this),
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
+
+    async onSnippetDropped({ snippetEl }) {
+        await this.setDefaultDonationEmail(snippetEl);
+    }
+
+    async onWillSave(rootEl) {
+        await this.setDefaultDonationEmail(rootEl);
+    }
+
+    async setDefaultDonationEmail(rootEl) {
+        const donationEls = selectElements(rootEl, ".s_donation").filter(
+            (donationEl) => !donationEl.dataset.donationEmail
+        );
+        if (!donationEls.length) {
+            return;
+        }
+        this.defaultDonationEmail = await getDefaultEmailTo({ services: this.services });
+        for (const donationEl of donationEls) {
+            donationEl.dataset.donationEmail = this.defaultDonationEmail;
+        }
+    }
 }
 
 export class BaseDonationAction extends BuilderAction {

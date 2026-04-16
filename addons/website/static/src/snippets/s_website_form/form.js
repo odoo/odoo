@@ -283,21 +283,9 @@ export class Form extends Interaction {
 
                 // In general, we want the data-for and prefill values to
                 // take priority over set default values. The 'email_to'
-                // field is however treated as an exception at the moment
-                // so that values set by users are always used.
-                if (
-                    name === "email_to" &&
-                    fieldEl.value &&
-                    // The following value is the default value that
-                    // is set if the form is edited in any way. (see the
-                    // @website/js/form_editor_registry module in editor
-                    // assets bundle).
-                    // TODO that value should probably never be forced
-                    // unless explicitely manipulated by the user or on
-                    // custom form addition but that seems risky to
-                    // change as a stable fix.
-                    fieldEl.value !== "info@yourcompany.example.com"
-                ) {
+                // field is however treated as an exception so that values
+                // explicitly set by users are always used.
+                if (name === "email_to" && fieldEl.value) {
                     continue;
                 }
 
