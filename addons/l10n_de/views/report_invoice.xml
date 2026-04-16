@@ -1,0 +1,17 @@
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//t[@t-set='o']" position="replace">
+            <t t-set="o" t-value="o.with_context(lang=lang, partner_display_name_hide_company=True)"/>
+        </xpath>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_de.report_invoice_document'"
+               t-call="l10n_de.report_invoice_document"
+               t-lang="lang">
+            </t>
+        </xpath>
+    </template>
+</odoo>

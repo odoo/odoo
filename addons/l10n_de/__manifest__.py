@@ -24,6 +24,7 @@ By default, the audit trail is enabled for GoBD compliance.
     'data': [
         'data/account_account_tags_data.xml',
         'views/account_view.xml',
+        'views/report_invoice.xml',
         'views/res_company_views.xml',
     ],
     'demo': [

@@ -16,3 +16,9 @@ class AccountMove(models.Model):
             if move.country_code == 'DE' and move.is_sale_document() and not move.delivery_date:
                 move.delivery_date = move.invoice_date or fields.Date.context_today(self)
         return super()._post(soft)
+
+    def _get_name_invoice_report(self):
+        self.ensure_one()
+        if self.country_code == 'DE' and self.env.ref('l10n_de.report_invoice_document', raise_if_not_found=False):
+            return 'l10n_de.report_invoice_document'
+        return super()._get_name_invoice_report()
