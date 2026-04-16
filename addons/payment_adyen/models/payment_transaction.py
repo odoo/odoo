@@ -226,11 +226,13 @@ class PaymentTransaction(models.Model):
             # The capture/void may be initiated from Adyen, so we can't trust the reference.
             # We find the transaction based on the original provider reference since Adyen will have
             # two different references: one for the original transaction and one for the capture or
-            # void. We keep the second one only for child transactions. For full capture/void, no
-            # child transaction are created. Thus, we first look for the source transaction before
-            # checking if we need to find/create a child transaction.
+            # void. We keep the second one only for child transactions.
             source_tx = self.search([
                 ("provider_reference", "=", source_reference),
+                ("provider_code", "=", "adyen"),
+            ])
+            tx = self.search([
+                ("provider_reference", "=", provider_reference),
                 ("provider_code", "=", "adyen"),
             ])
             if source_tx:
@@ -240,31 +242,24 @@ class PaymentTransaction(models.Model):
                     source_tx.currency_id,
                     arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
                 )
-                if source_tx.amount == converted_notification_amount:  # Full capture/void.
-                    tx = source_tx
-                else:  # Partial capture/void; we search for the child transaction instead.
-                    tx = self.search([
-                        ("provider_reference", "=", provider_reference),
-                        ("provider_code", "=", "adyen"),
-                    ])
-                    if tx and tx.amount != converted_notification_amount:
-                        # If the void was requested expecting a certain amount but, in the meantime,
-                        # others captures that Odoo was unaware of were done, the amount voided will
-                        # be different from the amount of the existing transaction.
-                        tx._set_error(
-                            _(
-                                "The amount processed by Adyen for the transaction %s is different"
-                                " than the one requested. Another transaction is created with the"
-                                " correct amount.",
-                                tx.reference,
-                            )
+                if tx and tx.amount != converted_notification_amount:
+                    # If the void was requested expecting a certain amount but, in the meantime,
+                    # others captures that Odoo was unaware of were done, the amount voided will
+                    # be different from the amount of the existing transaction.
+                    tx._set_error(
+                        _(
+                            "The amount processed by Adyen for the transaction %s is different than"
+                            " the one requested. Another transaction is created with the correct"
+                            " amount.",
+                            tx.reference,
                         )
-                        tx = self.env["payment.transaction"]
-                    if not tx:  # Partial capture/void initiated from Adyen or with a wrong amount.
-                        # Manually create a child transaction with a new reference. The reference of
-                        # the child transaction was personalized from Adyen and could be identical
-                        # to that of an existing transaction.
-                        tx = self._adyen_create_child_tx(source_tx, payment_data)
+                    )
+                    tx = self.env["payment.transaction"]
+                if not tx:  # capture/void initiated from Adyen or with a wrong amount.
+                    # Manually create a child transaction with a new reference. The reference of
+                    # the child transaction was personalized from Adyen and could be identical
+                    # to that of an existing transaction.
+                    tx = self._adyen_create_child_tx(source_tx, payment_data)
             else:  # The capture/void was initiated for an unknown source transaction
                 pass  # Don't do anything with the capture/void notification
         else:  # 'REFUND'
