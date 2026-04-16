@@ -394,7 +394,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_webhook_notification_cancels_transaction(self):
         tx = self._create_transaction(
-            "direct", state="pending", provider_reference=self.original_reference, amount=9.99
+            "direct", state="authorized", provider_reference=self.original_reference, amount=9.99
         )
         payload = dict(
             self.webhook_notification_batch_data,
