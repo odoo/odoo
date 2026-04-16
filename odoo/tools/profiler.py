@@ -7,8 +7,8 @@ import logging
 import sys
 import time
 import threading
+import os
 import re
-import tracemalloc
 
 from psycopg2 import OperationalError
 
@@ -17,6 +17,13 @@ from odoo.tools import SQL
 
 from .gc import disabling_gc
 
+try:
+    import memray as _memray
+except ImportError:
+    _memray = None
+
+import psutil
+_current_process = psutil.Process(os.getpid())
 
 _logger = logging.getLogger(__name__)
 
@@ -128,12 +135,15 @@ class Collector:
 
     def progress(self, entry=None, frame=None):
         """ Checks if the limits were met and add to the entries"""
-        if self.profiler.entry_count_limit \
-            and self.profiler.counter >= self.profiler.entry_count_limit:
+        entry_limit_reached = bool(self.profiler.entry_count_limit and self.profiler.counter >= self.profiler.entry_count_limit)
+        soft_limit = tools.config['limit_memory_soft']
+        rss = _current_process.memory_info().rss if soft_limit else 0
+        memory_limit_reached = bool(soft_limit and rss >= soft_limit * 0.95)
+        if entry_limit_reached or memory_limit_reached:
             self.profiler.end()
             return
         self.profiler.counter += 1
-        self.add(entry=entry,frame=frame)
+        self.add(entry=entry, frame=frame)
 
     def _get_stack_trace(self, frame=None):
         """ Return the stack trace to be included in a given entry. """
@@ -265,36 +275,54 @@ _lock = threading.Lock()
 
 
 class MemoryCollector(_BasePeriodicCollector):
+    """
+    Traces memory allocations using memray over the profiling session.
+    Periodically samples process RSS via psutil.
+    The memray .bin file is written to the database filestore; only the path
+    is stored in the collector entry.
+    """
 
-    name = 'memory'
+    name = 'memory' if _memray else None
     _store = 'others'
-    _min_interval = 0.01  # minimum interval allowed
-    _default_interval = 1
 
     def start(self):
+        if not _memray:
+            _logger.warning("memray is not installed, MemoryCollector will not collect data.")
+            return
         _lock.acquire()
-        tracemalloc.start()
+        db = self.profiler.db
+        filestore_dir = os.path.join(tools.config.filestore(db), 'memray')
+        os.makedirs(filestore_dir, exist_ok=True)
+        timestamp = real_datetime_now().strftime("%Y%m%d-%H%M%S-%f")
+        self._bin_path = os.path.join(filestore_dir, f'memory_{timestamp}_pid{os.getpid()}.bin')
+        # Write a sidecar metadata file so the bin can be recovered correctly
+        # if the process is killed before the profile record is committed.
+        meta_path = os.path.splitext(self._bin_path)[0] + '.meta.json'
+        with open(meta_path, 'w', encoding='utf-8') as f:
+            json.dump({
+                'session': self.profiler.profile_session,
+                'description': self.profiler.description,
+            }, f)
+        self.__tracker = _memray.Tracker(self._bin_path, follow_fork=True)
+        self.__tracker.__enter__()
         super().start()
 
     def add(self, entry=None, frame=None):
-        """ Add an entry (dict) to this collector. """
-        self._entries.append({
-            'start': real_time(),
-            'memory': tracemalloc.take_snapshot(),
-        })
+        pass
 
     def stop(self):
         super().stop()
+        if self.__tracker:
+            self.__tracker.__exit__(None, None, None)
+            self.__tracker = None
         _lock.release()
-        tracemalloc.stop()
+        self._entries.append({
+            'start': real_time(),
+            'memray_bin_path': os.path.basename(self._bin_path),
+        })
 
     def post_process(self):
-        for i, entry in enumerate(self._entries):
-            if entry.get("memory", False):
-                entry_statistics = entry["memory"].statistics('traceback')
-                modified_entry_statistics = [{'traceback': list(statistic.traceback._frames),
-                                            'size': statistic.size} for statistic in entry_statistics]
-                self._entries[i] = {"memory_tracebacks": modified_entry_statistics, "start": entry['start']}
+        pass  # entries contain periodic RSS samples and the final bin path
 
 
 class SyncCollector(Collector):

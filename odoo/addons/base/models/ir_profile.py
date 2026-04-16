@@ -1,19 +1,30 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import contextlib
 import datetime
 import json
 import logging
+import re
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, models, api
+from odoo import fields, models, api, tools
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools.misc import str2bool
 from odoo.tools.constants import GC_UNLINK_LIMIT
 from odoo.tools.profiler import make_session
 from odoo.tools.speedscope import Speedscope
+
+try:
+    import memray as _memray
+except ImportError:
+    _memray = None
 
 _logger = logging.getLogger(__name__)
 
@@ -54,8 +65,74 @@ class IrProfile(models.Model):
         # remove profiles older than 30 days
         domain = [('create_date', '<', fields.Datetime.now() - datetime.timedelta(days=30))]
         records = self.sudo().search(domain, limit=GC_UNLINK_LIMIT)
+        for record in records:
+            bin_path = record._get_memray_bin_path()
+            if bin_path:
+                bin_path.unlink(missing_ok=True)
+                bin_path.with_suffix('.meta.json').unlink(missing_ok=True)
         records.unlink()
+        self._recover_orphaned_memray_files()
         return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
+
+    def _recover_orphaned_memray_files(self):
+        """
+        Find memray .bin files in the filestore that have no associated profile
+        (e.g. the process was killed before the profile record was committed).
+        A stub profile is created for each orphaned file so it appears in the
+        UI and is eventually cleaned up by the normal 30-day GC.
+        """
+        memray_dir = Path(tools.config.filestore(self.env.cr.dbname)) / 'memray'
+        if not memray_dir.exists():
+            return
+
+        # Collect all bin paths already referenced by a profile
+        tracked = {
+            profile._get_memray_bin_path()
+            for profile in self.search([('others', '!=', False)])
+        } - {None, ''}
+
+        now = datetime.datetime.now()
+        # Only recover files older than 1 hour to avoid touching active recordings
+        recover_cutoff = (now - datetime.timedelta(hours=1)).timestamp()
+        # Delete files older than 5 days that were never committed to a profile
+        delete_cutoff = (now - datetime.timedelta(days=5)).timestamp()
+
+        for bin_file in memray_dir.glob('*.bin'):
+            if bin_file in tracked:
+                continue
+            mtime = bin_file.stat().st_mtime
+            if mtime > recover_cutoff:
+                continue  # possibly still being written
+            if mtime < delete_cutoff:
+                bin_file.unlink(missing_ok=True)
+                bin_file.with_suffix('.meta.json').unlink(missing_ok=True)
+                _logger.info("Deleted stale orphaned memray file: %s", bin_file)
+                continue
+
+            # Parse creation time from filename: memory_YYYYMMDD-HHMMSS-ffffff_pidN.bin
+            create_date = fields.Datetime.now()
+            m = re.match(r'memory_(\d{8}-\d{6})', bin_file.name)
+            if m:
+                with contextlib.suppress(ValueError):
+                    create_date = datetime.datetime.strptime(m.group(1), '%Y%m%d-%H%M%S')
+
+            # Read sidecar metadata written at recording start
+            session = f'recovered_{bin_file.stem}'
+            name = 'Recovered memory profile (process killed)'
+            meta_file = bin_file.with_suffix('.meta.json')
+            if meta_file.exists():
+                meta = json.loads(meta_file.read_text(encoding='utf-8'))
+                session = meta.get('session', session)
+                name = meta.get('description', name)
+
+            others = json.dumps({"memory": json.dumps([{"memray_bin_path": bin_file.name}])})
+            self.create({
+                'name': name,
+                'session': session,
+                'others': others,
+                'create_date': create_date,
+            })
+            _logger.info("Recovered orphaned memray file: %s", bin_file)
 
     def _compute_has_memory(self):
         for profile in self:
@@ -63,21 +140,53 @@ class IrProfile(models.Model):
                 return False
         return True
 
-    def _generate_memory_profile(self, params):
-        memory_graph = []
-        memory_limit = params.get('memory_limit', 0)
-        for profile in self:
-            if profile.others:
-                memory = json.loads(profile.others).get("memory", "[{}]")
-                memory_tracebacks = json.loads(memory)[:-1]
-                for entry in memory_tracebacks:
-                    memory_graph.append({
-                        "samples": [
-                            sample for sample in entry["memory_tracebacks"]
-                            if sample.get("size", False) >= memory_limit
-                        ]
-                    , "start": entry["start"]})
-        return memory_graph
+    def _get_memray_bin_path(self):
+        """Return the memray .bin file path stored in the profile's others field, or None."""
+        if not self.others:
+            return None
+        memory_json = json.loads(self.others).get("memory")
+        if not memory_json:
+            return None
+        entries = json.loads(memory_json)
+        # The last entry contains the memray_bin_path
+        bin_path = entries[-1].get("memray_bin_path", "")
+        memray_dir = Path(tools.config.filestore(self.env.cr.dbname)) / 'memray'
+
+        path = (memray_dir / bin_path).resolve()
+        assert path.is_relative_to(memray_dir)
+
+        return str(path)
+
+    def _generate_memory_profile(self, report='flamegraph', leaks=False, temporal=False, split_threads=False):
+        """
+        Generate a memray HTML report for this profile.
+
+        :param report: ``'flamegraph'``.
+        :param leaks: show memory leaks instead of peak usage.
+        :param temporal: (flamegraph only) generate a temporal flame graph.
+        :return: HTML bytes, or None if the bin file is not available.
+        """
+        VALID_REPORTS = ('flamegraph',)
+        if report not in VALID_REPORTS:
+            raise ValueError(f"Unknown memray report type: {report!r}. Use one of {VALID_REPORTS}.")
+
+        bin_path = self._get_memray_bin_path()
+        if not bin_path:
+            return None
+
+        cmd = [sys.executable, '-m', 'memray', report, '--force']
+        cmd.extend(
+            flag for flag, enabled in (
+                ('--leaks', leaks),
+                ('--temporal', temporal),
+                ('--split-threads', split_threads),
+            ) if enabled
+        )
+
+        with tempfile.NamedTemporaryFile(suffix='.html') as tmp:
+            output_path = tmp.name
+            subprocess.run(cmd + ['--output', output_path, str(bin_path)], check=True, capture_output=True)
+            return Path(output_path).read_bytes()
 
     def _compute_config_url(self):
         for profile in self:
@@ -202,6 +311,11 @@ class IrProfile(models.Model):
         if params is not None:
             request.session['profile_params'] = params
 
+        # Always persist memray_available in the session so it survives page reloads
+        session_params = request.session.get('profile_params') or {}
+        session_params['memray_available'] = bool(_memray)
+        request.session['profile_params'] = session_params
+
         return {
             'session': request.session.get('profile_session'),
             'collectors': request.session.get('profile_collectors'),
@@ -215,6 +329,20 @@ class IrProfile(models.Model):
             'url': f'/web/profile_config/{ids}',
             'target': 'new',
         }
+
+    def action_recover_orphaned_memray_files(self):
+        self._recover_orphaned_memray_files()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': self.env._('Recovery complete'),
+                'message': self.env._('Orphaned memray files have been recovered.'),
+                'type': 'success',
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }
+
 
 class BaseEnableProfilingWizard(models.TransientModel):
     _name = 'base.enable.profiling.wizard'

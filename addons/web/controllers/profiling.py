@@ -63,13 +63,13 @@ class Profiling(Controller):
             raise request.not_found()
 
         if action == 'memory_open':
-            memory_profile = profiles._generate_memory_profile(profiles._parse_params(kwargs))
-            encoded_memory_profile = json.dumps(memory_profile).encode('utf_8')
-            context = {
-                'profile': profiles,
-                'memory_graph': base64.b64encode(encoded_memory_profile).decode('utf-8'),
-                }
-            return request.render('web.view_memory', context)
+            report = kwargs.get('report', 'flamegraph')
+            leaks = kwargs.get('leaks') == 'True'
+            temporal = kwargs.get('temporal') == 'True'
+            html = profiles._generate_memory_profile(report=report, leaks=leaks, temporal=temporal)
+            if not html:
+                raise request.not_found()
+            return request.make_response(html, headers=[('Content-Type', 'text/html')])
 
         context = {
             'default_params': profiles._default_profile_params(),
