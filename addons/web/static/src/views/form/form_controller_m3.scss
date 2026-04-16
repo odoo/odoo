@@ -46,13 +46,20 @@
             transform: translate(calc(var(--field-spacing-unit)), calc(-.5 * var(--field-spacing-unit)));
             z-index: 1; // TODO finetune for quick create kanban
             padding: 0 calc(var(--field-spacing-unit) / 2) !important;
-            background: $o-view-background-color;
             border-radius: var(--field-spacing-unit);
             margin-bottom: 0 !important;
+
+            // Hide the border of the adjacent sibling box that is under the label
+            background-image: linear-gradient($o-view-background-color);
+            background-size: 100% var(--o-box-border-size);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: transparent;
 
             // Same as ligne +/- 592; TODO merge the rules after maybe
             font-size: $font-size-sm !important;
             font-weight: $font-weight-bold !important;
+            line-height: ROUND(down, 1.5em, 1px);
 
             & * {
                 color: inherit !important;
