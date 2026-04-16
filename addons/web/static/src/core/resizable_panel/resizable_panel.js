@@ -1,10 +1,5 @@
 import { useComponent, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import {
-    Component,
-    onMounted,
-    onWillUpdateProps,
-    onWillUnmount,
-} from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, onWillUnmount } from "@odoo/owl";
 
 function useResizable({
     containerRef,
