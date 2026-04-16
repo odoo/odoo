@@ -1,0 +1,80 @@
+.o_field_widget[name="order_line"] {
+
+    th[data-name="visual_line_no"] {
+        width: 36px !important;
+        min-width: 36px !important;
+        max-width: 36px !important;
+
+        .o_resize {
+            display: none !important;
+        }
+    }
+
+    table tbody {
+        counter-reset: sale_line_counter;
+    }
+
+    tr.o_data_row:not(.o_is_line_section):not(.o_is_line_subsection):not(.o_is_line_note):not(.text-muted):not(.d-none) {
+
+        td[name="visual_line_no"] {
+            position: relative;
+            box-sizing: border-box;
+            width: 36px !important;
+            min-width: 36px !important;
+            max-width: 36px !important;
+            padding: 8px 4.8px !important;
+            vertical-align: top;
+            text-align: left;
+
+            &::before {
+                content: counter(sale_line_counter);
+                counter-increment: sale_line_counter;
+            }
+
+            > * {
+                display: none !important;
+            }
+        }
+    }
+
+    &:has(th[data-name="visual_line_no"]:not(.d-none)) {
+
+        tr.o_data_row.o_is_line_section:not(.d-none),
+        tr.o_data_row.o_is_line_subsection:not(.d-none),
+        tr.o_data_row.o_is_line_note:not(.d-none) {
+
+            td.o_handle_cell + td {
+                position: relative;
+                padding-left: 41.8px !important;
+            }
+        }
+
+        tr.o_data_row.o_is_line_section:not(.d-none),
+        tr.o_data_row.o_is_line_subsection:not(.d-none),
+        tr.o_data_row.o_is_line_note:not(.text-muted):not(.d-none) {
+
+            td.o_handle_cell + td {
+
+                &::before {
+                    content: counter(sale_line_counter);
+                    counter-increment: sale_line_counter;
+
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+
+                    position: absolute;
+                    top: 1px;
+                    bottom: 0;
+                    left: 0;
+
+                    box-sizing: border-box;
+                    width: 29px;
+                    padding: 8px 4.8px;
+
+                    font-style: normal !important;
+                }
+            }
+        }
+    }
+}

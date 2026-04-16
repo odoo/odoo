@@ -365,6 +365,7 @@ class SaleOrder(models.Model):
         help="Internal warning for the partner or the products as set by the user.",
         compute="_compute_sale_warning_text",
     )
+    show_sale_line_numbers = fields.Boolean(related="company_id.show_sale_line_numbers")
 
     # Payment fields
     transaction_count = fields.Integer(compute="_compute_transaction_count")

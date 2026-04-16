@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_inherit_line_numbers" inherit_id="sale.report_saleorder_document">
+
+        <th name="th_description" position="before">
+            <th name="th_line_no" class="text-start" style="width: 1%; white-space: nowrap;" t-if="doc.company_id.show_sale_line_numbers"/>
+        </th>
+
+        <xpath expr="//tbody[hasclass('sale_tbody')]" position="before">
+            <t t-set="visual_line_counter" t-value="1"/>
+        </xpath>
+
+        <td name="td_section_name" position="before">
+            <td name="td_combo_line_no" class="text-start" t-if="doc.company_id.show_sale_line_numbers">
+                <span t-out="visual_line_counter"/>
+                <t t-set="visual_line_counter" t-value="visual_line_counter + 1"/>
+            </td>
+        </td>
+
+        <td name="td_note_name" position="before">
+            <td name="td_note_line_no" class="text-start fst-normal" t-if="doc.company_id.show_sale_line_numbers">
+                <span t-out="visual_line_counter"/>
+                <t t-set="visual_line_counter" t-value="visual_line_counter + 1"/>
+            </td>
+        </td>
+
+        <td name="td_section_group_name" position="before">
+            <td name="td_combo_line_no" class="text-start" t-if="doc.company_id.show_sale_line_numbers">
+                <span t-out="visual_line_counter"/>
+                <t t-set="visual_line_counter" t-value="visual_line_counter + 1"/>
+            </td>
+        </td>
+
+         <td name="td_combo_name" position="before">
+            <td name="td_combo_line_no" class="text-start" t-if="doc.company_id.show_sale_line_numbers">
+                <span t-out="visual_line_counter"/>
+                <t t-set="visual_line_counter" t-value="visual_line_counter + 1"/>
+            </td>
+        </td>
+
+        <td name="td_product_name" position="before">
+            <td name="td_line_no" class="text-start" t-if="doc.company_id.show_sale_line_numbers">
+                <span t-out="visual_line_counter"/>
+                <t t-set="visual_line_counter" t-value="visual_line_counter + 1"/>
+            </td>
+        </td>
+
+    </template>
+</odoo>
