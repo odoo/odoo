@@ -1,5 +1,5 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
-import { beforeEach, expect, queryAllTexts, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import {
     contains,
@@ -81,7 +81,7 @@ beforeEach(async () => {
         { partner_id: partnerId_1, partner_checked: true, user_id: serverState.userId },
         { partner_id: partnerId_2, partner_checked: true, user_id: serverData.userId },
     ]);
-    pyEnv["calendar.event"].create([
+    const [eventId_1] = pyEnv["calendar.event"].create([
         {
             name: "event 1",
             start: "2016-12-11 00:00:00",
@@ -107,6 +107,8 @@ beforeEach(async () => {
             user_id: user.userId,
         },
         {
+            // Activity linked to a calendar event meeting.
+            calendar_event_id: eventId_1,
             can_write: true,
             date_deadline: "2016-12-12 10:55:05",
             state: "today",
@@ -133,6 +135,8 @@ beforeEach(async () => {
             user_id: user.userId + 1,
         },
         {
+            // Activity of type Document
+            activity_category: "upload_file",
             can_write: true,
             date_deadline: "2016-12-13 00:00:00",
             state: "planned",
@@ -225,13 +229,13 @@ test("Activity events rendering and popover", async () => {
     await mountView({ type: "calendar", resModel: "calendar.event", arch });
     expect.verifySteps(["calendar_fetch_activities"]);
 
-    // Check activity events rendering (3 activity events: overdue, today and planned)
+    // Check activity events rendering.
     // Done activities and other users activities are not displayed.
-    expect(".fc-event.o_activity_event").toHaveCount(3);
+    expect(pyEnv["mail.activity"].length).toBe(6);
+    expect(".fc-event.o_activity_event").toHaveCount(4);
     expect("td[data-date='2016-12-11'] .o_activity_event:contains('Activity 1')").toHaveCount(1);
-    expect(
-        "td[data-date='2016-12-12'] .o_activity_event:contains('2 pending activities')"
-    ).toHaveCount(1);
+    expect("td[data-date='2016-12-12'] .o_activity_event:contains('Activity 2')").toHaveCount(1);
+    expect("td[data-date='2016-12-12'] .o_activity_event:contains('Activity 3')").toHaveCount(1);
     expect("td[data-date='2016-12-13'] .o_activity_event:contains('Activity 5')").toHaveCount(1);
     // Check activity calendar side panel filter
     expect(".o_calendar_sidepanel input#show_activities_checkbox").toHaveProperty("checked", true);
@@ -240,33 +244,29 @@ test("Activity events rendering and popover", async () => {
     expect(".fc-event.o_activity_event").toHaveCount(0);
     await contains(".o_calendar_sidepanel input#show_activities_checkbox").click(); // Show activities
     expect.verifySteps(["calendar_show_activities", "calendar_fetch_activities"]);
-    expect(".fc-event.o_activity_event").toHaveCount(3);
+    expect(".fc-event.o_activity_event").toHaveCount(4);
     // Check activity popover rendering
-    await clickEvent("activity-event-2016-12-12");
-    expect(queryAllTexts(".o-mail-ActivityListPopoverItem-name")).toEqual([
-        "Activity 2",
-        "Activity 3",
-    ]);
-    const a2_selector = ".o-mail-ActivityListPopoverItem:contains(Activity 2) ";
-    const a3_selector = ".o-mail-ActivityListPopoverItem:contains(Activity 3) ";
-    expect(a2_selector + ".text-action").toHaveCount(0); // no res record link
-    expect(a3_selector + ".text-action").toHaveText("Partner 2"); // res record link
-    // Check activity popover done and reschedule actions
-    await contains(a2_selector + ".o-mail-ActivityListPopoverItem-markAsDone").click();
-    expect(a2_selector + ".o-mail-ActivityMarkAsDone").toHaveCount(1);
-    await contains(a2_selector + "button:text(Done)").click(); // Activity 2 marked done
-    expect(a2_selector).toHaveCount(0);
-    expect.verifySteps(["calendar_fetch_activities"]);
-    await contains(a3_selector + ".o-mail-ActivityListPopoverItem-reschedulebtn").click();
+    await clickEvent("activity-event-2"); // Activity of type meeting
+    expect(".o_cw_activity_popover .list-group-item button[title='Related Record']").toHaveCount(0);
+    expect(".card-footer a[title='Mark Done']").toHaveCount(1);
+    expect(".card-footer a[title='View Meeting']").toHaveCount(1);
+    await clickEvent("activity-event-5"); // Activity of type document
+    expect(".o_cw_activity_popover .list-group-item button[title='Related Record']").toHaveCount(0);
+    expect(".card-footer button[title='Upload File']").toHaveCount(1);
+    expect(".card-footer a[title='Edit']").toHaveCount(1);
+    await clickEvent("activity-event-3"); // Activity with related record
+    expect(".o_cw_activity_popover .list-group-item button[title='Related Record']").toHaveCount(1);
+    expect(".card-footer a[title='Mark Done']").toHaveCount(1);
+    expect(".card-footer a[title='Edit']").toHaveCount(1);
+    // Check activity popover reschedule and mark done actions
+    await contains(".o_cw_activity_popover .list-group-item button[title='Reschedule']").click();
     await contains(".o_popover .o-dropdown-item:contains(Tomorrow)").click(); // Activity 3 rescheduled
     expect.verifySteps(["action_reschedule_tomorrow", "calendar_fetch_activities"]);
-    expect(a3_selector).toHaveCount(0);
-    // Check activity popover auto closing (no activity left for the day) and calendar view update
-    expect(".o_cw_activity_popover").toHaveCount(0);
-    expect(".fc-event.o_activity_event").toHaveCount(2);
+    await clickEvent("activity-event-2");
+    await contains(".card-footer a[title='Mark Done']").click();
+    await contains(".card-footer a[title='Done']").click(); // Activity 2 marked done
+    expect.verifySteps(["calendar_fetch_activities"]);
     // Check activity records have been updated
-    // Activity 2: Archived and set done
-    // Activity 3: Rescheduled
     const a2 = pyEnv["mail.activity"].browse(2)[0];
     expect(a2.active).toBe(false);
     expect(a2.state).toBe("done");
