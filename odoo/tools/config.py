@@ -785,11 +785,13 @@ class configmanager:
     def _check_addons_path(cls, option, opt, value):
         ad_paths = []
         for path in map(cls._normalize, cls._check_comma(option, opt, value)):
+            if glob.has_magic(path):
+                ad_paths.extend(sorted(p for p in glob.glob(path) if os.path.isdir(p) and cls._is_addons_path(p)))
+                continue
             if not os.path.isdir(path):
                 cls._log(logging.WARNING, "option %s, no such directory %r, skipped", opt, path)
                 continue
             ad_paths.append(path)
-
         return ad_paths
 
     @classmethod
