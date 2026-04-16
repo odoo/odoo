@@ -191,7 +191,17 @@
                             help="If set, replaces the website logo as the default social share image."
                         >
                             <field name="has_default_share_image"/>
-                            <field name="social_default_image" widget="image" class="w-25 mt-2" invisible="not has_default_share_image"/>
+                            <field
+                                name="social_default_image"
+                                widget="image"
+                                class="w-25 mt-2"
+                                invisible="not has_default_share_image"
+                                options="{'accepted_file_extensions': '.png,.jpg,.jpeg,.gif,.webp'}"
+                            />
+                            <div class="text-muted mt-2">
+                                <i class="fa fa-info-circle me-1"/>
+                                Supported formats for social share images are PNG, JPG, WEBP, or GIF.
+                            </div>
                         </setting>
                         <setting
                             id="google_console_setting"
