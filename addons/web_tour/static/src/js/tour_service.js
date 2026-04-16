@@ -24,51 +24,32 @@ class OnboardingItem extends Component {
 }
 
 const stepSchema = {
-    "id?": t.string,
-    "content?": t.or([t.string, t.object()]), //allow object(_t && markup)
-    "debugHelp?": t.string,
-    "isActive?": t.array(t.string),
-    "run?": t.or([t.string, t.function(), t.boolean]),
-    "timeout?": t.customValidator(t.number, (value) => value >= 0 && value <= 60000),
-    "tooltipPosition?": t.customValidator(t.string, (value) =>
+    "id?": t.string(),
+    "content?": t.or([t.string(), t.object()]), //allow object(_t && markup)
+    "debugHelp?": t.string(),
+    "isActive?": t.array(t.string()),
+    "run?": t.or([t.string(), t.function(), t.boolean()]),
+    "timeout?": t.customValidator(t.number(), (value) => value >= 0 && value <= 60000),
+    "tooltipPosition?": t.customValidator(t.string(), (value) =>
         ["top", "bottom", "left", "right"].includes(value)
     ),
-    trigger: t.string,
-    "expectUnloadPage?": t.boolean,
+    trigger: t.string(),
+    "expectUnloadPage?": t.boolean(),
 };
 
 const stepSchemaDebug = {
     ...stepSchema,
-    "pause?": t.boolean,
-    "break?": t.boolean,
+    "pause?": t.boolean(),
+    "break?": t.boolean(),
 };
 
 const tourSchema = {
     steps: t.function(),
-    "undeterministicTour_doNotCopy?": t.boolean,
+    "undeterministicTour_doNotCopy?": t.boolean(),
 };
 
-function strictObject(schema) {
-    const validateObject = t.object(schema);
-    return function validateStrictObject(ctx) {
-        ctx.validate(validateObject);
-        const unknownKeys = [];
-        for (const key in ctx.value) {
-            if (!(key in schema) && !(`${key}?` in schema)) {
-                unknownKeys.push(key);
-            }
-        }
-        if (unknownKeys.length) {
-            ctx.addIssue({
-                message: "object value has unknown keys",
-                unknownKeys,
-            });
-        }
-    };
-}
-
 const tourRegistry = registry.category("web_tour.tours");
-tourRegistry.addValidation(strictObject(tourSchema));
+tourRegistry.addValidation(t.strictObject(tourSchema));
 
 export class TourService {
     /**
@@ -351,7 +332,7 @@ export class TourService {
         try {
             assertType(
                 step,
-                tourConfig.debug ? strictObject(stepSchemaDebug) : strictObject(stepSchema),
+                tourConfig.debug ? t.strictObject(stepSchemaDebug) : t.strictObject(stepSchema),
                 "Error in schema for TourStep"
             );
         } catch (error) {
