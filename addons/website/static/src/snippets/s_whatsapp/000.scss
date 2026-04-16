@@ -1,0 +1,119 @@
+.s_whatsapp {
+    $o-wa-green: #25D366;
+    $o-wa-green-hover: #1ebe5c;
+
+    right: 25px;
+    left: auto;
+    z-index: 1000;
+    margin-bottom: 10px;
+
+    &:has(.wa-fab.o_pos_left) {
+        right: auto;
+        left: 25px;
+
+        .chatbox {
+            right: auto;
+            left: 0;
+        }
+    }
+
+    &:not(.no_icon_color) .wa-fab {
+        background: $o-wa-green;
+        color: white;
+    }
+
+    .wa-fab {
+        width: 50px;
+        height: 50px;
+        font-size: x-large;
+        cursor: pointer;
+
+        &.fa-2x {
+            width: 70px;
+            height: 70px;
+            font-size: xx-large;
+        }
+
+        &.fa-3x {
+            width: 80px;
+            height: 80px;
+            font-size: xxx-large;
+        }
+    }
+
+    .notification-badge {
+        inset: -8% 12% auto auto;
+        width: 25%;
+        height: 25%;
+        border: 2px solid white;
+        transform: translate(50%, 50%);
+    }
+
+    .chatbox {
+        right: 0;
+        bottom: 100%;
+        left: auto;
+        width: 300px;
+    }
+
+    .header {
+        background: #075E54;
+
+        img {
+            width: 40px;
+            height: 40px;
+            max-width: none;
+        }
+    }
+
+    .wa-messages {
+        background: #ECE5DD;
+    }
+
+    .wa-input-box {
+        display: flex;
+    }
+
+    .wa-user-message {
+        overflow-y: auto;
+        min-height: 2.5rem;
+        max-height: 6rem;
+        resize: none;
+        outline: none;
+    }
+
+    .wa-send {
+        background: $o-wa-green;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        margin: 6px;
+
+        &:hover {
+            background: $o-wa-green-hover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+        }
+    }
+
+    .wa-cta-box {
+        display: none;
+    }
+
+    .wa-cta-btn {
+        font-size: 17px;
+        background: $o-wa-green;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            background: $o-wa-green-hover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+            transform: translateY(-2px);
+        }
+    }
+
+    // Toggle between input box and CTA button
+    &[data-is-cta-mode="true"] {
+        .wa-input-box { display: none; }
+        .wa-cta-box { display: flex; }
+    }
+}
