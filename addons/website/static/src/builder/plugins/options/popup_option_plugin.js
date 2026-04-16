@@ -79,16 +79,19 @@ export class PopupOptionPlugin extends Plugin {
 // current page only.
 export class MoveBlockAction extends BuilderAction {
     static id = "moveBlock";
+    setup() {
+        this.preview = false;
+    }
     isApplied({ editingElement, value }) {
         return editingElement.closest("#o_shared_blocks")
             ? value === "allPages"
             : value === "currentPage";
     }
-    apply({ editingElement, value }) {
+    apply({ editingElement, value, params: { mainParam: targetSelector } }) {
         const selector = value === "allPages" ? "#o_shared_blocks" : "main .oe_structure.o_savable";
         const whereEl = this.editable.querySelector(selector);
-        const popupEl = editingElement.closest(".s_popup");
-        whereEl.insertAdjacentElement("afterbegin", popupEl);
+        const targetEl = editingElement.closest(targetSelector);
+        whereEl.insertAdjacentElement("afterbegin", targetEl);
     }
 }
 export class SetBackdropAction extends BuilderAction {

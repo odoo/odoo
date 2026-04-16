@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<template id="s_whatsapp" name="WhatsApp Snippet">
+        <section
+            class="s_whatsapp position-fixed bottom-0 o_no_save"
+            t-att-data-whatsapp-number="env['website'].get_current_website().company_id.phone or ''"
+            data-agent-avatar-src="/website/static/src/img/snippets_demo/s_whatsapp_agent.webp"
+        >
+            <div class="s_whatsapp_translation_inputs">
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" data-name="Name" name="agent_name" value="Jane Doe"/>
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" data-name="Description" name="agent_description" value="Online"/>
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" data-name="Default Message" name="agent_message" value="Hi there 👋 how can I help you?"/>
+                <div class="wa-input-box">
+                    <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" data-name="Placeholder" name="message_placeholder" value="Enter Your Message..."/>
+                </div>
+                <div class="wa-cta-box">
+                    <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" data-name="CTA Label" name="cta_label" value="Start Conversation"/>
+                </div>
+            </div>
+            <button class="p-0 border-0 bg-transparent position-relative d-inline-flex o_not_editable" aria-label="Open WhatsApp chat">
+                <i class="fa fa-whatsapp wa-fab rounded-circle d-flex align-items-center justify-content-center shadow-lg o_pos_right"></i>
+                <span class="notification-badge bg-danger position-absolute rounded-circle"></span>
+            </button>
+        </section>
+    </template>
+
+    <asset id="website.s_whatsapp_chatbox_xml" name="Whatsapp Chatbox XML">
+        <bundle>web.assets_frontend</bundle>
+        <path>website/static/src/snippets/s_whatsapp/whatsapp_chatbox.xml</path>
+    </asset>
+
+    <asset id="website.s_whatsapp_000_scss" name="Whatsapp 000 SCSS">
+        <bundle>web.assets_frontend</bundle>
+        <path>website/static/src/snippets/s_whatsapp/000.scss</path>
+    </asset>
+
+</odoo>

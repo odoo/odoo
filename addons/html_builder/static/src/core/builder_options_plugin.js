@@ -439,7 +439,10 @@ export class BuilderOptionsPlugin extends Plugin {
         const isInnerSnippet = this.config.snippetModel.isInnerContent(el);
         const keepOptions =
             this.checkPredicates("should_keep_overlay_options_predicates", el) ?? false;
-        if (isInnerSnippet && isAloneInColumn && !keepOptions) {
+        const removeOptions =
+            this.checkPredicates("should_remove_overlay_options_predicates", el) ?? false;
+
+        if ((isInnerSnippet && isAloneInColumn && !keepOptions) || removeOptions) {
             return false;
         }
 
