@@ -1,0 +1,92 @@
+services:
+  traefik:
+    image: traefik:v3.1
+    command:
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --certificatesresolvers.le.acme.email=${TRAEFIK_ACME_EMAIL}
+      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.le.acme.httpchallenge=true
+      - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_letsencrypt:/letsencrypt
+    restart: unless-stopped
+    networks:
+      - web
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    networks:
+      - internal
+
+  odoo:
+    image: ${ODOO_IMAGE}
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ODOO_ADMIN_PASSWD: ${ODOO_ADMIN_PASSWD}
+      ODOO_LOG_LEVEL: ${ODOO_LOG_LEVEL}
+      ODOO_PROXY_MODE: ${ODOO_PROXY_MODE}
+      ODOO_LONGPOLLING_PORT: ${ODOO_LONGPOLLING_PORT}
+      ODOO_WORKERS: ${ODOO_WORKERS}
+      ODOO_MAX_CRON_THREADS: ${ODOO_MAX_CRON_THREADS}
+      ODOO_LIMIT_TIME_CPU: ${ODOO_LIMIT_TIME_CPU}
+      ODOO_LIMIT_TIME_REAL: ${ODOO_LIMIT_TIME_REAL}
+      ODOO_LIMIT_MEMORY_SOFT: ${ODOO_LIMIT_MEMORY_SOFT}
+      ODOO_LIMIT_MEMORY_HARD: ${ODOO_LIMIT_MEMORY_HARD}
+    volumes:
+      - odoo_data:/var/lib/odoo
+      - ./custom_addons:/opt/odoo/custom_addons:ro
+      - ./oca_addons:/opt/odoo/oca_addons:ro
+      - ./config/odoo.conf.template:/etc/odoo/odoo.conf.template:ro
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.odoo.rule=Host(`${ODOO_DOMAIN}`)
+      - traefik.http.routers.odoo.entrypoints=websecure
+      - traefik.http.routers.odoo.tls=true
+      - traefik.http.routers.odoo.tls.certresolver=le
+      - traefik.http.services.odoo.loadbalancer.server.port=8069
+      - traefik.http.routers.odoo-longpoll.rule=Host(`${ODOO_DOMAIN}`) && PathPrefix(`/longpolling`)
+      - traefik.http.routers.odoo-longpoll.entrypoints=websecure
+      - traefik.http.routers.odoo-longpoll.tls=true
+      - traefik.http.routers.odoo-longpoll.tls.certresolver=le
+      - traefik.http.services.odoo-longpoll.loadbalancer.server.port=${ODOO_LONGPOLLING_PORT}
+    networks:
+      - web
+      - internal
+
+volumes:
+  pgdata:
+  odoo_data:
+  traefik_letsencrypt:
+
+networks:
+  web:
+  internal:

@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  odoo:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: dev
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${ODOO_HTTP_PORT:-8069}:8069"
+      - "${ODOO_LONGPOLLING_PORT:-8072}:8072"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ODOO_ADMIN_PASSWD: ${ODOO_ADMIN_PASSWD}
+      ODOO_LOG_LEVEL: ${ODOO_LOG_LEVEL}
+      ODOO_PROXY_MODE: ${ODOO_PROXY_MODE}
+      ODOO_LONGPOLLING_PORT: ${ODOO_LONGPOLLING_PORT}
+      ODOO_WORKERS: ${ODOO_WORKERS}
+      ODOO_MAX_CRON_THREADS: ${ODOO_MAX_CRON_THREADS}
+      ODOO_LIMIT_TIME_CPU: ${ODOO_LIMIT_TIME_CPU}
+      ODOO_LIMIT_TIME_REAL: ${ODOO_LIMIT_TIME_REAL}
+      ODOO_LIMIT_MEMORY_SOFT: ${ODOO_LIMIT_MEMORY_SOFT}
+      ODOO_LIMIT_MEMORY_HARD: ${ODOO_LIMIT_MEMORY_HARD}
+    volumes:
+      - odoo_data:/var/lib/odoo
+      - ./custom_addons:/opt/odoo/custom_addons
+      - ./oca_addons:/opt/odoo/oca_addons
+      - ./config/odoo.conf.template:/etc/odoo/odoo.conf.template:ro
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  odoo_data:
