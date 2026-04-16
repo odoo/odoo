@@ -31,7 +31,7 @@
             }
 
             &:has(.o_field_invalid) {
-                --o-input-border-color: o-text-color('danger');
+                --o-input-border-color: #{o-text-color('danger')};
                 background: #{$o-input-invalid-bg};
 
                 .o_field_invalid {
