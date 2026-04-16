@@ -45,3 +45,10 @@ class PosOrderLine(models.Model):
             'sale_order_line_name'
         ]
         return params
+
+    def _prepare_refund_data(self, refund_order):
+        data = super()._prepare_refund_data(refund_order)
+        data.update({
+            'sale_order_line_id': False,  # Remove the sale order line id to be coherent with frontend refund
+        })
+        return data
