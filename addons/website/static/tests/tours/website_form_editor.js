@@ -167,12 +167,14 @@ const addExistingField = function (name, type, label, required, display) {
 const compareIds = ({ content, firstElSelector, secondElSelector, errorMessage }) => ({
     content,
     trigger: `:iframe ${firstElSelector}`,
-    run: function () {
-        const firstEl = this.anchor;
-        const secondEl = firstEl.ownerDocument.querySelector(secondElSelector);
-        if (firstEl.id === secondEl.id) {
-            console.error(errorMessage);
-        }
+    async run({ anchor, waitUntil }) {
+        await waitUntil(
+            () => {
+                const secondEl = anchor.ownerDocument.querySelector(secondElSelector);
+                return secondEl && anchor.id !== secondEl.id;
+            },
+            { message: errorMessage }
+        );
     },
 });
 

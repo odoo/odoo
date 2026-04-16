@@ -472,6 +472,7 @@ test("Changing max files number option updates file input 'multiple' attribute",
 });
 
 test("Form using the Outgoing Mails model includes hidden email_to field", async () => {
+    onRpc("res.company", "read", () => [{ email: "company@mail.com" }]);
     await setupWebsiteBuilder(
         `<section class="s_website_form">
             <form data-model_name="mail.mail">
@@ -488,9 +489,38 @@ test("Form using the Outgoing Mails model includes hidden email_to field", async
     await contains("div.o-dropdown-item:contains('Send an E-mail')").click();
 
     expect(":iframe input[type='hidden'][name='email_to']").toHaveCount(1);
-    expect(":iframe input[type='hidden'][name='email_to']").toHaveValue(
-        "info@yourcompany.example.com"
+    expect(":iframe input[type='hidden'][name='email_to']").toHaveValue("company@mail.com");
+});
+
+test("Saving outgoing mail form without company email uses editor email fallback", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    onRpc("formbuilder_whitelist", () => true);
+    onRpc("res.company", "read", () => [{ email: "" }]);
+    onRpc("res.users", "read", () => [{ email: "user@mail.com" }]);
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        const savedView = args[1];
+        expect(savedView).toInclude(`name="email_to"`);
+        expect(savedView).toInclude(`value="user@mail.com"`);
+        return true;
+    });
+    await setupWebsiteBuilder(
+        `<section class="s_website_form">
+            <form data-model_name="mail.mail">
+                <div class="s_website_form_submit">
+                    <div class="s_website_form_label"/>
+                    <a>Submit</a>
+                </div>
+            </form>
+        </section>`
     );
+
+    await contains(":iframe section").click();
+    await contains("div:has(>span:contains('Action')) + div button").click();
+    await contains("div.o-dropdown-item:contains('Send an E-mail')").click();
+
+    expect(":iframe input[type='hidden'][name='email_to']").toHaveValue("user@mail.com");
+
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
 });
 
 test("Last list entry cannot be removed", async () => {

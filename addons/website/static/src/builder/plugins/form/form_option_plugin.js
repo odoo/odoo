@@ -65,7 +65,6 @@ import { nodeSize } from "@html_editor/utils/position";
  * @property { FormOptionPlugin['fetchModels'] } fetchModels
  */
 
-const DEFAULT_EMAIL_TO_VALUE = "info@yourcompany.example.com";
 export class FormOptionPlugin extends Plugin {
     static id = "websiteFormOption";
     static dependencies = ["builderActions", "builderOptions", "savePlugin", "websiteBridge"];
@@ -185,6 +184,9 @@ export class FormOptionPlugin extends Plugin {
         clean_for_save_processors: (rootEl) => {
             this.removeSuccessMessagePreviews(rootEl);
         },
+        on_will_save_handlers: async (rootEl) => {
+            await this.applyDefaultValues(rootEl);
+        },
         dropzone_selectors: [
             {
                 selector: ".s_website_form",
@@ -290,7 +292,7 @@ export class FormOptionPlugin extends Plugin {
                 field.relation,
                 field.domain || [],
                 fieldNames,
-                { context: this.dependencies.websiteBridge.getWebsiteContextLang() },
+                { context: this.dependencies.websiteBridge.getWebsiteContextLang() }
             );
             if (field.fieldName) {
                 field.records.forEach((r) => (r["display_name"] = r[field.fieldName]));
@@ -320,6 +322,8 @@ export class FormOptionPlugin extends Plugin {
                     return this.fetchFieldRecords(field, formEl);
                 })
             );
+            await this.fetchFormInfoFields(formInfo);
+            return formInfo;
         }
         await this.fetchFormInfoFields(formInfo);
         return formInfo;
@@ -336,11 +340,6 @@ export class FormOptionPlugin extends Plugin {
             `.s_website_form_dnone:has(input[name="${fieldName}"])`
         )) {
             hiddenEl.remove();
-        }
-        // For the email_to field, we keep the field even if it has no value so
-        // that the email is sent to data-for value or to the default email.
-        if (fieldName === "email_to" && !value && !this.dataForEmailTo) {
-            value = DEFAULT_EMAIL_TO_VALUE;
         }
         if (value || fieldName === "email_to") {
             const hiddenField = renderToElement("website.form_field_hidden", {
@@ -365,7 +364,7 @@ export class FormOptionPlugin extends Plugin {
      * @param {Integer} modelId
      * @param {Object} formInfo obtained from prepareFormModel
      */
-    applyFormModel(el, activeForm, modelId, formInfo) {
+    async applyFormModel(el, activeForm, modelId, formInfo) {
         let oldFormInfo;
         if (modelId) {
             const oldFormKey = activeForm.website_form_key;
@@ -413,12 +412,36 @@ export class FormOptionPlugin extends Plugin {
             // In some forms (e.g., contact forms), the "email_to" field must be included as hidden.
             // For example, this may force the 'email_to' value to a dummy/default one on the
             // contact us form just by interacting with it.
-            formInfo.fields?.forEach((field) => {
-                if (field.defaultValue) {
-                    this.addHiddenField(el, field.defaultValue, field.name);
+            for (const field of formInfo.fields || []) {
+                let defaultValue = field.defaultValue;
+                if (!defaultValue && field.getDefaultValue) {
+                    defaultValue = await field.getDefaultValue({ services: this.services });
                 }
-            });
+                if (defaultValue || field.name === "email_to") {
+                    this.addHiddenField(el, defaultValue, field.name);
+                }
+            }
         }
+        await this.applyDefaultValues(el);
+    }
+    async applyDefaultValues(rootEl) {
+        const formEls = selectElements(rootEl, ".s_website_form form[data-model_name]");
+        if (!formEls.length) {
+            return;
+        }
+        const formInfos = registry.category("builder.form_editor_actions").getAll();
+        const promises = [];
+        // Each applyDefaultValue is responsible for checking the form model and field.
+        for (const formEl of formEls) {
+            for (const formInfo of formInfos) {
+                for (const field of formInfo.fields || []) {
+                    if (field.applyDefaultValue) {
+                        promises.push(field.applyDefaultValue({ formEl, services: this.services }));
+                    }
+                }
+            }
+        }
+        await Promise.all(promises);
     }
     /**
      * Ensures formInfo fields are fetched.
@@ -806,6 +829,7 @@ export class FormOptionPlugin extends Plugin {
     async onSnippetDropped({ snippetEl }) {
         // Re-render the fields to ensure each field gets a unique ID.
         await this.rerenderFieldsInElement(snippetEl);
+        await this.applyDefaultValues(snippetEl);
     }
     /**
      * Handler called when an element is cloned.
@@ -892,14 +916,14 @@ export class SelectAction extends BuilderAction {
             formInfo: await this.dependencies.websiteFormOption.prepareFormModel(el, activeForm),
         };
     }
-    apply({ editingElement: el, value: modelId, loadResult }) {
+    async apply({ editingElement: el, value: modelId, loadResult }) {
         if (!loadResult) {
             return;
         }
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
         const targetModelName = getModelName(el);
         const activeForm = models.find((m) => m.model === targetModelName);
-        this.dependencies.websiteFormOption.applyFormModel(
+        await this.dependencies.websiteFormOption.applyFormModel(
             el,
             activeForm,
             parseInt(modelId),
@@ -941,19 +965,9 @@ export class AddActionFieldAction extends BuilderAction {
         const value = el.querySelector(
             `.s_website_form_dnone input[name="${params.fieldName}"]`
         )?.value;
-        if (params.fieldName === "email_to") {
-            // For email_to, we try to find a value in this order:
-            // 1. The current value of the input
-            // 2. The data-for value if it exists
-            // 3. The default value (`defaultEmailToValue`)
-            if (value && value !== DEFAULT_EMAIL_TO_VALUE) {
-                return value;
-            }
-            // Get the email_to value from the data-for attribute if it exists.
-            // We use it if there is no value on the email_to input.
-            const formId = el.id;
-            const dataForValues = getParsedDataFor(formId, el.ownerDocument);
-            return dataForValues?.["email_to"] || DEFAULT_EMAIL_TO_VALUE;
+        const dataForValue = getParsedDataFor(el.id, el.ownerDocument)?.[params.fieldName];
+        if (dataForValue) {
+            return value || dataForValue;
         }
         if (value) {
             return value;
