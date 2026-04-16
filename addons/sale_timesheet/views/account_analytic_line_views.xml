@@ -10,10 +10,10 @@
                     <field name="order_id" string="Sales Order" filter_domain="['|', ('so_line', 'ilike', self), ('order_id', 'ilike', self)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='month']" position="before">
-                    <filter name="billable" string="Billable" domain="[('so_line', '!=', False)]"
+                    <filter name="billable" string="Billable" domain="[('billable_type', '!=', '09_non_billable')]"
                         context="{'show_target_left': True}"
                         groups="sales_team.group_sale_salesman"/>
-                    <filter name="non_billable" string="Non-Billable" domain="[('so_line', '=', False)]"
+                    <filter name="non_billable" string="Non-Billable" domain="[('billable_type', '=', '09_non_billable')]"
                         groups="sales_team.group_sale_salesman"/>
                     <separator/>
                 </xpath>
