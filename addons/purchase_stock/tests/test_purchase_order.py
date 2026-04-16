@@ -517,6 +517,28 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 pol_form.product_qty = 25
         self.assertEqual(pol.name, "[C02] Name02")
 
+    def test_duplicated_and_modified_picking(self):
+        """ Test that the purchase order's received quantity is not modified by a duplicated picking
+            whose picking type has been changed.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                })],
+        })
+        po.button_confirm()
+        po.picking_ids.button_validate()
+        self.assertEqual(po.order_line.qty_received, 10.0)
+        outgoing_picking_type = self.env['stock.picking.type'].search([('code', '=', 'outgoing')])
+        duplicated_picking = po.picking_ids.copy()
+        duplicated_picking.picking_type_id = outgoing_picking_type[0]
+        duplicated_picking.button_validate()
+        self.assertEqual(po.order_line.qty_received, 10.0)
+
     def test_putaway_strategy_in_backorder(self):
         stock_location = self.company_data['default_warehouse'].lot_stock_id
         sub_loc_01 = self.env['stock.location'].create([{
