@@ -222,12 +222,12 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
     session.server_version_info = kiosk_backend_info.server_version_info;
     const app = new App({
         getTemplate,
-        env: env,
         dev: env.debug,
         translateFn: appTranslateFn,
         translatableAttributes: ["data-tooltip"],
     });
     const root = app.createRoot(kioskAttendanceApp, {
+        env: env,
         props: {
             token: kiosk_backend_info.token,
             companyId: kiosk_backend_info.company_id,
