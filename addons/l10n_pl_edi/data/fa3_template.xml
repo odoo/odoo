@@ -48,12 +48,10 @@
           <!-- AdresL2: Second line of the address (optional). -->
           <AdresL2 t-if="seller.street2" t-out="seller.street2"/>
         </Adres>
-        <t t-if="seller.email or seller.phone">
-        <DaneKontaktowe>
-            <Email t-out="seller.email"/>
-            <Telefon t-out="seller.phone"/>
+        <DaneKontaktowe t-if="seller.email or seller.phone">
+          <Email t-if="seller.email" t-out="seller.email"/>
+          <Telefon t-if="seller.phone" t-out="seller.phone"/>
         </DaneKontaktowe>
-        </t>
       </Podmiot1>
 
       <!--
@@ -99,13 +97,10 @@
             <AdresL2 t-if="buyer.street2" t-out="buyer.street2"/>
           </Adres>
         </t>
-        <t t-if="buyer.email or buyer.phone">
-        <DaneKontaktowe>
-            <Email t-out="buyer.email"/>
-            <Telefon t-out="buyer.phone"/>
+        <DaneKontaktowe t-if="buyer.email or buyer.phone">
+          <Email t-if="buyer.email" t-out="buyer.email"/>
+          <Telefon t-if="buyer.phone" t-out="buyer.phone"/>
         </DaneKontaktowe>
-        </t>
-
             <!-- JST flag: 1=subordinate local gov unit; 2=otherwise. If 1, complete Podmiot3 with NIP/IDWew and role=8 -->
           <JST>2</JST>
 
