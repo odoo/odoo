@@ -100,3 +100,10 @@ class PosSession(models.Model):
                 if cash_move.employee_id:
                     cash_in_out['cashier_name'] = cash_move.partner_id.name
         return cash_in_out_list
+
+    def _get_opening_cash_statement_line_vals(self, is_first_session, cashbox_value):
+        vals = super()._get_opening_cash_statement_line_vals(is_first_session, cashbox_value)
+        if self.employee_id:
+            vals['employee_id'] = self.employee_id.id
+            vals['partner_id'] = self.employee_id.work_contact_id.id
+        return vals

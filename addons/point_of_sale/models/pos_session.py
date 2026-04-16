@@ -368,8 +368,7 @@ class PosSession(models.Model):
         for session in self.filtered(lambda session: session.state == 'opening_control'):
             values = {}
             if session.config_id.cash_control and not session.rescue:
-                last_session = self.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
-                session.cash_register_balance_start = last_session.cash_register_balance_end_real  # defaults to 0 if lastsession is empty
+                session.cash_register_balance_start = session.cash_journal_id.current_statement_balance
             session.write(values)
         return True
 
@@ -477,6 +476,12 @@ class PosSession(models.Model):
         self.env.flush_all()  # ensure sale.report is up to date
         return True
 
+    def _create_bank_statement_with_lines(self, name, lines):
+        return self.env['account.bank.statement'].sudo().create({
+            'name': name,
+            'line_ids': [Command.create(line_val) for line_val in lines],
+        })
+
     def _post_statement_difference(self, amount):
         if amount:
             if self.config_id.cash_control:
@@ -505,7 +510,7 @@ class PosSession(models.Model):
                 st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit) - closing")
                 st_line_vals['counterpart_account_id'] = self.cash_journal_id.profit_account_id.id
 
-            created_line = self.env['account.bank.statement.line'].with_context(no_retrieve_partner=True).create(st_line_vals)
+            created_line = self._create_bank_statement_with_lines(_("Closing cash difference %s", self.name), [st_line_vals]).line_ids
 
             if created_line:
                 created_line.move_id.message_post(body=_(
@@ -1215,13 +1220,13 @@ class PosSession(models.Model):
                 )
 
         # create the statement lines and account move lines
-        BankStatementLine = self.env['account.bank.statement.line'].with_context(no_retrieve_partner=True)
         split_cash_statement_lines = {}
         combine_cash_statement_lines = {}
         split_cash_receivable_lines = {}
         combine_cash_receivable_lines = {}
-        split_cash_statement_lines = BankStatementLine.create(split_cash_statement_line_vals).mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
-        combine_cash_statement_lines = BankStatementLine.create(combine_cash_statement_line_vals).mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
+        statement_name = _("Closing %s", self.name)
+        split_cash_statement_lines = self._create_bank_statement_with_lines(statement_name, split_cash_statement_line_vals).line_ids.mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
+        combine_cash_statement_lines = self._create_bank_statement_with_lines(statement_name, combine_cash_statement_line_vals).line_ids.mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
         split_cash_receivable_lines = MoveLine.create(split_cash_receivable_vals)
         combine_cash_receivable_lines = MoveLine.create(combine_cash_receivable_vals)
 
@@ -1718,6 +1723,26 @@ class PosSession(models.Model):
         ).search([('code', '=', 'pos.session'), ('company_id', 'in', [self.config_id.company_id.id, False])], order='company_id', limit=1)
 
         self.name = (self.config_id.name if sequence.prefix == '/' else '') + sequence.next_by_code('pos.session') + (self.name if self.name != '/' else '')
+        if self.cash_journal_id:
+            self._create_opening_cash_statement(cashbox_value)
+
+    def _get_opening_cash_statement_line_vals(self, is_first_session, cashbox_value):
+        # Here, we intentionally avoid adding pos_session_id to the opening bank statement because
+        # opening balance statement lines should not be included in cash in/out lines.
+        return {
+            'journal_id': self.cash_journal_id.id,
+            'payment_ref': _('Opening cash balance') if is_first_session else _('Opening cash difference'),
+            'amount': cashbox_value - self.cash_journal_id.current_statement_balance,
+            'date': fields.Date.context_today(self),
+            'partner_id': self.env.user.partner_id.id,
+        }
+
+    def _create_opening_cash_statement(self, cashbox_value):
+        is_first_session = len(self.config_id.session_ids) == 1
+        self._create_bank_statement_with_lines(
+            _("Initial deposit %s", self.name) if is_first_session else _("Opening cash difference %s", self.name),
+            [self._get_opening_cash_statement_line_vals(is_first_session, cashbox_value)],
+        )
 
     def _post_cash_details_message(self, state, expected, difference, notes):
         expected_formatted = self.currency_id.format(expected)
@@ -1784,22 +1809,22 @@ class PosSession(models.Model):
             'journal_id': session.cash_journal_id.id,
             'amount': sign * amount,
             'date': fields.Date.context_today(self),
-            'payment_ref': '-'.join([session.name, extras['translatedType'], reason]),
+            'payment_ref': _('Cash %(type)s - %(reason)s', type=extras['translatedType'], reason=reason),
             'partner_id': partner_id,
         }
 
     def try_cash_in_out(self, _type, amount, reason, partner_id, extras):
+        self.ensure_one()
         sign = 1 if _type == 'in' else -1
-        sessions = self.filtered('cash_journal_id')
-        if not sessions:
-            raise UserError(_("There is no cash payment method for this PoS Session"))
-
-        vals_list = [
-            self._prepare_account_bank_statement_line_vals(session, sign, amount, reason, partner_id, extras)
-            for session in sessions
-        ]
-
-        self.env['account.bank.statement.line'].with_context(no_retrieve_partner=True).create(vals_list)
+        statement_line_vals = self._prepare_account_bank_statement_line_vals(self, sign, amount, reason, partner_id, extras)
+        if bank_statement := self.env['account.bank.statement'].sudo().with_context(lang='en_US').search([
+            ('journal_id', '=', self.cash_journal_id.id),
+            ('name', '=', 'Cash In/Out - ' + self.name),
+        ], limit=1):
+            bank_statement.line_ids = [Command.create(statement_line_vals)]
+            bank_statement.balance_end_real = bank_statement.balance_end
+        else:
+            self._create_bank_statement_with_lines(_("Cash In/Out - %s", self.name), [statement_line_vals])
 
     def delete_cash_in_out(self, absl_id, partner_id):
         if not self.env.user.has_group('account.group_account_basic'):
@@ -1810,6 +1835,8 @@ class PosSession(models.Model):
         cashier_name = absl.partner_id.name
         amount = absl.amount
         action = cashier_name + ': ' + str(amount)
+        absl.statement_id.balance_end_real -= absl.amount
+        absl.statement_id = False
         absl.unlink()
         self.log_partner_message(partner_id, action, "CASH_IN_OUT_UNLINK")
 

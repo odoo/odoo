@@ -3715,6 +3715,61 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_combo_no_free_item')
 
+    def test_bank_account_statements_creation_for_config(self):
+        new_pos_config = self.env['pos.config'].create({
+            'name': 'New Pos Config',
+            'module_pos_restaurant': False,
+            'cash_control': True,
+        })
+        cash_journal = self.env['account.journal'].create({
+            'name': 'Cash Journal',
+            'type': 'cash',
+            'company_id': self.env.company.id,
+        })
+        cash_method = self.env['pos.payment.method'].create({
+            'name': 'Cash Payment Method',
+            'company_id': self.env.company.id,
+            'journal_id': cash_journal.id,
+        })
+        new_pos_config.write({
+            'payment_method_ids': [(6, 0, [cash_method.id])],
+        })
+        new_pos_config.with_user(self.pos_user).open_ui()
+        current_session = new_pos_config.current_session_id
+        self.assertEqual(cash_journal.current_statement_balance, 0.0)
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('account.group_account_basic').id),
+            ],
+        })
+        # Simulate the flow for creating statements for opening cash, cash in/out and closing session
+        self.start_pos_tour(
+            'test_bank_account_statements_creation_for_config',
+            pos_config=new_pos_config,
+        )
+        current_session.post_closing_cash_details(110)
+        current_session.close_session_from_ui()
+        bank_statements = self.env["account.bank.statement"].search([('journal_id', '=', cash_journal.id)], order='id asc')
+        opening_statement = bank_statements[0]
+
+        self.assertEqual(cash_journal.current_statement_balance, 110.0)
+        self.assertEqual(opening_statement.name, f'Initial deposit {current_session.name}')
+        self.assertEqual(opening_statement.balance_end_real, 100.0)
+        self.assertEqual(opening_statement.line_ids[0].amount, 100.0)
+        self.assertEqual(opening_statement.line_ids[0].payment_ref, 'Opening cash balance')
+
+        cash_in_out_statement = bank_statements[1]
+        self.assertEqual(cash_in_out_statement.name, f'Cash In/Out - {current_session.name}')
+        self.assertEqual(cash_in_out_statement.balance_end_real, 90.0)
+        self.assertEqual(cash_in_out_statement.line_ids[0].amount, -10.0)
+        self.assertEqual(cash_in_out_statement.line_ids[0].payment_ref, 'Cash out - Cash Out')
+
+        closing_session_statement = bank_statements[2]
+        self.assertEqual(closing_session_statement.name, f'Closing {current_session.name}')
+        self.assertEqual(closing_session_statement.balance_end_real, 110.0)
+        self.assertEqual(closing_session_statement.line_ids[0].amount, 20.0)
+        self.assertEqual(closing_session_statement.line_ids[0].payment_ref, current_session.name)
+
     def test_not_available_pricelist_not_set_on_order(self):
         """ Test that when the pricelist is not available, it is not set on the order """
         not_available_pricelist, available_pricelist = self.env['product.pricelist'].create([{

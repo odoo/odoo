@@ -94,7 +94,8 @@
             eval="[[ref('pos_closed_session_1')], '']" />
 
         <function model="pos.session" name="action_pos_session_closing_control"
-            eval="[[ref('pos_closed_session_1')]]" />
+            eval="[[ref('pos_closed_session_1')]]"
+            context="{'skip_pdf_attachment_generation': True}" />
 
         <!-- Closed Session 2 -->
 
@@ -189,6 +190,7 @@
             eval="[[ref('pos_closed_session_2')], '']" />
 
         <function model="pos.session" name="action_pos_session_closing_control"
-            eval="[[ref('pos_closed_session_2')]]" />
+            eval="[[ref('pos_closed_session_2')]]"
+            context="{'skip_pdf_attachment_generation': True}" />
     </data>
 </odoo>

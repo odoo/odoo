@@ -87,7 +87,8 @@
         </record>
 
         <function model="pos.session" name="action_pos_session_closing_control"
-            eval="[[ref('pos_closed_session_3')]]" />
+            eval="[[ref('pos_closed_session_3')]]"
+            context="{'skip_pdf_attachment_generation': True}" />
 
         <!-- Closed Session 4 -->
 
@@ -166,7 +167,8 @@
         </record>
 
         <function model="pos.session" name="action_pos_session_closing_control"
-            eval="[[ref('pos_closed_session_4')]]" />
+            eval="[[ref('pos_closed_session_4')]]"
+            context="{'skip_pdf_attachment_generation': True}" />
 
         <!-- Open Session -->
         <record id="customer_1" model="res.partner">
