@@ -9,10 +9,6 @@ from odoo.exceptions import UserError
 
 from odoo.addons.base.tests.files import PDF_RAW
 
-from odoo.tools import file_open
-from odoo.addons.base.models.ir_actions_report import _split_table
-from lxml import etree
-
 try:
     from pdfminer.converter import PDFPageAggregator
     from pdfminer.layout import LAParams, LTFigure, LTTextBox
@@ -92,10 +88,11 @@ class TestReports(odoo.tests.TransactionCase):
         })
 
         pdf_text = "0"
-        def _run_wkhtmltopdf(*args, **kwargs):
+
+        def _run_pdf_engine_without_processing(*args, **kwargs):
             return bytes(pdf_text, "utf-8")
 
-        self.patch(type(Report), "_run_wkhtmltopdf", _run_wkhtmltopdf)
+        self.patch(type(Report), "_run_pdf_engine_without_processing", _run_pdf_engine_without_processing)
 
         # sanity check: the report is not set to save attachment
         # assert that there are no pre-existing attachment
@@ -772,27 +769,3 @@ class TestAggregatePdfReports(odoo.tests.HttpCase):
 
 def cleanup_string(s):
     return ''.join(s.split())
-
-
-class TestSplitTable(odoo.tests.TransactionCase):
-    def test_split_table(self):
-        # NOTE: All the tests's xml are in split_table/ relative to this file
-        CASES = (
-            ("Table's len is equal to max_rows and should not be split", "simple", "simple", 3),
-            ("Table's len is greater to max_rows and should not be split", "simple", "simple", 4),
-            ("max_rows is 1 and every table should be split", "simple", "simple.split1", 1),
-            ("max_row is 2 and the table should be split", "simple", "simple.split2", 2),
-            ("Nested tables should be split", "nested", "nested.split2", 2),
-            ("Nested tables at the start should be split", "first_nested", "first_nested.split2", 2),
-            ("Attributes should be copied", "copy_attributes", "copy_attributes.split1", 1),
-        )
-
-        for description, actual, expected, max_rows in CASES:
-            with self.subTest(description), \
-                file_open(f"base/tests/split_table/{actual}.xml") as actual, \
-                file_open(f"base/tests/split_table/{expected}.xml") as expected:
-
-                tree = etree.fromstring(actual.read())
-                _split_table(tree, max_rows)
-                processed = etree.tostring(tree, encoding='unicode')
-                self.assertEqual(cleanup_string(processed), cleanup_string(expected.read()))

@@ -76,7 +76,7 @@
                                     </div>
                             </button>
                             <button name="associated_view" type="object"
-                                    invisible="report_type not in ['qweb-pdf', 'qweb-html', 'qweb-text']" icon='fa-code'
+                                    invisible="'qweb' not in report_type" icon='fa-code'
                                     class="oe_stat_button">
                                     <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_text">Qweb Views</span>
@@ -88,7 +88,7 @@
                                 <field name="name"/>
                                 <field name="report_type"/>
                                 <field name="paperformat_id"
-                                       invisible="report_type != 'qweb-pdf'"/>
+                                       invisible="'pdf' not in report_type"/>
                             </group>
                             <group>
                                 <field name="model"/>

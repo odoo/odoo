@@ -6,7 +6,7 @@
     'category': 'Sales/Point of Sale',
     'sequence': 40,
     'summary': 'Handle checkouts and payments for shops and restaurants.',
-    'depends': ['resource', 'product', 'account', 'barcodes_gs1_nomenclature', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete'],
+    'depends': ['resource', 'product', 'account', 'barcodes_gs1_nomenclature', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete', 'base_report_wkhtmltox'],
     'data': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',

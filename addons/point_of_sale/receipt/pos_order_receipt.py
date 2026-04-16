@@ -171,7 +171,8 @@ class PosOrderReceipt(models.AbstractModel):
 
     def order_receipt_generate_image(self, basic_receipt=False, width=500, height=0):
         content = self.order_receipt_generate_html(basic_receipt)
-        return self.env['ir.actions.report']._run_wkhtmltoimage(
+        return self.env['ir.actions.report']._run_image_engine(
+            'wkhtmltopdf',
             [content],
             width,
             height,

@@ -5,7 +5,7 @@ import { download } from "@web/core/network/download";
  * Generates the report url given a report action.
  *
  * @param {Object} action the report action
- * @param {"text"|"qweb"|"html"} type the type of the report
+ * @param {"text"|"qweb"|"html"|"pdf"} type the type of the report
  * @param {Object} userContext the user context
  * @returns {string}
  */
@@ -30,21 +30,17 @@ export function getReportUrl(action, type, userContext) {
     return url;
 }
 
-// messages that might be shown to the user dependening on the state of wkhtmltopdf
-function getWKHTMLTOPDF_MESSAGES(status) {
-    const link = '<br><br><a href="http://wkhtmltopdf.org/" target="_blank">wkhtmltopdf.org</a>'; // FIXME missing markup
+// messages that might be shown to the user dependening on the PDF engine state
+function getPdfEngineMessage(status) {
     const _status = {
         broken: _t(
-            "Your installation of Wkhtmltopdf seems to be broken. The report will be shown in html.%(link)s",
-            { link }
+            "Your installation of PDF engine seems to be broken, check with the administrator. The report will be shown in html."
         ),
         install: _t(
-            "Unable to find Wkhtmltopdf on this system. The report will be shown in html.%(link)s",
-            { link }
+            "Unable to find the PDF engine on this system. The report will be shown in html."
         ),
         upgrade: _t(
-            "You should upgrade your version of Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as support for table-breaking between pages.%(link)s",
-            { link }
+            "You should upgrade your version of the PDF engine in order to get a correct render it.",
         ),
         workers: _t(
             "You need to start Odoo with at least two workers to print a pdf version of the reports."
@@ -60,16 +56,21 @@ function getWKHTMLTOPDF_MESSAGES(status) {
  * @param {Object} action the report action
  * @param {"pdf"|"text"} type the type of the report to download
  * @param {Object} userContext the user context
+ * @param {"string"} [engineName] the pdf rendering engine to use
  * @returns {Promise<{success: boolean, message?: string}>}
  */
-export async function downloadReport(rpc, action, type, userContext) {
+export async function downloadReport(rpc, action, type, userContext, engineName) {
     let message;
     if (type === "pdf") {
-        // Cache the wkhtml status on the function. In prod this means is only
+        // Cache the engine status on the function. In prod this means is only
         // checked once, but we can reset it between tests to test multiple statuses.
-        downloadReport.wkhtmltopdfStatusProm ||= rpc("/report/check_wkhtmltopdf");
-        const status = await downloadReport.wkhtmltopdfStatusProm;
-        message = getWKHTMLTOPDF_MESSAGES(status);
+        let params = {};
+        if (engineName){
+            params.engine_name = engineName;
+        }
+        downloadReport.reportingEngineStatusProm ||= rpc("/report/get_pdf_engine_state", params);
+        const status = await downloadReport.reportingEngineStatusProm;
+        message = getPdfEngineMessage(status);
         if (!["upgrade", "ok"].includes(status)) {
             return { success: false, message };
         }

@@ -78,7 +78,6 @@ from odoo.tools.xml_utils import _validate_xml
 
 import odoo.addons.base
 from . import case, test_cursor
-from odoo.addons.base.models import ir_actions_report
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
@@ -149,8 +148,12 @@ _disable_flushing_cursor = False
 
 
 @contextmanager
-def release_test_lock():
+def release_test_lock(check_acquired=False):
     """ Releases the test lock in a context manager, the lock is acquired once the context is over."""
+    if check_acquired and not _registry_test_lock.count:
+        # not acquired, just noop
+        yield
+        return
     try:
         _registry_test_lock.release()
         yield
@@ -1380,26 +1383,33 @@ class TransactionCase(BaseCase):
     @contextmanager
     def allow_pdf_render(self):
         """
-        Allows wkhtmltopdf to send requests to the backend.
+        Allows the pdf renderer to send requests to the backend.
         Enters registry mode if necessary.
         """
         with ExitStack() as stack:
             if not type(self)._registry_patched:
                 stack.enter_context(self.registry_test_mode())
-            old_run_wkhtmltopdf = ir_actions_report._run_wkhtmltopdf
 
-            def _patched_run_wkhtmltopdf(args):
+            case_instance = self
+
+            def _patched_run_wkhtmltopdf(self, args):
                 with (
-                    patch.object(self, 'http_request_key', 'wkhtmltopdf'),
+                    patch.object(case_instance, 'http_request_key', 'wkhtmltopdf'),
                     release_test_lock(),
                     patch('odoo.tests.common._disable_flushing_cursor', True),
                 ):
                     args = ['--cookie', TEST_CURSOR_COOKIE_NAME, 'wkhtmltopdf', *args]
-                    return old_run_wkhtmltopdf(args)
+                    return old_run_wkhtmltopdf(self, args)
 
-            stack.enter_context(
-                patch.object(ir_actions_report, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf)
-            )
+            report_model = self.env.registry['ir.actions.report']
+            try:
+                old_run_wkhtmltopdf = report_model._run_wkhtmltopdf
+            except AttributeError:
+                pass
+            else:
+                stack.enter_context(
+                    patch.object(report_model, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
+                )
             yield
 
 
@@ -2493,20 +2503,26 @@ class HttpCase(TransactionCase):
         self.opener = Opener(self)
         self.http_key_sequence = itertools.count()
         # we need to allow requests during pdf rendering.
-        old_run_wkhtmltopdf = ir_actions_report._run_wkhtmltopdf
+        case_instance = self
 
-        def _patched_run_wkhtmltopdf(args):
+        def _patched_run_wkhtmltopdf(self, args):
             with (
-                patch.object(self, 'http_request_key', 'wkhtmltopdf'),
+                patch.object(case_instance, 'http_request_key', 'wkhtmltopdf'),
                 release_test_lock(),
                 patch('odoo.tests.common._disable_flushing_cursor', True),
             ):
                 args = ['--cookie', TEST_CURSOR_COOKIE_NAME, 'wkhtmltopdf', *args]
-                return old_run_wkhtmltopdf(args)
+                return old_run_wkhtmltopdf(self, args)
 
-        self.startPatcher(
-            patch.object(ir_actions_report, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
-        )
+        report_model = self.env.registry['ir.actions.report']
+        try:
+            old_run_wkhtmltopdf = report_model._run_wkhtmltopdf
+        except AttributeError:
+            pass
+        else:
+            self.startPatcher(
+                patch.object(report_model, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
+            )
 
     @contextmanager
     def allow_pdf_render(self):
