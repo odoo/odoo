@@ -799,3 +799,36 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         downpayment.create_invoices()
         invoice = sale_order.invoice_ids
         self.assertEqual(invoice.invoice_line_ids.account_id, self.company_data['default_account_revenue'])
+
+    def test_down_payment_invoice_manual_removing_of_tax_affecting_subsequent_taxes(self):
+        """
+        Test that removing a tax from a down payment invoice correctly recomputes remaining taxes.
+        This ensures that cached manual_tax_amounts are not reused when the tax set changes,
+        particularly for taxes with "Affect Base of Subsequent Taxes", and that dependent
+        taxes are recomputed using the updated base instead of stale values.
+        """
+        product = self.company_data['product_order_cost']
+        tax_10_a = self.percent_tax(10.0, include_base_amount=True)
+        tax_10_b = self.percent_tax(10.0)
+
+        product = self._create_product(list_price=100.0, taxes_id=tax_10_a + tax_10_b)
+        so = self._create_sale_order_one_line(product_id=product, confirm=True)
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 100.0,
+            'amount_tax': 21.0,
+            'amount_total': 121.0,
+        }])
+
+        dp_invoice = self._create_down_payment_invoice(so, 'percent', 50)
+        self.assertRecordValues(dp_invoice, [{
+            'amount_untaxed': 50.0,
+            'amount_tax': 10.5,
+            'amount_total': 60.5,
+        }])
+
+        dp_invoice.invoice_line_ids.tax_ids = [Command.set(tax_10_b.ids)]
+        self.assertRecordValues(dp_invoice, [{
+            'amount_untaxed': 50.0,
+            'amount_tax': 5.0,
+            'amount_total': 55.0,
+        }])
