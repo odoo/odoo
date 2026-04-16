@@ -28,7 +28,7 @@ registerWebsitePreviewTour("snippet_translation", {}, () => [
     ...insertSnippet({ id: "s_cover", name: "Cover", groupName: "Intro" }),
     {
         content: "Check that contact us contain Parseltongue",
-        trigger: ':iframe .s_cover .btn-outline-secondary:contains("Contact us in Parseltongue")',
+        trigger: ':iframe .s_cover .btn-outline-primary:contains("Contact us in Parseltongue")',
     },
     {
         content: "Check that the save button contains 'in fu_GB'",
@@ -92,7 +92,7 @@ registerWebsitePreviewTour(
         {
             content: "Check that contact us contain Parseltongue",
             trigger:
-                ':iframe .s_cover .btn-outline-secondary:contains("Contact us in Parseltongue")',
+                ':iframe .s_cover .btn-outline-primary:contains("Contact us in Parseltongue")',
         },
     ]
 );
@@ -102,7 +102,7 @@ registerWebsitePreviewTour("snippet_translation_switching_website", {}, () => [
     ...insertSnippet({ id: "s_cover", name: "Cover", groupName: "Intro" }),
     {
         content: "Check that contact us contain Parseltongue",
-        trigger: ":iframe .s_cover .btn-outline-secondary:contains('Contact us in Parseltongue')",
+        trigger: ":iframe .s_cover .btn-outline-primary:contains('Contact us in Parseltongue')",
     },
     ...clickOnSave(),
     ...testSwitchWebsite("website fu_GB"),
@@ -110,7 +110,7 @@ registerWebsitePreviewTour("snippet_translation_switching_website", {}, () => [
     ...insertSnippet({ id: "s_cover", name: "Cover", groupName: "Intro" }),
     {
         content: "Check that contact us contain Fake User Lang",
-        trigger: ":iframe .s_cover .btn-outline-secondary:contains('Fake User Lang')",
+        trigger: ":iframe .s_cover .btn-outline-primary:contains('Fake User Lang')",
     },
 ]);
 registerWebsitePreviewTour("snippet_dialog_rtl", {}, () => [
