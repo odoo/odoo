@@ -366,6 +366,33 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         return not self._get_downpayment_lines() and self.price_subtotal < 0
 
+    def _l10n_sa_is_gift_card_or_ewallet_line(self):
+        """ Gift card and e-wallet lines are a means of payment, not an allowance: ZATCA must not see them. """
+        self.ensure_one()
+        if 'sale_line_ids' not in self._fields or 'reward_id' not in self.env['sale.order.line']._fields:
+            return False
+        # Invoicing users may not have access to loyalty programs.
+        return any(reward.program_type in {'gift_card', 'ewallet'} for reward in self.sale_line_ids.reward_id.sudo())
+
+    def _l10n_sa_is_ewallet_top_up_line(self):
+        self.ensure_one()
+        if 'loyalty.program' not in self.env:
+            return False
+        LoyaltyProgram = self.env['loyalty.program'].sudo()
+        return LoyaltyProgram.search_count([
+            *LoyaltyProgram._check_company_domain(self.company_id),
+            ('program_type', '=', 'ewallet'),
+            ('trigger_product_ids', 'in', self.product_id.ids),
+        ], limit=1)
+
+    def _check_edi_line_tax_required(self):
+        # EXTENDS account
+        res = super()._check_edi_line_tax_required()
+        # A taxed line passes the tax check anyway: skip the lookups.
+        if not res or self.tax_ids or self.company_id.account_fiscal_country_id.code != 'SA':
+            return res
+        return not (self._l10n_sa_is_gift_card_or_ewallet_line() or self._l10n_sa_is_ewallet_top_up_line())
+
     @api.depends('price_subtotal', 'price_total')
     def _compute_tax_amount(self):
         super()._compute_tax_amount()
