@@ -68,6 +68,17 @@ class DiscussChannelWebclientController(WebclientController):
         if name == "discuss.channel":
             channels = request.env["discuss.channel"].search([("id", "in", params)])
             request.update_context(channels=request.env.context["channels"] | channels)
+        if name == "/discuss/channel/members":
+            channel = request.env["discuss.channel"].search([("id", "=", params["channel_id"])])
+            if channel:
+                unknown_members = request.env["discuss.channel.member"].search(
+                    domain=[
+                        ("id", "not in", params["known_member_ids"]),
+                        ("channel_id", "=", channel.id),
+                    ],
+                    limit=100,
+                )
+                store.add(channel, ["member_count"]).add(unknown_members, "_store_member_fields")
         if name == "/discuss/channel/favorite":
             if member := request.env["discuss.channel.member"].search(
                 [("channel_id", "=", params["channel_id"]), ("is_self", "=", True)],
@@ -132,17 +143,6 @@ class DiscussChannelWebclientController(WebclientController):
 
 
 class ChannelController(http.Controller):
-    @mail_route("/discuss/channel/members", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
-    def discuss_channel_members(self, channel_id, known_member_ids):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
-        if not channel:
-            raise NotFound()
-        unknown_members = self.env["discuss.channel.member"].search(
-            domain=[("id", "not in", known_member_ids), ("channel_id", "=", channel.id)],
-            limit=100,
-        )
-        return Store().add(channel, ["member_count"]).add(unknown_members, "_store_member_fields")
-
     @mail_route("/discuss/channel/update_avatar", methods=["POST"], type="jsonrpc")
     def discuss_channel_avatar_update(self, channel_id, data):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])

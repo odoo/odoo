@@ -580,9 +580,8 @@ export class DiscussChannel extends Record {
         const previousState = this.fetchMembersState;
         this.fetchMembersState = "pending";
         const known_member_ids = this.channel_member_ids.map((channelMember) => channelMember.id);
-        let data;
         try {
-            data = await rpc("/discuss/channel/members", {
+            await this.store.fetchStoreData("/discuss/channel/members", {
                 channel_id: this.id,
                 known_member_ids: known_member_ids,
             });
@@ -591,7 +590,6 @@ export class DiscussChannel extends Record {
             throw e;
         }
         this.fetchMembersState = "fetched";
-        this.store.insert(data);
     }
 
     async fetchPinnedMessages() {

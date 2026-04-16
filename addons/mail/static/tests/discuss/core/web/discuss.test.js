@@ -33,7 +33,11 @@ test("can create a new channel", async () => {
         }
     });
     listenStoreFetch(undefined, {
-        logParams: ["/discuss/create_channel", "/discuss/channel/messages"],
+        logParams: [
+            "/discuss/create_channel",
+            "/discuss/channel/messages",
+            "/discuss/channel/members",
+        ],
     });
     await start();
     await openDiscuss();
@@ -69,16 +73,15 @@ test("can create a new channel", async () => {
                     fetch_params: { limit: 60, around: selfMember.new_message_separator },
                 },
             ],
-        ],
-        {
-            ignoreOrder: true,
-            stepsAfter: [
-                `/discuss/channel/members - ${JSON.stringify({
+            [
+                "/discuss/channel/members",
+                {
                     channel_id: channelId,
                     known_member_ids: [selfMember.id],
-                })}`,
+                },
             ],
-        }
+        ],
+        { ignoreOrder: true }
     );
 });
 

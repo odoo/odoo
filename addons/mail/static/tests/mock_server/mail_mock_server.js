@@ -275,16 +275,6 @@ async function channel_call_leave(request) {
     BusBus._sendmany(notifications);
 }
 
-registerRoute("/discuss/channel/members", discuss_channel_members);
-/** @type {RouteCallback} */
-async function discuss_channel_members(request) {
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-
-    const { channel_id, known_member_ids } = await parseRequestParams(request);
-    return DiscussChannel._load_more_members([channel_id], known_member_ids);
-}
-
 registerRoute("/discuss/channel/sub_channel/create", discuss_channel_sub_channel_create);
 async function discuss_channel_sub_channel_create(request) {
     /** @type {import("mock_models").DiscussChannel} */
@@ -1009,6 +999,18 @@ function _process_request_for_all(store, name, params, context = {}) {
     if (name === "res.users") {
         const [userId] = ResUsers.search([["id", "=", params["id"]]]);
         store.add(ResUsers.browse(userId));
+    }
+    if (name === "/discuss/channel/members") {
+        const memberIds = DiscussChannelMember.search(
+            [
+                ["id", "not in", params.known_member_ids || []],
+                ["channel_id", "=", params.channel_id],
+            ],
+            makeKwArgs({ limit: 100 })
+        );
+        const memberCount = DiscussChannelMember.search_count([["channel_id", "=", params.channel_id]]);
+        store.add(DiscussChannel.browse(params.channel_id), { member_count: memberCount });
+        store.add(DiscussChannelMember.browse(memberIds));
     }
     if (name === "/discuss/channel/messages") {
         /** @type {import("mock_models").MailMessage} */

@@ -218,6 +218,7 @@ test("Load more button should load more members", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMember");
     pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await click(
         ".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members')) [title='Load more']"

@@ -2072,6 +2072,7 @@ test("Can post message with only attachment", async () => {
 });
 
 test("failure on loading messages should display error", async () => {
+    expect.errors(1);
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -2085,9 +2086,12 @@ test("failure on loading messages should display error", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread:has(:text('An error occurred while fetching messages.'))");
+    await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test("failure on loading messages should prompt retry button", async () => {
+    expect.errors(1);
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -2101,6 +2105,8 @@ test("failure on loading messages should prompt retry button", async () => {
     await start();
     await openDiscuss(channelId);
     await contains("button:text('Click here to retry')");
+    await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test("failure on loading more messages should display error and prompt retry button", async () => {

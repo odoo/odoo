@@ -715,32 +715,6 @@ export class DiscussChannel extends models.ServerModel {
         return store.get_result();
     }
 
-    /**
-     * @param {number[]} ids
-     * @param {number[]} known_member_ids
-     */
-    _load_more_members(ids, known_member_ids) {
-        const kwargs = getKwArgs(arguments, "ids", "known_member_ids");
-        ids = kwargs.ids;
-        delete kwargs.ids;
-        known_member_ids = kwargs.known_member_ids || [];
-
-        /** @type {import("mock_models").DiscussChannelMember} */
-        const DiscussChannelMember = this.env["discuss.channel.member"];
-
-        const members = DiscussChannelMember.search(
-            [
-                ["id", "not in", known_member_ids],
-                ["channel_id", "in", ids],
-            ],
-            makeKwArgs({ limit: 100 })
-        );
-        const member_count = DiscussChannelMember.search_count([["channel_id", "in", ids]]);
-        return new mailDataHelpers.Store(this.browse(ids[0]), { member_count })
-            .add(DiscussChannelMember.browse(members))
-            .get_result();
-    }
-
     /** @param {number} id */
     message_post(id) {
         const kwargs = getKwArgs(arguments, "id");
