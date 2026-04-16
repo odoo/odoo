@@ -1003,9 +1003,11 @@ class CustomerPortal(Controller):
             raise MissingError(_("This document does not exist."))
         try:
             document.check_access('read')
-        except AccessError:
-            if not access_token or not document_sudo.access_token or not consteq(document_sudo.access_token, access_token):
+        except AccessError as exc:
+            if not access_token:
                 raise
+            if not document_sudo.access_token or not consteq(document_sudo.access_token, access_token):
+                raise AccessDenied(_("Invalid access token")) from exc
         return document_sudo
 
     def _get_page_view_values(self, document, access_token, values, session_history, no_breadcrumbs, **kwargs):

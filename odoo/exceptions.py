@@ -49,8 +49,11 @@ class AccessDenied(UserError):
     """
     http_status = 403  # Forbidden
 
-    def __init__(self, message="Access Denied"):
+    def __init__(self, message="Access Denied", response=None):
         super().__init__(message)
+        if response:
+            self.error_response = response
+            self.http_status = response.status
         self.suppress_traceback()  # must be called in `except`s too
 
     def suppress_traceback(self):
@@ -73,6 +76,7 @@ class AccessDenied(UserError):
 
         # The above exception was the direct cause of the following exception
         self.__cause__ = None
+
 
 class AccessError(UserError):
     """Access rights error.
