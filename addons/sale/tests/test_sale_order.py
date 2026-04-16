@@ -793,6 +793,20 @@ class TestSaleOrder(SaleCommon):
             msg="price_total should be equal to expected_total",
         )
 
+    def test_sale_order_line_name_translation(self):
+        """Ensure the name of an order_line is translated to the partner's language."""
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.product.update_field_translations('name', {'fr_FR': 'Produit Test'})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+            })]
+        })
+        self.assertEqual(sale_order.order_line.name, "Test Product")
+        self.partner.lang = "fr_FR"
+        self.assertEqual(sale_order.order_line.name, "Produit Test")
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):

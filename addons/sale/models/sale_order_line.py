@@ -401,7 +401,7 @@ class SaleOrderLine(models.Model):
                 if ptav._origin not in valid_values:
                     line.product_no_variant_attribute_value_ids -= ptav
 
-    @api.depends('product_id', 'linked_line_id', 'linked_line_ids')
+    @api.depends('product_id', 'linked_line_id', 'linked_line_ids', 'order_partner_id.lang')
     def _compute_name(self):
         for line in self:
             if not line.product_id and not line.is_downpayment:
