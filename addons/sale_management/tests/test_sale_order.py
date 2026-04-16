@@ -5,6 +5,8 @@ from itertools import chain
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 
+from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.sale_management.controllers.portal import CustomerPortal
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
 
 
@@ -523,3 +525,25 @@ class TestSaleOrder(SaleManagementCommon):
             so.order_line[2]._can_be_edited_on_portal(),
             "Discount line on optional section should not be editable on portal",
         )
+
+    def test_optional_lines_discount_is_not_recomputed_on_portal(self):
+        sale_order_with_option = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "display_type": "line_section",
+                    "name": "Optional products",
+                    "is_optional": True,
+                }),
+                Command.create({"product_id": self.optional_product.id}),
+            ],
+        })
+
+        optional_product_line = self._get_optional_product_lines(sale_order_with_option)
+        optional_product_line.discount = 20
+
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                sale_order_with_option.id, optional_product_line.id, input_quantity=10
+            )
+            self.assertEqual(optional_product_line.discount, 20)
