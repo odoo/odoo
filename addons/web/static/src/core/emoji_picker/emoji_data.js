@@ -2994,7 +2994,8 @@ const _getEmojisData2 = () => `{
     ],
     "name": "` + _t("flexed biceps") + `",
     "shortcodes": [
-        ":flexed_biceps:"
+        ":flexed_biceps:",
+		":muscle:"
     ]
 },
 {
