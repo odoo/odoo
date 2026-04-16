@@ -12,7 +12,14 @@
         <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-att-class="{ 'w-100': this.props.hasSizeConstraints, 'px-1': !this.props.channel }">
             <t t-if="this.store.self_user?.share === false">
                 <div class="position-relative">
-                    <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-att-value="this.searchStr" t-custom-ref="input" t-att-placeholder="this.searchPlaceholder" t-on-input="this.onInput"/>
+                    <label id="o-discuss-ChannelInvitation-searchStatusIcon" for="o-discuss-ChannelInvitation-search" class="position-absolute top-50 px-2 translate-middle-y smaller opacity-50" role="status">
+                        <t t-if="this.state.hasPendingRequest">
+                            <i class="fa fa-spin fa-circle-o-notch" title="Loading…" aria-hidden="true"/>
+                            <p class="visually-hidden">Invite suggestions are loading…</p>
+                        </t>
+                        <i t-else="" class="oi oi-search" aria-hidden="true"/>
+                    </label>
+                    <input id="o-discuss-ChannelInvitation-search" class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 ps-4 bg-view" aria-describedby="o-discuss-ChannelInvitation-searchStatusIcon" t-att-value="this.searchStr" t-custom-ref="input" t-att-placeholder="this.searchPlaceholder" t-on-input="this.onInput"/>
                     <div t-if="this.props.channel?.allow_invite_by_email" class="o-discuss-ChannelInvitation-iconContainer position-absolute top-50 end-0 translate-middle-y me-2 smaller opacity-50" data-tooltip="Type email to invite">
                         <i class="fa fa-envelope-o fa-lg"/>
                         <i class="fa fa-plus-circle o-discuss-ChannelInvitation-iconPlus position-absolute bg-white rounded-circle"/>

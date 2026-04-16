@@ -32,6 +32,7 @@ export class ChannelInvitation extends Component {
         this.suggestionService = useService("mail.suggestion");
         this.sequential = useSequential();
         this.state = useState({
+            hasPendingRequest: false,
             searchResultCount: 0,
             searchStr: "",
             selectableEmails: [],
@@ -106,12 +107,15 @@ export class ChannelInvitation extends Component {
     }
 
     async fetchPartnersToInvite() {
-        const results = await this.sequential(() =>
-            this.orm.call("res.partner", "search_for_channel_invite", [
+        const results = await this.sequential(async () => {
+            this.state.hasPendingRequest = true;
+            const res = await this.orm.call("res.partner", "search_for_channel_invite", [
                 this.searchStr,
                 this.props.channel?.id ?? false,
-            ])
-        );
+            ]);
+            this.state.hasPendingRequest = false;
+            return res;
+        });
         if (!results) {
             return;
         }
