@@ -142,7 +142,7 @@ class ResCompany(models.Model):
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
         check_company=True,
-        domain="[('account_type', '=', 'expense')]")
+        domain="[('account_type', 'in', ('expense', 'expense_other'))]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
