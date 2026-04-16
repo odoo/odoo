@@ -1511,10 +1511,11 @@ export class PosStore extends WithLazyGetterTrap {
             this.syncingOrders.add(order.uuid);
 
             try {
-                const serialized = order.serializeForORM();
+                const serialized = order.serializeForORM({ keepCommands: true });
                 const data = await this.data.call("pos.order", "sync_from_ui", [[serialized]], {
                     context,
                 });
+                order.serializeForORM();
                 const missingRecords = await this.data.missingRecursive(data);
                 const newData = this.models.loadConnectedData(missingRecords);
 
