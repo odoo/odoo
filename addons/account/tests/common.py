@@ -386,6 +386,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             'default_journal_cash': cls.env['account.journal'].create({
                 'type': 'cash',
                 'name': 'Cash',
+                'code': 'CASH1',
                 'company_id': company.id,
             }),
             'default_journal_credit': cls.env['account.journal'].create({
