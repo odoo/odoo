@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { render, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -100,7 +100,9 @@ export class KanbanController extends Component {
             }
         }
 
-        this.model = useModelWithSampleData(KanbanSampleModel, this.modelParams, this.modelOptions);
+        this.model = useState(
+            useModelWithSampleData(KanbanSampleModel, this.modelParams, this.modelOptions)
+        );
         if (archInfo.progressAttributes) {
             const { activeBars } = this.props.state || {};
             this.progressBarState = useProgressBar(
