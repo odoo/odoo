@@ -7,7 +7,7 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']" position="after">
+            <xpath expr="//field[@name='parent_vat']" position="after">
                 <field name="l10n_it_codice_fiscale"/>
                 <field name="l10n_it_pa_index"/>
             </xpath>
@@ -37,7 +37,7 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
         <data>
-            <xpath expr="//field[@name='vat']" position="after">
+            <xpath expr="//field[@name='parent_vat']" position="after">
                 <field name="l10n_it_codice_fiscale" invisible="country_code != 'IT'"/>
                 <field name="l10n_it_tax_system" invisible="country_code != 'IT'"/>
             </xpath>

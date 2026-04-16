@@ -227,6 +227,8 @@ class ResPartner(models.Model):
         precompute=True,  # avoid queries post-create
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
+    parent_vat = fields.Char("VAT", compute="_compute_parent_vat", inverse="_inverse_parent_vat", store=False)
+    is_company_for_parent = fields.Boolean("Is Separate Entity", compute="_compute_parent_vat", inverse="_inverse_parent_vat", store=False)
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
     vat_label = fields.Char(string='Tax ID Label', compute='_compute_vat_label')
     same_vat_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
@@ -267,6 +269,7 @@ class ResPartner(models.Model):
         'Formatted Email', compute='_compute_email_formatted',
         help='Format email address "Name <email@domain>"')
     phone = fields.Char()
+
     is_company = fields.Boolean(string='Is a Company', default=False, compute="_compute_is_company", store=True,
         help="Check if the contact is a company, otherwise it is a person")
     is_public = fields.Boolean(compute='_compute_is_public', compute_sudo=True)
@@ -302,6 +305,27 @@ class ResPartner(models.Model):
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self: ResPartner = fields.Many2one(comodel_name='res.partner', compute='_compute_get_ids')
     application_statistics = fields.Json(string="Stats", compute="_compute_application_statistics")
+
+    @api.depends("vat")
+    def _compute_parent_vat(self):
+        for partner in self:
+            p = partner
+            while p.parent_id and p._is_vat_void(p.vat):
+                p = p.parent_id
+            partner.parent_vat = p.vat
+            partner.is_company_for_parent = partner.is_company
+
+    def _inverse_parent_vat(self):
+        for partner in self:
+            if not partner.parent_id:
+                partner.vat = partner.parent_vat
+            elif partner.is_company_for_parent: # is_company_for_parent means company with separate entity
+                if partner.parent_vat == partner.parent_id.vat or self._is_vat_void(partner.parent_vat) or self._is_vat_void(partner.parent_id.vat):
+                    raise UserError(self.env._("You can not set as a company for both. "))
+                partner.vat = partner.parent_vat
+            else:
+                partner.vat = ""
+                partner.commercial_partner_id.vat = partner.parent_vat
 
     @property
     def country_name(self):
@@ -503,10 +527,12 @@ class ResPartner(models.Model):
         for partner in self:
             partner.self = partner.id
 
-    @api.depends('parent_id.commercial_partner_id', 'parent_id')
+    @api.depends('parent_id.commercial_partner_id', 'parent_id', 'vat', 'parent_id.vat')
     def _compute_commercial_partner(self):
         for partner in self:
             if not partner.parent_id:
+                partner.commercial_partner_id = partner
+            elif not partner._is_vat_void(partner.vat) and partner.vat != partner.parent_id.vat:
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
@@ -670,7 +696,7 @@ class ResPartner(models.Model):
         """ Returns the list of fields that are managed by the commercial entity
         to which a partner belongs. When modified on a children, update is
         propagated until the commercial entity. """
-        return ['vat']
+        return []
 
     def _get_commercial_values(self):
         """ Get commercial values from record. Return only set values, as they

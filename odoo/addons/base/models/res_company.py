@@ -114,6 +114,7 @@ class ResCompany(models.CachedModel):
     phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
     website = fields.Char(related='partner_id.website', readonly=False)
     vat = fields.Char(related='partner_id.vat', string="Tax ID", readonly=False)
+    parent_vat = fields.Char(related="partner_id.parent_vat", readonly=False)
     company_registry = fields.Char(related='partner_id.company_registry', string="Company ID", readonly=False)
     company_registry_placeholder = fields.Char(related='partner_id.company_registry_placeholder')
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
