@@ -50,6 +50,7 @@ import {
     T_NULL,
     T_REGEX,
     T_UNDEFINED,
+    untracked,
 } from "../hoot_utils";
 import { mockFetch } from "../mock/network";
 import { logger } from "./logger";
@@ -116,7 +117,7 @@ const {
     clearTimeout,
     Error,
     Math: { abs: $abs, floor: $floor },
-    Object: { create: $create, entries: $entries, keys: $keys },
+    Object: { assign: $assign, create: $create, entries: $entries, keys: $keys },
     parseFloat,
     performance,
     Promise,
@@ -998,21 +999,15 @@ export function makeExpect(params) {
         return new Matcher(currentResult, received, flags);
     }
 
-    const expectFns = [
-        assertions,
-        errors,
-        step,
-        verifyErrors,
-        verifySteps,
-        waitForErrors,
-        waitForSteps,
-    ];
-    for (const fn of expectFns) {
-        // Functions are bound to keep their name when debugging
-        expect[fn.name] = function (...args) {
-            return untrack(fn.bind(this, ...args));
-        };
-    }
+    const enrichedExpect = $assign(expect, {
+        assertions: untracked(assertions),
+        errors: untracked(errors),
+        step: untracked(step),
+        verifyErrors: untracked(verifyErrors),
+        verifySteps: untracked(verifySteps),
+        waitForErrors: untracked(waitForErrors),
+        waitForSteps: untracked(waitForSteps),
+    });
     const expectHooks = {
         after: afterTest,
         before: beforeTest,
@@ -1025,7 +1020,7 @@ export function makeExpect(params) {
 
     let removeInteractionListener;
 
-    return [expect, expectHooks];
+    return [enrichedExpect, expectHooks];
 }
 
 export class CaseResult {
@@ -1984,7 +1979,7 @@ export class Matcher {
             T_MATCHER_FORMAT_XML_OPTIONS,
         ]);
 
-        return this._toHaveHTML("toHaveInnerHTML", "innerHTML", ...arguments);
+        return this._toHaveHTML("toHaveInnerHTML", "innerHTML", expected, options);
     }
 
     /**
@@ -2006,7 +2001,7 @@ export class Matcher {
             T_MATCHER_FORMAT_XML_OPTIONS,
         ]);
 
-        return this._toHaveHTML("toHaveOuterHTML", "outerHTML", ...arguments);
+        return this._toHaveHTML("toHaveOuterHTML", "outerHTML", expected, options);
     }
 
     /**

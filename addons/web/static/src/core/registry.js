@@ -1,4 +1,4 @@
-import { assertType, EventBus } from "@odoo/owl";
+import { EventBus, validateType } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -15,10 +15,11 @@ const validateSchema = (name, key, value, schema) => {
     if (!odoo.debug || typeof schema !== "function") {
         return;
     }
-    try {
-        assertType(value, schema);
-    } catch (error) {
-        throw new Error(`Validation error for key "${key}" in registry "${name}": ${error}`);
+    const issues = validateType(value, schema);
+    if (issues.length) {
+        throw new TypeError(
+            `Validation error for key "${key}" in registry "${name}":\n${JSON.stringify(issues)}`
+        );
     }
 };
 
