@@ -113,7 +113,7 @@ export class ChannelMember extends Record {
     registerTypingTimeout() {
         this.typingTimeoutId = browser.setTimeout(
             () => (this.isTyping = false),
-            Store.OTHER_LONG_TYPING
+            this.typingTimeoutDuration
         );
     }
     channelAsTyping = fields.One("discuss.channel", {
@@ -128,6 +128,10 @@ export class ChannelMember extends Record {
     /** @type {number} */
     typingTimeoutId;
     unpin_dt = fields.Datetime();
+
+    get typingTimeoutDuration() {
+        return Store.OTHER_LONG_TYPING;
+    }
 
     get canRemoveAdmin() {
         return (
