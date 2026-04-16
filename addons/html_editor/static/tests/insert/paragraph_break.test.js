@@ -728,7 +728,7 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore: '<p><span style="font-size: 36px;">abc[]</span></p>',
                     stepFunction: splitBlock,
-                    contentAfterEdit: `<p><span style="font-size: 36px;">abc</span></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><span style="font-size: 36px;" data-oe-zws-empty-inline="">[]\u200b</span></p>`,
+                    contentAfterEdit: `<p><span style="font-size: 36px;">abc</span></p><p><span style="font-size: 36px;" data-oe-zws-empty-inline="">[]\u200b</span></p>`,
                     contentAfter: `<p><span style="font-size: 36px;">abc</span></p><p>[]<br></p>`,
                 });
             });
