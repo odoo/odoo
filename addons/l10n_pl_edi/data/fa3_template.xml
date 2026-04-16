@@ -49,10 +49,10 @@
           <AdresL2 t-if="seller.street2" t-out="seller.street2"/>
         </Adres>
         <t t-if="seller.email or seller.phone">
-        <DaneKontaktowe>
-            <Email t-out="seller.email"/>
-            <Telefon t-out="seller.phone"/>
-        </DaneKontaktowe>
+          <DaneKontaktowe>
+            <Email t-if="seller.email" t-out="seller.email"/>
+            <Telefon t-if="seller.phone" t-out="seller.phone"/>
+          </DaneKontaktowe>
         </t>
       </Podmiot1>
 
@@ -100,10 +100,10 @@
           </Adres>
         </t>
         <t t-if="buyer.email or buyer.phone">
-        <DaneKontaktowe>
-            <Email t-out="buyer.email"/>
-            <Telefon t-out="buyer.phone"/>
-        </DaneKontaktowe>
+          <DaneKontaktowe>
+            <Email t-if="buyer.email" t-out="buyer.email"/>
+            <Telefon t-if="buyer.phone" t-out="buyer.phone"/>
+          </DaneKontaktowe>
         </t>
 
             <!-- JST flag: 1=subordinate local gov unit; 2=otherwise. If 1, complete Podmiot3 with NIP/IDWew and role=8 -->
@@ -184,10 +184,10 @@
           <!-- P_13_11: Total value of sales under the margin scheme referred to in Article 119 and Article 120 TO-CHECK -->
 
           <!-- P_15: Total gross amount of the invoice (including all taxes). -->
-        <P_15 t-out="float_repr(invoice.amount_total_in_currency_signed, 2)"/>
+        <P_15 t-out="float_repr(invoice.amount_total_signed, 2)"/>
 
           <!-- KursWalutyZ: Exchange rate of the currency to PLN on the invoice date. TO-CHECK -->
-          <KursWalutyZ t-out="float_repr(1 / (invoice.invoice_currency_rate or 1), 5)"/>
+          <KursWalutyZ t-out="float_repr(invoice.invoice_currency_rate, 3)"/>
         <!--
           ======================================================================
           Adnotacje (Annotations)
