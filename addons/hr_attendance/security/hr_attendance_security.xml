@@ -18,7 +18,8 @@
         <field name="name">Self Attendance Edit</field>
         <field name="sequence">0</field>
         <field name="privilege_id" ref="res_groups_privilege_attendances"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_by_ids" eval="[(4, ref('base.group_user_lite'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user_lite'))]"/>
         <field name="comment">Grants users permission to modify their own attendance entries that are pending approval.</field>
     </record>
 

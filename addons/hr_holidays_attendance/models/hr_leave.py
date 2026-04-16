@@ -11,7 +11,7 @@ from odoo.tools import float_round
 class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
-    employee_overtime = fields.Float(compute='_compute_employee_overtime', groups='base.group_user')
+    employee_overtime = fields.Float(compute='_compute_employee_overtime', groups='base.group_user_lite')
     overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible')
 
     @api.depends('work_entry_type_id')
