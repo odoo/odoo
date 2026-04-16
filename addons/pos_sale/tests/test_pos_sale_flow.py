@@ -82,7 +82,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('PosRefundDownpayment', login="accountman")
         self.assertEqual(len(sale_order.order_line), 4)
-        self.assertEqual(sale_order.order_line[2].qty_invoiced, 1)
+        self.assertEqual(sale_order.order_line[2].qty_invoiced, 0)
         self.assertEqual(sale_order.order_line[3].qty_invoiced, -1)
 
     def test_pos_not_groupable_product(self):
