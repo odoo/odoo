@@ -64,22 +64,25 @@ class PaymentCommon(BaseCommon):
             'arch': arch,
         })
 
+        # Activate payment method unknown before creating the provider to ensure it's included
+        # in the Many2many relationship when the provider is created
+        pm_unknown = cls.env.ref('payment.payment_method_unknown')
+        pm_unknown.write({
+            'active': True,
+            'support_tokenization': True,
+        })
+
         cls.dummy_provider = cls.env['payment.provider'].create({
             'name': "Dummy Provider",
             'code': 'none',
             'state': 'test',
             'is_published': True,
-            'payment_method_ids': [Command.set([cls.env.ref('payment.payment_method_unknown').id])],
+            'payment_method_ids': [Command.set([pm_unknown.id])],
             'allow_tokenization': True,
             'redirect_form_view_id': redirect_form.id,
             'available_currency_ids': [Command.set(
                 (cls.currency_euro + cls.currency_usd + cls.env.company.currency_id).ids
             )],
-        })
-        # Activate pm
-        cls.env.ref('payment.payment_method_unknown').write({
-            'active': True,
-            'support_tokenization': True,
         })
 
         cls.provider = cls.dummy_provider
