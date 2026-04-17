@@ -18,6 +18,8 @@ const storeServicePatch = {
          * @type {string[]}
          */
         this.channel_types_with_seen_infos = [];
+        // Debounce it to avoid intensive client => worker communication.
+        // Should be moved in the bus service at some point.
         this.updateBusSubscription = debounce(
             () => this.env.services.bus_service.forceUpdateChannels(),
             0

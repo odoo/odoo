@@ -1,29 +1,72 @@
 /**
- * Returns a function, that, as long as it continues to be invoked, will not
- * be triggered. The function will be called after it stops being called for
- * N milliseconds. If `immediate` is passed, trigger the function on the
- * leading edge, instead of the trailing.
+ * Copied from "@web/core/utils/timings" as the websocket worker should work with the
+ * minimal amount of dependencies.
  *
- * Inspired by https://davidwalsh.name/javascript-debounce-function
+ * Creates and returns a new debounced version of the passed function (func) which will
+ * postpone its execution until after 'delay' milliseconds have elapsed since the last
+ * time it was invoked. The debounced function will return a Promise that will be resolved
+ * when the function (func) has been fully executed.
+ *
+ * If both `options.trailing` and `options.leading` are true, the function will only be
+ * invoked at the trailing edge if the debounced function was called at least once more
+ * during the wait time.
+ *
+ * @template {Function} T the return type of the original function
+ * @param {T} func the function to debounce
+ * @param {number} delay
+ * @param {boolean} [options] if true, equivalent to exclusive leading. If false,
+ * equivalent to exclusive trailing.
+ * @param {object} [options]
+ * @param {boolean} [options.leading=false] whether the function should be invoked at the
+ * leading edge of the timeout
+ * @param {boolean} [options.trailing=true] whether the function should be invoked at the
+ * trailing edge of the timeout
+ * @returns {T & { cancel: () => void }} the debounced function
  */
-export function debounce(func, wait, immediate) {
-    let timeout;
-    return function () {
-        const context = this;
-        const args = arguments;
-        function later() {
-            timeout = null;
-            if (!immediate) {
-                func.apply(context, args);
-            }
+export function debounce(func, delay, options) {
+    let handle;
+    const funcName = func.name ? func.name + " (debounce)" : "debounce";
+    let lastArgs;
+    let leading = false;
+    let trailing = true;
+    if (typeof options === "boolean") {
+        leading = options;
+        trailing = !options;
+    } else if (options) {
+        leading = options.leading ?? leading;
+        trailing = options.trailing ?? trailing;
+    }
+
+    return Object.assign(
+        {
+            /** @type {any} */
+            [funcName](...args) {
+                return new Promise((resolve) => {
+                    if (leading && !handle) {
+                        Promise.resolve(func.apply(this, args)).then(resolve);
+                    } else {
+                        lastArgs = args;
+                    }
+                    clearTimeout(handle);
+                    handle = setTimeout(() => {
+                        handle = null;
+                        if (trailing && lastArgs) {
+                            Promise.resolve(func.apply(this, lastArgs)).then(resolve);
+                            lastArgs = null;
+                        }
+                    }, delay);
+                });
+            },
+        }[funcName],
+        {
+            cancel(execNow = false) {
+                clearTimeout(handle);
+                if (execNow && lastArgs) {
+                    func.apply(this, lastArgs);
+                }
+            },
         }
-        const callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) {
-            func.apply(context, args);
-        }
-    };
+    );
 }
 
 export class Logger {

@@ -49,6 +49,7 @@ const logger = new Logger("bus_websocket_worker");
  * for SharedWorker and this class implements it.
  */
 export class WebsocketWorker {
+    static OUTGOING_BATCH_DELAY = 300;
     INITIAL_RECONNECT_DELAY = 1000;
     RECONNECT_JITTER = 1000;
     CONNECTION_CHECK_DELAY = 60_000;
@@ -65,6 +66,8 @@ export class WebsocketWorker {
         this.isWaitingForNewUID = true;
         this.lastChannelSubscription = null;
         this.lastNotificationId = 0;
+        /** @type {{force: boolean}|null} */
+        this.nextSubscribeData = null;
         this.loggingEnabled = null;
         this.messageWaitQueue = [];
         this.name = name;
@@ -72,9 +75,10 @@ export class WebsocketWorker {
         this.state = WORKER_STATE.IDLE;
         this.websocketURL = "";
 
-        this._debouncedSendToServer = debounce(this._sendToServer, 300);
-        this._debouncedUpdateChannels = debounce(this._updateChannels, 300);
-        this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
+        this._debouncedSendToServer = debounce(
+            this._sendToServer,
+            WebsocketWorker.OUTGOING_BATCH_DELAY
+        );
         this._onWebsocketClose = this._onWebsocketClose.bind(this);
         this._onWebsocketError = this._onWebsocketError.bind(this);
         this._onWebsocketMessage = this._onWebsocketMessage.bind(this);
@@ -173,7 +177,7 @@ export class WebsocketWorker {
             case "BUS:DELETE_CHANNEL":
                 return this._deleteChannel(client, data);
             case "BUS:FORCE_UPDATE_CHANNELS":
-                return this._forceUpdateChannels();
+                return this._scheduleUpdateChannels({ force: true });
             case "BUS:SET_LOGGING_ENABLED":
                 this.loggingEnabled = data;
                 break;
@@ -211,7 +215,7 @@ export class WebsocketWorker {
      */
     _addChannel(client, channel) {
         this.channelsByClient.get(client).push(channel);
-        this._debouncedUpdateChannels();
+        this._scheduleUpdateChannels();
     }
 
     /**
@@ -229,16 +233,8 @@ export class WebsocketWorker {
         const channelIndex = clientChannels.indexOf(channel);
         if (channelIndex !== -1) {
             clientChannels.splice(channelIndex, 1);
-            this._debouncedUpdateChannels();
+            this._scheduleUpdateChannels();
         }
-    }
-
-    /**
-     * Update the channels on the server side even if the channels on
-     * the client side are the same than the last time we subscribed.
-     */
-    _forceUpdateChannels() {
-        this._updateChannels({ force: true });
     }
 
     /**
@@ -250,7 +246,7 @@ export class WebsocketWorker {
      */
     _unregisterClient(client) {
         this.channelsByClient.delete(client);
-        this._debouncedUpdateChannels();
+        this._scheduleUpdateChannels();
     }
 
     /**
@@ -394,7 +390,7 @@ export class WebsocketWorker {
         this._logDebug("_onWebsocketOpen");
         this._updateState(WORKER_STATE.CONNECTED);
         this.broadcast(this.isReconnecting ? "BUS:RECONNECT" : "BUS:CONNECT");
-        this._debouncedUpdateChannels();
+        this._scheduleUpdateChannels();
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.isReconnecting = false;
@@ -525,13 +521,12 @@ export class WebsocketWorker {
     }
 
     /**
-     * Update the channel subscription on the server. Ignore if the channels
-     * did not change since the last subscription.
-     *
-     * @param {boolean} force Whether or not we should update the subscription
-     * event if the channels haven't change since last subscription.
+     * Debounced execution of the channel subscription update. Intended to be called via
+     * `_scheduleUpdateChannels` only.
      */
-    _updateChannels({ force = false } = {}) {
+    _debouncedUpdateChannels = debounce(() => {
+        const { force } = this.nextSubscribeData;
+        this.nextSubscribeData = null;
         const allTabsChannels = [
             ...new Set([].concat.apply([], [...this.channelsByClient.values()])),
         ].sort();
@@ -546,7 +541,22 @@ export class WebsocketWorker {
             });
             this.firstSubscribeResolver.resolve();
         }
+    }, WebsocketWorker.OUTGOING_BATCH_DELAY);
+
+    /**
+     * Schedule a channel subscription update. The operation is debounced and may be
+     * batched with other calls. The server will only be notified if the channel set has
+     * changed since the last subscription, unless `force` is true.
+     *
+     * @param {boolean} force If true, ensures a subscription event is sent even if the
+     * channel list has not changed.
+     */
+    _scheduleUpdateChannels({ force = false } = {}) {
+        this.nextSubscribeData ??= {};
+        this.nextSubscribeData.force ||= force;
+        this._debouncedUpdateChannels();
     }
+
     /**
      * Update the worker state and broadcast the new state to its clients.
      *

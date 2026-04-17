@@ -144,3 +144,44 @@ test("check connection health during inactivity", async () => {
     await advanceTime(worker.CONNECTION_CHECK_DELAY + 1000);
     await expect.waitForSteps(["check_connection_health_sent"]);
 });
+
+test("debounced updates respect force and batching", async () => {
+    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 120_000 });
+    patchWithCleanup(WebsocketWorker.prototype, {
+        _sendToServer(message) {
+            if (message.event_name === "subscribe") {
+                expect.step(`subscribe - ${JSON.stringify(message.data.channels)}`);
+            }
+            super._sendToServer(message);
+        },
+    });
+    const worker = await startWebSocketWorker((type) => {
+        if (type == "BUS:CONNECT") {
+            expect.step(type);
+        }
+    });
+    const client = new MessagePort();
+    worker.registerClient(client);
+    worker._start();
+    await expect.waitForSteps(["BUS:CONNECT"]);
+    await advanceTime(120_000);
+    await expect.waitForSteps(["subscribe - []"]);
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
+    await advanceTime(120_000);
+    await expect.waitForSteps(['subscribe - ["C1"]']);
+    // 1 add channel => force => only one forced subscribe
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
+    worker._onClientMessage(client, { action: "BUS:FORCE_UPDATE_CHANNELS" });
+    await advanceTime(120_000);
+    await expect.waitForSteps(['subscribe - ["C1"]']);
+    // 2 force => add channel => only one forced subscribe
+    worker._onClientMessage(client, { action: "BUS:FORCE_UPDATE_CHANNELS" });
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
+    await advanceTime(120_000);
+    await expect.waitForSteps(['subscribe - ["C1"]']);
+    // 3 multiple adds => only one subscribe
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C2" });
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C3" });
+    await advanceTime(120_000);
+    await expect.waitForSteps(['subscribe - ["C1","C2","C3"]']);
+});
