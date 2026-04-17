@@ -471,6 +471,7 @@ class MailTrackMixin(models.AbstractModel):
         # store company information for company dependent fields
         if col_info.get('company_dependent') is True:
             field_info['company_id'] = self.env.company.id
+            values['company_name'] = self.env.company.name
 
         if col_info['type'] in {'integer', 'float', 'char', 'text'}:
             values.update({

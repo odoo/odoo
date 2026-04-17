@@ -30,7 +30,7 @@ class MailMessage(models.Model):
             for cmd in tracking_values_cmd:
                 if len(cmd) == 3 and cmd[0] == 0:
                     track_values = dict(cmd[2])  # copy to avoid altering original dict
-                    for key in (k for k in ('field_name', 'field_label', 'field_type', 'new_value', 'old_value') if k in cmd[2]):
+                    for key in (k for k in ('field_name', 'field_label', 'field_type', 'new_value', 'old_value', 'company_name') if k in cmd[2]):
                         track_values.pop(key)
                     track_values['mail_message_id'] = message.id
                     track_vals_lst.append(track_values)
