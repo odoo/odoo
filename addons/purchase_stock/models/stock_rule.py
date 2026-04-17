@@ -282,7 +282,7 @@ class StockRule(models.Model):
             'price_unit': price_unit,
             'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
-        if seller.uom_id != line.uom_id and not values.get('force_uom'):
+        if seller and seller.uom_id != line.uom_id and not values.get('force_uom'):
             res['product_qty'] = line.uom_id._compute_quantity(res['product_qty'], seller.uom_id, rounding_method='HALF-UP')
             res['uom_id'] = seller.uom_id
         orderpoint_id = values.get('orderpoint_id')
