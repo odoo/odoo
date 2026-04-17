@@ -5,7 +5,6 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
 import { getTemplate as defaultGetTemplate } from "@web/core/templates";
 import { isIterable } from "@web/core/utils/arrays";
-import { patch } from "@web/core/utils/patch";
 import {
     customDirectives as defaultCustomDirectives,
     globalValues as defaultGlobalValues,
@@ -26,17 +25,6 @@ import { patchWithCleanup } from "./patch_test_helpers";
  * @template [E=any]
  * @typedef {import("@odoo/owl").ComponentConstructor<P, E>} ComponentConstructor
  */
-
-patch(MainComponentsContainer.prototype, {
-    setup() {
-        super.setup();
-
-        hasMainComponent = true;
-        after(() => (hasMainComponent = false));
-    },
-});
-
-let hasMainComponent = false;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -165,7 +153,7 @@ export async function mountWithCleanup(ComponentClass, options) {
     /** @type {InstanceType<C>} */
     const component = await componentRoot.mount(targetEl);
 
-    if (!noMainContainer && !hasMainComponent) {
+    if (!noMainContainer) {
         const mainContainerRoot = app.createRoot(MainComponentsContainer, {
             env: Object.assign(Object.create(commonEnv), containerEnv),
             props: {},
