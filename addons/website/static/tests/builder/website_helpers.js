@@ -32,7 +32,8 @@ import { WebsiteBridgePlugin } from "@website/builder/plugins/website_bridge_plu
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
-import { getWebsiteSnippets } from "./snippets_getter.hoot";
+import { getWebsiteSnippets } from "../snippets_getter.hoot";
+import { getStructureSnippet, patchDOMParser } from "../snippet_helpers";
 import { revertPreview } from "@html_builder/core/utils";
 import { WebsiteBuilder } from "@website/builder/website_builder";
 import { session } from "@web/session";
@@ -80,27 +81,6 @@ export function defineWebsiteModels({ includeMailModels = true } = {}) {
             },
         ],
     }));
-}
-
-const domParserCache = new Map();
-function patchDOMParser() {
-    patchWithCleanup(DOMParser.prototype, {
-        parseFromString(html, type) {
-            if (type !== "text/html") {
-                return super.parseFromString(html, type);
-            }
-            if (domParserCache.has(html)) {
-                return domParserCache.get(html).cloneNode(true);
-            }
-            const res = super.parseFromString(html, type);
-            if (res.body?.firstChild?.id === "snippet_groups") {
-                // Only cache the document containing the snippets
-                domParserCache.set(html, res);
-                return res.cloneNode(true);
-            }
-            return res;
-        },
-    });
 }
 
 /**
@@ -474,7 +454,6 @@ export async function waitForSnippetDialog() {
  * @param {string | string[]} snippetName
  */
 export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) {
-    patchDOMParser();
     mockService("website", {
         get currentWebsite() {
             return {
@@ -548,21 +527,6 @@ export async function setupSidebarBuilderForTranslation(options) {
     await getTranslatedElements();
     await openBuilderSidebar();
     return { getEditor, getEditableContent, waitSidebarUpdated };
-}
-
-export async function getStructureSnippet(snippetName) {
-    const html = await getWebsiteSnippets();
-    const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
-    const processors = registry.category("html_builder.snippetsPreprocessor").getAll();
-    for (const processor of Object.values(processors)) {
-        processor("website.snippets", snippetsDocument);
-    }
-    const snippetEl = snippetsDocument.querySelector(
-        `[data-snippet=${snippetName}]:not([data-snippet] [data-snippet])`
-    );
-    const el = snippetEl.cloneNode(true);
-    el.dataset.name = snippetEl.parentElement.getAttribute("name");
-    return el;
 }
 
 export async function insertStructureSnippet(editor, snippetName) {

@@ -1,11 +1,11 @@
-import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
-import { markup } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { Chart } from "@website/snippets/s_chart/chart";
+import { startInteractionsWithSnippet } from "../helpers";
 
 setupInteractionWhiteList("website.chart");
 
@@ -19,24 +19,7 @@ patch(Chart.prototype, {
 });
 
 test("chart is started when there is an element .s_chart", async () => {
-    const { core } = await startInteractions(
-        markup`
-            <div class="s_chart" data-type="bar" data-legend-position="top" data-tooltip-display="true" data-stacked="false" data-border-width="2"
-                data-data="${JSON.stringify({
-                    labels: ["First", "Second", "Third", "Fourth", "Fifth"],
-                    datasets: [
-                        {
-                            label: "One",
-                            data: ["12", "24", "18", "17", "10"],
-                            backgroundColor: "o-color-1",
-                            borderColor: "o-color-1",
-                        },
-                    ],
-                })}">
-                <h2>A Chart Title</h2>
-                <canvas/>
-            </div>`.toString()
-    );
+    const { core } = await startInteractionsWithSnippet("s_chart");
     expect(core.interactions).toHaveLength(1);
     await advanceTime(0);
     const canvas = queryOne("canvas");
