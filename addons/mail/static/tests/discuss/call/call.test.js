@@ -514,6 +514,24 @@ test("Systray icon shows latest action", async () => {
     await contains(".o-discuss-CallMenu-buttonContent .fa-hand-paper-o");
 });
 
+test("Can use Call actions in Call Systray Menu", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallMenu-dropdownMore");
+    await contains(".o-dropdown-item", { count: 8 });
+    await contains(".o-dropdown-item:has(:text('Mute'))");
+    await contains(".o-dropdown-item:has(:text('Deafen'))");
+    await contains(".o-dropdown-item:has(:text('Turn camera on'))");
+    await contains(".o-dropdown-item:has(:text('Share Screen'))");
+    await contains(".o-dropdown-item:has(:text('Raise Hand'))");
+    await contains(".o-dropdown-item:has(:text('Picture in Picture'))");
+    await contains(".o-dropdown-item:has(:text('Fullscreen'))");
+    await contains(".o-dropdown-item:has(:text('Disconnect'))");
+});
+
 test("Systray icon keeps track of earlier actions", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

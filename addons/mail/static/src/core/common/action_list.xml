@@ -97,11 +97,6 @@
         'px-3 py-2':     this.props.dropdown and   this.ui.isSmall,
         'px-2 py-1':     this.props.dropdown and  !this.ui.isSmall,
     })"/>
-    <!-- opacity -->
-    <t t-set="btnClass" t-value="this.attClassObjectToString({
-        [btnClass]: true,
-        'opacity-75 opacity-100-hover': this.action.tags.includes('CALL_LAYOUT') or this.env.inMeetingSideActions,
-    })"/>
     <!-- simulated dark theme -->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
        [btnClass]: true,
