@@ -295,6 +295,9 @@
         <field name="mode">primary</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
+            <filter name="unassigned" position="before">
+                <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
+            </filter>
             <filter name="creation_date_filter" position="after">
                 <filter string="Deadline" name="date_deadline" date="date_deadline">
                     <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;=', 'today +1d')]"/>
