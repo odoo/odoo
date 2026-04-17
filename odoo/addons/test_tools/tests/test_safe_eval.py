@@ -1,5 +1,6 @@
 import ast
 import inspect
+import types
 from textwrap import dedent
 from unittest.mock import patch
 
@@ -11,6 +12,7 @@ from odoo.tools.safe_eval import (
     const_eval,
     safe_checker,
     safe_eval,
+    wrap_module,
 )
 from odoo.tools.safe_eval.runtime import (
     _SafeGenerator,
@@ -814,6 +816,40 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaises(UnsafeFunctionError):
             safe_checker.check(__import__)
         safe_checker.check(safe_eval._import)
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_trust_wrapped_custom_modules(self):
+
+        def _add_to_module(module: types.ModuleType, name: str, obj: object):
+            setattr(module, name, obj)
+            if hasattr(obj, '__module__'):
+                obj.__module__ = module.__name__
+
+        class C: ...
+
+        class Z: ...
+
+        def foo(): ...
+
+        custom_module = types.ModuleType('custom_module')
+        _add_to_module(custom_module, 'C', C)
+        _add_to_module(custom_module, 'Z', Z)
+        _add_to_module(custom_module, 'foo', foo)
+
+        wrapped_custom_module = wrap_module(custom_module, ['C', 'foo'], top_level_=True)
+
+        expr = """
+            custom_module.C()
+            custom_module.foo()
+        """
+        safe_eval(dedent(expr), {'custom_module': wrapped_custom_module}, mode='exec')
+
+        expr = """
+            # `custom_module.Z()` raises an `AttributeError`
+            Z()
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
+            safe_eval(dedent(expr), {'Z': custom_module.Z}, mode='exec')
 
     def test_prevent_bypass_module(self):
         from collections import deque  # noqa: PLC0415

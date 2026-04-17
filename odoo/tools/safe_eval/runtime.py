@@ -467,7 +467,10 @@ class _SafeWhitelist:
     A wildcard '*' at the end of a qualified name to trust all objects
     within subpath namespace.
 
+    The `add_generic` method allows to trust an object using its object reference.
+
     .. code-block:: python
+        safe_whitelist.add_generic(<object>)
         safe_whitelist.add_class('odoo.orm.models.*')
         safe_whitelist.add_instance('odoo.orm.environments.Environment')
         safe_whitelist.add_function('odoo.tools.float_utils.float_compare')
@@ -530,6 +533,22 @@ class _SafeWhitelist:
         self._classes = list()
         self._instances = list()
         self._functions = list()
+
+    def add_generic(self, obj: object) -> None:
+        if isinstance(obj, type):
+            if obj not in safe_whitelist.TRUSTED_CLASSES:
+                self.add_class(self.get_full_path(obj))
+        elif isinstance(obj, (
+            FunctionType, MethodType, BuiltinMethodType,
+            MethodDescriptorType, MemberDescriptorType, GetSetDescriptorType,
+            ClassMethodDescriptorType, WrapperDescriptorType,
+        )):
+            if obj not in safe_whitelist.TRUSTED_FUNCTIONS:
+                self.add_function(self.get_full_path(obj))
+        else:
+            t_obj = type(obj)
+            if t_obj not in safe_whitelist.TRUSTED_CLASSES:
+                self.add_instance(self.get_full_path(t_obj))
 
     def add_class(self, qualname: str) -> None:
         self._classes.append(qualname)
@@ -736,26 +755,6 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('odoo.tools.safe_eval.evaluation.<evaluated_code>.*')
     # Generators wrapper
     safe_whitelist.add_function('odoo.tools.safe_eval.runtime.safe_gen_wrapper.<locals>._wrapper')
-    # Wrapped modules
-    safe_whitelist.add_class('datetime.date')
-    safe_whitelist.add_class('datetime.datetime')
-    safe_whitelist.add_class('datetime.time')
-    safe_whitelist.add_class('datetime.timedelta')
-    safe_whitelist.add_class('datetime.timezone')
-    safe_whitelist.add_class('datetime.tzinfo')
-    safe_whitelist.add_class('dateutil.tz.tz.tzutc')
-    safe_whitelist.add_function('dateutil.parser.isoparser.isoparser.isoparse')
-    safe_whitelist.add_function('dateutil.parser._parser.parse')
-    safe_whitelist.add_class('dateutil.relativedelta.relativedelta')
-    safe_whitelist.add_class('dateutil.rrule.rrule')
-    safe_whitelist.add_class('dateutil.rrule.rruleset')
-    safe_whitelist.add_instance('dateutil.rrule._rrulestr')
-    safe_whitelist.add_function('json.dumps')
-    safe_whitelist.add_function('json.loads')
-    safe_whitelist.add_function('time.time')
-    safe_whitelist.add_function('time.strptime')
-    safe_whitelist.add_function('time.strftime')
-    safe_whitelist.add_function('time.sleep')
     # Monkey patches
     safe_whitelist.add_class('odoo._monkeypatches.zoneinfo.ZoneInfo')
     safe_whitelist.add_function('odoo._monkeypatches.*')

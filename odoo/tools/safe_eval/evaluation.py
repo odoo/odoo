@@ -480,7 +480,7 @@ Pre-wrapped modules are provided as attributes of `odoo.tools.safe_eval`.
 
 
 class wrap_module:
-    def __init__(self, module, attributes):
+    def __init__(self, module, attributes, top_level_=False):
         """Helper for wrapping a package/module to expose selected attributes
 
         :param module: the actual package/module to wrap, as returned by ``import <module>``
@@ -489,13 +489,18 @@ class wrap_module:
                                     are used as an ``attributes`` in case the
                                     corresponding item is a submodule
         """
+        # Determine if top-level instanciation
+        is_top_level = top_level_ or sys._getframe(1).f_code.co_name == '<module>'
         # builtin modules don't have a __file__ at all
         modfile = getattr(module, '__file__', '(built-in)')
         self._repr = f"<wrapped {module.__name__!r} ({modfile})>"
         for attrib in attributes:
             target = getattr(module, attrib)
             if isinstance(target, types.ModuleType):
-                target = wrap_module(target, attributes[attrib])
+                target = wrap_module(target, attributes[attrib], is_top_level)
+            elif is_top_level:
+                # Only attributes of top-level instanciations are trusted automatically
+                safe_whitelist.add_generic(target)
             setattr(self, attrib, target)
 
     def __repr__(self):
