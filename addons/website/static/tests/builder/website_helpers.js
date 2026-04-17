@@ -489,7 +489,7 @@ export const websiteServiceInTranslateMode = {
 };
 
 export async function setupSidebarBuilderForTranslation(options) {
-    const { websiteContent } = options;
+    const { websiteContent, loadIframeBundles = false } = options;
     // Hack: configure the snippets menu as in translate mode when clicking
     // on the "Edit" button of the systray. The goal of this hack is to avoid
     // the handling of an extra reload of the action to arrive in translate
@@ -510,6 +510,7 @@ export async function setupSidebarBuilderForTranslation(options) {
             onIframeLoaded: (iframe) => {
                 websiteServiceInTranslateMode.pageDocument = iframe.contentDocument;
             },
+            loadIframeBundles,
         }
     );
     await getTranslatedElements();

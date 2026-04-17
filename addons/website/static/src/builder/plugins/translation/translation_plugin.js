@@ -226,6 +226,11 @@ export class TranslationPlugin extends Plugin {
                     filteredEditableEl.value = match[2];
                 }
                 filteredEditableEl.classList.add("o_translatable_attribute");
+                if (filteredEditableEl.matches("textarea, input")) {
+                    // We want those elements to be translated by the sidebar,
+                    // not by editing the input.
+                    filteredEditableEl.setAttribute("readonly", "");
+                }
             }
         }
         const textEditEls = editableEls.filter(
@@ -241,6 +246,9 @@ export class TranslationPlugin extends Plugin {
             // Update the text content of textarea too
             textEditEl.innerText = match[2];
             textEditEl.classList.add("o_translatable_text");
+            // We want those elements to be translated by the sidebar,
+            // not by editing the input.
+            textEditEl.setAttribute("readonly", "");
             textEditEl.classList.remove("o_text_content_invisible");
         }
     }
