@@ -230,6 +230,7 @@ class UoM(models.Model):
 
         if self == to_unit:
             amount = qty
+            rounding_method = 'HALF-UP'  # If "converting" to the same unit, use the usual HALF-UP rounding method
         else:
             amount = qty / self.factor
             if to_unit:
