@@ -154,7 +154,7 @@ class TestStructure(TransactionCase):
         for ubn in ['88117254', '12345601', '90183275']:
             test_partner.vat = ubn
 
-        for ubn in ['88117250', '12345600', '90183272']:
+        for ubn in ['88117250', '12345600', '90183272', '1234567A']:
             with self.assertRaises(ValidationError):
                 test_partner.vat = ubn
 
