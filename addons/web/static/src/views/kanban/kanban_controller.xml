@@ -22,8 +22,8 @@
                     </t>
                 </t>
                 <t t-set-slot="control-panel-selection-actions">
-                    <div t-if="this.hasSelectedRecords" class="o_selection_container d-flex gap-1 w-100 w-md-auto">
-                       <SelectionBox root="this.model.root"/>
+                    <div t-if="this.hasSelectedRecords" class="o_selection_container d-flex justify-content-center gap-1 w-100 w-md-auto">
+                        <SelectionBox root="this.model.root"/>
                         <t t-if="!this.env.isSmall">
                             <t t-foreach="this.headerButtons" t-as="button" t-key="button.id" t-if="!this.evalViewModifier(button.invisible)">
                                 <MultiRecordViewButton

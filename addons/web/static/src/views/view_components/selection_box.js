@@ -1,4 +1,5 @@
 import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 export class SelectionBox extends Component {
     static components = {};
@@ -8,6 +9,10 @@ export class SelectionBox extends Component {
     };
     setup() {
         this.root = this.props.root;
+        useLayoutEffect(() => {
+            this.env.bus.trigger("STICKY_NAVBAR:RESET_STATE", { isDocked: true });
+            return () => this.env.bus.trigger("STICKY_NAVBAR:RESET_STATE", { isDocked: false });
+        });
     }
     get nbSelected() {
         return this.selectedRecords.length;

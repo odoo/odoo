@@ -2,7 +2,7 @@
 
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor, press, Deferred, waitForNone } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml, proxy } from "@odoo/owl";
 import {
     contains,
@@ -592,10 +592,11 @@ test("validating click on autocomplete item by pressing Enter", async () => {
         type: "ir.actions.act_window",
         views: [[false, "form"]],
     });
-    getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
+    await getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
     await waitFor(".o_tour_pointer_tip");
     expect(".o_tour_pointer_tip").toHaveCount(1);
     await contains(".o-autocomplete--input").click();
+    await runAllTimers();
     await animationFrame();
     expect(".o_tour_pointer_tip").toHaveCount(1);
     await press("Enter");

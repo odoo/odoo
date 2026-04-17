@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Pager } from "@web/core/pager/pager";
 import { useService } from "@web/core/utils/hooks";
@@ -18,8 +17,6 @@ import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
 import { Component, onMounted, proxy } from "@odoo/owl";
-
-const STICKY_CLASS = "o_mobile_sticky";
 
 /**
  * @typedef EmbeddedAction
@@ -170,8 +167,6 @@ export class ControlPanel extends Component {
             },
         });
 
-        this.onScrollThrottledBound = this.onScrollThrottled.bind(this);
-
         const { viewSwitcherEntries, viewType } = this.env.config;
         for (const view of viewSwitcherEntries || []) {
             useCommand(_t("Show %s view", view.name), () => this.switchView(view.type), {
@@ -192,24 +187,6 @@ export class ControlPanel extends Component {
                 }
             );
         }
-
-        useLayoutEffect(() => {
-            if (
-                !this.env.isSmall ||
-                ("adaptToScroll" in this.display && !this.display.adaptToScroll)
-            ) {
-                return;
-            }
-            const scrollingEl = this.getScrollingElement();
-            this.scrollingElementResizeObserver.observe(scrollingEl);
-            scrollingEl.addEventListener("scroll", this.onScrollThrottledBound);
-            this.root.el.style.top = "0px";
-            this.scrollingElementHeight = scrollingEl.scrollHeight;
-            return () => {
-                this.scrollingElementResizeObserver.unobserve(scrollingEl);
-                scrollingEl.removeEventListener("scroll", this.onScrollThrottledBound);
-            };
-        });
 
         // The goal is to automatically open the dropdown menu of embedded actions if there is only one visible embedded action
         // We use a timer to delay the display of that dropdown menu to avoid flicker issues
@@ -238,16 +215,14 @@ export class ControlPanel extends Component {
                     this._sortEmbeddedActions(embeddedOrder);
                 }
             }
-            if (
-                !this.env.isSmall ||
-                ("adaptToScroll" in this.display && !this.display.adaptToScroll)
-            ) {
-                return;
-            }
-            this.oldScrollTop = 0;
-            this.lastScrollTop = 0;
-            this.initialScrollTop = this.getScrollingElement().scrollTop;
         });
+
+        useLayoutEffect(() => {
+            if (this.root.el) {
+                this.env.bus.trigger("STICKY_NAVBAR:CONTROL_PANEL_VISIBILITY", { controlPanel: this.root.el });
+            }
+            return () => this.env.bus.trigger("STICKY_NAVBAR:CONTROL_PANEL_VISIBILITY", { controlPanel: null });
+        }, () => [this.root.el]);
 
         useSortable({
             enable: true,
@@ -261,25 +236,11 @@ export class ControlPanel extends Component {
         });
     }
 
-    scrollingElementResizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-            if (this.scrollingElementHeight !== entry.target.scrollingElementHeight) {
-                this.oldScrollTop +=
-                    entry.target.scrollingElementHeight - this.scrollingElementHeight;
-                this.scrollingElementHeight = entry.target.scrollingElementHeight;
-            }
-        }
-    });
-
     getDropdownClass(action) {
         return (!this.env.isSmall && this._isEmbeddedActionVisible(action)) ||
             (this.env.isSmall && this.state.embeddedInfos.currentEmbeddedAction?.id === action.id)
             ? "selected"
             : "";
-    }
-
-    getScrollingElement() {
-        return this.root.el.parentElement;
     }
 
     /**
@@ -368,44 +329,6 @@ export class ControlPanel extends Component {
             });
         }
         this.state.embeddedInfos.showEmbedded = !this.state.embeddedInfos.showEmbedded;
-    }
-
-    /**
-     * Show or hide the control panel on the top screen.
-     * The function is throttled to avoid refreshing the scroll position more
-     * often than necessary.
-     */
-    onScrollThrottled() {
-        if (this.isScrolling) {
-            return;
-        }
-        this.isScrolling = true;
-        browser.requestAnimationFrame(() => (this.isScrolling = false));
-
-        const scrollTop = this.getScrollingElement().scrollTop;
-        const delta = Math.round(scrollTop - this.oldScrollTop);
-
-        if (scrollTop > this.initialScrollTop) {
-            // Beneath initial position => sticky display
-            this.root.el.classList.add(STICKY_CLASS);
-            if (delta <= 0) {
-                // Going up | not moving
-                this.lastScrollTop = Math.min(0, this.lastScrollTop - delta);
-            } else {
-                // Going down
-                this.lastScrollTop = Math.max(
-                    -this.root.el.offsetHeight,
-                    -this.root.el.offsetTop - delta
-                );
-            }
-            this.root.el.style.top = `${this.lastScrollTop}px`;
-        } else {
-            // Above initial position => standard display
-            this.root.el.classList.remove(STICKY_CLASS);
-            this.lastScrollTop = 0;
-        }
-
-        this.oldScrollTop = scrollTop;
     }
 
     isViewAvailable(view) {

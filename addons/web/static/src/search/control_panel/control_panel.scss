@@ -11,10 +11,9 @@
         }
 
         @include media-breakpoint-down(md) {
-            &.o_mobile_sticky {
-                @include o-position-sticky();
-                z-index: 10;
-            }
+            @include o-position-sticky();
+            z-index: 10;
+            top: $o-navbar-height;
         }
 
         @include media-breakpoint-up(lg) {
