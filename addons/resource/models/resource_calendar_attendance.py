@@ -113,6 +113,92 @@ class ResourceCalendarAttendance(models.Model):
         # some years have 53 weeks. Therefore, two consecutive odd week number follow each other (53 --> 1).
         return int(math.floor((date.toordinal() - 1) / 7) % 2)
 
+<<<<<<< 351366260e13be8d1dc61f3aee971b1c76a84ead
+||||||| 57a13f20e1f6d0770eb9fc5c0065e3e2a0d59a39
+    @api.depends('hour_from', 'hour_to')
+    def _compute_duration_hours(self):
+        for attendance in self.filtered('hour_to'):
+            attendance.duration_hours = (attendance.hour_to - attendance.hour_from) if attendance.day_period != 'lunch' else 0
+
+    def _inverse_duration_hours(self):
+        for calendar, attendances in self.grouped('calendar_id').items():
+            if not calendar.duration_based:
+                continue
+            for attendance in attendances:
+                if attendance.day_period == 'full_day':
+                    period_duration = attendance.duration_hours / 2
+                    attendance.hour_to = 12 + period_duration
+                    attendance.hour_from = 12 - period_duration
+                elif attendance.day_period == 'morning':
+                    attendance.hour_to = 12
+                    attendance.hour_from = 12 - attendance.duration_hours
+                elif attendance.day_period == 'afternoon':
+                    attendance.hour_to = 12 + attendance.duration_hours
+                    attendance.hour_from = 12
+
+    @api.depends('day_period')
+    def _compute_duration_days(self):
+        for attendance in self:
+            if attendance.day_period == 'lunch':
+                attendance.duration_days = 0
+            elif attendance.day_period == 'full_day':
+                attendance.duration_days = 1
+            else:
+                attendance.duration_days = 0.5 if attendance.duration_hours <= attendance.calendar_id.hours_per_day * 3 / 4 else 1
+
+    @api.depends('week_type')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        this_week_type = str(self.get_week_type(fields.Date.context_today(self)))
+        section_names = {'0': self.env._('First week'), '1': self.env._('Second week')}
+        section_info = {True: self.env._('this week'), False: self.env._('other week')}
+        for record in self.filtered(lambda l: l.display_type == 'line_section'):
+            section_name = f"{section_names[record.week_type]} ({section_info[this_week_type == record.week_type]})"
+            record.display_name = section_name
+
+=======
+    @api.depends('hour_from', 'hour_to', 'day_period')
+    def _compute_duration_hours(self):
+        for attendance in self.filtered('hour_to'):
+            attendance.duration_hours = (attendance.hour_to - attendance.hour_from) if attendance.day_period != 'lunch' else 0
+
+    def _inverse_duration_hours(self):
+        for calendar, attendances in self.grouped('calendar_id').items():
+            if not calendar.duration_based:
+                continue
+            for attendance in attendances:
+                if attendance.day_period == 'full_day':
+                    period_duration = attendance.duration_hours / 2
+                    attendance.hour_to = 12 + period_duration
+                    attendance.hour_from = 12 - period_duration
+                elif attendance.day_period == 'morning':
+                    attendance.hour_to = 12
+                    attendance.hour_from = 12 - attendance.duration_hours
+                elif attendance.day_period == 'afternoon':
+                    attendance.hour_to = 12 + attendance.duration_hours
+                    attendance.hour_from = 12
+
+    @api.depends('day_period')
+    def _compute_duration_days(self):
+        for attendance in self:
+            if attendance.day_period == 'lunch':
+                attendance.duration_days = 0
+            elif attendance.day_period == 'full_day':
+                attendance.duration_days = 1
+            else:
+                attendance.duration_days = 0.5 if attendance.duration_hours <= attendance.calendar_id.hours_per_day * 3 / 4 else 1
+
+    @api.depends('week_type')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        this_week_type = str(self.get_week_type(fields.Date.context_today(self)))
+        section_names = {'0': self.env._('First week'), '1': self.env._('Second week')}
+        section_info = {True: self.env._('this week'), False: self.env._('other week')}
+        for record in self.filtered(lambda l: l.display_type == 'line_section'):
+            section_name = f"{section_names[record.week_type]} ({section_info[this_week_type == record.week_type]})"
+            record.display_name = section_name
+
+>>>>>>> 5b4f5c6d3ac99eef8736a323321f8035134c5bfa
     def _copy_attendance_vals(self):
         self.ensure_one()
         return {
