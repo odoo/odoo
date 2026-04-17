@@ -54,6 +54,14 @@
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('job_pages_kanban_view')}),
     ]"/>
     <field name="context">{'create_action': '/jobs/add'}</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Ready to recruit more efficiently?
+        </p>
+        <a name="%(hr.action_create_job_position)d" class="btn btn-link" type="action">
+            Let's create a job position
+        </a>
+    </field>
 </record>
 
 <menuitem id="menu_job_pages"
