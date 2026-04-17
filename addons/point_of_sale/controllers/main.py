@@ -21,7 +21,7 @@ class PosController(PortalAccount):
         if not pos_order.exists():
             return request.not_found()
 
-        image = pos_order.sudo().order_receipt_generate_image()
+        image = pos_order.with_company(pos_order.company_id).sudo().order_receipt_generate_image()
         return request.make_response(image, [
             ('Content-Type', 'image/png'),
             ('Content-Length', len(image)),
