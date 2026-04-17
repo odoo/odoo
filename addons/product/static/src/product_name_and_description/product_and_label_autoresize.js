@@ -21,16 +21,15 @@ export function productAndLabelResizeTextArea(textarea, options = {}) {
     const style = window.getComputedStyle(textarea);
     if (options.targetParentName) {
         let target = textarea.parentElement;
-        let shouldContinue = true;
-        while (target && shouldContinue) {
+        while (target) {
+            if (target.getAttribute("name") === options.targetParentName) {
+                break;
+            }
             const totalParentHeight = Array.from(target.children).reduce((total, child) => {
                 const childHeight = child.style.height || style.lineHeight;
                 return total + parseFloat(childHeight);
             }, 0);
             target.style.height = `${totalParentHeight}px`;
-            if (target.getAttribute("name") === options.targetParentName) {
-                shouldContinue = false;
-            }
             target = target.parentElement;
         }
     }
