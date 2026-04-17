@@ -219,11 +219,7 @@ registerCallAction("fullscreen", {
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("picture-in-picture", {
-    condition: ({ owner, store, thread }) =>
-        !owner.env.inCallMenu &&
-        thread?.isSelfInCall &&
-        store.env.services["discuss.pip_service"] &&
-        !store.env?.isSmall,
+    condition: ({ owner, store, thread }) => thread?.isSelfInCall && !store.env?.isSmall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.state.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
