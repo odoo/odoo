@@ -753,8 +753,17 @@
     </record>
 
     <record id="l10n_be_work_entry_type_european" model="hr.work.entry.type">
-        <field name="name">European Time Off</field>
+        <field name="name">European Time Off (Employee)</field>
         <field name="code">LEAVE216</field>
+        <field name="color">5</field>
+        <field name="display_code">EUR</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+    </record>
+
+    <record id="l10n_be_work_entry_type_european_worker" model="hr.work.entry.type">
+        <field name="name">European Time Off (Worker)</field>
+        <field name="code">LEAVE259</field>
         <field name="color">5</field>
         <field name="display_code">EUR</field>
         <field name="country_id" ref="base.be"/>
