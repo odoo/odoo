@@ -25,14 +25,3 @@ export class Reactive {
         return reactive(this);
     }
 }
-
-/**
- * Creates a side-effect that runs based on the content of reactive objects.
- * @template {object[]} T
- * @param {(...args: [...T]) => X} cb callback for the effect
- * @param {[...T]} deps the reactive objects that the effect depends on
- * @deprecated
- */
-export function effect(cb, deps) {
-    // odoo effect should be replaced by owl effect, make sure to dispose the effect!
-}
