@@ -21,7 +21,7 @@ class AccountFullReconcile(models.Model):
                     raise ValueError("Unexpected command: %s" % command)
         move_line_ids = [list(get_ids(vals.pop('reconciled_line_ids'))) for vals in vals_list]
         partial_ids = [list(get_ids(vals.pop('partial_reconcile_ids'))) for vals in vals_list]
-        fulls = super(AccountFullReconcile, self.with_context(tracking_disable=True)).create(vals_list)
+        fulls = super().create(vals_list)
 
         self.env['account.move.line'].invalidate_model(['full_reconcile_id'])
         fulls.invalidate_recordset(['reconciled_line_ids'], flush=False)
