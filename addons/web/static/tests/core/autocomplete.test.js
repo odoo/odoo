@@ -739,12 +739,14 @@ test("tab and shift+tab close the dropdown", async () => {
     await press("Tab");
     await animationFrame();
     expect(dropdown).not.toHaveCount();
+    expect(input).toBeFocused();
     // Shift + Tab
     await contains(input).click();
     expect(dropdown).toBeVisible();
     await press("Tab", { shiftKey: true });
     await animationFrame();
     expect(dropdown).not.toHaveCount();
+    expect(input).toBeFocused();
 });
 
 test("Clicking away selects the first option when selectOnBlur is true", async () => {

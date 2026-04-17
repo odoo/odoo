@@ -171,20 +171,30 @@ export class SelectMenu extends Component {
             () => [this.props.choices, this.props.groups]
         );
 
+        const navigationCallback = (navigator) => {
+            if (navigator.activeItem) {
+                return navigator.activeItem.select();
+            }
+            if (document.activeElement.value) {
+                navigator.items[0].select();
+            }
+        };
+
         this.navigationOptions = {
             shouldFocusFirstItem: !hasTouch(),
             virtualFocus: this.props.searchable,
             hotkeys: {
                 enter: {
                     isAvailable: ({ navigator }) => navigator.items.length > 0,
-                    callback: (navigator) => {
-                        if (navigator.activeItem) {
-                            return navigator.activeItem.select();
-                        }
-                        if (document.activeElement.value) {
-                            navigator.items[0].select();
-                        }
-                    },
+                    callback: navigationCallback,
+                },
+                tab: {
+                    isAvailable: ({ navigator }) => navigator.items.length > 0,
+                    callback: navigationCallback,
+                },
+                "shift+tab": {
+                    isAvailable: ({ navigator }) => navigator.items.length > 0,
+                    callback: navigationCallback,
                 },
             },
             onItemActivated: (element) => {
