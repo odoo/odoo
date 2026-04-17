@@ -519,3 +519,12 @@ test("Cancel snippet drag & drop over sidebar", async () => {
 
     expect(contentEl).toHaveInnerHTML("");
 });
+
+test("data-name is injected when missing and preserved when already set on snippets at editor setup", async () => {
+    await setupHTMLBuilder(`
+        <section class="s_test" data-snippet="s_test"></section>
+        <section class="s_test_existing" data-snippet="s_test_existing" data-name="Existing Name"></section>
+    `);
+    expect(":iframe .s_test").toHaveAttribute("data-name", "Test");
+    expect(":iframe .s_test_existing").toHaveAttribute("data-name", "Existing Name");
+});
