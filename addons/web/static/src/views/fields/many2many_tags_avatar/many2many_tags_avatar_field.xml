@@ -27,6 +27,7 @@
                     getDomain.bind="this.getDomain"
                     isToMany="true"
                     specification="this.specification"
+                    originalValue="this.props.record.data[this.props.name]"
                 >
                     <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                         <t t-call="{{ this.constructor.optionTemplate }}"/>

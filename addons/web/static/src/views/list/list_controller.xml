@@ -100,13 +100,13 @@
     </t>
 
     <t t-name="web.ListView.Buttons">
-        <button t-if="!this.env.inDialog and !this.editedRecord and this.activeActions.create" type="button" class="btn btn-primary o_list_button_add" t-att-data-available-offline="this.isNewButtonAvailableOffline" data-hotkey="c" t-on-click="this.onClickCreate" data-bounce-button="">
+        <button t-if="!this.env.inDialog and !this.editedRecord and this.activeActions.create" type="button" class="btn btn-primary o_list_button_add" data-available-offline="" data-hotkey="c" t-on-click="this.onClickCreate" data-bounce-button="">
             New
         </button>
-        <button t-if="this.editedRecord" type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="this.onClickSave">
+        <button t-if="this.editedRecord" type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="this.onClickSave" data-available-offline="">
             Save
         </button>
-        <button t-if="this.editedRecord" type="button" class="btn btn-secondary o_list_button_discard" data-hotkey="j" t-on-click.stop="this.onClickDiscard" t-on-mousedown="this.onMouseDownDiscard">
+        <button t-if="this.editedRecord" type="button" class="btn btn-secondary o_list_button_discard" data-hotkey="j" t-on-click.stop="this.onClickDiscard" t-on-mousedown="this.onMouseDownDiscard" data-available-offline="">
             Discard
         </button>
     </t>

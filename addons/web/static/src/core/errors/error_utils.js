@@ -121,7 +121,7 @@ export function formatTraceback(error) {
     //     _onOpenFormView@http://localhost:8069/web/content/425-baf33f1/web.assets.js:1064:30
     //     ...
     const descriptionLine = `${errorName}: ${error.message}`;
-    if (error.stack.split("\n")[0].trim() !== descriptionLine) {
+    if ((error.stack || error).split("\n")[0].trim() !== descriptionLine) {
         // avoid having the description line twice if already present
         traceback = `${descriptionLine}\n${error.stack}`.replace(/\n/g, "\n    ");
     }

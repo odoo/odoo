@@ -35,10 +35,15 @@ export class ProjectTaskTemplateDropdown extends Component {
             type: Function,
             optional: true,
         },
+        isNewButtonAvailableOffline: {
+            type: Boolean,
+            optional: true,
+        },
     };
     static defaultProps = {
         hotkey: "c",
         projectId: null,
+        isNewButtonAvailableOffline: true,
     };
 
     setup() {
@@ -63,21 +68,6 @@ export class ProjectTaskTemplateDropdown extends Component {
                 })
                 .call("project.project", "get_template_tasks", [this.props.projectId]);
         }
-    }
-    
-    get isNewButtonAvailableOffline() {
-        const { actionId, viewType } = this.env.config;
-        if (viewType === "list") {
-            return !this.props.archInfo.editable && this.offlineService.isAvailableOffline(actionId, "form", false);
-        } else if (viewType === "kanban" ) {
-            if (this.props.archInfo.activeActions.quickCreate) {
-            return this.offlineService.isAvailableOffline(actionId, "kanban_quick_create", false);
-            }
-            return this.offlineService.isAvailableOffline(actionId, "form", false);
-        } else if (viewType === "form") {
-            return this.offlineService.isAvailableOffline(actionId, "form", false);
-        }
-        return false;
     }
 
     async createTaskFromTemplate(templateId) {

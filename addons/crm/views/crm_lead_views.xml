@@ -1141,6 +1141,7 @@
             <field name="view_mode">kanban,list,graph,pivot,form,calendar,activity</field>
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
+                    'default_user_id': uid,
                     'default_type': 'opportunity',
                     'search_default_assigned_to_me': 1,
                     'show_user_team_stages': 1,

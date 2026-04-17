@@ -144,6 +144,8 @@ test("create favorite filter", async () => {
                 </form>`,
     });
 
+    await animationFrame();
+
     queryFirst(".o_field_mailing_filter input").autocomplete = "widget";
     expect(".o_mass_mailing_remove_filter").not.toBeVisible();
     expect(".o_mass_mailing_save_filter_container").toBeVisible();
@@ -194,6 +196,8 @@ test("unlink favorite filter", async () => {
                         options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model': 'mailing_model_id'}"/>
                 </form>`,
     });
+
+    await animationFrame();
 
     expect(".o_field_mailing_filter input").toHaveValue("Belgian Events");
     expect(".o_mass_mailing_remove_filter").toBeVisible();
@@ -327,6 +331,8 @@ test("filter drop-down and filter icons visibility toggles properly based on fil
             </form>`,
     });
 
+    await animationFrame();
+
     expect(".o_field_mailing_filter .o_input_dropdown").not.toBeVisible();
     expect(".o_mass_mailing_no_filter").toBeVisible();
     expect(".o_mass_mailing_save_filter_container").toBeVisible();
@@ -370,6 +376,8 @@ test("filter widget does not raise traceback when losing focus with unexpected d
                     options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model': 'mailing_model_id'}"/>
             </form>`,
     });
+
+    await animationFrame();
 
     expect(".o_mass_mailing_save_filter_container").toBeVisible();
     expect(".o_mass_mailing_remove_filter").not.toBeVisible();

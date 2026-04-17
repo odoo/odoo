@@ -408,13 +408,6 @@ export class FormController extends Component {
         this.disableSaveOnVisibilityChange = false;
     }
 
-    get isNewButtonAvailableOffline() {
-        if (this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false)) {
-            return true;
-        }
-        return false;
-    }
-
     /**
      * onRecordSaved is a callBack that will be executed after the save
      * if it was done. It will therefore not be executed if the record
