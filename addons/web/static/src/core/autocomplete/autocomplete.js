@@ -278,52 +278,56 @@ export class AutoComplete extends Component {
     }
 
     navigate(direction) {
-        let step = Math.sign(direction);
-        if (!step) {
-            this.state.activeSourceOption = null;
-            step = 1;
-        } else {
+        const step = Math.sign(direction);
+        if (step) {
             this.state.navigationRev++;
         }
 
-        do {
-            if (this.state.activeSourceOption) {
-                let [sourceIndex, optionIndex] = this.state.activeSourceOption;
-                let source = this.sources[sourceIndex];
+        const navigableOptions = [];
+        for (let sourceIndex = 0; sourceIndex < this.sources.length; sourceIndex++) {
+            const source = this.sources[sourceIndex];
+            if (source.isLoading) {
+                continue;
+            }
 
-                optionIndex += step;
-                if (0 > optionIndex || optionIndex >= source.options.length) {
-                    sourceIndex += step;
-                    source = this.sources[sourceIndex];
-
-                    while (source && source.isLoading) {
-                        sourceIndex += step;
-                        source = this.sources[sourceIndex];
-                    }
-
-                    if (source) {
-                        optionIndex = step < 0 ? source.options.length - 1 : 0;
-                    }
-                }
-
-                this.state.activeSourceOption = source ? [sourceIndex, optionIndex] : null;
-            } else {
-                let sourceIndex = step < 0 ? this.sources.length - 1 : 0;
-                let source = this.sources[sourceIndex];
-
-                while (source && source.isLoading) {
-                    sourceIndex += step;
-                    source = this.sources[sourceIndex];
-                }
-
-                if (source) {
-                    const optionIndex = step < 0 ? source.options.length - 1 : 0;
-                    if (optionIndex < source.options.length) {
-                        this.state.activeSourceOption = [sourceIndex, optionIndex];
-                    }
+            for (let optionIndex = 0; optionIndex < source.options.length; optionIndex++) {
+                if (!source.options[optionIndex].unselectable) {
+                    navigableOptions.push([sourceIndex, optionIndex]);
                 }
             }
-        } while (this.activeOption?.unselectable);
+        }
+
+        if (!navigableOptions.length) {
+            this.state.activeSourceOption = null;
+            return;
+        }
+
+        const defaultSourceOption = step < 0 ? navigableOptions[navigableOptions.length - 1] : navigableOptions[0];
+
+        if (!step || !this.state.activeSourceOption) {
+            this.state.activeSourceOption = defaultSourceOption;
+            return;
+        }
+
+        const [currentSourceIndex, currentOptionIndex] = this.state.activeSourceOption;
+        const currentIndex = navigableOptions.findIndex(
+            ([sI, oI]) => sI === currentSourceIndex && oI === currentOptionIndex
+        );
+
+        if (currentIndex === -1) {
+            this.state.activeSourceOption = defaultSourceOption;
+            return;
+        }
+
+        let nextIndex = currentIndex + step;
+
+        if (nextIndex < 0) {
+            nextIndex = navigableOptions.length - 1;
+        } else if (nextIndex >= navigableOptions.length) {
+            nextIndex = 0;
+        }
+
+        this.state.activeSourceOption = navigableOptions[nextIndex];
     }
 
     onInputBlur() {

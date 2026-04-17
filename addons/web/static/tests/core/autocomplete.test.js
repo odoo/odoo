@@ -618,6 +618,41 @@ test("correct sequence of blur, focus and select", async () => {
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 });
 
+test.tags("desktop");
+test("autocomplete arrow navigation", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`
+            <AutoComplete
+                value="this.state.value"
+                sources="this.sources"
+            />
+        `;
+        static props = [];
+
+        state = useState({ value: "" });
+        sources = buildSources(() => [item("World"), item("Hello")]);
+    }
+
+    await mountWithCleanup(Parent);
+
+    await contains(".o-autocomplete input").click();
+
+    const dropdownItemIds = queryAllAttributes(".dropdown-item", "id");
+    expect(dropdownItemIds).toEqual(["autocomplete_0_0", "autocomplete_0_1"]);
+    expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[0]);
+
+    await press("ArrowUp");
+    await animationFrame();
+
+    expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[1]);
+
+    await press("ArrowDown");
+    await animationFrame();
+
+    expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[0]);
+});
+
 test("autocomplete always closes on click away", async () => {
     class Parent extends Component {
         static template = xml`<AutoComplete value="this.state.value" sources="this.sources" autoSelect="true"/>`;
@@ -808,7 +843,6 @@ test("autocomplete scrolls when moving with arrows", async () => {
         message: "'Up' " + msgNotInView,
     });
     await press("ArrowUp");
-    await press("ArrowUp");
     await animationFrame();
     expect(activeItemSelector).toHaveText("Up");
     expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
@@ -884,17 +918,9 @@ test("unselectable options are... not selectable", async () => {
 
     await press("arrowup");
     await animationFrame();
-    expect(`.o-autocomplete--input`).not.toHaveAttribute("aria-activedescendant");
-
-    await press("arrowdown");
-    await animationFrame();
     expect(`.o-autocomplete--input`).toHaveAttribute("aria-activedescendant", "autocomplete_0_1");
 
     await press("arrowdown");
-    await animationFrame();
-    expect(`.o-autocomplete--input`).not.toHaveAttribute("aria-activedescendant");
-
-    await press("arrowup");
     await animationFrame();
     expect(`.o-autocomplete--input`).toHaveAttribute("aria-activedescendant", "autocomplete_0_1");
 
