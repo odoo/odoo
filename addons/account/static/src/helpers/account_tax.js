@@ -254,6 +254,7 @@ export const accountTaxHelpers = {
             // the type of involved fields and we don't have access to this information js-side.
             product = null,
             product_uom = null,
+            discount = 0.0,
             special_mode = null,
             filter_tax_function = null,
         } = {}
@@ -345,6 +346,7 @@ export const accountTaxHelpers = {
             product: product || {},
             uom: product_uom || {},
             price_unit: price_unit,
+            discount: discount,
             quantity: quantity,
             raw_base: raw_base,
             special_mode: special_mode,
@@ -473,7 +475,7 @@ export const accountTaxHelpers = {
         product,
         original_taxes,
         new_taxes,
-        { product_uom = null } = {}
+        { product_uom = null, discount = 0.0 } = {}
     ) {
         const original_tax_ids = new Set(original_taxes.map((x) => x.id));
         const new_tax_ids = new Set(new_taxes.map((x) => x.id));
@@ -490,6 +492,7 @@ export const accountTaxHelpers = {
             rounding_method: "round_globally",
             product: product,
             product_uom: product_uom,
+            discount: discount,
         });
         price_unit = taxes_computation.total_excluded;
 
@@ -498,6 +501,7 @@ export const accountTaxHelpers = {
             rounding_method: "round_globally",
             product: product,
             product_uom: product_uom,
+            discount: discount,
             special_mode: "total_excluded",
         });
         let delta = 0.0;
@@ -713,6 +717,7 @@ export const accountTaxHelpers = {
                 rounding_method: rounding_method,
                 product: base_line.product_id,
                 product_uom: base_line.product_uom_id,
+                discount: base_line.discount,
                 special_mode: base_line.special_mode,
                 filter_tax_function: base_line.filter_tax_function,
             }

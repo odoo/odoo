@@ -15,6 +15,7 @@ patch(accountTaxHelpers, {
     eval_tax_amount_formula(tax, raw_base, evaluation_context) {
         const formula_context = {
             price_unit: evaluation_context.price_unit,
+            discount: evaluation_context.discount,
             quantity: evaluation_context.quantity,
             product: evaluation_context.product,
             uom: evaluation_context.uom,

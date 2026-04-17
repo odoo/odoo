@@ -22,8 +22,10 @@ class AccountTax(models.Model):
         help="Compute the amount of the tax.\n\n"
              ":param base: float, actual amount on which the tax is applied\n"
              ":param price_unit: float\n"
+             ":param discount: float, the line discount percentage\n"
              ":param quantity: float\n"
              ":param product: A object representing the product\n"
+             ":param uom: An object representing the product uom\n"
     )
     formula_decoded_info = fields.Json(compute='_compute_formula_decoded_info')
 
@@ -97,13 +99,14 @@ class AccountTax(models.Model):
         # Safe eval.
         formula_context = {
             'price_unit': evaluation_context['price_unit'],
+            'discount': evaluation_context['discount'],
             'quantity': evaluation_context['quantity'],
             'product': evaluation_context['product'],
             'uom': evaluation_context['uom'],
             'base': raw_base,
         }
-        assert accessed_fields['product'] <= formula_context['product'].keys(), "product fields used in formula must be present in the product dict"
-        assert accessed_fields['uom'] <= formula_context['uom'].keys(), "uom fields used in formula must be present in the product dict"
+        assert accessed_fields['product.product'] <= formula_context['product'].keys(), "product fields used in formula must be present in the product dict"
+        assert accessed_fields['uom.uom'] <= formula_context['uom'].keys(), "uom fields used in formula must be present in the uom dict"
         try:
             formula_context = json.loads(json.dumps(formula_context))
         except TypeError:

@@ -15,6 +15,7 @@ class TestTaxCommonAccountTaxPython(TestTaxCommon):
         expected_values,
         product_values=None,
         product_uom_values=None,
+        discount=0.0,
         price_include_override='tax_excluded',
     ):
         tax = self.python_tax(formula, price_include_override=price_include_override)
@@ -33,4 +34,4 @@ class TestTaxCommonAccountTaxPython(TestTaxCommon):
             })
         else:
             uom = None
-        return self.assert_taxes_computation(tax, price_unit, expected_values, product=product, product_uom=uom)
+        return self.assert_taxes_computation(tax, price_unit, expected_values, product=product, product_uom=uom, discount=discount)

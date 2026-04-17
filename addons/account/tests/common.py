@@ -2002,10 +2002,11 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                     float_round(results['price_unit'], precision_rounding=rounding),
                 )
 
-    def _create_py_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, product_uom, precision_rounding, rounding_method, excluded_tax_ids):
+    def _create_py_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, product_uom, discount, precision_rounding, rounding_method, excluded_tax_ids):
         kwargs = {
             'product': product,
             'product_uom': product_uom,
+            'discount': discount,
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
             'filter_tax_function': (lambda tax: tax.id not in excluded_tax_ids) if excluded_tax_ids else None,
@@ -2026,7 +2027,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             )
         return results
 
-    def _create_js_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, product_uom, precision_rounding, rounding_method, excluded_tax_ids):
+    def _create_js_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, product_uom, discount, precision_rounding, rounding_method, excluded_tax_ids):
         return {
             'test': 'taxes_computation',
             'taxes': [self._jsonify_tax(tax) for tax in taxes],
@@ -2034,6 +2035,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'quantity': quantity,
             'product': self._jsonify_product(product, taxes),
             'product_uom': self._jsonify_product_uom(product_uom, taxes),
+            'discount': discount,
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
             'excluded_tax_ids': excluded_tax_ids,
@@ -2047,6 +2049,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         quantity=1,
         product=None,
         product_uom=None,
+        discount=0.0,
         precision_rounding=0.01,
         rounding_method='round_per_line',
         excluded_special_modes=None,
@@ -2068,6 +2071,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             quantity,
             product,
             product_uom,
+            discount,
             precision_rounding,
             rounding_method,
             excluded_tax_ids,
@@ -2081,20 +2085,21 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     def _assert_sub_test_adapt_price_unit_to_another_taxes(self, results, expected_price_unit):
         self.assertEqual(results['price_unit'], expected_price_unit)
 
-    def _create_py_sub_test_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, product, product_uom):
-        return {'price_unit': self.env['account.tax']._adapt_price_unit_to_another_taxes(price_unit, product, original_taxes, new_taxes, product_uom=product_uom)}
+    def _create_py_sub_test_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, product, product_uom, discount):
+        return {'price_unit': self.env['account.tax']._adapt_price_unit_to_another_taxes(price_unit, product, original_taxes, new_taxes, product_uom=product_uom, discount=discount)}
 
-    def _create_js_sub_test_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, product, product_uom):
+    def _create_js_sub_test_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, product, product_uom, discount):
         return {
             'test': 'adapt_price_unit_to_another_taxes',
             'price_unit': price_unit,
             'product': self._jsonify_product(product, original_taxes + new_taxes),
             'product_uom': self._jsonify_product_uom(product_uom, original_taxes + new_taxes),
+            'discount': discount,
             'original_taxes': [self._jsonify_tax(tax) for tax in original_taxes],
             'new_taxes': [self._jsonify_tax(tax) for tax in new_taxes],
         }
 
-    def assert_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, expected_price_unit, product=None, product_uom=None):
+    def assert_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, expected_price_unit, product=None, product_uom=None, discount=0.0):
         self._create_assert_test(
             expected_price_unit,
             self._create_py_sub_test_adapt_price_unit_to_another_taxes,
@@ -2105,6 +2110,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             new_taxes,
             product,
             product_uom,
+            discount,
         )
 
     # -------------------------------------------------------------------------

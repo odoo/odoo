@@ -1157,6 +1157,7 @@ class AccountTax(models.Model):
         special_mode=False,
         manual_tax_amounts=None,
         filter_tax_function=None,
+        discount=0.0,
     ):
         """ Compute the tax/base amounts for the current taxes.
 
@@ -1169,6 +1170,7 @@ class AccountTax(models.Model):
         :param rounding_method:     'round_per_line' or 'round_globally'.
         :param product:             The product of the line.
         :param product_uom:         The product uom of the line.
+        :param discount:            The discount percentage applied on the line.
         :param special_mode:        Indicate a special mode for the taxes computation.
                             * total_excluded: The initial base of computation excludes all price-included taxes.
                             Suppose a tax of 21% price included. Giving 100 with special_mode = 'total_excluded'
@@ -1251,6 +1253,7 @@ class AccountTax(models.Model):
             'product': sorted_taxes._eval_taxes_computation_turn_to_product_values(product=product),
             'uom': sorted_taxes._eval_taxes_computation_turn_to_product_uom_values(product_uom=product_uom),
             'price_unit': price_unit,
+            'discount': discount,
             'quantity': quantity,
             'raw_base': raw_base,
             'special_mode': special_mode,
@@ -1350,7 +1353,7 @@ class AccountTax(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _adapt_price_unit_to_another_taxes(self, price_unit, product, original_taxes, new_taxes, product_uom=None):
+    def _adapt_price_unit_to_another_taxes(self, price_unit, product, original_taxes, new_taxes, product_uom=None, discount=0.0):
         """ From the price unit and taxes given as parameter, compute a new price unit corresponding to the
         new taxes.
 
@@ -1371,6 +1374,7 @@ class AccountTax(models.Model):
         :param original_taxes:  A recordset of taxes from where you come from.
         :param new_taxes:       A recordset of the taxes you are mapping the price unit to.
         :param product_uom:     The product uom.
+        :param discount:        The discount percentage applied on the line.
         :return:                The price_unit after mapping of taxes.
         """
         if original_taxes == new_taxes or False in original_taxes.mapped('price_include'):
@@ -1383,6 +1387,7 @@ class AccountTax(models.Model):
             rounding_method='round_globally',
             product=product,
             product_uom=product_uom,
+            discount=discount,
         )
         price_unit = taxes_computation['total_excluded']
 
@@ -1394,6 +1399,7 @@ class AccountTax(models.Model):
             product=product,
             product_uom=product_uom,
             special_mode='total_excluded',
+            discount=discount,
         )
         delta = sum(x['tax_amount'] for x in taxes_computation['taxes_data'] if x['tax'].price_include)
         return price_unit + delta
@@ -1781,6 +1787,7 @@ class AccountTax(models.Model):
             product_uom=base_line['product_uom_id'],
             special_mode=base_line['special_mode'],
             filter_tax_function=base_line['filter_tax_function'],
+            discount=base_line['discount'],
         )
 
         # Only python side for professional with reverse charge
