@@ -292,12 +292,13 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'user_currency': user_currency,
         }
 
+        order_sessions = orders.mapped('session_id')
         session_name = False
-        if len(sessions) == 1:
-            state = sessions[0].state
-            date_start = sessions[0].start_at
-            date_stop = sessions[0].stop_at
-            session_name = sessions[0].name
+        if len(order_sessions) == 1:
+            state = order_sessions[0].state
+            date_start = order_sessions[0].start_at
+            date_stop = order_sessions[0].stop_at
+            session_name = order_sessions[0].name
         else:
             state = "multiple"
 
