@@ -1,56 +1,20 @@
-import { useState } from "@web/owl2/utils";
 import { cleanTerm } from "@mail/utils/common/format";
+import { useState } from "@web/owl2/utils";
 
 import { Component } from "@odoo/owl";
 
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
-import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
-import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
+import { highlightText } from "@web/core/utils/html";
 
 const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
 
 const NEW_CHANNEL = "NEW_CHANNEL";
-const NEW_GROUP_CHAT = "NEW_GROUP_CHAT";
-
-class CreateChatDialog extends Component {
-    static components = { ChannelInvitation, Dialog };
-    static props = ["close", "name?"];
-    static template = "mail.CreateChatDialog";
-
-    setup() {
-        super.setup();
-        this.store = useService("mail.store");
-        this.invitePeopleState = useState({
-            selectablePartners: [],
-            selectedPartners: [],
-            searchStr: this.props.name,
-        });
-    }
-
-    get createText() {
-        if (this.invitePeopleState.selectedPartners.length === 1) {
-            return _t("Open Chat");
-        }
-        return _t("Create Group Chat");
-    }
-
-    onClickConfirm() {
-        const selectedPartnersId = this.invitePeopleState.selectedPartners.map((p) => p.id);
-        const partners_to = [
-            ...new Set([this.store.self_user?.partner_id.id, ...selectedPartnersId]),
-        ];
-        if (partners_to.length === 1) {
-            this.store.createGroupChat({ partners_to });
-        } else {
-            this.store.startChat(partners_to);
-        }
-        this.props.close();
-    }
-}
+const VIEW_HIDDEN = "VIEW_HIDDEN";
 
 class CreateChannelDialog extends Component {
     static components = { Dialog };
@@ -90,7 +54,7 @@ class CreateChannelDialog extends Component {
     }
 }
 
-class DiscussCommand extends Component {
+export class DiscussCommand extends Component {
     static components = { DiscussAvatar };
     static template = "mail.DiscussCommand";
     static props = {
@@ -110,6 +74,14 @@ class DiscussCommand extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
     }
+
+    get formattedEmail() {
+        return highlightText(this.props.searchValue, this.email, "fw-bolder text-primary");
+    }
+
+    get email() {
+        return this.props.persona?.email;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -119,7 +91,7 @@ commandSetupRegistry.add("@", {
     debounceDelay: 200,
     emptyMessage: _t("No conversation found"),
     name: _t("conversations"),
-    placeholder: _t("Search a conversation"),
+    placeholder: _t("Search conversations"),
 });
 
 /**
@@ -168,7 +140,8 @@ export class DiscussCommandPalette {
             partners = Object.values(this.store["res.partner"].records).filter(
                 (partner) =>
                     partner.main_user_id?.share === false &&
-                    cleanTerm(partner.displayName).includes(this.cleanedTerm) &&
+                    (cleanTerm(partner.displayName).includes(this.cleanedTerm) ||
+                        cleanTerm(partner.email).includes(this.cleanedTerm)) &&
                     (!filtered || !filtered.has(partner))
             );
             partners = this.suggestion
@@ -274,29 +247,24 @@ export class DiscussCommandPalette {
         if (channelOrPersona === NEW_CHANNEL) {
             return {
                 Component: DiscussCommand,
-                action: async () => {
-                    const name = this.options.searchValue.trim();
-                    if (name) {
-                        await makeNewChannel(name, this.store);
-                    } else {
-                        this.dialog.add(CreateChannelDialog);
-                    }
+                action: () => {
+                    this.dialog.add(CreateChannelDialog, {
+                        name: this.options.searchValue?.trim(),
+                    });
                 },
                 name: _t("Create Channel"),
                 className: "o-mail-DiscussCommand-createChannel d-flex",
                 props: { action: { icon: "fa fa-fw fa-hashtag", searchValueSuffix: true } },
             };
         }
-        if (channelOrPersona === NEW_GROUP_CHAT) {
-            const name = this.options.searchValue.trim();
+        if (channelOrPersona === VIEW_HIDDEN) {
             return {
                 Component: DiscussCommand,
+                name: _t("View hidden conversations"),
+                props: { action: {} },
                 action: () => {
-                    this.dialog.add(CreateChatDialog, { name });
+                    this.env.services.action.doAction("mail.discuss_my_conversations_action");
                 },
-                name: _t("Create Chat"),
-                className: "d-flex",
-                props: { action: { icon: "oi fa-fw oi-users" } },
             };
         }
         throw new Error(`Unsupported use of makeDiscussCommand("${channelOrPersona}")`);
@@ -311,15 +279,11 @@ commandProviderRegistry.add("find_or_start_conversation", {
         palette.buildResults();
         palette.commands.slice(0, 8);
         if (!palette.store.inPublicPage) {
-            palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
-            palette.commands.push(palette.makeDiscussCommand(NEW_GROUP_CHAT));
+            if (palette.cleanedTerm) {
+                palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
+            }
             if (palette.store.has_unpinned_channels) {
-                palette.commands.push({
-                    name: _t("View hidden conversations"),
-                    action: () => {
-                        env.services.action.doAction("mail.discuss_my_conversations_action");
-                    },
-                });
+                palette.commands.push(palette.makeDiscussCommand(VIEW_HIDDEN));
             }
         }
         return palette.commands;

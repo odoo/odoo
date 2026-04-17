@@ -2543,9 +2543,9 @@ test("Newly created chat is at the top of the DM list", async () => {
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
-    await contains(".o_command_name", { count: 6 });
-    await insertText("input[placeholder='Search a conversation']", "Jer");
-    await contains(".o_command_name", { count: 3 });
+    await contains(".o_command_name", { count: 4 });
+    await insertText(".o_command_palette_search input[placeholder='Search conversations']", "Jer");
+    await contains(".o_command_name", { count: 2 });
     await click(".o_command_name:text('Jerry Golay')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Jerry Golay')", {
         before: [".o-mail-DiscussSidebarChannel-itemName:text('Albert')"],

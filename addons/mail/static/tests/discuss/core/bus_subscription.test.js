@@ -87,7 +87,10 @@ test("bus subscription is refreshed when channel is joined", async () => {
     await openDiscuss();
     await expect.waitForSteps([]);
     await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "new channel");
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "new channel"
+    );
     await expect.waitForSteps(["subscribe"]);
 });
 

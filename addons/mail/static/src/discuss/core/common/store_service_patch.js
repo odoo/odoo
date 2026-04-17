@@ -1,4 +1,5 @@
 import { Store } from "@mail/core/common/store_service";
+import { fields } from "@mail/model/misc";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
@@ -22,6 +23,9 @@ const storeServicePatch = {
             () => this.env.services.bus_service.forceUpdateChannels(),
             0
         );
+        this.favoriteChannels = fields.Many("discuss.channel", {
+            inverse: "storeAsFavoriteChannels",
+        });
     },
     /**
      * @param {Object} param0

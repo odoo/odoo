@@ -35,9 +35,12 @@ test("can make DM chat in mobile", async () => {
     await contains("button.active:text('Notifications')");
     await click("button:text('Chats')");
     await click(".o-mail-DiscussSearch-inputContainer");
-    await contains(".o_command_name", { count: 5 });
-    await insertText("input[placeholder='Search a conversation']", "Gandalf");
     await contains(".o_command_name", { count: 3 });
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "Gandalf"
+    );
+    await contains(".o_command_name", { count: 2 });
     await click(".o_command_name:text('Gandalf')");
     await contains(".o-mail-ChatWindow:text('Gandalf')");
 });
@@ -51,9 +54,12 @@ test("can search channel in mobile", async () => {
     await contains("button.active:text('Notifications')");
     await click("button:text('Channels')");
     await click(".o-mail-DiscussSearch-inputContainer");
-    await contains(".o_command_name", { count: 5 });
-    await insertText("input[placeholder='Search a conversation']", "Gryff");
     await contains(".o_command_name", { count: 3 });
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "Gryff"
+    );
+    await contains(".o_command_name", { count: 2 });
     await click(".o_command_name:text('Gryffindors')");
     await contains(".o-mail-ChatWindow div[title='Gryffindors']");
 });
@@ -65,8 +71,9 @@ test("can make new channel in mobile", async () => {
     await contains("button.active:text('Notifications')");
     await click("button:text('Channels')");
     await click(".o-mail-DiscussSearch-inputContainer");
-    await insertText("input[placeholder='Search a conversation']", "slytherins");
+    await insertText(".o_command_palette input", "slytherins");
     await click(".o-mail-DiscussCommand-nameContainer:text('Create Channel')");
+    await click("button:text(Create Channel)");
     await contains(".o-mail-ChatWindow:text('slytherins')");
 });
 
@@ -75,7 +82,7 @@ test("new message opens the @ command palette", async () => {
     await click(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button:text('New Message')");
     await contains(".o_command_palette_search .o_namespace:text('@')");
-    await contains(".o_command_palette input[placeholder='Search a conversation']");
+    await contains(".o_command_palette input[placeholder='Search conversations']");
 });
 
 test("channel preview show deleted messages", async () => {

@@ -50,12 +50,13 @@ test("can create a new channel", async () => {
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('abc')", { count: 0 });
     await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "abc");
+    await insertText(".o_command_palette_search input[placeholder='Search conversations']", "abc");
     await expect.waitForSteps([
         `/discuss/search - {"term":""}`,
         `/discuss/search - {"term":"abc"}`,
     ]);
     await click(".o-mail-DiscussCommand-nameContainer:text('Create Channel')");
+    await click("button:text(Create Channel)");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('abc')");
     await contains(".o-mail-Message", { count: 0 });
     const [channelId] = pyEnv["discuss.channel"].search([["name", "=", "abc"]]);
@@ -89,10 +90,9 @@ test("can create a read-only channel", async () => {
     const pyEnv = await startServer();
     await start();
     await openDiscuss();
-    await contains(".o-mail-Discuss");
     await click("input[placeholder='Search conversations']");
-    await click("a:text('Create Channel')");
-    await insertText("input[placeholder='Channel name']", "abc");
+    await insertText(".o_command_palette input", "abc");
+    await click("a:text('Create Channel abc')");
     await click("input[type='checkbox'][name='readonly']");
     await triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('abc')");
@@ -133,9 +133,12 @@ test("can make a DM chat", async () => {
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mario')", { count: 0 });
     await click("input[placeholder='Search conversations']");
-    await contains(".o_command_name", { count: 5 });
-    await insertText("input[placeholder='Search a conversation']", "mario");
     await contains(".o_command_name", { count: 3 });
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "mario"
+    );
+    await contains(".o_command_name", { count: 2 });
     await click(".o_command_name:text('Mario')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mario')");
     await contains(".o-mail-Message", { count: 0 });
@@ -164,10 +167,11 @@ test("can create a group chat conversation", async () => {
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
-    await click("a:text('Create Chat')");
-    await click("li:text('Mario')");
-    await click("li:text('Luigi')");
-    await click(".btn:text('Create Group Chat')");
+    await click(".o_command_name:text(Mario)");
+    await contains(".o-mail-DiscussContent-threadName[title='Mario']");
+    await click("[title='Invite People']");
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text(Luigi))");
+    await click("button:text('Create Group Chat')");
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-Message", { count: 0 });
 });
@@ -190,9 +194,12 @@ test("Chat is pinned on other tabs when joined", async () => {
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
     await click(`${env1.selector} input[placeholder='Search conversations']`);
-    await contains(`${env1.selector} .o_command_name`, { count: 5 });
-    await insertText(`${env1.selector} input[placeholder='Search a conversation']`, "Jer");
     await contains(`${env1.selector} .o_command_name`, { count: 3 });
+    await insertText(
+        `${env1.selector} .o_command_palette_search input[placeholder='Search conversations']`,
+        "Jer"
+    );
+    await contains(`${env1.selector} .o_command_name`, { count: 2 });
     await click(`${env1.selector} .o_command_name:text('Jerry Golay')`);
     await contains(`${env1.selector} .o-mail-DiscussSidebarChannel-itemName:text('Jerry Golay')`);
     await contains(`${env2.selector} .o-mail-DiscussSidebarChannel-itemName:text('Jerry Golay')`);
@@ -260,8 +267,12 @@ test("Preserve letter case and accents when creating channel from sidebar", asyn
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "Crème brûlée Fan Club");
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "Crème brûlée Fan Club"
+    );
     await click(".o-mail-DiscussCommand-nameContainer:text('Create Channel')");
+    await click("button:text(Create Channel)");
     await contains(".o-mail-DiscussContent-threadName", { value: "Crème brûlée Fan Club" });
 });
 
@@ -269,8 +280,9 @@ test("Create channel must have a name", async () => {
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
+    await insertText(".o_command_palette input", "abc");
     await click(".o-mail-DiscussCommand-nameContainer:text('Create Channel')");
-    await click("input[placeholder='Channel name']");
+    await insertText("input[placeholder='Channel name']:value(abc)", "", { replace: true });
     await triggerHotkey("Enter");
     await contains(".invalid-feedback:text('Channel must have a name.')");
 });

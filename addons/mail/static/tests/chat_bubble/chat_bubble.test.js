@@ -48,9 +48,14 @@ test("No duplicated chat bubbles", async () => {
     // Make bubble of "John" chat
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button:text('New Message')");
-    await contains(".o_command_name", { count: 5 });
-    await insertText("input[placeholder='Search a conversation']", "John");
     await contains(".o_command_name", { count: 3 });
+    await contains(".o_command:eq(0):text(John)");
+    await contains(".o_command:eq(1):text(OdooBot)");
+    await contains(".o_command:eq(2):text(Mitchell Admin)");
+    await insertText(".o_command_palette_search input[placeholder='Search conversations']", "John");
+    await contains(".o_command_name", { count: 2 });
+    await contains(".o_command:eq(0):text(John)");
+    await contains(".o_command:eq(1):has(:text(Create Channel))");
     await click(".o_command_name:text('John')");
     await contains(".o-mail-ChatWindow:text('John')");
     await contains(
@@ -61,9 +66,11 @@ test("No duplicated chat bubbles", async () => {
     // Make bubble of "John" chat again
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button:text('New Message')");
-    await contains(".o_command_name", { count: 5 });
-    await insertText("input[placeholder='Search a conversation']", "John");
     await contains(".o_command_name", { count: 3 });
+    await insertText(".o_command_palette_search input[placeholder='Search conversations']", "John");
+    await contains(".o_command_name", { count: 2 });
+    await contains(".o_command:eq(0):text(John)");
+    await contains(".o_command:eq(1):has(:text(Create Channel))");
     await click(".o_command_name:text('John')");
     await contains(".o-mail-ChatBubble[name='John']", { count: 0 });
     await contains(".o-mail-ChatWindow .o-mail-ChatWindow-header:has(:text('John'))");

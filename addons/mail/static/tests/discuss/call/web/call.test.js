@@ -11,10 +11,10 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { Settings } from "@mail/core/common/settings_model";
-import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { toRawValue } from "@mail/utils/common/local_storage";
 import { pttExtensionServiceInternal } from "@mail/discuss/call/common/ptt_extension_service";
 import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_service";
+import { makeRecordFieldLocalId } from "@mail/model/misc";
+import { toRawValue } from "@mail/utils/common/local_storage";
 import { advanceTime, freezeTime, keyDown, mockTouch, mockUserAgent, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
@@ -29,9 +29,12 @@ test("no auto-call on joining chat", async () => {
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
-    await contains(".o_command_name", { count: 5 });
-    await insertText("input[placeholder='Search a conversation']", "mario");
     await contains(".o_command_name", { count: 3 });
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "mario"
+    );
+    await contains(".o_command_name", { count: 2 });
     await click(".o_command_name:text('Mario')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mario')");
     await contains(".o-mail-Message", { count: 0 });
@@ -49,9 +52,10 @@ test("no auto-call on joining group chat", async () => {
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
-    await click("a:text('Create Chat')");
-    await click("li:text('Mario')");
-    await click("li:text('Luigi')");
+    await click(".o_command_name:text(Mario)");
+    await contains(".o-mail-DiscussContent-threadName[title='Mario']");
+    await click("[title='Invite People']");
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text(Luigi))");
     await click("button:text('Create Group Chat')");
     await contains(".o-mail-DiscussSidebar-item:contains('Mario, and Luigi')");
     await contains(".o-mail-Message", { count: 0 });

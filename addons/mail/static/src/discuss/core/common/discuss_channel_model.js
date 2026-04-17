@@ -507,6 +507,12 @@ export class DiscussChannel extends Record {
             this.onPinStateUpdated();
         },
     });
+    storeAsFavoriteChannels = fields.One("Store", {
+        compute() {
+            return this.self_member_id?.is_favorite ? this.store : null;
+        },
+        inverse: "favoriteChannels",
+    });
     thread = fields.One("mail.thread", {
         compute() {
             return { id: this.id, model: "discuss.channel" };

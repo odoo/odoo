@@ -36,6 +36,12 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             tooltipPosition: "right",
         },
         {
+            trigger: ".o-mail-CreateChannelDialog .btn-primary",
+            content: markup(_t("<p>Create a public or private channel.</p>")),
+            run: "click",
+            tooltipPosition: "bottom",
+        },
+        {
             trigger: ".o-mail-Composer-input",
             content: markup(
                 _t(

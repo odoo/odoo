@@ -35,8 +35,7 @@ registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
             run: "fill @",
         },
         {
-            trigger:
-                ".o-mail-DiscussCommand:not(:has(.fa-user)):has(.fa-hashtag):text(Test channel)",
+            trigger: ".o-mail-DiscussCommand:text(Test channel)",
         },
     ],
 });

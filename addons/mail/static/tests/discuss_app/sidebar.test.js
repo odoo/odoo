@@ -921,12 +921,18 @@ test("opening a hidden channel re-pins it", async () => {
     await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')", { count: 0 });
     await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "Mitchell Admin");
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "Mitchell Admin"
+    );
     await click(".o-mail-DiscussCommand-nameContainer:text('Mitchell Admin')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')");
     await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
     await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "General");
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "General"
+    );
     await click(".o-mail-DiscussCommand-nameContainer:text('General')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
     await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))", {

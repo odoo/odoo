@@ -33,8 +33,9 @@ test("following internal link from chatter does not open chat window", async () 
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button:text('New Message')");
-    await insertText("input[placeholder='Search a conversation']", "abc");
+    await insertText(".o_command_palette_search input[placeholder='Search conversations']", "abc");
     await click("a:has(:text('Create Channel'))");
+    await click("button:text(Create Channel)");
     await contains(".o-mail-ChatWindow-header:text('abc')");
     await contains(".o-mail-ChatWindow", { count: 1 });
 });
