@@ -423,7 +423,7 @@ registry.category("web_tour.tours").add("test_mobile_self_order_preparation_chan
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_self_order_table_sharing-each_mode", {
+registry.category("web_tour.tours").add("test_self_order_table_no_more_sharing-each_mode", {
     steps: () =>
         [
             Utils.checkIsNoBtn("My Order"),
@@ -439,13 +439,12 @@ registry.category("web_tour.tours").add("test_self_order_table_sharing-each_mode
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_self_order_table_sharing-meal_mode", {
+registry.category("web_tour.tours").add("test_self_order_table_no_more_sharing-meal_mode", {
     steps: () =>
         [
             Utils.checkIsNoBtn("My Order"),
             Utils.clickBtn("Order Now"),
-            Utils.clickBtn("Checkout"),
-            CartPage.checkProduct("Coca-Cola", "2.20", "1"),
+            Utils.checkIsDisabledBtn("Checkout"),
         ].flat(),
 });
 
