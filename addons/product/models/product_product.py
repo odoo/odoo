@@ -1266,12 +1266,14 @@ class ProductProduct(models.Model):
     def _has_multiple_uoms(self):
         if self.type == 'combo':
             return False
-        return self.env['res.groups']._is_feature_enabled('uom.group_uom') and len(
-            self._get_available_uoms()
-        ) > 1
+        return len(self._get_available_uoms()) > 1
 
     def _get_available_uoms(self):
-        return self.product_tmpl_id._get_available_uoms() | self.extra_uom_ids
+        res = self.product_tmpl_id._get_available_uoms()
+        if self.env["res.groups"]._is_feature_enabled("uom.group_uom"):
+            # Multi-uom disabled, only main product uom matters.
+            return res | self.extra_uom_ids
+        return res
 
     def _get_main_uom(self):
         return self.product_tmpl_id._get_main_uom()

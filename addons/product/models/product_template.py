@@ -1708,14 +1708,15 @@ class ProductTemplate(models.Model):
     def _has_multiple_uoms(self) -> bool:
         if self.type == 'combo':
             return False
-        return self.env['res.groups']._is_feature_enabled('uom.group_uom') and len(
-            self._get_available_uoms()
-        ) > 1
+        return len(self._get_available_uoms()) > 1
 
     def _get_available_uoms(self):
         if not self:
             return self.env['uom.uom']
         self.ensure_one()
+        if not self.env['res.groups']._is_feature_enabled('uom.group_uom'):
+            # Multi-uom disabled, only main product uom matters.
+            return self.uom_id
         return self.uom_id | self.uom_ids
 
     def _get_main_uom(self):
