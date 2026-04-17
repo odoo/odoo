@@ -531,3 +531,12 @@ test("Renaming custom snippets don't make an orm call", async () => {
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_custom_snippet_edit>span:contains('new custom name')"
     ).toHaveCount(1);
 });
+
+test("data-name is injected when missing and preserved when already set on snippets at editor setup", async () => {
+    await setupHTMLBuilder(`
+        <section class="s_test" data-snippet="s_test"></section>
+        <section class="s_test_existing" data-snippet="s_test_existing" data-name="Existing Name"></section>
+    `);
+    expect(":iframe .s_test").toHaveAttribute("data-name", "Test");
+    expect(":iframe .s_test_existing").toHaveAttribute("data-name", "Existing Name");
+});
