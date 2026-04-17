@@ -205,6 +205,7 @@ ${"-".repeat(columnIndex - 1)}^`;
   function setAttribute(key, value) {
     switch (value) {
       case false:
+      case null:
       case void 0:
         removeAttribute.call(this, key);
         break;
@@ -2208,21 +2209,23 @@ ${"-".repeat(columnIndex - 1)}^`;
       }
     }
     render() {
-      let prev = this.root.node;
-      let scheduler = prev.app.scheduler;
-      let current = prev.parent;
-      while (current) {
-        if (current.fiber) {
-          let root2 = current.fiber.root;
-          if (root2.counter === 0 && prev.parentKey in current.fiber.childrenMap) {
-            current = root2.node;
-          } else {
-            scheduler.delayedRenders.push(this);
-            return;
+      const scheduler = this.root.node.app.scheduler;
+      if (scheduler.tasks.size > 1) {
+        let prev = this.root.node;
+        let current = prev.parent;
+        while (current) {
+          if (current.fiber) {
+            let root2 = current.fiber.root;
+            if (root2.counter === 0 && prev.parentKey in current.fiber.childrenMap) {
+              current = root2.node;
+            } else {
+              scheduler.delayedRenders.push(this);
+              return;
+            }
           }
+          prev = current;
+          current = current.parent;
         }
-        prev = current;
-        current = current.parent;
       }
       const node = this.node;
       const root = this.root;
@@ -2230,6 +2233,7 @@ ${"-".repeat(columnIndex - 1)}^`;
         const c = getCurrentComputation();
         removeSources(node.signalComputation);
         setComputation(node.signalComputation);
+        node.signalComputation.state = 0 /* EXECUTED */;
         try {
           this.bdom = true;
           this.bdom = node.renderFn();
@@ -2240,7 +2244,7 @@ ${"-".repeat(columnIndex - 1)}^`;
         const newCounter = root.counter - 1;
         root.counter = newCounter;
         if (newCounter === 0) {
-          this.node.app.scheduler.flush();
+          scheduler.flush();
         }
       }
     }
@@ -2356,7 +2360,7 @@ ${"-".repeat(columnIndex - 1)}^`;
     forceNextRender = false;
     parentKey;
     props;
-    defaultProps = {};
+    defaultProps = null;
     renderFn;
     parent;
     children = /* @__PURE__ */ Object.create(null);
@@ -2495,34 +2499,6 @@ ${"-".repeat(columnIndex - 1)}^`;
       }
       disposeComputation(this.signalComputation);
       this.status = STATUS.DESTROYED;
-    }
-    async updateAndRender(props2, parentFiber) {
-      props2 = Object.assign({}, props2);
-      for (const key in this.defaultProps) {
-        if (props2[key] === void 0) {
-          props2[key] = this.defaultProps[key];
-        }
-      }
-      const fiber = makeChildFiber(this, parentFiber);
-      this.fiber = fiber;
-      const component = this.component;
-      let prev = getCurrentComputation();
-      setComputation(void 0);
-      let promises = this.willUpdateProps.map((f) => f.call(component, props2));
-      setComputation(prev);
-      await Promise.all(promises);
-      if (fiber !== this.fiber) {
-        return;
-      }
-      this.props = props2;
-      fiber.render();
-      const parentRoot = parentFiber.root;
-      if (this.willPatch.length) {
-        parentRoot.willPatch.push(fiber);
-      }
-      if (this.patched.length) {
-        parentRoot.patched.push(fiber);
-      }
     }
     /**
      * Finds a child that has dom that is not yet updated, and update it. This
@@ -3009,7 +2985,6 @@ ${"-".repeat(columnIndex - 1)}^`;
         return false;
       };
     }
-    const updateAndRender = ComponentNode.prototype.updateAndRender;
     const initiateRender = ComponentNode.prototype.initiateRender;
     return (props2, key, ctx, parent, C) => {
       let children = ctx.children;
@@ -3021,15 +2996,43 @@ ${"-".repeat(columnIndex - 1)}^`;
       if (node) {
         if (arePropsDifferent(node.props, props2) || parentFiber.deep || node.forceNextRender) {
           node.forceNextRender = false;
-          if (node.willUpdateProps.length) {
-            updateAndRender.call(node, props2, parentFiber);
+          const hooks = node.willUpdateProps;
+          const fiber = makeChildFiber(node, parentFiber);
+          node.fiber = fiber;
+          const parentRoot = parentFiber.root;
+          if (node.willPatch.length) parentRoot.willPatch.push(fiber);
+          if (node.patched.length) parentRoot.patched.push(fiber);
+          let promises;
+          if (hooks.length) {
+            const defaultProps = node.defaultProps;
+            if (defaultProps) {
+              props2 = Object.assign({}, props2);
+              for (const k in defaultProps) {
+                if (props2[k] === void 0) {
+                  props2[k] = defaultProps[k];
+                }
+              }
+            }
+            const component = node.component;
+            const prev = getCurrentComputation();
+            setComputation(void 0);
+            for (const f of hooks) {
+              const r = f.call(component, props2);
+              if (r && typeof r.then === "function") {
+                (promises ||= []).push(r);
+              }
+            }
+            setComputation(prev);
+          }
+          if (promises) {
+            const p = promises.length === 1 ? promises[0] : Promise.all(promises);
+            p.then(() => {
+              if (fiber !== node.fiber) return;
+              node.props = props2;
+              fiber.render();
+            });
           } else {
-            const fiber = makeChildFiber(node, parentFiber);
-            node.fiber = fiber;
             node.props = props2;
-            const parentRoot = parentFiber.root;
-            if (node.willPatch.length) parentRoot.willPatch.push(fiber);
-            if (node.patched.length) parentRoot.patched.push(fiber);
             fiber.render();
           }
         }
@@ -6073,7 +6076,9 @@ ${issueStrings}`);
   }
   function props(type, defaults) {
     const { node, app, componentName } = getContext("component");
-    Object.assign(node.defaultProps, defaults);
+    if (defaults) {
+      node.defaultProps = Object.assign(node.defaultProps || {}, defaults);
+    }
     function getProp(key) {
       if (node.props[key] === void 0 && defaults) {
         return defaults[key];
@@ -6202,8 +6207,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-04-15T12:30:35.471Z",
-    hash: "5eb36fad",
+    date: "2026-04-17T15:14:37.900Z",
+    hash: "94559d43",
     url: "https://github.com/odoo/owl"
   };
 
