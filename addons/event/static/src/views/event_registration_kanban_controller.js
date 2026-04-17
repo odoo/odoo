@@ -27,7 +27,8 @@ export class EventRegistrationKanbanController extends KanbanController {
                 {
                     model: this.model,
                     registration: result
-                }
+                },
+                { onClose: () => this.model.load() }
             );
         } else {
             return super.openRecord(record);
