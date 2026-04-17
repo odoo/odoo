@@ -15,6 +15,7 @@ export class RepeatTranslationStatePlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        force_background_translation_state_selectors: ".alert > .o_file_name_container",
         // lower sequence than the default to run before FeffPlugin's handler
         normalize_handlers: withSequence(5, (root) => {
             const cursors = this.dependencies.selection.preserveSelection();
