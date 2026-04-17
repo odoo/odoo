@@ -466,7 +466,12 @@
             - _cart_total_classes: CSS classes to append on the root div of the total template;
                                    default `None`.
         -->
-        <div id="cart_totals" t-attf-class="#{_cart_total_classes}"/>
+        <!-- encode order_id for confirmation page where website_sale_order will not be current cart -->
+        <div
+            id="cart_totals"
+            t-attf-class="#{_cart_total_classes}"
+            t-att-data-order-id="website_sale_order.id if request.cart != website_sale_order else None"
+        />
     </template>
 
     <!-- Deactivatable through the website editor. -->

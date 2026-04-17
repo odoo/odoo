@@ -23,9 +23,9 @@ export class CartAccessories extends Component {
             },
             {
                 isBuyNow: true,
-                shouldRedirectToCart: false,
+                source: "cart_accessory",
                 showQuantity: this.props.isQuantityViewActive,
-            }
+            },
         );
     }
 

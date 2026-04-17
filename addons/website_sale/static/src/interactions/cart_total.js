@@ -9,6 +9,7 @@ export class CartTotal extends Interaction {
         _root: {
             "t-component": (el) => {
                 const root = el.parentElement;
+                const orderId = parseInt(el.dataset.orderId);
 
                 const selectors = {
                     deliveryLabel: "#cart_totals_edit_mode .cart_delivery_label",
@@ -18,7 +19,10 @@ export class CartTotal extends Interaction {
 
                 const templateData = wSaleUtils.extractEditModeText(root, selectors);
 
-                return [CartTotalComponent, { templateData }];
+                return [
+                    CartTotalComponent,
+                    { templateData, ...(Number.isInteger(orderId) && { orderId }) },
+                ];
             },
         },
     };

@@ -5,7 +5,10 @@ import { useService, useBus } from "@web/core/utils/hooks";
 
 export class CartTotal extends Component {
     static template = "website_sale.CartTotal";
-    static props = {};
+    static props = {
+        templateData: Object,
+        orderId: { type: Number, optional: true },
+    };
 
     setup() {
         this.state = useState({
@@ -30,7 +33,9 @@ export class CartTotal extends Component {
     }
 
     async updateTotals() {
-        const data = await rpc("/shop/cart/totals");
+        const data = await rpc("/shop/cart/totals", {
+            order_id: this.props.orderId ? this.props.orderId : false,
+        });
         Object.assign(this.state, data);
     }
 

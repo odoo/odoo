@@ -133,6 +133,7 @@
             "website_sale/static/src/xml/website_sale_image_viewer.xml",
             "website_sale/static/src/xml/website_sale_product_availability.xml",
             "website_sale/static/src/js/cart_lines/**/*",
+            "website_sale/static/src/js/cart_quick_reorder/**/*",
             "website_sale/static/src/js/cart_total/**/*",
             "website_sale/static/src/js/components/alert_banner/*",
             "website_sale/static/src/js/components/website_sale_image_viewer.js",
@@ -210,6 +211,7 @@
             "website_sale/static/src/js/product_comparison_bottom_bar/*",
             "website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js",
             "website_sale/static/src/js/cart_lines/**/*",
+            "website_sale/static/src/js/cart_quick_reorder/**/*",
             "website_sale/static/src/js/cart_total/**/*",
             "website_sale/static/src/js/comparison_utils.js",
             "website_sale/static/src/js/wishlist_utils.js",
@@ -217,7 +219,7 @@
             "website_sale/static/src/js/components/alert_banner/*",
             "website_sale/static/src/js/components/website_sale_image_viewer.js",
             # TODO Find out why these do not work:
-            #'website_sale/static/src/snippets/**/*.js',
+            # 'website_sale/static/src/snippets/**/*.js',
             # TODO Re-activate when testing edit mode
             # ('remove', 'website_sale/static/src/snippets/**/*.edit.js'),
         ],

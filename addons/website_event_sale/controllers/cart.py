@@ -4,9 +4,9 @@ from odoo.addons.website_sale.controllers.cart import Cart as WebsiteSaleCart
 
 
 class Cart(WebsiteSaleCart):
-    def _cart_line_data(self, line):
+    def _prepare_cart_line_data(self, line):
         slug = request.env["ir.http"]._slug
-        line_data = super()._cart_line_data(line)
+        line_data = super()._prepare_cart_line_data(line)
 
         # If the sale order line concerns an event, we want the "product" link to point to
         # the event itself and not to the product on the ecommerce
