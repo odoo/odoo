@@ -47,7 +47,7 @@ class StockWarehouse(models.Model):
         'stock.location', 'Location Stock',
         domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]",
         required=True, check_company=True)
-    code = fields.Char('Short Name', required=True, size=5, help="Short name used to identify your warehouse")
+    code = fields.Char('Short Name', required=True, help="Short name used to identify your warehouse")
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_warehouse', 'warehouse_id', 'route_id',
         'Routes',
