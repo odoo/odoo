@@ -53,8 +53,8 @@ class Cart(WebsiteSaleCart):
                         break
         return result
 
-    def _cart_line_data(self, line):
-        line_data = super()._cart_line_data(line)
+    def _prepare_cart_line_data(self, line):
+        line_data = super()._prepare_cart_line_data(line)
         line_data["is_reward_line"] = line.is_reward_line
         line_data["show_coupon_code"] = (
             line.coupon_id

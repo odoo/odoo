@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="website_sale.CartQuickReorder">
+        <span t-att-title="this.quickReorderTooltip">
+            <button
+                type="button"
+                class="btn btn-sm btn-link"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#quick_reorder_sidebar"
+                aria-controls="quick_reorder_sidebar"
+                t-att-disabled="this.state.is_public_user || !this.state.order_history.length"
+            >
+                <i class="fa fa-rotate-left me-1"/>
+                <t t-out="this.props.templateData.quickReorderLabel"/>
+            </button>
+        </span>
+
+        <!-- quick reorder offcanvas -->
+        <div
+            id="quick_reorder_sidebar"
+            class="offcanvas offcanvas-end"
+            aria-labelledby="quick_reorder_sidebar"
+            t-custom-ref="quickReorderSidebar"
+        >
+            <div class="offcanvas-header">
+                <h5 t-out="this.props.templateData.quickReorderLabel" class="offcanvas-title"/>
+                <button
+                    type="button"
+                    class="btn-close text-reset"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                />
+            </div>
+            <div class="offcanvas-body">
+                <div
+                    class="o_wsale_quick_reorder_line_group ps-sm-3"
+                    t-if="this.state.order_history.length"
+                    t-foreach="this.state.order_history"
+                    t-as="order_line_group"
+                    t-key="order_line_group_index"
+                >
+                    <div class="o_wsale_quick_reorder_group_content d-flex gap-3 w-100 position-relative">
+                        <div class="o_dot_line d-none d-sm-block position-absolute top-0 bottom-0 mb-1 border-start"/>
+                        <span class="o_dot d-none d-sm-block position-absolute translate-middle-x text-o-color-1"/>
+                        <div class="w-100 ps-sm-4">
+                            <h6 t-out="order_line_group.label" class="mt-1 mb-3 text-muted"/>
+                            <t
+                                t-foreach="order_line_group.lines"
+                                t-as="line"
+                                t-key="line.id"
+                            >
+                                <OrderHistoryLine line="line" focus="line_index == 0"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
