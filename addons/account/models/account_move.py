@@ -869,6 +869,9 @@ class AccountMove(models.Model):
             move.journal_id = move._search_default_journal()
 
     def _get_valid_journal_types(self):
+        journal_type = self.env.context.get("journal_type")
+        if journal_type:
+            return [journal_type]
         if self.is_sale_document(include_receipts=True):
             return ['sale']
         elif self.is_purchase_document(include_receipts=True):
