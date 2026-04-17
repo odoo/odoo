@@ -1,4 +1,5 @@
 import re
+import pytz
 from collections import defaultdict
 
 from odoo import _, api, fields, models
@@ -55,7 +56,9 @@ class L10nInEwaybill(models.Model):
         if picking_id := self.picking_id:
             return {
                 'document_number': picking_id.name,
-                'document_date': picking_id.date_done
+                'document_date': fields.Date.to_date(
+                    picking_id.date_done.astimezone(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d')
+                ) if picking_id.date_done else False,
             }
         return super()._get_ewaybill_document_details()
 

@@ -40,7 +40,7 @@ class L10nInEwaybill(models.Model):
     account_move_id = fields.Many2one('account.move', copy=False, readonly=True)
 
     # Document details
-    document_date = fields.Datetime("Document Date", compute='_compute_ewaybill_document_details')
+    document_date = fields.Date("Document Date", compute='_compute_ewaybill_document_details')
     document_number = fields.Char("Document", compute='_compute_ewaybill_document_details')
     company_id = fields.Many2one("res.company", compute='_compute_ewaybill_company', store=True)
     company_currency_id = fields.Many2one(related='company_id.currency_id')
