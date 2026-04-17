@@ -406,6 +406,7 @@ class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
         self.env["hr.employee"].create({
             "name": "Partner B2 - Calendar 35h night",
             "tz": "Europe/Brussels",
+            "work_email": "partner_b2@35night.com",
             "work_contact_id": self.partnerB.id,
             "company_id": self.company_A.id,
             "date_version": datetime(2023, 12, 1),

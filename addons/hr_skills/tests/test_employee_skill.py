@@ -33,7 +33,7 @@ class TestEmployeeSkills(TransactionCase):
         super().setUpClass()
         cls.skipTest(cls, "To be reintroduced post 18.4 freeze")
         cls.employee = cls.env['hr.employee'].create([
-            {'name': 'Test Employee'},
+            {'name': 'Test Employee', 'work_email': 'test@employee.com'},
         ])
         cls.certification, cls.language = cls._create_skill_types([
             {

@@ -66,7 +66,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
             [{"name": "Course B1"}, {"name": "Course B2"}]
         )
         # group restricted fields
-        third_model_record = self.env["hr.employee"].create({"name": "Employee"})
+        third_model_record = self.env["hr.employee"].create({"name": "Employee", 'work_email': 'third_model@employee.com'})
         with self.assertRaises(AccessError):
             third_model_record.with_user(self.user_employee).read("message_needaction_counter")
         for record in chain(first_model_records, second_model_records, third_model_record):

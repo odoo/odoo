@@ -29,10 +29,12 @@ class TestAttendanceManager(TransactionCase):
         cls.abigail_employee, cls.ryan_employee = cls.env['hr.employee'].create([
             {
                 'name': 'Abigail Employee',
+                'work_email': 'abigail@employee.com',
                 'attendance_manager_id': cls.marc.id,
             },
             {
                 'name': 'Ryan Employee',
+                'work_email': 'ryan@employee.com',
                 'attendance_manager_id': cls.luisa.id,
                 'user_id': cls.ryan.id,
             },

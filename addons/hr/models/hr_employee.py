@@ -13,7 +13,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import SQL, convert, email_normalize, format_date, format_time
+from odoo.tools import SQL, convert, format_date, format_time
 from odoo.tools.float_utils import float_is_zero
 from odoo.tools.intervals import Intervals
 from odoo.tools.misc import SENTINEL
@@ -1216,128 +1216,6 @@ class HrEmployee(models.Model):
             action['res_id'] = related_partners.id
         return action
 
-    def action_create_user(self):
-        self.ensure_one()
-        if self.user_id:
-            raise ValidationError(self.env._("This employee already has an user."))
-        return {
-            'name': self.env._('Create User'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'res.users',
-            'view_mode': 'form',
-            'view_id': self.env.ref('hr.view_users_simple_form').id,
-            'target': 'new',
-            'context': {
-                **self.env.context,
-                'default_create_employee_id': self.id,
-                'default_name': self.name,
-                'default_phone': self.work_phone,
-                'default_mobile': self.mobile_phone,
-                'default_login': self.work_email,
-                'default_partner_id': self.work_contact_id.id,
-            },
-        }
-
-    def action_create_users_confirmation(self):
-        raise RedirectWarning(
-                message=self.env._("You're about to invite new users. %s users will be created with the default user template's rights. "
-                "Adding new users may increase your subscription cost. Do you wish to continue?", len(self.ids)),
-                action=self.env.ref('hr.action_hr_employee_create_users').id,
-                button_text=self.env._('Confirm'),
-                additional_context={
-                    'selected_ids': self.ids,
-                },
-            )
-
-    def action_create_users(self):
-        def _get_user_creation_notification_action(message, message_type, next_action):
-            return {
-                    'type': 'ir.actions.client',
-                    'tag': 'display_notification',
-                    'params': {
-                        'title': self.env._("User Creation Notification"),
-                        'type': message_type,
-                        'message': message,
-                        'next': next_action
-                    }
-                }
-
-        employee_emails = [
-            normalized_email
-            for employee in self
-            for normalized_email in tools.mail.email_normalize_all(employee.work_email)
-        ]
-        conflicting_users = self.env['res.users']
-        if employee_emails:
-            conflicting_users = self.env['res.users'].search([
-                '|', ('email_normalized', 'in', employee_emails),
-                ('login', 'in', employee_emails),
-            ])
-        emp_by_email = self.grouped(lambda employee: email_normalize(employee.work_email))
-        duplicate_emails = [email for email, employees in emp_by_email.items() if email and len(employees) > 1]
-        old_users = []
-        new_users = []
-        users_without_emails = []
-        users_with_invalid_emails = []
-        users_with_existing_email = []
-        employees_with_duplicate_email = []
-        for employee in self:
-            normalized_email = email_normalize(employee.work_email)
-            if employee.user_id:
-                old_users.append(employee.name)
-                continue
-            if not employee.work_email:
-                users_without_emails.append(employee.name)
-                continue
-            if not normalized_email:
-                users_with_invalid_emails.append(employee.name)
-                continue
-            if normalized_email in conflicting_users.mapped('email_normalized'):
-                users_with_existing_email.append(employee.name)
-                continue
-            if normalized_email in duplicate_emails:
-                employees_with_duplicate_email.append(employee.name)
-                continue
-            new_users.append({
-                'create_employee_id': employee.id,
-                'name': employee.name,
-                'phone': employee.work_phone,
-                'login': normalized_email,
-                'partner_id': employee.work_contact_id.id,
-            })
-
-        next_action = {'type': 'ir.actions.act_window_close'}
-        if new_users:
-            self.env['res.users'].create(new_users)
-            message = self.env._('Users %s creation successful', ', '.join([user['name'] for user in new_users]))
-            next_action = _get_user_creation_notification_action(message, 'success', {
-                "type": "ir.actions.client",
-                "tag": "soft_reload",
-                "params": {"next": next_action},
-            })
-
-        if old_users:
-            message = self.env._('User already exists for Those Employees %s', ', '.join(old_users))
-            next_action = _get_user_creation_notification_action(message, 'warning', next_action)
-
-        if users_without_emails:
-            message = self.env._("You need to set the work email address for %s", ', '.join(users_without_emails))
-            next_action = _get_user_creation_notification_action(message, 'danger', next_action)
-
-        if users_with_invalid_emails:
-            message = self.env._("You need to set a valid work email address for %s", ', '.join(users_with_invalid_emails))
-            next_action = _get_user_creation_notification_action(message, 'danger', next_action)
-
-        if users_with_existing_email:
-            message = self.env._('User already exists with the same email for Employees %s', ', '.join(users_with_existing_email))
-            next_action = _get_user_creation_notification_action(message, 'warning', next_action)
-
-        if employees_with_duplicate_email:
-            message = self.env._('The following employees have the same work email address: %s', ', '.join(employees_with_duplicate_email))
-            next_action = _get_user_creation_notification_action(message, 'warning', next_action)
-
-        return next_action
-
     def _compute_display_name(self):
         if self.browse().has_access('read'):
             return super()._compute_display_name()
@@ -1733,11 +1611,51 @@ class HrEmployee(models.Model):
     def create(self, vals_list):
         vals_per_company = defaultdict(list)
         for idx, vals in enumerate(vals_list):
+            User = self.env['res.users']
             if vals.get('user_id'):
-                user = self.env['res.users'].browse(vals['user_id'])
+                user = User.browse(vals['user_id'])
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
                 vals['name'] = vals.get('name', user.name)
                 self._remove_work_contact_id(user, vals.get('company_id'))
+            else:
+                # TODO DBE: this is ugly as hell. make a _find_or_create_user_from_vals (or from employuee but do it after employee creation)
+                #  can use inspiration from _find_internal_users_from_address_mail and maybe _partner_find_from_emails
+                # the thing is to prioritize work email, except if work contact is given and has an email address.
+                # (email = work email and private_email is the private one)
+                # So if work contact and workcontact.email -> use workcontact user or create one
+                # elif work_email is given : check if user with this email and use it or create one
+                # TODO DBE: Quid if we create an inactive employee ?
+                if vals.get('resource_id'):
+                    resource = self.env['resource.resource'].browse(vals['resource_id'])
+                    vals['name'] = vals.get('name', resource.name)
+                    vals['work_email'] = vals.get('work_email', resource.email)
+                user_name = vals['name']
+                work_email = vals.get('work_email')
+                email_normalized = tools.mail.email_normalize_all(work_email)
+                work_contact_id = self.env['res.partner'].browse(vals.get('work_contact_id')).exists()
+                user = work_contact_id.user_id
+                if not work_contact_id and not user and email_normalized:
+                    user = User.sudo().search([("login", "=", email_normalized[0])])
+                    if user and user.employee_id:
+                        raise ValidationError(_("A user already exists with this e-mail address: %s", vals.get('work_email')))
+                if not user and not self.env.context.get('no_employee_user'):
+                    if not self.has_access('create'):
+                        raise AccessError(_('You cannot create an employee.'))
+                    email_from_contact = work_contact_id.email if work_contact_id else False
+                    if work_email and not email_from_contact and not email_normalized:
+                        raise ValidationError(_('Invalid e-mail address ({work_email}) for {user_name}'))
+                    user = User.sudo().create({
+                        'name': user_name,
+                        'phone': vals.get('work_phone') or vals.get('mobile_phone') or (work_contact_id.phone if work_contact_id else False),
+                        'login': email_normalized[0] if email_normalized else email_from_contact,
+                        'partner_id': vals.get('work_contact_id'),
+                        'role': 'group_user_lite',
+                        'group_ids': [self.env.ref('base.group_user_lite').id]
+                    })
+                    if work_contact_id:
+                        work_contact_id.user_id = user
+                vals['user_id'] = user.id
+                vals['work_contact_id'] = user.partner_id.id
             # Having one create per company is necessary to pass the company in the context to correctly set it in
             # the underlying version created by the framework
             vals_per_company[vals.get('company_id', self.env.company)].append((idx, vals))

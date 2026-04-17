@@ -8,6 +8,7 @@ class TestEmployeeMultipleBanksUi(HttpCase):
     def test_employee_profile_tour(self):
         employee = self.env['hr.employee'].create({
             'name': 'Johnny H.',
+            'work_email': 'john@ny.com',
         })
         self.start_tour("/odoo", 'hr_employee_multiple_bank_accounts_tour', login="admin", timeout=200)
         total = 0

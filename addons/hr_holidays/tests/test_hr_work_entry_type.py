@@ -13,7 +13,7 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 class TestHrWorkEntryType(TestHrHolidaysCommon):
 
     def test_count_as(self):
-        employee = self.env['hr.employee'].create({'name': 'Test Employee'})
+        employee = self.env['hr.employee'].create({'name': 'Test Employee', 'work_email': 'test@employee.com'})
 
         work_entry_type = self.env['hr.work.entry.type'].create({
             'name': 'Paid Time Off',
@@ -107,7 +107,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
             └─────────────────┘             requested
           Valid allocation period              day
         """
-        employee = self.env['hr.employee'].create({'name': 'Test Employee'})
+        employee = self.env['hr.employee'].create({'name': 'Test Employee', 'work_email': 'test@employee.com'})
         work_entry_type = self.env['hr.work.entry.type'].create({
             'name': 'Test Leave',
             'code': 'Test Leave',

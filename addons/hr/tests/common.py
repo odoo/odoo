@@ -45,4 +45,5 @@ class TestHrCommon(common.TransactionCase):
             'name': 'Richard',
             'sex': 'male',
             'country_id': cls.env.ref('base.be').id,
+            'work_email': 'richard_employee@example.com',
         })

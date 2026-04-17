@@ -105,6 +105,7 @@ class TestAccessRightsEmployeeManager(TestAllocationRights):
         super().setUpClass()
         cls.managed_employee = cls.env['hr.employee'].create({
             'name': 'Jolly Jumper',
+            'work_email': 'neigh@employee.com',
             'leave_manager_id': cls.user_employee.id,
         })
 

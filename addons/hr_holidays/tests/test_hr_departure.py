@@ -12,6 +12,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         super().setUpClass()
         cls.employee = cls.env['hr.employee'].create({
             'name': 'Sky',
+            'work_email': 'sky@employee.com',
             'date_version': date(2022, 1, 1),
         })
         cls.departure_date = date.today()

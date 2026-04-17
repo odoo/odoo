@@ -21,6 +21,7 @@ class TestResource(TestHrCommon):
         cls.calendar_40h = cls.env['resource.calendar'].create({'name': 'Default calendar'})
         cls.employee_niv = cls.env['hr.employee'].create({
             'name': 'Sharlene Rhodes',
+            'work_email': 'sharleen@rhodes.com',
             'departure_date': '2022-06-01',
             'resource_calendar_id': cls.calendar_40h.id,
         })
@@ -165,6 +166,7 @@ class TestResource(TestHrCommon):
     def test_queries(self):
         employees_test = self.env['hr.employee'].create([{
             'name': 'Employee ' + str(i),
+            'work_email': 'employee_' + str(i) + '@test.com',
         } for i in range(0, 50)])
         for emp in employees_test:
             self.contract_cdd.copy({'employee_id': emp.id})

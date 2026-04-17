@@ -13,9 +13,9 @@ class TestHrOrgChart(TestHrCommon, HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.employee_georges, cls.employee_paul, cls.employee_pierre = cls.env['hr.employee'].with_user(cls.res_users_hr_officer).create([
-            {'name': 'Georges'},
-            {'name': 'Paul'},
-            {'name': 'Pierre'},
+            {'name': 'Georges', 'work_email': 'georges@doe.com'},
+            {'name': 'Paul', 'work_email': 'poule@doe.com'},
+            {'name': 'Pierre', 'work_email': 'pierre@doe.com'},
         ])
         cls.department_a, cls.department_b = cls.env['hr.department'].create([
             {

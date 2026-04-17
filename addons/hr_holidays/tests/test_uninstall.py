@@ -10,7 +10,8 @@ from odoo.tests import TransactionCase, tagged
 class TestHrLeaveUninstall(TransactionCase):
     def test_unlink_model(self):
         employee = self.env['hr.employee'].create({
-            'name': 'Test Employee'
+            'name': 'Test Employee',
+            'work_email': 'test@employee.com',
         })
         holiday = self.env['hr.leave'].create({
             'name': 'Time Off',

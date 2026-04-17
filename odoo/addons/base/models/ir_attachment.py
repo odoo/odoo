@@ -493,7 +493,7 @@ class IrAttachment(models.Model):
         compute_sudo=True, depends_context=('uid',))
 
     # for external access
-    access_token = fields.Char('Access Token', groups="base.group_user")
+    access_token = fields.Char('Access Token', groups="base.group_user_lite")
 
     raw = fields.Binary(string="File Content (raw)", compute='_compute_raw', inverse='_inverse_raw')
     db_datas = fields.Binary('Database Data', attachment=False)

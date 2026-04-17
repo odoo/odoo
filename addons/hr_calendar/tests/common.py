@@ -80,24 +80,31 @@ class TestHrContractCalendarCommon(common.TransactionCase):
         cls.partnerF, cls.partnerG = cls.env['res.partner'].create([
             {
                 'name': "Partner A",
+                'email': 'partner_a@example.com',
             },
             {
                 'name': "Partner B",
+                'email': 'partner_b@example.com',
             },
             {
                 'name': "Partner C",
+                'email': 'partner_c@example.com',
             },
             {
                 'name': "Partner D",
+                'email': 'partner_d@example.com',
             },
             {
                 'name': "Partner E",
+                'email': 'partner_e@example.com',
             },
             {
                 'name': 'Partner F',
+                'email': 'partner_f@example.com',
             },
             {
                 'name': 'Partner G',
+                'email': 'partner_g@example.com',
             },
         ])
 

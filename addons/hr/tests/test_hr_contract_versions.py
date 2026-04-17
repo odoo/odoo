@@ -33,6 +33,7 @@ class TestHrContractVersions(TransactionCase):
         cls.env.user.company_id = cls.company
         cls.employee = cls.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'employee@test.com',
             'date_version': '2025-01-01'
         })
 

@@ -32,6 +32,7 @@ class TestAllocations(TestHrHolidaysCommon):
         })
         cls.employee = cls.env['hr.employee'].create({
             'name': 'My Employee',
+            'work_email': 'mr@employee.com',
             'company_id': cls.company.id,
             'department_id': cls.department.id,
             'category_ids': [(4, cls.category_tag.id)],
@@ -87,9 +88,11 @@ class TestAllocations(TestHrHolidaysCommon):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
+                'work_email': 'emp1@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             }, {
                 'name': 'Emp2',
+                'work_email': 'emp2@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             },
         ])
@@ -307,6 +310,7 @@ class TestAllocations(TestHrHolidaysCommon):
         """
         employee = self.env['hr.employee'].create({
             'name': 'My Employee',
+            'work_email': 'test@employee.com',
             'company_id': self.company.id,
             'resource_calendar_id': self.calendar_35h.id,
         })
@@ -470,6 +474,7 @@ class TestAllocations(TestHrHolidaysCommon):
 
         employee = self.env['hr.employee'].create({
             'name': 'test_employee',
+            'work_email': 'test@employee.com',
         })
 
         work_entry_type = self.env['hr.work.entry.type'].with_user(admin_user)

@@ -38,6 +38,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         })
         cls.manager2 = cls.env['hr.employee'].create({
             'name': 'Test Manager 2',
+            'work_email': 'test2@employee.com',
             "company_id": cls.env.company.id,
             "pin": "5652"
         })
@@ -45,6 +46,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         # User employee
         cls.emp1 = cls.env['hr.employee'].create({
             'name': 'Test Employee 1',
+            'work_email': 'test@employee.com',
             "company_id": cls.env.company.id,
         })
         emp1_user = new_test_user(
@@ -59,6 +61,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         # Non-user employee
         cls.emp2 = cls.env['hr.employee'].create({
             'name': 'Test Employee 2',
+            'work_email': 'other_test2@employee.com',
             "company_id": cls.env.company.id,
         })
         cls.emp2.write({"name": "Pos Employee2", "pin": "1234"})
@@ -72,6 +75,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
 
         cls.emp4 = cls.env['hr.employee'].create({
             'name': 'Test Employee 4',
+            'work_email': 'test4@employee.com',
             "company_id": cls.env.company.id,
         })
 
@@ -183,6 +187,7 @@ class TestUi(TestPosHrHttpCommon):
     def test_minimal_employee_refund(self):
         minimal_emp = self.env['hr.employee'].create({
             'name': 'Minimal Employee',
+            'work_email': 'minimal@employee.com',
             "company_id": self.env.company.id,
         })
         self.main_pos_config.update({

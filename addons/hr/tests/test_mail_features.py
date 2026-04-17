@@ -32,9 +32,9 @@ class TestHrEmployeeMail(TestHrCommon, MailCommon):
     def test_assert_initial_values(self):
         self.assertTrue(self.test_employee.work_contact_id)
         self.assertFalse(self.test_employee.message_partner_ids)
-        self.assertFalse(self.test_employee.email)
-        self.assertFalse(self.test_employee.phone)
-        self.assertFalse(self.test_employee.user_id)
+        self.assertTrue(self.test_employee.email)
+        self.assertTrue(self.test_employee.phone)
+        self.assertTrue(self.test_employee.user_id)
 
     def test_employee_get_default_recipients(self):
         employee = self.test_employee.with_user(self.res_users_hr_officer)

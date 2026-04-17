@@ -77,6 +77,7 @@ class TestSandwichLeave(TransactionCase):
         }])
         self.rahul_emp = self.env['hr.employee'].create({
             'name': 'Rahul',
+            'work_email': 'rahul@employee.com',
             'country_id': self.env.ref('base.in').id,
             'company_id': self.indian_company.id,
             'resource_calendar_id': self.test_calendar.id,

@@ -12,7 +12,10 @@ class TestHrAttendanceDomainTranslation(TransactionCase):
 
         cls.hr_attendance = cls.env['hr.attendance']
         cls.hr_employee = cls.env['hr.employee']
-        cls.employee_musa, employee_tecna = cls.hr_employee.create([{'name': 'Musa'}, {'name': 'Tecna'}])
+        cls.employee_musa, employee_tecna = cls.hr_employee.create([
+            {'name': 'Musa', 'work_email': 'musa@example.com'},
+            {'name': 'Tecna', 'work_email': 'tecna@example.com'}
+        ])
         cls.hr_attendance.create({
             'employee_id': employee_tecna.id,
             'check_in': time.strftime('%Y-%m-10 10:00'),

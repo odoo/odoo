@@ -1,9 +1,9 @@
 id,name,model_id,group_id/id,operation,domain
 access_decimal_precision_config,decimal.precision configuration,decimal.precision,base.group_system,ru,
 access_ir_access_group_erp_manager,ir_access_group_erp_manager,ir.access,base.group_erp_manager,crud,
-ir_attachment_public_rule,read public attachments,ir.attachment,base.group_user,r,"[('public', '=', True)]"
-ir_attachment_access_read_rule,read res_model,ir.attachment,base.group_user,r,"[('res_access_read', '=', True)]"
-ir_attachment_res_access_write,write res_model,ir.attachment,base.group_user,cud,"[('res_access_write', '=', True)]"
+ir_attachment_public_rule,read public attachments,ir.attachment,base.group_user_lite,r,"[('public', '=', True)]"
+ir_attachment_access_read_rule,read res_model,ir.attachment,base.group_user_lite,r,"[('res_access_read', '=', True)]"
+ir_attachment_res_access_write,write res_model,ir.attachment,base.group_user_lite,cud,"[('res_access_write', '=', True)]"
 access_ir_cron_group_cron,ir_cron group_cron,ir.cron,base.group_system,crud,
 access_ir_cron_progress_group_cron,ir_cron_progress group_cron,ir.cron.progress,base.group_system,crud,
 access_ir_cron_trigger_group_cron,ir_cron_trigger group_cron,ir.cron.trigger,base.group_system,crud,
@@ -58,7 +58,7 @@ res_partner_rule_edit_all,edit all,res.partner,base.group_partner_manager,u,
 res_partner_rule_write_self,self user write access,res.partner,base.group_user_lite,u,"[('id', '=', user.partner_id.id)]"
 res_partner_rule,res.partner company,res.partner,,crud,"['|', '|', ('partner_share', '=', False), ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]"
 access_clearing_label_group_everyone,clearing_label_group_everyone,clearing.label,base.group_everyone,r,
-res_partner_bank_rule_user,Partner bank user rule,res.partner.bank,base.group_user,r,
+res_partner_bank_rule_user,Partner bank user rule,res.partner.bank,base.group_user_lite,r,
 res_partner_bank_rule_user_1,Partner bank user rule,res.partner.bank,base.group_partner_manager,cru,
 res_partner_bank_rule,Partner bank company rule,res.partner.bank,,crud,"['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]"
 access_res_partner_category_group_user,res_partner_category group_user,res.partner.category,base.group_user,r,
@@ -68,7 +68,7 @@ access_res_partner_industry_group_system,res_partner_industry group_system,res.p
 access_res_users_public,res_users all,res.users,base.group_public,r,
 res_users_rule_portal,portal user access,res.users,base.group_portal,r,"[('commercial_partner_id', '=', user.commercial_partner_id.id)]"
 res_users_rule_read_all,read all,res.users,base.group_user_lite,r,
-res_users_rule_write_self,self user write access,res.users,base.group_user,u,"[('id', '=', user.id)]"
+res_users_rule_write_self,self user write access,res.users,base.group_user_lite,u,"[('id', '=', user.id)]"
 res_users_lite_rule_write_self,self user (lite) write access,res.users,base.group_user_lite,u,"[('id', '=', user.id)]"
 res_users_rule_edit_all,edit all,res.users,base.group_erp_manager,crud,
 res_users_rule,user rule,res.users,,crud,"['|', ('share', '=', False), ('company_ids', 'in', company_ids)]"

@@ -26,6 +26,7 @@ class TestHrAttendance(TransactionCase):
         })
         cls.employee_kiosk = cls.env['hr.employee'].create({
             'name': "Machiavel",
+            'work_email': 'fly@employee.com',
             'pin': '5678',
         })
         cls.hr_user = cls.env['res.users'].create({
@@ -95,7 +96,7 @@ class TestHrAttendance(TransactionCase):
             tz = ZoneInfo('Europe/Brussels')
             return datetime(year, month, day, hour, minute).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
 
-        employee = self.env['hr.employee'].create({'name': 'Cunégonde', 'tz': 'Europe/Brussels'})
+        employee = self.env['hr.employee'].create({'name': 'Cunégonde', 'work_email': 'cunegonde@employee.com', 'tz': 'Europe/Brussels'})
         self.env['hr.attendance'].create({
             'employee_id': employee.id,
             'check_in': tz_datetime(2019, 3, 1, 22, 0),  # should count from midnight in the employee's timezone (=the previous day in utc!)

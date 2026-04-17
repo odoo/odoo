@@ -48,18 +48,22 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.full_time_employee, self.full_time_employee_2,\
         self.part_time_employee, self.part_time_employee2 = self.env['hr.employee'].create([{
                 'name': 'John Doe',
+                'work_email': 'john@doe.com',
                 'company_id': self.test_company.id,
                 'resource_calendar_id': self.test_company.resource_calendar_id.id,
             }, {
                 'name': 'John Smith',
+                'work_email': 'john@smith.com',
                 'company_id': self.test_company.id,
                 'resource_calendar_id': self.test_company.resource_calendar_id.id,
             }, {
                 'name': 'Jane Doe',
+                'work_email': 'jane@doe.com',
                 'company_id': self.test_company.id,
                 'resource_calendar_id': self.part_time_calendar.id,
             }, {
                 'name': 'Jon Show',
+                'work_email': 'jon@snow.com',
                 'company_id': self.test_company.id,
                 'resource_calendar_id': self.part_time_calendar2.id,
             },
@@ -117,6 +121,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.test_company.resource_calendar_id.write({'company_id': False})
         self.env['hr.employee'].create({
             'name': 'Employee Company 2',
+            'work_email': 'test2@employee.com',
             'company_id': self.test_company_2.id,
             'resource_calendar_id': self.test_company.resource_calendar_id.id,
         })
@@ -593,6 +598,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         self.flexible_employee = self.env['hr.employee'].create({
             'name': 'Flexible',
+            'work_email': 'flexible@employee.com',
             'company_id': self.test_company.id,
             'resource_calendar_id': False,
             'hours_per_week': 7,

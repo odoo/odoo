@@ -23,6 +23,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
 
         cls.flex_employee, cls.fully_flex_employee = cls.env['hr.employee'].create([{
             'name': "flexible employee",
+            'work_email': 'flex@employee.com',
             'date_version': date(2025, 1, 1),
             'contract_date_start': date(2025, 1, 1),
             'wage': 10,
@@ -31,6 +32,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'hours_per_day': 8.0,
             'resource_id': cls.flex_resource.id,
         }, {
+            'work_email': 'fully_flex@employee.com',
             'name': "fully flexible employee",
             'date_version': date(2025, 1, 1),
             'contract_date_start': date(2025, 1, 1),

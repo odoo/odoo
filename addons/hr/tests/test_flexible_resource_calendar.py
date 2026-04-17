@@ -24,6 +24,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
     def test_flexible_resource_work_intervals_with_contracts(self):
         flex_employee, fully_flex_employee = self.env['hr.employee'].create([{
             'name': "flex employee",
+            'work_email': 'flex@employee.com',
             'date_version': date(2025, 1, 1),
             'contract_date_start': date(2025, 1, 1),
             'contract_date_end': date(2025, 7, 29),
@@ -34,6 +35,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'resource_id': self.flex_resource.id,
         }, {
             'name': "fully flex employee",
+            'work_email': 'fully_flex@employee.com',
             'date_version': date(2025, 1, 1),
             'contract_date_start': date(2025, 1, 1),
             'contract_date_end': date(2025, 7, 29),

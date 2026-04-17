@@ -65,7 +65,8 @@ class TestProjectProject(TransactionCase):
 
     def test_compute_total_timesheet_time(self):
         employee = self.env['hr.employee'].create({
-             'name': 'Test Employee',
+            'name': 'Test Employee',
+            'work_email': 'test@employee.com',
         })
 
         project = self.env['project.project'].create({

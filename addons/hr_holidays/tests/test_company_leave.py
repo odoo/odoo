@@ -50,6 +50,7 @@ class TestCompanyLeave(TransactionCase):
 
         cls.employee = cls.env['hr.employee'].create({
             'name': 'My Employee',
+            'work_email': 'mr@employee.com',
             'company_id': cls.company.id,
             'tz': "Europe/Brussels",
         })
@@ -266,6 +267,7 @@ class TestCompanyLeave(TransactionCase):
 
         employees = self.env['hr.employee'].create([{
             'name': 'Employee %s' % i,
+            'work_email': f'employee_{i}@example.com',
             'company_id': self.company.id
         } for i in range(100)])
 

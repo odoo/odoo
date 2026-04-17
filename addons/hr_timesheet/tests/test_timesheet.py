@@ -497,8 +497,8 @@ class TestTimesheet(TestCommonTimesheet):
         """ Always set the current company in the timesheet, not the employee company """
         company_4 = self.env['res.company'].create({'name': 'Company 4'})
         empl_employee, archived_employee = self.env['hr.employee'].with_company(company_4).create([
-            {'name': 'Employee 3'},
-            {'name': 'Employee 4', 'active': False},
+            {'name': 'Employee 3', 'work_email': 'emp3@employee.com'},
+            {'name': 'Employee 4', 'work_email': 'emp4@employee.com', 'active': False},
         ])
 
         Timesheet = self.env['account.analytic.line'].with_context(allowed_company_ids=[company_4.id, self.env.company.id])

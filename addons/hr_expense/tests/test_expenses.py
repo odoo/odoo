@@ -1045,6 +1045,7 @@ class TestExpenses(TestExpenseCommon):
         branch_company = self.setup_other_company(name='Branch', parent_id=self.company_data['company'].id)['company']
         employee = self.env['hr.employee'].sudo().create({
             'name': 'Employee XYZ',
+            'work_email': 'xyz@employee.com',
             'company_id': branch_company.id,
         })
         allowed_companies = branch_company + self.company_data['company']

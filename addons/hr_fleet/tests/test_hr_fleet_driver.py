@@ -13,7 +13,8 @@ class TestHrFleetDriver(common.TransactionCase):
         super().setUpClass()
 
         cls.test_employee = cls.env['hr.employee'].create({
-            'name': 'Test Employee'
+            'name': 'Test Employee',
+            'work_email': 'test@employee.com'
         })
 
         cls.test_user = cls.env['res.users'].create({
