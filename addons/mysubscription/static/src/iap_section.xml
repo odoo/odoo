@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mysubscription.IapSection" owl="1">
+        <h1 class="text-primary mb-3">Extra Services</h1>
+        <div class="row gx-5 mb-3">
+            <div class="col-lg-3">
+                <h4 class="text-primary mb-1 fw-bold">Services</h4>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>Usage Based Pricing.</div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <t t-foreach="this.iapAccounts" t-as="account" t-key="account.name">
+                    <IapContainer account="account"/>
+                    <!-- <hr class="my-4 text-muted opacity-25"/> -->
+                </t>
+            </div>
+        </div>
+    </t>
+    <t t-name="mysubscription.IapContainer">
+        <div
+            t-attf-class="card mb-3 p-3 rounded-3 o_mysub_shadow_card"
+            t-on-click="() => this.openTopUp()"
+        >
+            <div class="d-flex align-items-sm-center flex-column flex-sm-row">
+                <div class="flex-shrink-0 me-sm-4 mb-3 mb-sm-0 text-center">
+                    <img t-att-src="this.imageUrl" width="64" height="64" alt="IAP Icon" class="rounded"/>
+                </div>
+                <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                    <div class="mb-3 mb-md-0">
+                        <h3 class="text-primary mb-1 fw-bold" t-out="this.name"/>
+                        <div class="fw-bold fs-5 text-dark" t-out="this.balance"/>
+                        <div class="text-muted" t-out="this.description"/>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 justify-content-end">
+                        <a
+                            t-att-href="this.creditUrl"
+                            class="btn btn-primary px-4 py-2 text-nowrap"
+                            target="_blank"
+                            t-on-click.stop=""
+                        >
+                            Top Up
+                        </a>
+                        <button
+                            class="btn btn-outline-secondary px-4 py-2 text-nowrap"
+                            t-on-click.stop="() => this.openSettings()"
+                        >
+                            Settings
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

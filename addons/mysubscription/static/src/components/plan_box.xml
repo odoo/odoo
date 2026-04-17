@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mysubscription.PlanBox">
+        <div class="col-md-6">
+
+            <div t-attf-class="card {{this.isCurrentPlanSelected ? 'border-primary' : ''}} mb-3 p-2 rounded-3 h-100 o_mysub_shadow_card"
+                t-on-click="this.onClickPlan"
+            >
+                <div class="d-flex justify-content-between mb-3">
+                    <h2 class="mb-0 text-primary" t-out="this.props.data.title"/>
+                </div>
+
+                <t t-set="content" t-value="this.props.data.content"/>
+                <div class="mb-2" t-out="content.subtitle"/>
+
+                <div class="mb-2 container flex-grow-1">
+                    <t t-foreach="content.addons" t-as="addon" t-key="addon.category">
+                        <div class="row">
+                            <div t-out="addon.category" class="col-4 text-nowrap pe-2"/>
+                            <div t-out="addon.apps" class="col-8 text-muted"/>
+                        </div>
+                    </t>
+                </div>
+
+                <hr class="my-2"/>
+
+                <div class="mt-auto d-flex flex-column flex-sm-row align-items-center">
+                    <div class="d-flex flex-column align-items-start">
+                        <div class="fw-bold fs-4">
+                            <h2 class="text-primary p-0 m-0 fw-bold" t-out="this.props.data.price"/>
+                        </div>
+                        <div t-if="this.props.data.price != 'Free'" class="text-muted">/user/month</div>
+                        <div t-else="" class="invisible">/user/month</div>
+                    </div>
+
+                    <div class="mt-2 mt-sm-0 ms-sm-auto text-start text-sm-end w-100 w-sm-auto">
+                        <t t-if="this.props.data.isEnterprise">
+                            <a
+                                t-att-href="this.props.data.button.href"
+                                class="btn btn-primary px-4 py-2 w-100"
+                                target="_blank"
+                                t-out="this.props.data.button.text"
+                            />
+                        </t>
+                        <t t-else="">
+                            <div class="btn px-4 py-2 invisible">
+                                Placeholder
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+
+</templates>
