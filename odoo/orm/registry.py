@@ -594,7 +594,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._is_modifying_relations.clear()
 
         # discard fields from field inverses
-        self.field_inverses.discard_keys_and_values(fields)
+        if 'field_inverses' in vars(self):
+            self.field_inverses.discard_keys_and_values(fields)
+
+        self.field_setup_dependents.discard_keys_and_values(fields)
 
     def get_field_trigger_tree(self, field: Field) -> TriggerTree:
         """ Return the trigger tree of a field by computing it from the transitive
