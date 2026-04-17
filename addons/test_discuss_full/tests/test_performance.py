@@ -33,10 +33,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: show_livechat_category
     #       - search discuss_channel_member (is_self for ACL check)
     #       - search_count discuss_channel_member
-    #   9: store add odoobot:
+    #   10: store add odoobot:
     #       - fetch res_partner (_read_format)
     #         [enterprise] search ai_agent (_compute_im_status ai override)
     #       - search res_users (_compute_im_status)
+    #       - fetch res_users (_compute_im_status)
     #       - search presence (_compute_im_status)
     #       - fetch presence (_compute_im_status)
     #       - search employee (_store_im_status_fields)
@@ -44,7 +45,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search hr_employee_location (_store_im_status_fields hr_homeworking override)
     #       - fetch hr_employee (_compute_work_location_type)
     #       - search hr_leave (_compute_leave_status)
-    _query_count_init_store = 21
+    _query_count_init_store = 22
     # Queries for _query_count_init_messaging (in order):
     #   2: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
     #       - fetch res_users
@@ -93,7 +94,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search discuss_channel_member
     #       - search_fetch discuss_channel
     #   1: search_count discuss_channel_member (_add_has_unpinned_channels_to_store)
-    #   33: channel _to_store_defaults:
+    #   34: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -104,9 +105,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       16: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
-    #           12: partner:
+    #           13: partner:
     #               - fetch res_partner (partner)
     #                 [enterprise] search ai_agent (_compute_im_status ai override)
+    #               - fetch res_users (_compute_im_status)
     #               - fetch res_users (_compute_im_status)
     #               - search mail_presence (_compute_im_status)
     #               - fetch mail_presence (_compute_im_status)
@@ -157,7 +159,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch user (author)
     #       - fetch discuss_call_history
     #       - select the current db snapshot
-    _query_count_discuss_channels = 61
+    _query_count_discuss_channels = 62
 
     def setUp(self):
         super().setUp()
