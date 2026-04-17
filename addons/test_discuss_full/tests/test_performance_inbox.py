@@ -24,7 +24,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       - search mail_notification
         #       - fetch mail_notification
         #   - search bus_bus (_bus_last_id)
-        #   30 store add message:
+        #   29 store add message:
         #       - fetch mail_message (_records_by_model_name/prefetch)
         #       - search mail_message_schedule
         #       - search mail_followers
@@ -42,7 +42,6 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       - search mail_poll (end_message_id)
         #       - search mail_message_link_preview
         #       - fetch mail_notification
-        #       - search mail_tracking_value
         #       2 _compute_rating_id:
         #           - search rating_rating
         #           - fetch rating_rating
@@ -78,5 +77,5 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(38):
+        with self.assertQueryCount(37):
             self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})
