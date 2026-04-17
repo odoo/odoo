@@ -17,7 +17,7 @@ registerWebsitePreviewTour(
         ...clickOnSnippet(
             ".s_title.o_savable.custom[data-oe-model][data-oe-id][data-oe-field][data-oe-xpath]"
         ),
-        changeOption("Block", ".oe_snippet_save"),
+        changeOption("Title", ".oe_snippet_save"),
         goBackToBlocks(),
         {
             content: "Wait for the custom category to appear in the panel",
