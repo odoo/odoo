@@ -2225,7 +2225,7 @@ class MailThread(models.AbstractModel):
     def message_post(self, *,
                      body='', subject=None, message_type='notification',
                      email_from=None, author_id=None, parent_id=False,
-                     subtype_xmlid=None, subtype_id=False,
+                     subtype_xmlid=None, subtype_id=False, forwarded_from_id=False,
                      partner_ids=None, outgoing_email_to=False,
                      incoming_email_to=False, incoming_email_cc=False,
                      attachments=None, attachment_ids=None, body_is_html=False,
@@ -2247,6 +2247,7 @@ class MailThread(models.AbstractModel):
           fetch, will force value of subtype_id;
         :param int subtype_id: subtype_id of the message, used mainly for followers
             notification mechanism;
+        :param int forwarded_from_id: Id of the message that has been forwarded;
         :param list(int) partner_ids: partner_ids to notify in addition to partners
             computed based on subtype / followers matching;
         :param str outgoing_email_to: comma-separated list of emails to notify in
@@ -2360,6 +2361,7 @@ class MailThread(models.AbstractModel):
             'body': escape(body),  # escape if text, keep if markup
             'message_type': message_type,
             'parent_id': self._message_compute_parent_id(parent_id),
+            'forwarded_from_id': forwarded_from_id,
             'subject': subject or False,
             'subtype_id': subtype_id,
             # recipients
@@ -3166,6 +3168,7 @@ class MailThread(models.AbstractModel):
             'email_add_signature',
             'email_from',
             'email_layout_xmlid',
+            'forwarded_from_id',
             'incoming_email_cc',
             'incoming_email_to',
             'is_internal',

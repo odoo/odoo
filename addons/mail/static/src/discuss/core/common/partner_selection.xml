@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.PartnerSelection">
+        <t t-if="this.store.self_user?.share === false">
+            <div class="position-relative">
+                <input class="o-discuss-PartnerSelection-search form-control lh-1 px-2 bg-view" t-attf-class="{{ props.searchClass }}" t-att-value="this.state.searchStr" t-custom-ref="input" t-att-placeholder="this.searchPlaceholder" t-on-input="this.onInput"/>
+                <t t-slot="next_to_search"/>
+            </div>
+            <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': this.state.selectablePartners.length === 0 and this.state.selectableEmails.length === 0 }">
+                <div t-if="this.state.selectablePartners.length === 0 and this.state.selectableEmails.length === 0" class="smaller text-muted mx-1 opacity-50">
+                    <t t-if="this.props.searchEmptyText" t-out="this.props.searchEmptyText"/>
+                    <t t-else="">No user found.</t>
+                </div>
+                <div t-if="this.state.searchResultCount > this.state.selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.showingResultNarrowText"/>
+                <t t-foreach="this.state.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
+                    <t t-call="discuss.PartnerSelection.selectableItem">
+                        <t t-set="selectableItemIndex" t-value="selectablePartner_index"/>
+                    </t>
+                </t>
+                <t t-foreach="this.state.selectableEmails" t-as="selectableEmailAddress" t-key="selectableEmailAddress">
+                    <t t-call="discuss.PartnerSelection.selectableItem">
+                        <t t-set="selectableEmailAddress" t-value="selectableEmailAddress"/>
+                        <t t-set="selectableItemIndex" t-value="this.state.selectablePartners.length + selectableEmailAddress_index"/>
+                    </t>
+                </t>
+            </ul>
+        </t>
+    </t>
+
+    <t t-name="discuss.PartnerSelection.selectableItem">
+        <t t-set="isSelected" t-value="selectablePartner ? selectablePartner.in(this.state.selectedPartners) : this.state.selectedEmails.includes(selectableEmailAddress)"/>
+        <li class="o-discuss-PartnerSelection-selectable object-fit-cover d-flex align-items-center px-1 py-0 btn list-group-item border-0 rounded-0 w-100"
+            t-attf-class="{{ this.props.selectableClass }}"
+            t-att-class="{ 'o-odd': selectableItemIndex % 2 === 1, 'o-selected': isSelected, 'align-items-center': selectableEmailAddress }"
+            t-on-click="() => selectablePartner ? this.onClickSelectablePartner(selectablePartner) : this.onClickSelectableEmail(selectableEmailAddress) "
+        >
+            <div class="d-flex align-items-center p-1 bg-inherit">
+                <div class="position-relative d-flex flex-shrink-0 bg-inherit">
+                    <DiscussAvatar t-if="selectablePartner" persona="selectablePartner"/>
+                    <div t-else="" class="w-100 h-100 d-flex align-items-center justify-content-center rounded-3 bg-primary text-white">
+                        <i class="fa fa-envelope"/>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-column mx-2 o-mb-0_5 flex-grow-1 overflow-hidden">
+                <t t-if="selectablePartner">
+                    <div class="d-flex overflow-hidden align-items-baseline" name="selectablePartnerName">
+                        <span class="text-truncate" t-out="selectablePartner.name"/>
+                        <t t-slot="next_to_selectablePartnerName" t-props="{ 'selectablePartner': selectablePartner }"/>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1 gap-1" name="selectablePartnerDetail">
+                        <span t-if="selectablePartner.email" t-out="selectablePartner.email" class="text-truncate text-start smaller text-600 fw-normal lh-1"/>
+                        <t t-slot="next_to_selectablePartnerDetail" t-props="{ 'selectablePartner': selectablePartner }"/>
+                    </div>
+                </t>
+                <div t-else="" class="overflow-hidden d-flex flex-column align-items-baseline">
+                    <span class="text-truncate text-start w-100" t-out="selectableEmailAddress"/>
+                    <t t-slot="next_to_selectableEmailAddress" t-props="{ 'selectableEmailAddress': selectableEmailAddress }"/>
+                </div>
+            </div>
+            <input class="form-check-input flex-shrink-0 mt-0 mx-1" type="checkbox" t-att-checked="isSelected ? 'checked' : undefined"/>
+        </li>
+    </t>
+</templates>
