@@ -14,6 +14,7 @@ import {
 import { advanceTime, mockDate, runAllTimers } from "@odoo/hoot-mock";
 
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { startInteractionsWithSnippet } from "../helpers";
 
 setupInteractionWhiteList(["website.form", "website.post_link", "website.form.add_other_option"]);
 
@@ -41,77 +42,26 @@ async function fillAndSubmitForm(el, value) {
     await click("a.s_website_form_send");
 }
 
-const formTemplate = /* html */ `
-    <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
-            <div class="container-fluid">
-                <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
-                    <div class="s_website_form_rows row s_col_no_bgcolor">
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
-                            <div class="row s_col_no_resize s_col_no_bgcolor">
-                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="obij2aulqyau">
-                                    <span class="s_website_form_label_content">Your Name</span>
-                                    <span class="s_website_form_mark"> *</span>
-                                </label>
-                                <div class="col-sm">
-                                    <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="name" required="1" data-fill-with="name" id="obij2aulqyau"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
-                            <div class="row s_col_no_resize s_col_no_bgcolor">
-                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oub62hlfgjwf">
-                                    <span class="s_website_form_label_content">Your Email</span>
-                                    <span class="s_website_form_mark"> *</span>
-                                </label>
-                                <div class="col-sm">
-                                    <input class="form-control s_website_form_input o_translatable_attribute" type="email" name="email_from" required="" data-fill-with="email" id="oub62hlfgjwf"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="email_from" data-visibility-comparator="set">
-                            <div class="row s_col_no_resize s_col_no_bgcolor">
-                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oqsf4m51acj">
-                                    <span class="s_website_form_label_content">Subject</span>
-                                    <span class="s_website_form_mark"> *</span>
-                                </label>
-                                <div class="col-sm">
-                                    <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="subject" required="" id="oqsf4m51acj"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required s_website_form_field_hidden_if d-none" data-type="text" data-visibility-dependency="subject" data-visibility-comparator="set">
-                            <div class="row s_col_no_resize s_col_no_bgcolor">
-                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oyeqnysxh10b">
-                                    <span class="s_website_form_label_content">Your Question</span>
-                                    <span class="s_website_form_mark"> *</span>
-                                </label>
-                                <div class="col-sm">
-                                    <textarea class="form-control s_website_form_input o_translatable_text" name="description" required="1" id="oyeqnysxh10b" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
-                            <div class="row s_col_no_resize s_col_no_bgcolor">
-                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
-                                    <span class="s_website_form_label_content"/>
-                                </label>
-                                <div class="col-sm">
-                                    <input type="hidden" class="form-control s_website_form_input o_translatable_attribute" name="email_to" value="info@yourcompany.example.com"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
-                            <div style="width: 200px;" class="s_website_form_label"></div>
-                            <span id="s_website_form_result"></span>
-                            <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </section>
-    </div>
-`;
+/**
+ * Makes the field of `inputName` visible only if `dependency` is set.
+ */
+function setVisibilityDependency(html, inputName, dependency) {
+    const fieldEl = html.querySelector(`[name="${inputName}"]`).closest(".s_website_form_field");
+    fieldEl.classList.add("s_website_form_field_hidden_if", "d-none");
+    Object.assign(fieldEl.dataset, {
+        visibilityDependency: dependency,
+        visibilityComparator: "set",
+    });
+}
+
+function startFormInteractions() {
+    return startInteractionsWithSnippet("s_website_form", {
+        processHTML: (html) => {
+            setVisibilityDependency(html, "subject", "email_from");
+            setVisibilityDependency(html, "description", "subject");
+        },
+    });
+}
 
 const formWithRestrictedFieldsTemplate = /* html */ `
     <div id="wrapwrap">
@@ -392,7 +342,7 @@ const formTemplateWithRadioAndSelect = /* html */ `
 // TODO Split in distinct tests.
 
 test("form checks fields", async () => {
-    const { core } = await startInteractions(formTemplate);
+    const { core } = await startFormInteractions();
     expect(core.interactions).toHaveLength(1);
     expect(queryOne("form input[name=name]")).toHaveValue("Mitchell Admin");
     expect(queryOne("form input[name=email_from]")).toHaveValue("");
@@ -402,7 +352,7 @@ test("form checks fields", async () => {
 });
 
 test("(name) form checks conditions and should focus the first invalid field on submit", async () => {
-    await startInteractions(formTemplate);
+    await startFormInteractions();
     const nameEl = queryOne("input[name=name]");
 
     checkField(nameEl, true, false);
@@ -457,7 +407,7 @@ test("max file upload limit > 1", async () => {
 });
 
 test("(mail) form checks conditions", async () => {
-    await startInteractions(formTemplate);
+    await startFormInteractions();
     const mailEl = queryOne("input[name=email_from]");
 
     checkField(mailEl, true, false);
@@ -492,7 +442,7 @@ test("(mail) form checks conditions", async () => {
 });
 
 test("(subject) form checks conditions", async () => {
-    await startInteractions(formTemplate);
+    await startFormInteractions();
     const subjectEl = queryOne("input[name=subject]");
 
     checkField(subjectEl, false, false);
@@ -527,7 +477,7 @@ test("(subject) form checks conditions", async () => {
 });
 
 test("(question) form checks conditions", async () => {
-    await startInteractions(formTemplate);
+    await startFormInteractions();
     const questionEl = queryOne("textarea[name=description]");
 
     checkField(questionEl, false, false);
@@ -562,7 +512,7 @@ test("(question) form checks conditions", async () => {
 });
 
 test("(rpc) form checks conditions", async () => {
-    await startInteractions(formTemplate);
+    await startFormInteractions();
 
     // Fill mail
     await click("input[name=email_from]");
@@ -592,7 +542,7 @@ test("(rpc) form checks conditions", async () => {
 });
 
 test("form submit result cleaned but not removed on stop", async () => {
-    const { core } = await startInteractions(formTemplate);
+    const { core } = await startFormInteractions();
     expect(core.interactions).toHaveLength(1);
     expect(queryOne("#s_website_form_result").children.length).toEqual(0);
     await click("a.s_website_form_send");
@@ -758,42 +708,9 @@ test("form prefilled conditional", async () => {
     });
 
     // Phone number is only visible if name is filled.
-    const { core } = await startInteractions(`
-        <div id="wrapwrap">
-            <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
-                <div class="container-fluid">
-                    <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
-                        <div class="s_website_form_rows row s_col_no_bgcolor">
-                            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
-                                <div class="row s_col_no_resize s_col_no_bgcolor">
-                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="obij2aulqyau">
-                                        <span class="s_website_form_label_content">Your Name</span>
-                                        <span class="s_website_form_mark"> *</span>
-                                    </label>
-                                    <div class="col-sm">
-                                        <input class="form-control s_website_form_input" type="text" name="name" required="1" data-fill-with="name" id="obij2aulqyau"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="tel"
-                                    data-visibility-dependency="name"
-                                    data-visibility-comparator="set"
-                            >
-                                <div class="row s_col_no_resize s_col_no_bgcolor">
-                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ozp7022vqhe">
-                                        <span class="s_website_form_label_content">Phone Number</span>
-                                    </label>
-                                    <div class="col-sm">
-                                        <input class="form-control s_website_form_input" type="tel" name="phone" data-fill-with="phone" id="ozp7022vqhe"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </section>
-        </div>
-    `);
+    const { core } = await startInteractionsWithSnippet("s_website_form", {
+        processHTML: (html) => setVisibilityDependency(html, "phone", "name"),
+    });
     expect(core.interactions).toHaveLength(1);
     expect(queryOne("form input[name=name]")).toHaveValue("Mitchell Admin");
     expect(queryOne("form input[name=phone]")).toHaveValue("+1-555-5555");
@@ -954,7 +871,7 @@ test("validates a date against today resolved when the form is mounted", async (
 });
 
 test("add aria-invalid to invalid fields", async () => {
-    await startInteractions(formTemplate);
+    await startFormInteractions();
     const mailEl = queryOne("input[name=email_from]");
 
     expect(mailEl.getAttribute("aria-invalid")).toBeEmpty();

@@ -1,38 +1,25 @@
-import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { click, press, queryAll, queryOne } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
+import { startInteractionsWithSnippet } from "../helpers";
 
 setupInteractionWhiteList("website.search_bar");
 
 describe.current.tags("interaction_dev");
 
-const searchTemplate = /* html */ `
-    <form method="get" class="o_searchbar_form s_searchbar_input" action="/website/search" data-snippet="s_searchbar_input">
-        <div role="search" class="input-group input-group-lg">
-            <input type="search" name="search" class="search-query form-control oe_search_box o_translatable_attribute" placeholder="Search..."
-                    data-search-type="test"
-                    data-limit="3"
-                    data-order-by="name asc"
-                    autocomplete="off"/>
-            <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button border border-start-0 px-4 bg-o-color-4">
-                <span class="o_search_spinner d-none spinner-border spinner-border-sm text-500"
-                      style="--spinner-border-width: 0.1em;"
-                      role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </span>
-                <small class="o_search_found_results d-none">
-                    <span class="o_search_count"></span>
-                </small>
-                <i class="oi" data-icon="search"></i>
-            </button>
-        </div>
-        <input name="order" type="hidden" class="o_search_order_by" value="test desc"/>
-    </form>
-`;
+function processSearchBarHTML(html) {
+    const formEl = html.querySelector("[data-snippet='s_searchbar_input']");
+    Object.assign(formEl.querySelector("input[type=search]").dataset, {
+        searchType: "test",
+        limit: 3,
+        orderBy: "name asc",
+    });
+    formEl.querySelector(".o_search_order_by").value = "test desc";
+}
 
 function supportAutocomplete() {
     onRpc("/website/snippet/autocomplete", async (args) => {
@@ -81,7 +68,9 @@ function supportAutocomplete() {
 
 test("searchbar triggers a search when text is entered", async () => {
     supportAutocomplete();
-    const { core } = await startInteractions(searchTemplate);
+    const { core } = await startInteractionsWithSnippet("s_searchbar_input", {
+        processHTML: processSearchBarHTML,
+    });
     expect(core.interactions).toHaveLength(1);
     await click("form input[type=search]");
     await press("x");
@@ -95,7 +84,9 @@ test("searchbar triggers a search when text is entered", async () => {
 
 test("searchbar selects first result on cursor down", async () => {
     supportAutocomplete();
-    await startInteractions(searchTemplate);
+    await startInteractionsWithSnippet("s_searchbar_input", {
+        processHTML: processSearchBarHTML,
+    });
     const inputEl = queryOne("form input[type=search]");
     await click(inputEl);
     await press("x");
@@ -111,7 +102,9 @@ test("searchbar selects first result on cursor down", async () => {
 
 test("searchbar selects last result on cursor up", async () => {
     supportAutocomplete();
-    await startInteractions(searchTemplate);
+    await startInteractionsWithSnippet("s_searchbar_input", {
+        processHTML: processSearchBarHTML,
+    });
     const inputEl = queryOne("form input[type=search]");
     await click(inputEl);
     await press("x");
@@ -127,7 +120,9 @@ test("searchbar selects last result on cursor up", async () => {
 
 test("searchbar removes results on escape", async () => {
     supportAutocomplete();
-    await startInteractions(searchTemplate);
+    await startInteractionsWithSnippet("s_searchbar_input", {
+        processHTML: processSearchBarHTML,
+    });
     await click("form input[type=search]");
     await press("x");
     await press("y");
