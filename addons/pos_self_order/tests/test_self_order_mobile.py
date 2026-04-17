@@ -270,7 +270,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         # Check self-order in pos-terminal are not prompted for Send-for-Preparation
         self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_preparation_changes', login='pos_user')
 
-    def test_self_order_table_sharing(self):
+    def test_self_order_table_no_more_sharing(self):
         """
         - MEAL MODE: table is assigned to order via table_id field when scanning QR code
             all phones scanning the same table QR code share the same order
@@ -308,7 +308,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             })],
         })
 
-        self.start_tour(self_route, "test_self_order_table_sharing-each_mode")
+        self.start_tour(self_route, "test_self_order_table_no_more_sharing-each_mode")
         last_order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(last_order.floating_order_name, f"Self-Order T {table.table_number}")
         self.assertFalse(last_order.table_id)
@@ -317,7 +317,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             'self_ordering_pay_after': 'meal',
         })
 
-        self.start_tour(self_route, "test_self_order_table_sharing-meal_mode")
+        self.start_tour(self_route, "test_self_order_table_no_more_sharing-meal_mode")
 
     def test_delete_mobile_order_from_backend(self):
         self.pos_config.write({
