@@ -1087,11 +1087,11 @@ class PosSession(models.Model):
             payment.outstanding_account_id = payment._get_outstanding_account(payment.payment_type)
 
         if float_compare(payment_amount, 0, precision_rounding=self.currency_id.rounding) < 0:
+            current_account = payment.outstanding_account_id
             payment.write({
-                'force_outstanding_account_id': payment.destination_account_id,
-                'destination_account_id': payment.outstanding_account_id,
                 'payment_type': 'outbound',
             })
+            payment.outstanding_account_id = current_account
 
     def _create_combine_account_payment(self, payment_method, amounts, diff_amount):
         outstanding_account = payment_method.outstanding_account_id
@@ -1109,6 +1109,7 @@ class PosSession(models.Model):
         })
 
         self._ensure_payment_outstanding_account(account_payment, amounts['amount'])
+        account_payment.flush_recordset(['payment_type', 'force_outstanding_account_id', 'outstanding_account_id'])
         account_payment.action_post()
 
         diff_amount_compare_to_zero = self.currency_id.compare_amounts(diff_amount, 0)
