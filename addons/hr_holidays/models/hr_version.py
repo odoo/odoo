@@ -166,6 +166,7 @@ class HrVersion(models.Model):
         return all_new_leave_origin, all_new_leave_vals
 
     def _create_all_new_leave(self, all_new_leave_origin, all_new_leave_vals):
+        # seems 'tracking_disable' is wanted to speedup leaves batch creation
         new_leaves = self.env['hr.leave'].with_context(
             tracking_disable=True,
             mail_activity_automation_skip=True,

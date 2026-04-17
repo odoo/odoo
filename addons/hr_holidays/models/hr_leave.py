@@ -1265,6 +1265,7 @@ class HrLeave(models.Model):
 
         if not new_leaves_vals:
             return self.env['hr.leave']
+        # wanted tracking_disable, as it is about splitting an existing leave
         return self.env['hr.leave'].with_context(
             tracking_disable=True,
             mail_activity_automation_skip=True,

@@ -44,7 +44,7 @@ class MailThreadMainAttachment(models.AbstractModel):
 
             # Assign one of the attachments as the main according to the following priority: pdf, image, other types.
             if attachments:
-                self.with_context(tracking_disable=True).message_main_attachment_id = max(
+                self.message_main_attachment_id = max(
                     attachments,
                     key=lambda r: (r.mimetype.endswith('pdf'), r.mimetype.startswith('image'))
                 ).id

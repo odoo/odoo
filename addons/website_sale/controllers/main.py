@@ -1430,7 +1430,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
         creation_context = clean_context(request.env.context)
         creation_context.update({
-            "tracking_disable": True
             # 'no_vat_validation': True,  # TODO VCR VAT validation or not ?
         })
         return (

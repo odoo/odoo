@@ -164,7 +164,7 @@ class IapAccount(models.Model):
                 # Default rounding of 4 decimal places to avoid large decimals
                 account_info = self._get_account_info(account, information)
 
-                account = account.with_context(disable_iap_update=True, tracking_disable=True)
+                account = account.with_context(disable_iap_update=True)
                 account.write({
                     **account_info,
                     'auto_refill_pack_id': False,

@@ -37,30 +37,34 @@ class TestAccruedSaleOrders(TestSaleCommon):
             "plan_id": cls.default_plan.id,
             "company_id": False,
         })
-        cls.sale_order = cls.env["sale.order"].create({
-            "partner_id": cls.partner_a.id,
-            "order_line": [
-                Command.create({
-                    "name": cls.product_a.name,
-                    "product_id": cls.product_a.id,
-                    "product_uom_qty": 10.0,
-                    "price_unit": cls.product_a.list_price,
-                    "tax_ids": False,
-                    "analytic_distribution": {
-                        cls.analytic_account_a.id: 80.0,
-                        cls.analytic_account_b.id: 20.0,
-                    },
-                }),
-                Command.create({
-                    "name": cls.product_b.name,
-                    "product_id": cls.product_b.id,
-                    "product_uom_qty": 10.0,
-                    "price_unit": cls.product_b.list_price,
-                    "tax_ids": False,
-                    "analytic_distribution": {cls.analytic_account_b.id: 100.0},
-                }),
-            ],
-        })
+        cls.sale_order = (
+            cls
+            .env["sale.order"]
+            .create({
+                "partner_id": cls.partner_a.id,
+                "order_line": [
+                    Command.create({
+                        "name": cls.product_a.name,
+                        "product_id": cls.product_a.id,
+                        "product_uom_qty": 10.0,
+                        "price_unit": cls.product_a.list_price,
+                        "tax_ids": False,
+                        "analytic_distribution": {
+                            cls.analytic_account_a.id: 80.0,
+                            cls.analytic_account_b.id: 20.0,
+                        },
+                    }),
+                    Command.create({
+                        "name": cls.product_b.name,
+                        "product_id": cls.product_b.id,
+                        "product_uom_qty": 10.0,
+                        "price_unit": cls.product_b.list_price,
+                        "tax_ids": False,
+                        "analytic_distribution": {cls.analytic_account_b.id: 100.0},
+                    }),
+                ],
+            })
+        )
         cls.sale_order.action_confirm()
         cls.account_expense = cls.company_data["default_account_expense"]
         cls.account_revenue = cls.company_data["default_account_revenue"]
