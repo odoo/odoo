@@ -34,7 +34,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
     def test_mrp_plan_and_unplan_reset_date_start(self):
         past_date = fields.Datetime.now() - timedelta(days=1)
-        mo = self.env['mrp.production'].with_context(tracking_disable=False, mail_notrack=False).create({
+        mo = self.env['mrp.production'].create({
             'product_id': self.bom_2.product_id.id,
             'product_uom_qty': 1.0,
             'date_start': past_date,
