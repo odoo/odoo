@@ -142,6 +142,7 @@ class TestEventNotifications(CalendarMailCommon):
     def test_assert_initial_values(self):
         self.assertFalse(self.event.partner_ids)
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite(self):
         self.env['ir.config_parameter'].sudo().set_int('mail.mail_force_send_limit', 100)
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
@@ -169,6 +170,7 @@ class TestEventNotifications(CalendarMailCommon):
                 'partner_ids': [(4, self.partner.id)],
             }])
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite_email_notif_mass_queued(self):
         """Check that more than 20 notified attendees means mails are queued."""
         self.env['ir.config_parameter'].sudo().set_int('mail.mail_force_send_limit', 100)
@@ -260,6 +262,7 @@ class TestEventNotifications(CalendarMailCommon):
         with self.assertNoNotifications():
             self.event.start_date += relativedelta(days=-1)
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_add_and_date_changed(self):
         self.event.partner_ids -= self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
