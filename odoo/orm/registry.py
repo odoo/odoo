@@ -625,6 +625,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         # discard fields from all cached properties
         reset_cached_properties(self)
+        self.field_setup_dependents.discard_keys_and_values(fields)
 
     @functools.cached_property
     def _field_trigger_trees(self) -> dict[Field, TriggerTree]:

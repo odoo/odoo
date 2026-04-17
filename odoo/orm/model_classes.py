@@ -537,13 +537,18 @@ def _setup_fields(model_cls: type[BaseModel], env: Environment):
 def _add_manual_models(env: Environment):
     """ Add extra models to the registry. """
     # clean up registry first
+    removed_fields = OrderedSet()
     for name, model_cls in list(env.registry.items()):
         if model_cls._custom:
+            removed_fields.update(model_cls._fields.values())
             del env.registry.models[name]
             # remove the model's name from its parents' _inherit_children
             for parent_cls in model_cls.__bases__:
                 if hasattr(parent_cls, 'pool'):
                     parent_cls._inherit_children.discard(name)
+
+    if removed_fields:
+        env.registry._discard_fields(list(removed_fields))
 
     # we cannot use self._fields to determine translated fields, as it has not been set up yet
     env.cr.execute("SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'")
