@@ -483,8 +483,10 @@ class Ewaybill(models.Model):
         return fields.Datetime.to_string(utc_time)
 
     @api.model
-    def _get_partner_state_code(self, partner):
-        return int(partner.state_id.l10n_in_tin) if partner.country_id.code == "IN" else 99
+    def _get_partner_state_code(self, partner, is_to_state=False):
+        if partner.country_id.code != "IN" or (is_to_state and partner.l10n_in_gst_treatment == "special_economic_zone"):
+            return 99
+        return int(partner.state_id.l10n_in_tin)
 
     def _l10n_in_tax_details(self):
         tax_details = {
@@ -576,7 +578,7 @@ class Ewaybill(models.Model):
 
         def prepare_details(key_paired_function, partner_detail):
             return {
-                f"{place}{key}": fun(partner)
+                f"{place}{key}": fun(partner, place) if key == "StateCode" else fun(partner)
                 for key, fun in key_paired_function
                 for place, partner in partner_detail
             }
@@ -599,7 +601,7 @@ class Ewaybill(models.Model):
                     key_paired_function={
                         'Gstin': lambda p: p.commercial_partner_id.vat or "URP",
                         'TrdName': lambda p: p.commercial_partner_id.name,
-                        'StateCode': self._get_partner_state_code,
+                        'StateCode': lambda p, place: self._get_partner_state_code(p, is_to_state=place == 'to'),
                     }.items(),
                     partner_detail={'from': self.partner_bill_from_id, 'to': self.partner_bill_to_id}.items()
                 ),
