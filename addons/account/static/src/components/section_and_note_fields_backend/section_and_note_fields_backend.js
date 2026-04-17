@@ -44,6 +44,7 @@ function hasPreviousSection(list, record) {
 
 function getRecordsUntilSection(list, record, asc, subSection) {
     const stopAtTypes = [DISPLAY_TYPES.SECTION];
+    const notStopAtProductTypes = record.data.product_type === 'combo' ? [] : ['combo'];
     if (subSection ?? record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
         stopAtTypes.push(DISPLAY_TYPES.SUBSECTION);
     }
@@ -53,13 +54,18 @@ function getRecordsUntilSection(list, record, asc, subSection) {
     if (asc) {
         sectionRecords.push(list.records[index]);
         index++;
-        while (index < list.records.length && !stopAtTypes.includes(list.records[index].data.display_type)) {
+        while (
+            index < list.records.length &&
+            (!stopAtTypes.includes(list.records[index].data.display_type) ||
+            notStopAtProductTypes.includes(list.records[index].data.product_type))) {
             sectionRecords.push(list.records[index]);
             index++;
         }
     } else {
         index--;
-        while (index >= 0 && !stopAtTypes.includes(list.records[index].data.display_type)) {
+        while (index >= 0 &&
+            (!stopAtTypes.includes(list.records[index].data.display_type) ||
+            notStopAtProductTypes.includes(list.records[index].data.product_type))) {
             sectionRecords.unshift(list.records[index]);
             index--;
         }
@@ -599,6 +605,9 @@ export const sectionAndNoteText = {
 export const listSectionAndNoteText = {
     ...sectionAndNoteText,
     component: ListSectionAndNoteText,
+    fieldDependencies: [
+        { name: "product_type", type: "selection" },
+    ],
 };
 
 registry.category("fields").add("section_and_note_one2many", sectionAndNoteFieldOne2Many);

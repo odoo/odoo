@@ -630,7 +630,7 @@ class TestSaleToInvoice(TestSaleCommon):
             {
                 'name': 'Meal Menu x 3',
                 'display_type': 'line_section',
-                'product_id': False,
+                'product_id': product_combo.id,
                 'quantity': 3,
                 'price_unit': 0,
                 'sequence': 0,

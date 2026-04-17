@@ -1503,6 +1503,7 @@ class SaleOrderLine(models.Model):
                 'display_type': 'line_section',
                 'sequence': self.sequence,
                 'name': f'{self.product_id.name} x {qty_to_invoice}',
+                'product_id': self.product_id.id,
                 'product_uom_id': self.product_uom_id.id,
                 'quantity': self.qty_to_invoice,
                 'sale_line_ids': [Command.link(self.id)],

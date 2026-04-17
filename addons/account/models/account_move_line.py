@@ -352,6 +352,7 @@ class AccountMoveLine(models.Model):
         check_company=True,
         index=True,
     )
+    product_type = fields.Selection(related='product_id.type', depends=['product_id'])
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
