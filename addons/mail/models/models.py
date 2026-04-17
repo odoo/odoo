@@ -1,17 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-
 from collections import defaultdict
 from datetime import datetime
+
 from lxml.builder import E
 from markupsafe import Markup
 
-from odoo import api, exceptions, models, tools, _
-from odoo.addons.mail.tools.alias_error import AliasError
+from odoo import _, api, exceptions, models, tools
 from odoo.fields import Domain
 from odoo.tools import parse_contact_from_email
 from odoo.tools.mail import email_normalize, email_split_and_format
+
+from odoo.addons.mail.tools.alias_error import AliasError
+from odoo.addons.mail.tools.discuss import StoreVersion
 
 _logger = logging.getLogger(__name__)
 
@@ -25,10 +27,10 @@ class Base(models.AbstractModel):
     # ------------------------------------------------------------
 
     def _flush(self):
-        if store_version_ctx := self.env.context.get("store_version_ctx"):
-            for field in self._fields.values():
-                if ids := self.env._field_dirty.get(field):
-                    store_version_ctx.mark_field_as_written(field.model_name, ids, field.name)
+        store_version = StoreVersion.ensure_version(self.env)
+        for field in self._fields.values():
+            if ids := self.env._field_dirty.get(field):
+                store_version.mark_field_as_written(field.model_name, ids, field.name)
         return super()._flush()
 
     def with_user(self, user):

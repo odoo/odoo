@@ -50,57 +50,8 @@ def add_guest_to_context(func):
     return add_guest_to_context__wrapper
 
 
-class StoreVersionInternal:
-    """Internal state used by the `@store_version` decorator."""
-    def __init__(self):
-        self.__version = None
-        self.__model_name_to_record_id_to_written_fnames = defaultdict(
-            lambda: defaultdict(OrderedSet)
-        )
-
-    def mark_field_as_written(self, model_name, record_ids, fname):
-        """Mark field as written for the given records. Done automatically when using the
-        ORM, should be done manually otherwise.
-        """
-        record_id_to_written_fnames = self.__model_name_to_record_id_to_written_fnames[model_name]
-        for id_ in record_ids:
-            record_id_to_written_fnames[id_].add(fname)
-
-    def get_formatted_version(self, env):
-        """Get the version metadata, used by the client to determine if an incoming
-        store insert is newer than what it already knows.
-        """
-        if not self.__version:
-            env.flush_all()  # Ensure TX id is assigned, if the DB was modified, before building the version.
-            env.cr.execute("SELECT pg_current_snapshot(), pg_current_xact_id_if_assigned()")
-            snapshot_str, current_xact_id = env.cr.fetchone()
-            xmin_str, xmax_str, xips_str = snapshot_str.split(":")
-            xmin = int(xmin_str)
-            xmax = int(xmax_str)
-            xips = [int(x) for x in xips_str.split(",") if x]
-            bitmap = bytearray(math.ceil((xmax - xmin) / 8))
-            for x in xips:
-                offset = x - xmin
-                bitmap[offset // 8] |= 1 << (offset % 8)
-            self.__version = {
-                "snapshot": {
-                    "xmin": xmin_str,
-                    "xmax": xmax_str,
-                    "xip_bitmap": base64.b64encode(bitmap).decode(),
-                    "current_xact_id": current_xact_id,
-                },
-                "written_fields_by_record": {
-                    model: {record_id: list(fnames) for record_id, fnames in recs.items()}
-                    for model, recs in self.__model_name_to_record_id_to_written_fnames.items()
-                },
-            }
-        return self.__version
-
-
-def store_version(func):
-    """Decorator to manage versioned updates in the store.
-
-    Store data is received from RPC and from the bus, and is applied directly to the
+class StoreVersion:
+    """Store data is received from RPC and from the bus, and is applied directly to the
     store. Without versioning, the order of arrival can cause outdated data to overwrite
     newer data, leading to incorrect store state.
 
@@ -113,43 +64,70 @@ def store_version(func):
     write transaction. The combination of xmin, xmax, xip and the current transaction id
     is enough to deduce it.
 
-    This decorator injects the version helper into the context, allowing written fields to
-    be observed and `Store.as_dict` to inject version metadata into its result.
+    This class is a helper, used by the Store class to manage versioning, allowing written
+    fields to be observed and `Store.as_dict` to inject version metadata into its result.
     """
-    @wraps(func)
-    def store_version__wrapper(self, *args, **kwargs):
-        if self.env.context.get("store_version_ctx"):
-            return func(self, *args, **kwargs)
-        should_cleanup = False
-        manager = StoreVersionInternal()
-        if isinstance(self, models.BaseModel):
-            self = self.with_context(store_version_ctx=manager)
-        else:
-            # Clean up only if we inserted the manager in the request context;
-            # otherwise, the original decorator will handle it.
-            should_cleanup = True
-            req = request or wsrequest
-            req.update_context(store_version_ctx=manager)
-        response = func(self, *args, **kwargs)
-        if should_cleanup:
-            # Clean context to prevent side effects based on the presence of `store_version_ctx`.
-            req.update_context(store_version_ctx=None)
-        return response
-    return store_version__wrapper
+
+    def __init__(self, env):
+        self.__env = env
+        self.__version = None
+        self.__model_to_field_to_ids = defaultdict(lambda: defaultdict(OrderedSet))
+
+    def mark_field_as_written(self, model_name, record_ids, fname):
+        """Mark field as written for the given records. Done automatically when using the
+        ORM, should be done manually otherwise.
+        """
+        self.__model_to_field_to_ids[model_name][fname].update(record_ids)
+
+    def get_formatted_version(self):
+        """Get the version metadata, used by the client to determine if an incoming
+        store insert is newer than what it already knows.
+        """
+        if not self.__version:
+            self.__env.flush_all()  # Ensure TX id is assigned, if the DB was modified, before building the version.
+            self.__env.cr.execute("SELECT pg_current_snapshot(), pg_current_xact_id_if_assigned()")
+            snapshot_str, current_xact_id = self.__env.cr.fetchone()
+            xmin_str, xmax_str, xips_str = snapshot_str.split(":")
+            xmin = int(xmin_str)
+            xmax = int(xmax_str)
+            xips = [int(x) for x in xips_str.split(",") if x]
+            bitmap = bytearray(math.ceil((xmax - xmin) / 8))
+            for x in xips:
+                offset = x - xmin
+                bitmap[offset // 8] |= 1 << (offset % 8)
+            written_fields_by_record = defaultdict(lambda: defaultdict(list))
+            for model, field_to_record_ids in self.__model_to_field_to_ids.items():
+                for fname, record_ids in field_to_record_ids.items():
+                    for id_ in record_ids:
+                        written_fields_by_record[model][id_].append(fname)
+            self.__version = {
+                "snapshot": {
+                    "xmin": xmin_str,
+                    "xmax": xmax_str,
+                    "xip_bitmap": base64.b64encode(bitmap).decode(),
+                    "current_xact_id": current_xact_id,
+                },
+                "written_fields_by_record": written_fields_by_record,
+            }
+        return self.__version
+
+    @staticmethod
+    def ensure_version(env):
+        if "store__version" not in env.cr.cache:
+            env.cr.cache["store__version"] = StoreVersion(env)
+        return env.cr.cache["store__version"]
 
 
 def mail_route(*route_args, **route_kwargs):
-    """Thin wrapper around `route` that adds guest context and enables versioning.
+    """Thin wrapper around `route` that adds guest context.
 
     This decorator is equivalent to applying, in order:
         @route(*route_args, **route_kwargs)
-        @store_version
         @add_guest_to_context
     """
 
     def decorator(func):
         wrapped_func = add_guest_to_context(func)
-        wrapped_func = store_version(wrapped_func)
         return route(*route_args, **route_kwargs)(wrapped_func)
 
     return decorator
@@ -216,15 +194,14 @@ def store_enqueue(func):
 
 class Store:
     """Helper to build a dict of data for sending to web client.
-    It supports merging of data from multiple sources, either through list extend or dict update.
-    The keys of data are the name of models as defined in mail JS code, and the values are any
-    format supported by store.insert() method (single dict or list of dict for each model
-    name).
+    It supports merging of data from multiple sources, either through list extend or dict
+    update. The keys of data are the name of models as defined in mail JS code, and the
+    values are any format supported by store.insert() method (single dict or list of dict
+    for each model name).
 
     The store instance is then transformed to a dictionnary to be sent either by the HTTP
-    or the bus stack. If the store was created in the context of the `@store_version` decorator,
-    this dictionnary also includes information about the data version, which will be used
-    by the client to distinguish stale from new data.
+    or the bus stack. This dictionnary also includes information about the data version,
+    which will be used by the client to distinguish stale from new data.
     """
 
     def __init__(self, bus_channel=None, bus_subchannel=None):
@@ -238,18 +215,14 @@ class Store:
         self._internal_store = None
         if bus_channel and bus_channel._name == "discuss.channel" and bus_subchannel != "internal_users":
             self._internal_store = Store(bus_channel=bus_channel, bus_subchannel="internal_users")
-        self._env_with_version_ctx = None
-        self.__try_update_version_ctx_from_env(bus_channel)
+        self.__version = None
+        self.__try_update_version_from_records(bus_channel)
 
-    def __try_update_version_ctx_from_env(self, records):
+    def __try_update_version_from_records(self, records):
         is_recordset = isinstance(records, models.Model)
         assert not records or is_recordset, "Records must be a recordset or a falsy value."
-        if (
-            is_recordset
-            and not self._env_with_version_ctx
-            and records.env.context.get("store_version_ctx")
-        ):
-            self._env_with_version_ctx = records.env
+        if is_recordset and not self.__version:
+            self.__version = StoreVersion.ensure_version(records.env)
 
     @store_enqueue
     def add(self, records, fields, *, as_thread=False, fields_params=None):
@@ -267,7 +240,7 @@ class Store:
 
         Use case: to add records and their fields to store. This is the preferred method.
         """
-        self.__try_update_version_ctx_from_env(records)
+        self.__try_update_version_from_records(records)
         if not records:
             return self
         # call _format_fields before checking identifier to always compare the final shape
@@ -324,7 +297,7 @@ class Store:
         Use case: to add fields from inside _to_store() methods to avoid recursive code.
         Note: in all other cases, Store.add() should be called instead.
         """
-        self.__try_update_version_ctx_from_env(field_list.records)
+        self.__try_update_version_from_records(field_list.records)
         if field_list and field_list.records:
             for record, record_data_list in self._get_records_data_list(field_list).items():
                 for record_data in record_data_list:
@@ -356,7 +329,7 @@ class Store:
     @store_enqueue
     def delete(self, records, as_thread=False):
         """Delete records from the store."""
-        self.__try_update_version_ctx_from_env(records)
+        self.__try_update_version_from_records(records)
         if not records:
             return self
         model_name = "mail.thread" if as_thread else records._name
@@ -384,14 +357,11 @@ class Store:
     def as_dict(self):
         """Hook for JSON serialization used by the `json_default` method. Do not call
         directly. Returns a dictionary representing the aggregated result of all store
-        commands, versioned if the store was created within a `@store_version` context.
+        commands, versioned.
         """
         result = self._build_result()
-        if result and self._env_with_version_ctx:
-            store_version_ctx = self._env_with_version_ctx.context["store_version_ctx"]
-            result["__store_version__"] = store_version_ctx.get_formatted_version(
-                self._env_with_version_ctx,
-            )
+        if result and self.__version:
+            result["__store_version__"] = self.__version.get_formatted_version()
         return result
 
     def _build_result(self):

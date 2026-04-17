@@ -10,8 +10,7 @@ except ImportError:
 from itertools import product
 
 from odoo.tests import new_test_user
-from odoo.addons.bus.tests.common import WebsocketCase
-from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.bus.tests.common import WebsocketCase, BusResult
 from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
@@ -98,28 +97,28 @@ class TestMailPresence(WebsocketCase, MailCommon):
 
     def test_presence_status_only_sent_to_self(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
-        self._reset_bus()
-        self.env["mail.presence"].with_user(bob)._update_presence(bob)
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        presence_channel_notif, self_channel_notif = self.env["bus.bus"].search([])
-        self.assertEqual(presence_channel_notif.channel, json_dump(channel_with_db(self.env.cr.dbname, (bob, "presence"))))
-        self.assertEqual(self_channel_notif.channel, json_dump(channel_with_db(self.env.cr.dbname, bob)))
-        presence_payload = json.loads(presence_channel_notif.message)["payload"]
-        self.assertEqual(presence_payload, {"res.users": [{"id": bob.id, "im_status": "online"}]})
-        self_payload = json.loads(self_channel_notif.message)["payload"]
-        self.assertEqual(self_payload, {"res.users": [{"id": bob.id, "presence_status": "online"}]})
+        with self.assertBus(
+            [
+                BusResult(
+                    (bob, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": bob.id, "im_status": "online"}]},
+                ),
+                BusResult(
+                    bob,
+                    "mail.record/insert",
+                    {"res.users": [{"id": bob.id, "presence_status": "online"}]},
+                ),
+            ],
+        ):
+            self.env["mail.presence"].with_user(bob)._update_presence(bob)
         other_user = new_test_user(self.env, login="other_user", groups="base.group_user")
-        self._reset_bus()
-        bob_presence = self.env["mail.presence"].search([("user_id", "=", bob.id)])
-        bob_presence._send_presence(bus_target=other_user)
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        notifications = self.env["bus.bus"].search([])
-        self.assertEqual(len(notifications), 1)  # Only im_status notification was dispatched, and only for bus_target.
-        self.assertEqual(
-            notifications.channel,
-            json_dump(channel_with_db(self.env.cr.dbname, other_user)),
-        )
-        self.assertEqual(
-           json.loads(notifications.message)["payload"],
-            {"res.users": [{"id": bob.id, "im_status": "online"}]},
-        )
+        with self.assertBus(
+            BusResult(
+                other_user,
+                "mail.record/insert",
+                {"res.users": [{"id": bob.id, "im_status": "online"}]},
+            ),
+        ):
+            bob_presence = self.env["mail.presence"].search([("user_id", "=", bob.id)])
+            bob_presence._send_presence(bus_target=other_user)
