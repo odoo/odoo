@@ -454,6 +454,8 @@
                     <filter string="My Team" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]"
                             groups="hr_expense.group_hr_expense_team_approver" help="Expenses of Your Team Member"/>
                     <separator />
+                    <filter string="Action Required" name="action_required" domain="[('state', 'not in', ['paid', 'refused'])]"/>
+                    <separator />
                     <filter string="Paid by Company" name="by_company" domain="[('payment_mode', '=', 'company_account')]"/>
                     <filter string="Paid by Employee" name="by_employee" domain="[('payment_mode', '=', 'own_account')]"/>
                     <separator />
@@ -524,7 +526,7 @@
             <field name="res_model">hr.expense</field>
             <field name="view_mode">list,kanban,form,graph,pivot,activity</field>
             <field name="search_view_id" ref="hr_expense_view_search"/>
-            <field name="context">{'search_default_my_open_expenses': 1}</field>
+            <field name="context">{'search_default_my_open_expenses': 1, 'search_default_action_required': 1}</field>
             <field name="help" type="html">
                 <div class="o_view_nocontent_expense_receipt o_view_pink_overlay">
                     <p class="o_view_nocontent_expense_receipt_image"/>
