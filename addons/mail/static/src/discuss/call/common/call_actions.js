@@ -87,7 +87,10 @@ registerCallAction("deafen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
 export const cameraOnAction = {
-    badge: ({ owner, store, channel }) => !owner.env.inCallMenu && channel?.default_display_mode === "video_full_screen" && store.rtc.cameraPermission !== "granted",
+    badge: ({ owner, store, channel }) =>
+        !owner.env.inCallMenu &&
+        channel?.default_display_mode === "video_full_screen" &&
+        store.rtc.cameraPermission !== "granted",
     badgeIcon: "fa fa-exclamation",
     condition: ({ channel }) => channel?.isSelfInCall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
@@ -195,11 +198,7 @@ registerCallAction("fullscreen", {
 });
 registerCallAction("picture-in-picture", {
     condition: ({ owner, channel, store }) =>
-        !owner.env.inCallMenu &&
-        channel?.isSelfInCall &&
-        store.env.services["discuss.pip_service"] &&
-        !store.env?.isSmall &&
-        !owner.env.pipWindow,
+        channel?.isSelfInCall && !store.env?.isSmall && !owner.env.pipWindow,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
