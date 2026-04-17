@@ -20,6 +20,7 @@ This module add, for accounting:
     'depends': [
         'account_qr_code_emv',
         'account',
+        'account_edi_ubl_cii',
     ],
     'auto_install': ['account'],
     'data': [
