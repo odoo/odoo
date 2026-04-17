@@ -65,6 +65,11 @@ class ProductCatalogMixin(models.AbstractModel):
             'id': section.id,
             'sequence': section.sequence,
             'display_type': display_type,
+            'subtotal': 0.0,
+            'currency_id': self.currency_id.id,
+            'collapse_prices': False, #update
+            'collapse_composition': False, #update
+            'is_optional': False, #update
         }
 
     def _get_new_line_sequence(self, child_field, section_id):
@@ -83,7 +88,7 @@ class ProductCatalogMixin(models.AbstractModel):
             # Insert after the last product of the selected section
             section_found = False
             for line in lines:
-                if line.display_type != 'line_section':
+                if line.display_type not in ('line_section', 'line_subsection'):
                     continue
                 if section_found:
                     sequence = line.sequence
@@ -113,10 +118,11 @@ class ProductCatalogMixin(models.AbstractModel):
         """
         sections = {}
         no_section_count = 0
+        no_section_subtotal = 0.0
         lines = self[child_field]
         for line in lines.sorted('sequence'):
             if line.display_type in ('line_section', 'line_subsection'):
-                sections[line.id] = {
+                values = {
                     'id': line.id,
                     'name': line.name,
                     'sequence': line.sequence,
@@ -126,18 +132,23 @@ class ProductCatalogMixin(models.AbstractModel):
                     'subtotal': line._get_section_totals('price_subtotal'),
                     'currency_id': self.currency_id.id,
                 }
+                if hasattr(line, 'collapse_prices'):
+                    values['collapse_prices'] = line.collapse_prices
+                if hasattr(line, 'collapse_composition'):
+                    values['collapse_composition'] = line.collapse_composition
+                if hasattr(line, 'is_optional'):
+                    values['is_optional'] = line.is_optional
+                sections[line.id] = values
             elif self._is_line_valid_for_section_line_count(line):
-                section = line.get_parent_section_line()
-                subsection = line.get_parent_subsection_line()
+                if line.parent_id and line.parent_id.id in sections:
+                    sections[line.parent_id.id]['line_count'] += 1
 
-                if subsection and subsection.id in sections:
-                    sections[subsection.id]['line_count'] += 1
+                if line.parent_id and line.parent_id.parent_id and line.parent_id.parent_id.id in sections:
+                    sections[line.parent_id.parent_id.id]['line_count'] += 1
 
-                if section and section.id in sections:
-                    sections[section.id]['line_count'] += 1
-
-                if not (section or subsection):
+                if not line.parent_id:
                     no_section_count += 1
+                    no_section_subtotal += line.price_subtotal
 
         if no_section_count > 0 or not sections:
             # If there are products outside of a section or no section at all
@@ -147,6 +158,9 @@ class ProductCatalogMixin(models.AbstractModel):
                 'sequence': lines[0].sequence - 1 if lines else 0,
                 'parent_id': False,
                 'line_count': no_section_count,
+                'display_type': False,
+                'subtotal': no_section_subtotal,
+                'currency_id': self.currency_id.id,
             }
 
         return sorted(sections.values(), key=lambda x: x['sequence'])
@@ -181,7 +195,7 @@ class ProductCatalogMixin(models.AbstractModel):
         )
 
     def _resequence_sections(self, child_field, id, parent_id, before_id=None, **kwargs):
-        lines = getattr(self, child_field).sorted("sequence")
+        lines = self[child_field].sorted("sequence")
         section = lines.browse(id)
 
         if not section:
@@ -360,5 +374,20 @@ class ProductCatalogMixin(models.AbstractModel):
             )
 
         to_delete.unlink()
+
+        return True
+
+    def _toggle_field_of_section(self, child_field, section_id, field_name, **kwargs):
+        lines = self[child_field]
+        section = lines.browse(section_id)
+
+        if not section.exists():
+            return True
+
+        # ensure field exists on model
+        if field_name not in section._fields:
+            return True
+
+        section[field_name] = not section[field_name]
 
         return True

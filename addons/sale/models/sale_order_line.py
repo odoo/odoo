@@ -1896,27 +1896,6 @@ class SaleOrderLine(models.Model):
 
         return self.parent_id
 
-    def get_parent_subsection_line(self):
-        if not self.display_type and self.parent_id.display_type == "line_subsection":
-            return self.parent_id
-
-        return False
-
-    def is_in_section(self, section_id):
-        """Check if line belongs to given section (or subsection)."""
-        self.ensure_one()
-
-        section = self.get_parent_section_line()
-
-        if not section_id:
-            return not section
-
-        if section and section.id == section_id:
-            return True
-
-        subsection = self.get_parent_subsection_line()
-        return subsection and subsection.id == section_id
-
     def _get_section_totals(self, totals_field):
         """Return the total/subtotal amount sale order lines linked to section."""
         self.ensure_one()

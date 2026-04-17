@@ -7,6 +7,8 @@ patch(ProductCatalogKanbanRecord.prototype, {
     setup() {
         super.setup();
 
+        this._pendingSectionUpdate = null;
+
         useSubEnv({
             ...this.env,
             selectedSectionId: this.env.searchModel.selectedSection.sectionId,
@@ -36,17 +38,40 @@ patch(ProductCatalogKanbanRecord.prototype, {
 
     updateQuantity(quantity) {
         const lineCountChange = (quantity > 0) - (this.productCatalogData.quantity > 0);
-        if (lineCountChange !== 0) {
-            this.notifyLineCountChange(lineCountChange);
-        }
+
+        const oldSubtotal = this.productCatalogData.quantity * this.productCatalogData.price;
 
         super.updateQuantity(quantity);
+
+        this._pendingSectionUpdate = {
+            oldSubtotal,
+            lineCountChange,
+        };
     },
 
-    notifyLineCountChange(lineCountChange) {
+    async _onQuantityChange() {
+        await super._onQuantityChange();
+
+        if (this._pendingSectionUpdate) {
+            const newSubtotal = this.productCatalogData.quantity * this.productCatalogData.price;
+
+            const subtotalDelta =
+                newSubtotal - this._pendingSectionUpdate.oldSubtotal;
+
+            this.notifySectionUpdate({
+                lineCountChange: this._pendingSectionUpdate.lineCountChange,
+                subtotalDelta,
+            });
+
+            this._pendingSectionUpdate = null;
+        }
+    },
+
+    notifySectionUpdate({lineCountChange, subtotalDelta}) {
         this.env.searchModel.trigger('section-line-count-change', {
             sectionId: this.env.selectedSectionId,
             lineCountChange: lineCountChange,
+            subtotalDelta: subtotalDelta,
         });
     },
 })

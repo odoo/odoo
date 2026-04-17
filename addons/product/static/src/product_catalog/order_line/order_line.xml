@@ -6,7 +6,6 @@
         <Portal target="this.portalTarget" t-key="this.rev">
             <div class="d-inline-flex align-items-baseline">
                 <span t-if="this.showPrice" t-out="this.price" class="o_product_catalog_price fw-bold me-4"/>
-                <span t-if="this.props.code" t-out="this.props.code" class="text-muted"/>
             </div>
             <span t-if="this.displayPriceByProductUoM" class="d-flex text-muted small" t-out="`${this.productUnitPrice}/${this.props.productUomDisplayName}`"/>
         </Portal>
@@ -22,7 +21,7 @@
         <span t-elif="this.props.readOnly" class="m-2 pt-3 border-top" t-out="this.props.warning">
             You can't edit this product in the catalog.
         </span>
-        <div t-else="" class="d-flex justify-content-end align-items-center m-2">
+        <div t-else="" class="d-flex align-items-center m-2">
             <div t-if="this.isInOrder()"
                 class="o_product_catalog_quantity o_product_catalog_cancel_global_click input-group flex-nowrap mw-75">
                 <button
@@ -74,7 +73,7 @@
                     t-out="this.props.warning"/>
             </t>
             <div 
-                class="ms-auto o_product_catalog_buttons o_product_catalog_cancel_global_click"
+                class="o_product_catalog_buttons o_product_catalog_cancel_global_click"
                 style="min-width: max-content;">
                 <button t-if="!this.isInOrder()"
                         t-on-click.stop="() => this.env.addProduct()"
@@ -82,14 +81,6 @@
                     <i class="fa fa-shopping-cart"/>
                     Add
                 </button>
-                <div t-else="" class="o_tooltip_div_remove" t-att-data-tooltip="this.disabledButtonTooltip">
-                    <button t-on-click.stop="this.env.removeProduct"
-                            t-att-disabled="this.disableRemove"
-                            class="btn btn-light border">
-                        <i class="fa fa-trash"/>
-                        Remove
-                    </button>
-                </div>
             </div>
         </div>
     </t>

@@ -1,13 +1,13 @@
 import { Component } from "@odoo/owl";
 import { formatCurrency } from '@web/core/currency';
-import { SectionsDropdown } from "./sections_dropdown";
+import { SectionDropdown } from "../section_dropdown/section_dropdown";
 
 export class SectionRow extends Component {
     static template = "account.SectionRow";
 
     static components = {
         SectionRow,
-        SectionsDropdown,
+        SectionDropdown,
     };
 
     static props = {

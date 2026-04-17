@@ -26,7 +26,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             precision: this.props.record.context.precision,
             productId: this.props.record.resId,
             addProduct: this.addProduct.bind(this),
-            removeProduct: this.removeProduct.bind(this),
             increaseQuantity: this.increaseQuantity.bind(this),
             setQuantity: this.setQuantity.bind(this),
             decreaseQuantity: this.decreaseQuantity.bind(this),
@@ -120,13 +119,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
      */
     addProduct(qty=1) {
         this.updateQuantity(qty);
-    }
-
-    /**
-     * Remove the product to the order
-     */
-    removeProduct() {
-        this.updateQuantity(0);
     }
 
     /**

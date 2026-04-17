@@ -4,8 +4,8 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { rpc } from '@web/core/network/rpc';
 import { _t } from '@web/core/l10n/translation';
 
-export class SectionsDropdown extends Component {
-    static template = "account.SectionsDropdown";
+export class SectionDropdown extends Component {
+    static template = "account.SectionDropdown";
     static components = { Dropdown, DropdownItem };
 
     static props = {
@@ -15,7 +15,7 @@ export class SectionsDropdown extends Component {
 
     async duplicateSection() {
         const result = await rpc("/product/catalog/duplicate_section",
-            this._getSectionInfoParams({
+            this.env._getSectionInfoParams({
                 section_id: this.props.section.id,
                 parent_id: this.props.section.parent_id,
             })
@@ -24,16 +24,15 @@ export class SectionsDropdown extends Component {
         const section = JSON.parse(JSON.stringify(this.props.section));
         section.id = result.id;
         if (this.props.section.parent_id) {
-            const parent = this.env._findSectionById(this.props.section.parent_id, this.props.state.sections);
-            parent.children.push(section);
-            parent.isOpen = true;
+            this.parent.children.push(section);
+            this.parent.isOpen = true;
         } else {
             this.props.state.sections.push(section);
         }
         const sequenceMap = result.sections;
 
-        const update = (list) => {
-            for (const s of list) {
+        const update = (sections) => {
+            for (const s of sections) {
                 if (sequenceMap[s.id] !== undefined) {
                     s.sequence = sequenceMap[s.id];
                 }
@@ -52,15 +51,15 @@ export class SectionsDropdown extends Component {
 
         await rpc(
             "/product/catalog/delete_section",
-            this._getSectionInfoParams({ section_id: section.id })
+            this.env._getSectionInfoParams({ section_id: section.id })
         );
 
-        const remove = (list) => {
-            for (let i = 0; i < list.length; i++) {
-                const s = list[i];
+        const remove = (sections) => {
+            for (let i = 0; i < sections.length; i++) {
+                const s = sections[i];
 
                 if (s.id === section.id) {
-                    list.splice(i, 1);
+                    sections.splice(i, 1);
                     return true;
                 }
 
@@ -76,10 +75,7 @@ export class SectionsDropdown extends Component {
         const selected = this.env.searchModel.selectedSection.sectionId;
 
         if (selected === section.id) {
-            this.env.setSelectedSection(
-                state.sections[0]?.id || null,
-                false
-            );
+            this.env.setSelectedSection(state.sections[0]?.id || null, false);
         }
 
         if (!state.sections.length) {
@@ -94,13 +90,45 @@ export class SectionsDropdown extends Component {
         }
     }
 
-    _getSectionInfoParams(extra = {}) {
-        const ctx = this.env.model.config.context;
-        return {
-            res_model: ctx.product_catalog_order_model,
-            order_id: ctx.order_id,
-            child_field: ctx.child_field,
-            ...extra,
-        };
+    async toggleFieldOfSection(field) {
+        const section = this.props.section;
+
+        await rpc(
+            "/product/catalog/toggle_field_of_section",
+            this.env._getSectionInfoParams({
+                section_id: section.id,
+                field: field,
+            })
+        );
+        section[field] = !section[field];
+
+        // If enabled, disable others
+        if (section[field]) {
+
+            for (const f of this._getToggleFieldsOfSection()) {
+                if (f !== field) {
+                    section[f] = false;
+                }
+            }
+        }
+    }
+
+    disableCompositionButton() {
+        return !!this.parent?.collapse_composition;
+    }
+
+    disablePricesButton() {
+        return !!(this.parent?.collapse_prices || this.parent?.collapse_composition);
+    }
+
+    get parent() {
+        return this.env._findSectionById(
+            this.props.section.parent_id,
+            this.props.state.sections
+        );
+    }
+
+    _getToggleFieldsOfSection(){
+        return ["collapse_prices", "collapse_composition"];
     }
 }

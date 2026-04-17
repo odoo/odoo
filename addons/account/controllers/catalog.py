@@ -85,3 +85,14 @@ class ProductCatalogAccountController(ProductCatalogController):
         """
         order = request.env[res_model].browse(order_id)
         return order.with_company(order.company_id)._duplicate_section(child_field, section_id, parent_id, **kwargs)
+
+    @route('/product/catalog/toggle_field_of_section', auth='user', type='jsonrpc')
+    def product_catalog_toggle_field_of_section(self, res_model, order_id, child_field, section_id, field, **kwargs):
+        """Toggle the collapse state of the given section.
+
+        :param int section_id: The section id.
+        :return: A dictionary with the updated section's 'id' and 'collapse_prices' status.
+        :rtype: dict
+        """
+        order = request.env[res_model].browse(order_id)
+        return order.with_company(order.company_id)._toggle_field_of_section(child_field, section_id, field, **kwargs)
