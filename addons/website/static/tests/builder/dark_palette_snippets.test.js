@@ -9,12 +9,8 @@ import {
     models,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import {
-    defineWebsiteModels,
-    getStructureSnippet,
-    setupWebsiteBuilder,
-    waitForSnippetDialog,
-} from "./website_helpers";
+import { defineWebsiteModels, setupWebsiteBuilder, waitForSnippetDialog } from "./website_helpers";
+import { getStructureSnippet } from "../snippet_helpers";
 
 defineWebsiteModels();
 

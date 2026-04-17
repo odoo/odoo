@@ -2,9 +2,9 @@ import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
-    getStructureSnippet,
     setupSidebarBuilderForTranslation,
 } from "@website/../tests/builder/website_helpers";
+import { getStructureSnippet } from "@website/../tests/snippet_helpers";
 
 defineWebsiteModels();
 
