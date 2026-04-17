@@ -14,15 +14,25 @@ function removeImageSrc(xmlString) {
     return new XMLSerializer().serializeToString(doc);
 }
 
-let websiteSnippetsPromise;
-export const getWebsiteSnippets = () => {
-    if (!websiteSnippetsPromise) {
-        websiteSnippetsPromise = unmockedOrm(
+let snippetsWithImgPromise, snippetsWithoutImgPromise;
+
+export const getWebsiteSnippets = (withImgSrc = false) => {
+    if (!snippetsWithImgPromise) {
+        snippetsWithImgPromise = unmockedOrm(
             "ir.ui.view",
             "render_public_asset",
             ["website.snippets"],
             {}
-        ).then((snippets) => removeImageSrc(snippets.trim()));
+        );
     }
-    return websiteSnippetsPromise;
+
+    if (withImgSrc) {
+        return snippetsWithImgPromise;
+    }
+    if (!snippetsWithoutImgPromise) {
+        snippetsWithoutImgPromise = snippetsWithImgPromise.then((snippets) =>
+            removeImageSrc(snippets.trim())
+        );
+    }
+    return snippetsWithoutImgPromise;
 };
