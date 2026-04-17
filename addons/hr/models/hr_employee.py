@@ -50,8 +50,7 @@ class HrEmployee(models.Model):
         ondelete='cascade',
         required=True,
         store=False,
-        compute_sudo=True,
-        groups="hr.group_hr_user")
+        compute_sudo=True)
     current_version_id = fields.Many2one(
         'hr.version',
         compute='_compute_current_version_id',
