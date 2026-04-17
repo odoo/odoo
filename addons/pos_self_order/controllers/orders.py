@@ -61,7 +61,7 @@ class PosSelfOrderController(http.Controller):
             del o['mobile']
 
         return {
-            'pos.order': self.env['pos.order']._load_pos_self_data_read(order, config),
+            'pos.order': orders,
             'pos.order.line': self.env['pos.order.line']._load_pos_self_data_read(order.lines, config),
             'pos.payment': self.env['pos.payment']._load_pos_self_data_read(order.payment_ids, config),
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_self_data_read(order.lines.custom_attribute_value_ids, config),
@@ -178,17 +178,7 @@ class PosSelfOrderController(http.Controller):
     @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
         pos_config = self._verify_pos_config(access_token)
-        table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
-        domain = False
-
-        if not table_identifier or pos_config.self_ordering_pay_after == 'each':
-            domain = [(False, '=', True)]
-        else:
-            domain = ['&', '&',
-                ('table_id', '=', table.id),
-                ('state', '=', 'draft'),
-                ('access_token', 'not in', [data.get('access_token') for data in order_access_tokens])
-            ]
+        domain = [(False, '=', True)]
 
         for data in order_access_tokens:
             domain = Domain.OR([domain, ['&',
