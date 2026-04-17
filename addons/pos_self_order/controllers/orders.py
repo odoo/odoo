@@ -53,8 +53,14 @@ class PosSelfOrderController(http.Controller):
         return self._generate_return_values(order_ids, pos_config)
 
     def _generate_return_values(self, order, config_id):
+        orders = order.read(order._load_pos_data_fields(config_id.id), load=False)
+
+        for o in orders:
+            del o['email']
+            del o['mobile']
+
         return {
-            'pos.order': order.read(order._load_pos_data_fields(config_id.id), load=False),
+            'pos.order': orders,
             'pos.order.line': order.lines.read(order._load_pos_data_fields(config_id.id), load=False),
             'pos.payment': order.payment_ids.read(order.payment_ids._load_pos_data_fields(order.config_id.id), load=False),
             'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(order.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
