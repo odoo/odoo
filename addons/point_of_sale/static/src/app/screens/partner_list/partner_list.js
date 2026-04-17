@@ -30,15 +30,10 @@ export class PartnerList extends Component {
         this.modalRef = useChildRef();
         this.modalContent = null;
         this.state = proxy({
-            initialPartners: this.pos.models["res.partner"].filter((p) => {
-                const par = p.property_account_receivable_id;
-                return !par || par.non_trade !== true;
-            }),
-            loadedPartners: [],
+            partners: new Map(),
             query: "",
             loading: false,
         });
-        this.loadedPartnerIds = new Set(this.state.initialPartners.map((p) => p.id));
         useHotkey("enter", () => this.onEnter(), {
             bypassEditableProtection: true,
         });
@@ -46,9 +41,11 @@ export class PartnerList extends Component {
 
         useLayoutEffect(
             () => {
-                if (this.state.loading || !this.modalRef.el) {
+                if (!this.modalRef.el) {
                     return;
-                } else if (!this.modalContent) {
+                }
+
+                if (!this.modalContent) {
                     this.modalContent = this.modalRef.el.querySelector(".modal-body");
                 }
 
@@ -60,7 +57,73 @@ export class PartnerList extends Component {
             },
             () => [this.modalRef.el]
         );
+        this.initPartnerLoad();
     }
+
+    async initPartnerLoad() {
+        const initialPartners = this.pos.models["res.partner"].filter((p) => {
+            const par = p.property_account_receivable_id;
+            return !par || par.non_trade !== true;
+        });
+        this.mergeBatch(initialPartners);
+
+        let safeCount = 0;
+        while (this.state.partners.size < 25) {
+            const batch = await this.getNewPartners();
+            if (batch.length === 0) {
+                break;
+            }
+
+            safeCount++;
+            if (safeCount === 10) {
+                break;
+            }
+        }
+    }
+    mergeBatch(incoming) {
+        const merged = new Map();
+        for (const partner of incoming) {
+            const key = this.getDeduplicationKey(partner);
+            const existing = this.state.partners.get(key);
+
+            if (!existing || this.isRicherThan(partner, existing)) {
+                this.state.partners.set(key, partner);
+                merged.set(key, partner);
+            }
+        }
+        return Array.from(merged.values());
+    }
+    getDeduplicationKey(partner) {
+        if (partner.total_due > 0) {
+            const shortId = Math.random().toString(36).slice(2, 7);
+            return `id:${shortId}`;
+        }
+
+        if (partner.email) {
+            return `email:${partner.email.toLowerCase().trim()}`;
+        }
+        if (partner.phone) {
+            return `phone:${partner.phone.replace(/\D/g, "")}`;
+        }
+        return `name:${partner.name?.toLowerCase().trim() ?? "__unknown__"}`;
+    }
+    isRicherThan(challenger, current) {
+        return this.countFields(challenger) > this.countFields(current);
+    }
+    countFields(partner) {
+        return [
+            partner.email,
+            partner.phone,
+            partner.name,
+            partner.city,
+            partner.country_id,
+            partner.state_id,
+            partner.street,
+            partner.street2,
+            partner.zip,
+        ].filter(Boolean).length;
+    }
+
     get globalState() {
         return this.pos.screenState.partnerList;
     }
@@ -188,13 +251,12 @@ export class PartnerList extends Component {
         this.props.close();
     }
     async searchPartner() {
-        const partner = await this.getNewPartners();
-        return partner;
+        return await this.getNewPartners();
     }
     async getNewPartners() {
         let domain = [];
         const offset = this.globalState.offsetBySearch[this.state.query] || 0;
-        if (offset > this.loadedPartnerIds.size) {
+        if (this.globalState.fullyLoadedBySearch[this.state.query]) {
             return [];
         }
         if (this.state.query) {
@@ -213,18 +275,11 @@ export class PartnerList extends Component {
                 domain,
                 offset,
             ]);
+            const partners = result["res.partner"];
 
-            this.globalState.offsetBySearch[this.state.query] =
-                offset + (result["res.partner"].length || 100);
-
-            for (const partner of result["res.partner"]) {
-                if (!this.loadedPartnerIds.has(partner.id)) {
-                    this.loadedPartnerIds.add(partner.id);
-                    this.state.loadedPartners.push(partner);
-                }
-            }
-
-            return result["res.partner"];
+            this.globalState.offsetBySearch[this.state.query] = offset + partners.length;
+            this.globalState.fullyLoadedBySearch[this.state.query] = partners.length === 0;
+            return this.mergeBatch(partners);
         } catch {
             return [];
         } finally {
