@@ -644,6 +644,19 @@ class RecipientsNotificationTest(MailCommon):
         )
 
     @users('employee')
+    def test_suggested_recipients_excludes_current_user_after_unfollow(self):
+        """Current user should not be suggested after they unsubscribe from a thread."""
+        test = self.env['mail.test.track'].create({
+            'name': 'Test Track',
+            'user_id': self.env.user.id,
+        })
+        test.message_unsubscribe([self.env.user.partner_id.id])
+        self.assertNotIn(
+            self.env.user.partner_id.id,
+            [partner_id for partner_id, *_ in test._message_get_suggested_recipients()[test.id]],
+        )
+
+    @users('employee')
     def test_notification_user_choice(self):
         """ Check fetching user information when notifying someone with multiple
         users (more complex use case). """
