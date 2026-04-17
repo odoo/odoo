@@ -20,12 +20,13 @@ from odoo import _, api, Command, fields, models, modules
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.models.account_payment_method_line import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
+from odoo.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
 
 
 WAITING_STATES = ('being_sent', 'processing', 'forward_attempt')
-FATTURAPA_FILENAME_RE = "[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))"
+FATTURAPA_FILENAME_RE = r"[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}\.((?i:xml\.p7m|xml))"
 
 
 # -------------------------------------------------------------------------
@@ -264,48 +265,61 @@ class AccountMove(models.Model):
         for move in self:
             move.show_reset_to_draft_button = not move.l10n_it_edi_transaction and move.show_reset_to_draft_button
 
+    def _parse_xml_with_recovery(self, content, name=None):
+        def parse_xml(parser, content):
+            try:
+                return etree.fromstring(content, parser)
+            except (etree.ParseError, ValueError) as e:
+                _logger.info("XML parsing of %s failed: %s", name, e)
+
+        parser = etree.XMLParser(recover=True, resolve_entities=False)
+        xml_tree = parse_xml(parser, content)
+        if xml_tree is None:
+            cleaned = remove_signature(content)
+            if cleaned:
+                xml_tree = parse_xml(parser, cleaned)
+        return xml_tree
+
     def _get_xml_tree(self, file_data):
         """ Some FatturaPA XMLs need to be parsed with `recover=True`,
             and some have signatures that need to be removed prior to parsing.
         """
         # EXTENDS 'account'
         res = super()._get_xml_tree(file_data)
-
-        # If the file was not correctly parsed, retry parsing it.
-        if res is None and self._is_l10n_it_edi_import_file(file_data):
-            def parse_xml(parser, name, content):
-                try:
-                    return etree.fromstring(content, parser)
-                except (etree.ParseError, ValueError) as e:
-                    _logger.info("XML parsing of %s failed: %s", name, e)
-
-            parser = etree.XMLParser(recover=True, resolve_entities=False)
-            xml_tree = parse_xml(parser, file_data['name'], file_data['raw'])
-            xml_tree = (
-                xml_tree if xml_tree is not None else
-                # The file may have a Cades signature, so we try removing it.
-                parse_xml(parser, file_data['name'], remove_signature(file_data['raw']))
-            )
-            if xml_tree is None:
-                _logger.info("Italian EDI invoice file %s cannot be decoded.", file_data['name'])
-            return xml_tree
-
+        if res is None:
+            filename = file_data['name'].lower()
+            mimetype = file_data['mimetype']
+            if (
+                mimetype.endswith('/xml')
+                or 'application/pkcs7-mime' in mimetype
+                or 'text/plain' in mimetype
+                and (
+                    filename.endswith(('.xml', '.p7m'))
+                    or guess_mimetype(file_data['raw'] or b'').endswith('/xml')
+                )
+            ):
+                # We don't need to log the error here actually, let's remove the name
+                xml_tree = self._parse_xml_with_recovery(file_data['raw'])
+                if xml_tree is not None:
+                    return xml_tree
         return res
 
+    def _check_l10n_it_edi_xml_content(self, file_data):
+        """ Checks if the XML root tag starts with 'FatturaElettronica'. Handles both standard XML and signed p7m files."""
+        xml_tree = self._parse_xml_with_recovery(file_data['raw'], file_data['name'])
+        if xml_tree is None:
+            return False
+        tag_name = etree.QName(xml_tree).localname
+        return tag_name.startswith('FatturaElettronica')
+
     def _is_l10n_it_edi_import_file(self, file_data):
-        is_xml = (
-            file_data['name'].endswith('.xml')
-            or file_data['mimetype'].endswith('/xml')
-            or 'text/plain' in file_data['mimetype']
-            and file_data['raw']
-            and file_data['raw'].startswith(b'<?xml'))
-        is_p7m = file_data['mimetype'] == 'application/pkcs7-mime'
-        return (is_xml or is_p7m) and re.search(FATTURAPA_FILENAME_RE, file_data['name'])
+        xml_tree = file_data.get('xml_tree')
+        return (xml_tree is not None and etree.QName(file_data['xml_tree']).localname.startswith('FatturaElettronica'))
 
     def _get_import_file_type(self, file_data):
         """ Identify FatturaPA XML and P7M files. """
         # EXTENDS 'account'
-        if self._is_l10n_it_edi_import_file(file_data) and file_data['xml_tree'] is not None:
+        if self._is_l10n_it_edi_import_file(file_data):
             return 'l10n_it.fatturapa'
         return super()._get_import_file_type(file_data)
 
