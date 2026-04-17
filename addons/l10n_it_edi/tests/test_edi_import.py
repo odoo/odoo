@@ -770,3 +770,24 @@ class TestItEdiImport(TestItEdi):
             'l10n_it_edi_transaction': f'{2:0>11}',
             },
         ])
+
+    def test_receive_multiple_body_bill_xml_and_p7m(self):
+        """ Test the correct import of an XML file containing multiple bodies."""
+        single_body_data = {
+            'invoice_date': fields.Date.from_string('2026-03-26'),
+            'ref': 'INV/2026/00010',
+            'amount_untaxed': 750.0,
+            'amount_tax': 165.0,
+            'amount_total': 915.0,
+            'invoice_line_ids': [
+                {
+                    'name': '[DESK0006] Customizable Desk (Black, Custom) 160x80cm, with large legs',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                },
+            ],
+        }
+        # Check xml file
+        self._assert_import_invoice('IT01654010345_10099.xml', [single_body_data] * 3)
+        # Check p7m file
+        self._assert_import_invoice('IT01654010345_10099.xml.p7m', [single_body_data] * 3)
