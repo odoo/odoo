@@ -1146,3 +1146,36 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             {"balance": 1000.0,     "tax_tag_ids": []},
             {"balance": -1000.0,    "tax_tag_ids": base_tag.ids},
         ])
+
+    def test_payment_register_non_withholding_tax(self):
+        """ Test the flow of registering a payment on an invoice with non-withholding taxes. """
+        tax_a = self.percent_tax(
+            -5,
+            is_withholding_tax_on_payment=True,
+            withholding_sequence_id=self.withholding_sequence.id,
+            type_tax_use='purchase',
+        )
+        tax_b = self.percent_tax(12, type_tax_use='purchase')
+        tax_c = self.percent_tax(-10, type_tax_use='purchase')
+
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2024-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set((tax_a | tax_b | tax_c).ids)],
+            })],
+        })
+        bill.action_post()
+
+        # Clear ORM cache so field access triggers the prefetch traversal.
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=bill.ids)\
+            .create({})
+
+        self.assertRecordValues(payment_register, [{'amount': 1020.0, 'withholding_net_amount': 970.0}])

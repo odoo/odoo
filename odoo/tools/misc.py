@@ -1004,6 +1004,9 @@ class OrderedSet[T](MutableSet[T]):
     def __iter__(self):
         return iter(self._map)
 
+    def __reversed__(self):
+        return reversed(self._map)
+
     def __len__(self):
         return len(self._map)
 
