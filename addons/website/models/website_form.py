@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
-
+from collections import defaultdict
 from lxml import html
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.osv import expression
@@ -153,22 +153,49 @@ class website_form_model_fields(models.Model):
     @api.ondelete(at_uninstall=False)
     def _check_if_used_in_website_form(self):
         """Prevent field deletion if used in a website form."""
+        if not self:
+            return
+
+        fields_by_model = defaultdict(list)
         for field in self:
-            for model_name, field_name in self.env['website']._get_html_fields():
-                domain = [(field_name, 'ilike', f'data-model_name="{field.model}"')]
-                records = self.env[model_name].with_context(active_test=False).search(domain)
-                for record in records:
-                    arch_parsed = html.fromstring(record[field_name])
-                    xpath_selector = f'//form[@data-model_name="{field.model}"]//*[@name="{field.name}"]'
-                    if arch_parsed.xpath(xpath_selector):
-                        raise ValidationError(_(
+            fields_by_model[field.model].append(field.name)
+
+        def _form_domain(field_name):
+            return expression.OR([
+                [(field_name, 'ilike', f'data-model_name="{model}"')]
+                for model in fields_by_model
+            ])
+
+        def _check(source_html, display_name):
+            arch_parsed = html.fromstring(source_html)
+            for model, fnames in fields_by_model.items():
+                for fname in fnames:
+                    xpath = f'//form[@data-model_name="{model}"]//*[@name="{fname}"]'
+                    if arch_parsed.xpath(xpath):
+                        raise ValidationError(self.env._(
                             "The field '%(field)s' cannot be deleted because it is referenced in a website view.\n"
                             "Model: %(model)s\n"
                             "View: %(view)s",
-                            field=field.name,
-                            model=field.model,
-                            view=record.display_name,
+                            field=fname,
+                            model=model,
+                            view=display_name,
                         ))
+
+        # Scan `ir.ui.view.arch_db` (always first in `_get_html_fields`) plus
+        # stored HTML columns where a `<form>` can still exist in the database:
+        # - sanitization disabled (`sanitize=False`, e.g. blog.post.content);
+        # - forms allowed (`sanitize_form=False`, e.g. product.template.website_description);
+        # - `sanitize_overridable=True`: users in `base.group_sanitize_override`
+        #   bypass `html_sanitize`, so `<form>` may be stored even when
+        #   `sanitize` and `sanitize_form` are True (e.g. event.sponsor.website_description).
+        # Other HTML fields strip `<form>` on every write and need not be scanned.
+        for model_name, field_name in self.env['website']._get_html_fields():
+            field = self.env[model_name]._fields[field_name]
+            if field.type == 'html' and field.sanitize and field.sanitize_form and not field.sanitize_overridable:
+                continue
+            records = self.env[model_name].with_context(active_test=False).search(_form_domain(field_name))
+            for record in records:
+                _check(record[field_name], record.display_name)
 
     @api.model
     def formbuilder_whitelist(self, model, fields):
