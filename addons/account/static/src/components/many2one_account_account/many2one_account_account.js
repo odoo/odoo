@@ -11,20 +11,13 @@ export class Many2XAccountAccountAutocomplete extends Many2XAutocomplete {
 
     async onSearchMore(request) {
         const { getDomain, context, fieldString } = this.props;
-        let dynamicFilters = [];
         if (request.length) {
-            dynamicFilters = [
-                {
-                    description: _t("Quick search: %s", request),
-                    domain: [["name", "ilike", request]],
-                },
-            ];
+            context["search_default_name"] = request;
         }
         const title = _t("Search: %s", fieldString);
         this.selectCreate({
             domain: getDomain(),
             context,
-            filters: dynamicFilters,
             title,
         });
     }
