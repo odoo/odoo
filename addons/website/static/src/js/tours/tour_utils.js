@@ -323,7 +323,7 @@ export function clickOnSave(position = "bottom", timeout = 50000, withContains =
             trigger: ".o-snippets-menu:not(:has(.o_we_ongoing_insertion))",
         },
         {
-            trigger: "body:not(:has(.o_dialog))",
+            trigger: "body.o_builder_open:not(:has(.o_dialog))",
         },
         {
             trigger: withContains
