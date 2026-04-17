@@ -488,7 +488,38 @@ export function parseEmail(text) {
     return [text, false];
 }
 
-export const EMOJI_REGEX = /\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200d/gu;
+const r = String.raw;
+/**
+ * Match Country Subdivision Flags.
+ * Black Flag emoji + tag-encoded subdivision name + cancel tag
+ * Example:
+ * 🏴 + [B] + [E] + [W] + [A] + [L] + [CANCEL] = Flag for Wallonia (BE-WAL)
+ */
+const SUBDIVISION_FLAG = r`🏴[\u{E0020}-\u{E007E}]+\u{E007F}`;
+/**
+ * Match Keycaps (e.g., 5️⃣, #️⃣).
+ * Numpad character + Variation Selector-16 + Combining Enclosing Keycap
+ */
+const KEYCAP = r`[#*\d]\uFE0F\u20E3`;
+const EMOJI_WITH_SKIN_TONE = r`\p{Emoji_Modifier_Base}\p{Emoji_Modifier}`;
+/**
+ * Match "regular" emojis.
+ * iOS keyboard sometimes appends an extraneous Variation Selector-16, which the
+ * optional \uFE0F accounts for.
+ */
+const EMOJI_PRESENTATION = r`\p{Emoji_Presentation}\uFE0F?`;
+/**
+ * Match "text-default" emojis (☃, ♥, ☂) that are followed by a Variation
+ * Selector-16 (U+FE0F), enabling their emoji representation (☃ → ☃️).
+ * Negative lookahead prevents matching incomplete keycap sequences.
+ */
+const QUALIFIED_TEXT = r`(?![#*\d])\p{Emoji}\uFE0F`;
+const EMOJI = r`(?:${SUBDIVISION_FLAG}|${KEYCAP}|${EMOJI_WITH_SKIN_TONE}|${EMOJI_PRESENTATION}|${QUALIFIED_TEXT})`;
+export const EMOJI_REGEX = new RegExp(
+    r`\p{Regional_Indicator}{2}|` + // Regional Indicator pairs (e.g., 🇧🇪)
+        r`${EMOJI}(?:\u200D${EMOJI})*`, // Zero Width Joiner sequences (e.g., 👨‍👩‍👧‍👦)
+    "gu"
+);
 
 /**
  * Wrap emojis present in the given text with a title and return a safe HTML
