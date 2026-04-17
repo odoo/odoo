@@ -791,6 +791,7 @@ class PaymentTransaction(models.Model):
             if tx.state == "error" and tx.state != previous_state:
                 return tx
             tx._apply_updates(payment_data)
+            print("DEBUG: TOKENIZE? ", tx.tokenize)
             if tx.tokenize and tx.state in {"authorized", "done"}:
                 tx._tokenize(payment_data)
         return tx

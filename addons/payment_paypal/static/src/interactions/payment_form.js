@@ -75,7 +75,7 @@ patch(PaymentForm.prototype, {
             return;
         }
 
-        this._hideInputs();
+        this.env.bus.trigger('hidePaymentButton');
         this._setPaymentFlow('direct');
         const paypalLoadingList = document.querySelectorAll('#o_paypal_loading');
         for (const paypalLoading of paypalLoadingList) {

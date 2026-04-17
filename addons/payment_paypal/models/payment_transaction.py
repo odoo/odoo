@@ -2,11 +2,13 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import urls
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paypal import utils as paypal_utils
 from odoo.addons.payment_paypal.const import PAYMENT_STATUS_MAPPING
+from odoo.addons.payment_paypal.controllers.main import PaypalController
 
 _logger = get_payment_logger(__name__)
 
@@ -89,6 +91,25 @@ class PaymentTransaction(models.Model):
         if company_email := self.provider_id.company_id.email:
             payload["purchase_units"][0]["payee"]["display_data"]["business_email"] = company_email
 
+        # Create Order and Save Card section
+
+        if self.tokenize:
+            payload["payment_source"]["paypal"]["attributes"] = {
+                "vault": {"store_in_vault": "ON_SUCCESS", "usage_type": "PLATFORM"}
+            }
+
+            base_url = self.get_base_url()
+            payload["payment_source"]["paypal"]["experience_context"].update({
+                "return_url": urls.urljoin(base_url, PaypalController._complete_url),
+                "cancel_url": urls.urljoin(base_url, PaypalController._complete_url),
+            })
+
+            # Returning payer
+            if self.token_id:
+                payload["payment_source"]["paypal"]["attributes"]["customer"] = {
+                    "id": self.token_id.paypal_customer_id
+                }
+
         return payload
 
     @api.model
@@ -156,3 +177,34 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(_("Received data with invalid payment status: %s", payment_status))
+
+    def _extract_token_values(self, payment_data):
+        """Override of `payment` to extract the token values from the payment data."""
+        if self.provider_code != "paypal":
+            return super()._extract_token_values(payment_data)
+
+        if customer := payment_data.get(
+            "customer"
+        ):  # TODO LEKER patch, this is probably not the way to go
+            return {"provider_ref": payment_data["id"], "paypal_customer_id": customer["id"]}
+
+        vault_data = (
+            payment_data
+            .get("payment_source", {})
+            .get("card", {})
+            .get("attributes", {})
+            .get("vault")
+        )
+
+        if not vault_data:
+            return {}
+
+        if vault_data["status"] == "VAULTED":
+            return {
+                "provider_ref": vault_data["id"],
+                "paypal_customer_id": vault_data["customer"]["id"],
+            }
+
+        if vault_data["status"] == "APPROVED":
+            # https://developer.paypal.com/docs/checkout/save-payment-methods/during-purchase/js-sdk/cards/#link-saveapprovedpaymentsource
+            return {}  # TODO LEKER

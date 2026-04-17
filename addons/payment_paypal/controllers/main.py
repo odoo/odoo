@@ -97,6 +97,7 @@ class PaypalController(http.Controller):
                 "txn_type": data.get("intent"),
                 "id": data.get("id"),
                 "status": data.get("status"),
+                "customer": data.get("customer"),
             })
         elif captured := purchase_unit.get("payments", {}).get("captures"):
             result.update({**captured[0], "txn_type": "CAPTURE"})
