@@ -35,7 +35,7 @@ export class SaleProgressBarField extends KanbanProgressBarField {
      */
     async defineInvoicingTarget() {
         const { resId, resModel } = this.props.record;
-        const action = await this.orm.call(resModel, "get_formview_action", [[resId]]);
+        const action = await this.orm.call(resModel, "get_defaultview_action", [[resId]]);
         this.actionService.doAction(action, { props: { mode: "edit" } });
     }
 }

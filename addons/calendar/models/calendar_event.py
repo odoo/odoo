@@ -996,7 +996,7 @@ class Meeting(models.Model):
 
     def action_open_calendar_event(self):
         if self.res_model and self.res_id:
-            return self.env[self.res_model].browse(self.res_id).get_formview_action()
+            return self.env[self.res_model].browse(self.res_id).get_defaultview_action()
         return False
 
     def action_sendmail(self):

@@ -142,8 +142,8 @@ class Department(models.Model):
             ])
         employees.write({'parent_id': manager_id})
 
-    def get_formview_action(self, access_uid=None):
-        res = super().get_formview_action(access_uid=access_uid)
+    def get_defaultview_action(self, access_uid=None):
+        res = super().get_defaultview_action(access_uid=access_uid)
         if (not self.env.user.has_group('hr.group_hr_user') and
            self.env.context.get('open_employees_kanban', False)):
             res.update({

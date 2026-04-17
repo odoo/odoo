@@ -419,9 +419,9 @@ We can redirect you to the public employee list."""
         # Hardcode the form view for public employee
         return self.env.ref('hr.hr_employee_public_view_form').id
 
-    def get_formview_action(self, access_uid=None):
+    def get_defaultview_action(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
-        res = super(HrEmployeePrivate, self).get_formview_action(access_uid=access_uid)
+        res = super().get_defaultview_action(access_uid=access_uid)
         user = self.env.user
         if access_uid:
             user = self.env['res.users'].browse(access_uid).sudo()

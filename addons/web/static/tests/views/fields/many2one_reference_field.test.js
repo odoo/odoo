@@ -52,7 +52,7 @@ test("Many2OneReferenceField in form view", async () => {
         },
     });
 
-    onRpc("get_formview_action", ({ model, args }) => {
+    onRpc("get_defaultview_action", ({ model, args }) => {
         expect.step(`opening ${model} ${args[0][0]}`);
         return false;
     });

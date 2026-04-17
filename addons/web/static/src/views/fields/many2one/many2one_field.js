@@ -247,7 +247,7 @@ export class Many2OneField extends Component {
             [openActionContext || this.context, record.fields[name].context],
             record.evalContext
         );
-        const action = await this.orm.call(this.relation, "get_formview_action", [[this.resId]], {
+        const action = await this.orm.call(this.relation, "get_defaultview_action", [[this.resId]], {
             context,
         });
         await this.action.doAction(action);

@@ -209,7 +209,7 @@ test("many2ones in form views", async () => {
             </form>`,
     };
 
-    onRpc("get_formview_action", function ({ args }) {
+    onRpc("get_defaultview_action", function ({ args }) {
         expect(args[0]).toEqual([4]);
         return {
             res_id: 17,
@@ -3642,8 +3642,8 @@ test("click on many2one link in list view", async () => {
                 <field name="product_id" widget="many2one" context="{'field': 'Yes'}"/>
             </list>`,
     };
-    onRpc("get_formview_action", (args) => {
-        expect.step("get_formview_action");
+    onRpc("get_defaultview_action", (args) => {
+        expect.step("get_defaultview_action");
         expect(args.kwargs.context.field).toBe("Yes");
         expect(args.kwargs.context).not.toInclude("global");
         return {
@@ -3669,7 +3669,7 @@ test("click on many2one link in list view", async () => {
     expect(".o_breadcrumb").toHaveCount(1);
 
     await contains("a.o_form_uri").click();
-    expect.verifySteps(["get_formview_action"]);
+    expect.verifySteps(["get_defaultview_action"]);
     expect(".breadcrumb-item").toHaveCount(1);
     expect(".o_breadcrumb").toHaveCount(1);
 });
@@ -3688,8 +3688,8 @@ test("external_button performs a doAction by default", async () => {
     Partner._views = {
         form: '<form><field name="trululu"/></form>',
     };
-    onRpc("get_formview_action", () => {
-        expect.step("get_formview_action");
+    onRpc("get_defaultview_action", () => {
+        expect.step("get_defaultview_action");
         return {
             type: "ir.actions.act_window",
             res_model: "partner",
@@ -3713,7 +3713,7 @@ test("external_button performs a doAction by default", async () => {
     expect(".o_field_widget .o_external_button.oi-arrow-right").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
 
-    expect.verifySteps(["get_formview_action"]);
+    expect.verifySteps(["get_defaultview_action"]);
     expect(".breadcrumb").toHaveText("first record");
 });
 

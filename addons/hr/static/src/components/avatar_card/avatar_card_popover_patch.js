@@ -28,7 +28,7 @@ export const patchAvatarCardPopover = {
     },
     async getProfileAction() {
         return this.user.employee_ids?.length > 0
-            ? this.orm.call("hr.employee", "get_formview_action", [this.user.employee_ids[0]])
+            ? this.orm.call("hr.employee", "get_defaultview_action", [this.user.employee_ids[0]])
             : super.getProfileAction(...arguments);
     },
 };

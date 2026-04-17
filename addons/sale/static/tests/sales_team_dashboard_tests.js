@@ -41,7 +41,7 @@ QUnit.test("edit progressbar target", async (assert) => {
                         res_model: "crm.team",
                         target: "current",
                         type: "ir.actions.act_window",
-                        method: "get_formview_action",
+                        method: "get_defaultview_action",
                     },
                     "should trigger do_action with the correct args"
                 );
@@ -66,7 +66,7 @@ QUnit.test("edit progressbar target", async (assert) => {
             </kanban>`,
         resId: 1,
         async mockRPC(route, { method, model }) {
-            if (route === "/web/dataset/call_kw/crm.team/get_formview_action") {
+            if (route === "/web/dataset/call_kw/crm.team/get_defaultview_action") {
                 return {
                     method,
                     res_model: model,
