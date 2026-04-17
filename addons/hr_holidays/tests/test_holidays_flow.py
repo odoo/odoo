@@ -283,6 +283,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                         'request_date_to': date.today() + relativedelta(day=10),
                     })
 
+    @freeze_time("2023-03-15")
     def test_manager_can_approve_from_leave_report_calendar(self):
         """Check if an approval user that has not additional access rights for Time Off can approve a leave for an employee."""
 
