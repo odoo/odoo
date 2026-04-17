@@ -49,11 +49,7 @@
             margin-bottom: 0 !important;
 
             // Hide the border of the adjacent sibling box that is under the label
-            background-image: linear-gradient($o-view-background-color);
-            background-size: 100% var(--o-box-border-size);
-            background-position: center;
-            background-repeat: no-repeat;
-            background-color: transparent;
+            background: linear-gradient(0deg, transparent 0%, $o-view-background-color 45%, $o-view-background-color 55%, transparent 100%);
 
             // Same as ligne +/- 592; TODO merge the rules after maybe
             font-size: $font-size-sm !important;
