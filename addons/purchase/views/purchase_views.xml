@@ -237,15 +237,15 @@
                             <div name="date_planned_div">
                                 <field name="date_planned" readonly="state not in ('draft', 'sent', 'to approve', 'purchase')"/>
                             </div>
-                            <field name="receipt_reminder_email" string="Ask confirmation" widget="boolean_toggle" groups="purchase.group_send_reminder" />
-                            <label for="reminder_date_before_receipt" string="Days before confirmation" invisible="not receipt_reminder_email" groups="purchase.group_send_reminder" />
-                            <div name="reminder" class="d-flex"
-                                 invisible="not receipt_reminder_email" groups="purchase.group_send_reminder"
-                                 title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
-                                <field name="reminder_date_before_receipt" />
+                            <label for="receipt_reminder_email" string="Arrival Confirmation" groups="purchase.group_send_reminder"/>
+                            <div name="reminder" class="o_row" groups="purchase.group_send_reminder"
+                             title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
+                                <field name="receipt_reminder_email"/>
+                                <field name="reminder_date_before_receipt" class="mb-0" invisible="not receipt_reminder_email" style="max-width: 30px;"/>
+                                <span invisible="not receipt_reminder_email">day(s) before</span>
                                 <widget name="toaster_button" button_name="send_reminder_preview"
-                                        additionalClasses="o_external_button"
-                                        title="Preview the reminder email by sending it to yourself."  invisible="not id" />
+                                        additionalClasses="o_external_button py-0"
+                                        title="Preview the reminder email by sending it to yourself." invisible="not receipt_reminder_email or not id"/>
                             </div>
                             <label for="receipt_status" invisible="state !='purchase'"/>
                                 <div class="d-flex align-items-center" invisible="state !='purchase'">
