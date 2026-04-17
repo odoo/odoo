@@ -70,3 +70,12 @@ test("saved translation branding is removed in edit mode", async () => {
     `);
     expect(":iframe h1.title").toHaveInnerHTML("Hello");
 });
+
+test("data-name is injected when missing and preserved when already set on snippets at editor setup", async () => {
+    await setupWebsiteBuilder(`
+        <section class="s_banner" data-snippet="s_banner"></section>
+        <section class="s_title" data-snippet="s_title" data-name="Existing Name"></section>
+    `);
+    expect(":iframe .s_banner").toHaveAttribute("data-name", "Banner");
+    expect(":iframe .s_title").toHaveAttribute("data-name", "Existing Name");
+});

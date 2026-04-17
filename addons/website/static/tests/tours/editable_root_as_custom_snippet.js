@@ -13,7 +13,7 @@ registerWebsitePreviewTour("editable_root_as_custom_snippet", {
     url: '/custom-page',
 }, () => [
     ...clickOnSnippet('.s_title.custom[data-oe-model][data-oe-id][data-oe-field][data-oe-xpath]'),
-    changeOption('Block', '.oe_snippet_save'),
+    changeOption('Title', '.oe_snippet_save'),
     {
         content: "Confirm modal",
         trigger: '.modal-footer .btn-primary',

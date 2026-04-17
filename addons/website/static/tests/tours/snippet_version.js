@@ -63,7 +63,7 @@ registerWebsitePreviewTour("snippet_version_2", {
 },
 {
     trigger:
-        ".o_customize_tab .options-container[data-container-title='Block'] .o_we_version_control",
+        ".o_customize_tab .options-container[data-container-title='Share'] .o_we_version_control",
 },
 {
     content: "s_share is outdated",
