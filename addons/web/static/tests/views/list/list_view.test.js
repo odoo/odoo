@@ -16147,7 +16147,7 @@ test(`quickcreate in a many2one in a list`, async () => {
     await runAllTimers();
     await press("tab");
     await animationFrame();
-    expect(`.o_data_cell:eq(0)`).toHaveText("aaa");
+    expect(`.o_data_cell:eq(0) input`).toHaveValue("aaa");
 });
 
 test.tags("desktop");
@@ -20767,15 +20767,12 @@ test(`select menu navigation with hot keys`, async () => {
     await press("Enter");
     await animationFrame();
 
-    await contains(".o_field_x2many_list_row_add button").click();
     await contains(`.o_field_widget[name=o2m] .o_data_row [name=stage] input`).click();
-    await press("ArrowLeft");
-    await animationFrame();
-    await press("ArrowLeft");
+    await press("ArrowUp");
     await animationFrame();
     await press("Enter");
     await animationFrame();
 
     await contains(`.o_form_button_save`).click();
-    expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual(["aab", "aac"]);
+    expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual(["aac", "aab"]);
 });

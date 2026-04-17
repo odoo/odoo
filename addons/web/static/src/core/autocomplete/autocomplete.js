@@ -411,6 +411,8 @@ export class AutoComplete extends Component {
 
         switch (hotkey) {
             case "enter":
+            case "tab":
+            case "shift+tab":
                 if (!this.isOpened || !this.state.activeSourceOption) {
                     return;
                 }
@@ -422,20 +424,6 @@ export class AutoComplete extends Component {
                 }
                 this.cancel();
                 break;
-            case "tab":
-            case "shift+tab":
-                if (!this.isOpened) {
-                    return;
-                }
-                if (
-                    this.props.autoSelect &&
-                    this.state.activeSourceOption &&
-                    (this.state.navigationRev > 0 || this.inputRef.el.value.length > 0)
-                ) {
-                    this.selectOption(this.activeOption);
-                }
-                this.close();
-                return;
             case "arrowup":
                 this.navigate(-1);
                 if (!this.isOpened) {

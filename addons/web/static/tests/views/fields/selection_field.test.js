@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, press, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
@@ -522,4 +522,42 @@ test("SelectionField fallback in list view", async () => {
     expect(".o_data_row:eq(0) .o_data_cell").toHaveText("unknown_status", {
         message: "unknown value should fallback to raw value in list view",
     });
+});
+
+test.tags("desktop");
+test("SelectionField hotkeys in form view", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="product_id" widget="selection" />
+            </form>`,
+    });
+
+    await contains(".o_field_widget[name='product_id'] input").click();
+    expect(".o_field_widget[name='product_id'] input").toBeFocused();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["xphone", "xpad"]);
+
+    await press("Tab");
+    await animationFrame();
+    expect(".o_field_widget[name='product_id'] input").toHaveValue("xphone");
+    expect(".o_field_widget[name='product_id'] input").toBeFocused();
+
+    await press("ArrowDown");
+    await animationFrame();
+    await press("ArrowDown");
+    await animationFrame();
+    await press("Shift+Tab");
+    await animationFrame();
+    expect(".o_field_widget[name='product_id'] input").toHaveValue("xpad");
+    expect(".o_field_widget[name='product_id'] input").toBeFocused();
+
+    await press("ArrowUp");
+    await animationFrame();
+    await press("Enter");
+    await animationFrame();
+    expect(".o_field_widget[name='product_id'] input").toHaveValue("xphone");
+    expect(".o_field_widget[name='product_id'] input").toBeFocused();
 });

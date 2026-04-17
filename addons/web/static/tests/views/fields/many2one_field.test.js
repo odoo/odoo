@@ -3106,8 +3106,8 @@ test("pressing enter in a m2o in an editable list", async () => {
     await press("Enter");
     await animationFrame();
 
-    expect("[name=product_id] input").toBeFocused();
-    expect("[name=product_id] .o-autocomplete--dropdown-menu").toHaveCount(0);
+    expect("tr.o_data_row:nth-child(1) [name=product_id] input").toBeFocused();
+    expect("tr.o_data_row:nth-child(1) [name=product_id] .o-autocomplete--dropdown-menu").toHaveCount(0);
 
     // we now trigger again ENTER to make sure we can move to next line
     await press("Enter");
@@ -3127,7 +3127,11 @@ test("pressing enter in a m2o in an editable list", async () => {
     await press("Tab");
     await animationFrame();
 
-    expect("tr.o_data_row:nth-child(2) [name=product_id] input").toHaveCount(0);
+    expect("tr.o_data_row:nth-child(2) [name=product_id] input").toBeFocused();
+    expect("tr.o_data_row:nth-child(2) [name=product_id] .o-autocomplete--dropdown-menu").toHaveCount(0);
+
+    await press("Enter");
+    await animationFrame();
 
     expect("tr.o_data_row:nth-child(3)").toHaveClass("o_selected_row");
 });
@@ -3214,7 +3218,7 @@ test("leaving a many2one by pressing tab", async () => {
     await press("tab");
     await animationFrame();
 
-    expect(".o_field_many2one input").toHaveValue("");
+    expect(".o_field_many2one input").toHaveValue("first record");
 
     // open autocomplete dropdown and manually select item by UP/DOWN key and press TAB
     await contains(".o_field_many2one input").click();
@@ -3257,20 +3261,21 @@ test("leaving an empty many2one by pressing tab (after backspace or delete)", as
     await press("tab");
     await animationFrame();
     await runAllTimers();
-    expect(".o_field_many2one input").toHaveValue("");
+    expect(".o_field_many2one input").toHaveValue("first record");
 
     // reset a value
-    await selectFieldDropdownItem("trululu", "first record");
-    expect(".o_field_many2one input").toHaveValue("first record");
+    await selectFieldDropdownItem("trululu", "second record");
+    expect(".o_field_many2one input").toHaveValue("second record");
 
     // simulate delete to remove values and press TAB
     await contains(".o_field_many2one input").edit("", { confirm: false });
     await runAllTimers();
     await press("delete");
+    await runAllTimers();
     await press("tab");
     // TODO: fix owl
     await animationFrame();
-    expect(".o_field_many2one input").toHaveValue("");
+    expect(".o_field_many2one input").toHaveValue("first record");
 });
 
 test("many2one in editable list + onchange, with enter", async () => {
