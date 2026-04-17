@@ -41,7 +41,7 @@ class PosSelfOrderController(http.Controller):
             del o['mobile']
 
         return {
-            'pos.order': self.env['pos.order']._load_pos_self_data_read(order, config),
+            'pos.order': orders,
             'pos.order.line': self.env['pos.order.line']._load_pos_self_data_read(order.lines, config),
             'pos.payment': self.env['pos.payment']._load_pos_self_data_read(order.payment_ids, config),
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_self_data_read(order.lines.custom_attribute_value_ids, config),
