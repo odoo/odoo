@@ -20,9 +20,6 @@ import { browser } from "@web/core/browser/browser";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
-import { omit } from "@web/core/utils/objects";
-import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
-
 import { Component } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
@@ -446,35 +443,5 @@ export class CalendarController extends Component {
     toggleWeekendVisibility() {
         this.state.isWeekendVisible = !this.state.isWeekendVisible;
         browser.localStorage.setItem("calendar.isWeekendVisible", this.state.isWeekendVisible);
-    }
-
-    getStaticActionMenuItems() {
-        return {};
-    }
-
-    get actionMenuItems() {
-        const { actionMenus } = this.props.info;
-        const staticActionItems = Object.entries(this.getStaticActionMenuItems())
-            .filter(([key, item]) => item.isAvailable === undefined || item.isAvailable())
-            .sort(([k1, item1], [k2, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
-            .map(([key, item]) =>
-                Object.assign({ key }, omit(item, "isAvailable", "sequence"), {
-                    groupNumber: STATIC_ACTIONS_GROUP_NUMBER,
-                })
-            );
-
-        return {
-            action: [...staticActionItems, ...(actionMenus?.action || [])],
-            print: actionMenus?.print || [],
-        };
-    }
-
-    get cogMenuProps() {
-        return {
-            items: this.props.info.actionMenus ? this.actionMenuItems : {},
-            context: this.props.context,
-            resModel: this.model.resModel,
-            getActiveIds: () => [],
-        };
     }
 }
