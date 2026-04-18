@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-04-14 08:01+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"PO-Revision-Date: 2026-04-18 12:07+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-1/mail/es_419/>\n"
 "Language: es_419\n"
@@ -5074,6 +5074,13 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"Ocurrió un error al renderizar la plantilla QWeb para %(template_label)s\n"
+"Modelo objetivo: %(model_name)s\n"
+"Contexto de idioma: %(lang_context)s\n"
+"Error: %(error_details)s\n"
+"\n"
+"Fragmento o snippet de origen de la plantilla:\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
@@ -5082,6 +5089,9 @@ msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
+"Ocurrió un error al renderizar la plantilla inline_template: %(template_txt)"
+"s\n"
+"Detalles del error: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -7399,7 +7409,7 @@ msgstr "Restablecer plantilla de correo"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Plantilla de correo: \"%(name)s\" (ID: %(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -7581,7 +7591,7 @@ msgstr "Marcado como no leído"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Plantilla de correo masivo: \"%(name)s\" (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -8369,7 +8379,7 @@ msgstr "No hay mensajes en el historial"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "No language detected in context"
-msgstr ""
+msgstr "No detectamos ningún idioma en el contexto"
 
 #. module: mail
 #. odoo-javascript
@@ -8995,6 +9005,11 @@ msgid ""
 "\n"
 "Correct it and try again."
 msgstr ""
+"No pudimos guardar tu plantilla debido a un problema.\n"
+"\n"
+"Error: %(error_details)s\n"
+"\n"
+"Corrígelo e inténtalo de nuevo."
 
 #. module: mail
 #. odoo-javascript
@@ -12046,7 +12061,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Template name not identified"
-msgstr ""
+msgstr "Nombre de la plantilla no identificado"
 
 #. module: mail
 #. odoo-python
@@ -13301,13 +13316,13 @@ msgstr "Sin nombre %(record_model_name)s (%(record_id)s)"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "Plantilla de correo sin nombre"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "Correo sin nombre"
 
 #. module: mail
 #. odoo-javascript
@@ -14682,7 +14697,7 @@ msgstr "creó este canal."
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
 msgid "d"
-msgstr ""
+msgstr "d"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -15249,7 +15264,7 @@ msgstr "“%(member_name)s” en “%(channel_name)s”"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
-msgstr ""
+msgstr "\"%s\""
 
 #~ msgid "111.222.333.444"
 #~ msgstr "111.222.333.444"
