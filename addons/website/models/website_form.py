@@ -150,12 +150,6 @@ class IrModelFields(models.Model):
         self.env.cr.execute('UPDATE ir_model_fields'
                          ' SET website_form_blacklisted=true'
                          ' WHERE website_form_blacklisted IS NULL')
-        # add an SQL-level default value on website_form_blacklisted to that
-        # pure-SQL ir.model.field creations (e.g. in _reflect) generate
-        # the right default value for a whitelist (aka fields should be
-        # blacklisted by default)
-        self.env.cr.execute('ALTER TABLE ir_model_fields '
-                         ' ALTER COLUMN website_form_blacklisted SET DEFAULT true')
 
     @api.ondelete(at_uninstall=False)
     def _check_if_used_in_website_form(self):

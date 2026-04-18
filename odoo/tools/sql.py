@@ -298,7 +298,7 @@ def table_columns(cr, tablename):
     # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
     # might prevent a postgres user to read this field.
     cr.execute(SQL(
-        ''' SELECT column_name, udt_name, character_maximum_length, is_nullable
+        ''' SELECT column_name, udt_name, character_maximum_length, is_nullable, column_default
             FROM information_schema.columns WHERE table_name=%s
             AND table_schema = current_schema ''',
         tablename,
@@ -317,14 +317,16 @@ def column_exists(cr, tablename, columnname):
     return cr.rowcount
 
 
-def create_column(cr, tablename, columnname, columntype, comment=None):
+def create_column(cr, tablename, columnname, columntype, comment=None, default=None):
     """ Create a column with the given type. """
+    if default is None and columntype.upper() == 'BOOLEAN':
+        default = False
     sql = SQL(
         "ALTER TABLE %s ADD COLUMN %s %s %s",
         SQL.identifier(tablename),
         SQL.identifier(columnname),
         SQL(columntype),
-        SQL("DEFAULT false" if columntype.upper() == 'BOOLEAN' else ""),
+        SQL("DEFAULT %s", default),
     )
     if comment:
         sql = SQL("%s; %s", sql, SQL(
@@ -378,6 +380,15 @@ def _convert_column(cr, tablename, columnname, columntype, using: SQL):
         drop_depending_views(cr, tablename, columnname)
         cr.execute(query)
     _schema.debug("Table %r: column %r changed to type %s", tablename, columnname, columntype)
+
+
+def update_column_default(cr, tablename, columnname, default):
+    cr.execute(SQL(
+        "ALTER TABLE %s ALTER COLUMN %s SET DEFAULT %s",
+        SQL.identifier(tablename),
+        SQL.identifier(columnname),
+        default,
+    ))
 
 
 def drop_depending_views(cr, table, column):

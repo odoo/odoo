@@ -1191,17 +1191,44 @@ class Field[T]:
             :param model: an instance of the field's model
             :param column: the column's configuration (dict) if it exists, or ``None``
         """
+        default = self._get_db_column_default(model)
         if not column:
             # the column does not exist, create it
-            sql.create_column(model.env.cr, model._table, self.name, self.column_type[1], self.string)
+            if callable(default):
+                default = None
+            sql.create_column(model.env.cr, model._table, self.name, self.column_type[1], comment=self.string, default=default)
             return
-        if column['udt_name'] == self.column_type[0]:
-            return
-        self._convert_db_column(model, column)
+        if column['udt_name'] != self.column_type[0]:
+            self._convert_db_column(model, column)
+            column['column_default'] = None  # conversion drops the default value
+        if not callable(default) and not (
+            default is None
+            if column['column_default'] is None else
+            column['column_default'] == str(default).lower()  # 'false'
+            if column['udt_name'] == 'bool' else
+            # in general the value is stored as a string with possible data cast
+            column['column_default'] == str(default)
+            or column['column_default'].startswith(repr(default) + ':')
+        ):
+            sql.update_column_default(model.env.cr, model._table, self.name, default)
 
     def _convert_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
         """ Convert the given database column to the type of the field. """
         sql.convert_column(model.env.cr, model._table, self.name, self.column_type[1])
+
+    def _get_db_column_default(self, model: BaseModel):
+        """ Get the default value for the database.
+        This may return a callable in case there is a default, but should not be updated.
+        """
+        if self.company_dependent or not callable(self.default):
+            return None
+        if self.default.__module__ != Field.__module__:
+            # Not defined in _setup_attrs__
+            return self.default
+        default = self.default(model)
+        default = self.convert_to_write(default, model)
+        default = self.convert_to_column_insert(default, model, validate=False)
+        return default
 
     def update_db_notnull(self, model: BaseModel, column: dict[str, typing.Any]):
         """ Add or remove the NOT NULL constraint on ``self``.

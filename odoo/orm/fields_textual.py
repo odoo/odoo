@@ -60,6 +60,11 @@ class BaseString(Field[str | typing.Literal[False]]):
             return dep, ()
         return super().get_depends(model)
 
+    def _get_db_column_default(self, model):
+        if self.translate:
+            return None
+        return super()._get_db_column_default(model)
+
     def _convert_db_column(self, model, column):
         # specialized implementation for converting from/to translated fields
         if self.translate or column['udt_name'] == 'jsonb':
