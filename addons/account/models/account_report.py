@@ -130,6 +130,13 @@ class AccountReport(models.Model):
         readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
+    enable_snapshots = fields.Boolean(
+        string="Enable Snapshots",
+        compute=lambda x: x._compute_report_option_filter('enable_snapshots'),
+        precompute=True,
+        readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+    )
+
     #  FILTERS =======================================================================================================================================
     # Those fields control the display of menus on the report
 
