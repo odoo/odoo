@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-04-13 19:27+0000\n"
+"PO-Revision-Date: 2026-04-18 13:45+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-2/"
 "point_of_sale/es/>\n"
@@ -297,6 +297,35 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hola, <t t-"
+"out=\"client_name\">nombre del cliente</t>:</t>\n"
+"                        <t t-else=\"\">Hola:</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Gracias por comprar en <t t-out=\"store_name\">"
+"Nombre de la tienda</t>.</div>\n"
+"                    <div>Adjunto encontrará el ticket de la compra realizada "
+"el <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+"dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
+"''\">fecha</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">a las (hora)</"
+"t>.</span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Saludos cordiales,</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Nombre de la tienda</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -422,7 +451,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
 msgid "<span name=\"served_by\">Served by:</span>"
-msgstr ""
+msgstr "<span name=\"served_by\">Atendido por:</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
@@ -487,7 +516,7 @@ msgstr "<strong>Por un importe de:</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_change_receipt
 msgid "<strong>CUSTOMER NOTE</strong>"
-msgstr ""
+msgstr "<strong>NOTA DEL CLIENTE</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -502,7 +531,7 @@ msgstr "<strong>Nota de fin de sesión</strong>:"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_change_receipt
 msgid "<strong>INTERNAL NOTE</strong>"
-msgstr ""
+msgstr "<strong>NOTA INTERNA</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
@@ -512,7 +541,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
 msgid "<strong>Note: </strong>"
-msgstr ""
+msgstr "<strong>Nota: </strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -3344,7 +3373,7 @@ msgstr "Resumen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Dine in"
-msgstr "Comer allí"
+msgstr "Comer en el local"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8740,12 +8769,12 @@ msgstr "Número de secuencia"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Served By"
-msgstr ""
+msgstr "Atendido por"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Served by"
-msgstr ""
+msgstr "Atendido por"
 
 #. module: point_of_sale
 #. odoo-javascript

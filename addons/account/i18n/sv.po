@@ -40,8 +40,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-04-14 15:09+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
+"PO-Revision-Date: 2026-04-18 13:40+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-2/"
 "account/sv/>\n"
@@ -196,6 +196,18 @@ msgstr "%(exception)s för %(user)s%(end_datetime_string)s%(reason)s."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s (Draft)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
@@ -205,12 +217,6 @@ msgstr ""
 "%(move)s har nått ett ogiltigt tillstånd när det gäller dess relaterade "
 "statement-rad.\n"
 "För att vara konsekvent måste verifikatet alltid ha exakt en suspense-rad."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "%(name)s - Draft at (%(currency_amount)s)"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1188,7 +1194,7 @@ msgid ""
 msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Faktura</span>\n"
 "                                        <span "
-"invisible=\"reconciled_invoices_type == 'invoice'\"> Kredritfaktura</span>"
+"invisible=\"reconciled_invoices_type == 'invoice'\"> Kreditfaktura</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
@@ -2864,6 +2870,12 @@ msgid "Accumulated Depreciation"
 msgstr "Ackumulerade avskrivningar"
 
 #. module: account
+#: model:account.account,name:account.1_retained_earnings
+#: model:account.account,name:account.2_account_account_us_retained_earnings
+msgid "Accumulated Retained Earnings"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
 #: model:ir.model.fields,field_description:account.field_account_report_line__action_id
 msgid "Action"
@@ -3803,6 +3815,11 @@ msgstr ""
 "kriterier (moms/land) uppfylls."
 
 #. module: account
+#: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Appropriation of the profit or loss"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
 msgid "April"
 msgstr "april"
@@ -3948,6 +3965,17 @@ msgstr "augusti"
 #: model:account.account,name:account.2_account_account_us_auto_insurance
 msgid "Auto Insurance"
 msgstr "Bilförsäkring"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Auto-Complete"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
+#: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
+msgid "Auto-complete from a previous bill or refund."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -4168,8 +4196,8 @@ msgstr "Saldoprocentsatsen kan inte vara 0"
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_44
-#: model:account.account,name:account.2_bank_journal_default_account_163
+#: model:account.account,name:account.1_bank_journal_default_account_46
+#: model:account.account,name:account.2_bank_journal_default_account_166
 #: model:account.journal,name:account.1_bank
 #: model:account.journal,name:account.2_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
@@ -4941,7 +4969,7 @@ msgstr "Överföra till"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.1_cash_journal_default_account_174
+#: model:account.account,name:account.1_cash_journal_default_account_176
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -4954,12 +4982,12 @@ msgid "Cash Account"
 msgstr "Kontantkonto"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_171
+#: model:account.account,name:account.1_cash_journal_default_account_173
 msgid "Cash Bakery"
 msgstr "Cash Bageri"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_173
+#: model:account.account,name:account.1_cash_journal_default_account_175
 msgid "Cash Bar"
 msgstr "Kassa Bar"
 
@@ -5001,7 +5029,7 @@ msgid "Cash Basis Transition Account"
 msgstr "Kontantmetod övergångskonto"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_170
+#: model:account.account,name:account.1_cash_journal_default_account_172
 msgid "Cash Clothes Shop"
 msgstr "Cash Klädbutik"
 
@@ -5063,7 +5091,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Kontant Rabatt Avskrivningsförlust Konto"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_169
+#: model:account.account,name:account.1_cash_journal_default_account_171
 msgid "Cash Furn. Shop"
 msgstr "Cash Furn. Butik"
 
@@ -5074,7 +5102,7 @@ msgid "Cash Registers"
 msgstr "Kassaregister"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_172
+#: model:account.account,name:account.1_cash_journal_default_account_174
 msgid "Cash Restaurant"
 msgstr "Restaurang Cash"
 
@@ -6325,6 +6353,11 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_depreciation_vehicles
 msgid "Cumulative amortization recorded for vehicle assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_retained_earnings
+msgid "Cumulative undistributed profits and losses"
 msgstr ""
 
 #. module: account
@@ -10521,6 +10554,12 @@ msgid "Invoice Totals"
 msgstr "Fakturans totalsumma"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_vendor_bill_id
+#: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_bill_id
+msgid "Invoice Vendor Bill"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid ""
@@ -10807,6 +10846,12 @@ msgstr "Är Redigerare"
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
 msgid "Is Entries"
 msgstr "Är inmatningar"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
+#: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
+msgid "Is Exact Move Duplicate"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -14528,6 +14573,14 @@ msgid "Profit Account"
 msgstr "Intäktskonto"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_profit_or_loss
+#: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Profit or Loss Appropriation"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
 msgstr "Proforma kreditnota"
@@ -15823,6 +15876,11 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 msgid "Select a type"
 msgstr "Välj en typ"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Select an old purchase document"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -19588,14 +19646,6 @@ msgid "Undefined Yet"
 msgstr "Odefinierad ännu"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-#: model:account.account,name:account.1_unaffected_earnings_account
-#: model:account.account,name:account.2_unaffected_earnings_account
-msgid "Undistributed Profits/Losses"
-msgstr "Ej utdelade vinster/förluster"
-
-#. module: account
 #: model:account.account,name:account.2_account_account_us_unemployment_insurance
 msgid "Unemployment Insurance"
 msgstr "Arbetslöshetsförsäkring"
@@ -21949,6 +21999,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Faktura för självfakturering (Ref "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid "Undistributed Profits/Losses"
+#~ msgstr "Ej utdelade vinster/förluster"
 
 #~ msgid "1.00"
 #~ msgstr "1.00"

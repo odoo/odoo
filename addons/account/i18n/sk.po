@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
 "PO-Revision-Date: 2026-02-14 12:24+0000\n"
 "Last-Translator: Tomas Smrekovsky <t.smrekovsky@gmail.com>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -159,17 +159,23 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_bank_statement_line.py:0
-msgid ""
-"%(move)s reached an invalid state regarding its related statement line.\n"
-"To be consistent, the journal entry must always have exactly one suspense "
-"line."
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s"
 msgstr ""
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "%(name)s - Draft at (%(currency_amount)s)"
+msgid "%(label)s at %(currency_amount)s (Draft)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+msgid ""
+"%(move)s reached an invalid state regarding its related statement line.\n"
+"To be consistent, the journal entry must always have exactly one suspense "
+"line."
 msgstr ""
 
 #. module: account
@@ -2601,6 +2607,12 @@ msgid "Accumulated Depreciation"
 msgstr ""
 
 #. module: account
+#: model:account.account,name:account.1_retained_earnings
+#: model:account.account,name:account.2_account_account_us_retained_earnings
+msgid "Accumulated Retained Earnings"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
 #: model:ir.model.fields,field_description:account.field_account_report_line__action_id
 msgid "Action"
@@ -3513,6 +3525,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Appropriation of the profit or loss"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
 msgid "April"
 msgstr "Apríl"
@@ -3657,6 +3674,17 @@ msgstr "August"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_auto_insurance
 msgid "Auto Insurance"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Auto-Complete"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
+#: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
+msgid "Auto-complete from a previous bill or refund."
 msgstr ""
 
 #. module: account
@@ -3876,8 +3904,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_44
-#: model:account.account,name:account.2_bank_journal_default_account_163
+#: model:account.account,name:account.1_bank_journal_default_account_46
+#: model:account.account,name:account.2_bank_journal_default_account_166
 #: model:account.journal,name:account.1_bank
 #: model:account.journal,name:account.2_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
@@ -4630,7 +4658,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.1_cash_journal_default_account_174
+#: model:account.account,name:account.1_cash_journal_default_account_176
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -4643,12 +4671,12 @@ msgid "Cash Account"
 msgstr "Peňažný účet"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_171
+#: model:account.account,name:account.1_cash_journal_default_account_173
 msgid "Cash Bakery"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_173
+#: model:account.account,name:account.1_cash_journal_default_account_175
 msgid "Cash Bar"
 msgstr ""
 
@@ -4690,7 +4718,7 @@ msgid "Cash Basis Transition Account"
 msgstr "Účet prechodu na hotovostný základ"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_170
+#: model:account.account,name:account.1_cash_journal_default_account_172
 msgid "Cash Clothes Shop"
 msgstr ""
 
@@ -4752,7 +4780,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_169
+#: model:account.account,name:account.1_cash_journal_default_account_171
 msgid "Cash Furn. Shop"
 msgstr ""
 
@@ -4763,7 +4791,7 @@ msgid "Cash Registers"
 msgstr "Registračné pokladne"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_172
+#: model:account.account,name:account.1_cash_journal_default_account_174
 msgid "Cash Restaurant"
 msgstr ""
 
@@ -5991,6 +6019,11 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_depreciation_vehicles
 msgid "Cumulative amortization recorded for vehicle assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_retained_earnings
+msgid "Cumulative undistributed profits and losses"
 msgstr ""
 
 #. module: account
@@ -10087,6 +10120,12 @@ msgid "Invoice Totals"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_vendor_bill_id
+#: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_bill_id
+msgid "Invoice Vendor Bill"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid ""
@@ -10362,6 +10401,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
 msgid "Is Entries"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
+#: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
+msgid "Is Exact Move Duplicate"
 msgstr ""
 
 #. module: account
@@ -13990,6 +14035,14 @@ msgid "Profit Account"
 msgstr "Účet zisku"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_profit_or_loss
+#: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Profit or Loss Appropriation"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
 msgstr ""
@@ -15263,6 +15316,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Select a type"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Select an old purchase document"
 msgstr ""
 
 #. module: account
@@ -18804,14 +18862,6 @@ msgid "Undefined Yet"
 msgstr "Zatiaľ nedefinované"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-#: model:account.account,name:account.1_unaffected_earnings_account
-#: model:account.account,name:account.2_unaffected_earnings_account
-msgid "Undistributed Profits/Losses"
-msgstr "Nerozdelené Zisky/Straty"
-
-#. module: account
 #: model:account.account,name:account.2_account_account_us_unemployment_insurance
 msgid "Unemployment Insurance"
 msgstr ""
@@ -21026,6 +21076,9 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "Undistributed Profits/Losses"
+#~ msgstr "Nerozdelené Zisky/Straty"
 
 #~ msgid "15%"
 #~ msgstr "15 %"

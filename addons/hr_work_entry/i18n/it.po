@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
 "PO-Revision-Date: 2026-04-13 13:18+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -186,6 +186,13 @@ msgstr "Tutto"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "All Countries"
 msgstr "Tutti i Paesi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_res_company__allowed_work_entry_type_ids
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__allowed_work_entry_type_ids
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__allowed_work_entry_type_ids
+msgid "Allowed Work Entry Type"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
@@ -1793,6 +1800,7 @@ msgstr "Permesso per formazione di promozione sociale"
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_sick_leave_without_certificate
 #: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_sick_leave
@@ -1952,6 +1960,11 @@ msgid "Sick Time Off Day up to 52 weeks (Paid at 55% by social security)"
 msgstr ""
 "Permesso per malattia fino a 52 settimane (pagato al 55% dall'assicurazione "
 "sociale)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_sick_leave_without_certificate
+msgid "Sick Time Off Without Certificate"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75

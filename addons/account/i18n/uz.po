@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
 "PO-Revision-Date: 2025-10-18 14:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -178,6 +178,18 @@ msgstr "%(exception)s %(user)s uchun %(end_datetime_string)s%(reason)s."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s (Draft)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, fuzzy
 msgid ""
@@ -188,12 +200,6 @@ msgstr ""
 "%(move)s tegishli ko‘chirma satriga nisbatan noto‘g‘ri holatga keldi. "
 "Muvofiq bo‘lishi uchun jurnal yozuvi har doim aniq bitta kutish chizig‘iga "
 "ega bo‘lishi kerak."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "%(name)s - Draft at (%(currency_amount)s)"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -3097,6 +3103,12 @@ msgid "Accumulated Depreciation"
 msgstr "To‘plangan amortizatsiya"
 
 #. module: account
+#: model:account.account,name:account.1_retained_earnings
+#: model:account.account,name:account.2_account_account_us_retained_earnings
+msgid "Accumulated Retained Earnings"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
 #: model:ir.model.fields,field_description:account.field_account_report_line__action_id
 #, fuzzy
@@ -4199,6 +4211,11 @@ msgstr ""
 "hisob xaritalarini avtomatik qo‘llash."
 
 #. module: account
+#: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Appropriation of the profit or loss"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
 #, fuzzy
 msgid "April"
@@ -4365,6 +4382,17 @@ msgstr "Avgust"
 #, fuzzy
 msgid "Auto Insurance"
 msgstr "Avtomobil sug‘urtasi"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Auto-Complete"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
+#: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
+msgid "Auto-complete from a previous bill or refund."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -4621,8 +4649,8 @@ msgstr "Qoldiq foizi 0 bo‘lishi mumkin emas"
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_44
-#: model:account.account,name:account.2_bank_journal_default_account_163
+#: model:account.account,name:account.1_bank_journal_default_account_46
+#: model:account.account,name:account.2_bank_journal_default_account_166
 #: model:account.journal,name:account.1_bank
 #: model:account.journal,name:account.2_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
@@ -5507,7 +5535,7 @@ msgstr "Keyingi davrga o‘tkazish"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.1_cash_journal_default_account_174
+#: model:account.account,name:account.1_cash_journal_default_account_176
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5522,12 +5550,12 @@ msgid "Cash Account"
 msgstr "Naqd pul hisobi"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_171
+#: model:account.account,name:account.1_cash_journal_default_account_173
 msgid "Cash Bakery"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_173
+#: model:account.account,name:account.1_cash_journal_default_account_175
 msgid "Cash Bar"
 msgstr ""
 
@@ -5575,7 +5603,7 @@ msgid "Cash Basis Transition Account"
 msgstr "Kassaviy usulga o‘tish hisobi"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_170
+#: model:account.account,name:account.1_cash_journal_default_account_172
 msgid "Cash Clothes Shop"
 msgstr ""
 
@@ -5646,7 +5674,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Naqd chegirmani hisobdan chiqarish zarar hisobi"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_169
+#: model:account.account,name:account.1_cash_journal_default_account_171
 msgid "Cash Furn. Shop"
 msgstr ""
 
@@ -5658,7 +5686,7 @@ msgid "Cash Registers"
 msgstr "Kassa apparatlari"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_172
+#: model:account.account,name:account.1_cash_journal_default_account_174
 msgid "Cash Restaurant"
 msgstr ""
 
@@ -7086,6 +7114,11 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_depreciation_vehicles
 msgid "Cumulative amortization recorded for vehicle assets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_retained_earnings
+msgid "Cumulative undistributed profits and losses"
 msgstr ""
 
 #. module: account
@@ -11928,6 +11961,12 @@ msgid "Invoice Totals"
 msgstr "Hisob-faktura jami"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_vendor_bill_id
+#: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_bill_id
+msgid "Invoice Vendor Bill"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, fuzzy
@@ -12257,6 +12296,12 @@ msgstr "Muharrir"
 #, fuzzy
 msgid "Is Entries"
 msgstr "Yozuvlar"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
+#: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
+msgid "Is Exact Move Duplicate"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -16539,6 +16584,14 @@ msgid "Profit Account"
 msgstr "Foyda hisobi"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_profit_or_loss
+#: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Profit or Loss Appropriation"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, fuzzy
 msgid "Proforma Credit Note"
@@ -18052,6 +18105,11 @@ msgstr ""
 #, fuzzy
 msgid "Select a type"
 msgstr "Turni tanlang"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Select an old purchase document"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -22325,15 +22383,6 @@ msgid "Undefined Yet"
 msgstr "Hali aniqlanmagan"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-#: model:account.account,name:account.1_unaffected_earnings_account
-#: model:account.account,name:account.2_unaffected_earnings_account
-#, fuzzy
-msgid "Undistributed Profits/Losses"
-msgstr "Taqsimlanmagan foyda/zarar"
-
-#. module: account
 #: model:account.account,name:account.2_account_account_us_unemployment_insurance
 #, fuzzy
 msgid "Unemployment Insurance"
@@ -25031,6 +25080,10 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} o‘z-o‘zini hisoblash hisob-fakturasi (Havola "
 "{{ object.name or 'mavjud emas' }})"
+
+#, fuzzy
+#~ msgid "Undistributed Profits/Losses"
+#~ msgstr "Taqsimlanmagan foyda/zarar"
 
 #, fuzzy
 #~ msgid "Restrict the use of taxes to a type of product."

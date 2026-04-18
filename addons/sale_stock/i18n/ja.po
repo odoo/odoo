@@ -14,17 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 12:31+0000\n"
+"POT-Creation-Date: 2026-04-17 18:39+0000\n"
+"PO-Revision-Date: 2026-04-18 13:41+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
 "sale_stock/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -108,8 +108,7 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されま"
-"す：\n"
+"プロダクト構成に応じて、納品数量はメカニズムによって自動的に計算されます：\n"
 "  - 手動: 数量を明細上で手動で設定します\n"
 "  - 費用からの分析: 数量は計上された費用からの合計数量です\n"
 "  - タイムシート: 数量は、この売上明細にリンクされたタスクに記録された時間の"
@@ -193,7 +192,7 @@ msgstr "デフォルト倉庫"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Delivered"
-msgstr "配送済"
+msgstr "納品済"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -229,7 +228,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
@@ -326,7 +324,6 @@ msgstr "遅延しているピッキングがあります"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
@@ -678,11 +675,6 @@ msgid "Stock Rules report"
 msgstr "在庫ルールレポート"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_account_stock_valuation_report
-msgid "Stock Valuation"
-msgstr "在庫評価"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "在庫ルールレポート"
@@ -823,3 +815,6 @@ msgstr "代わりに処理"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
 msgstr "が遅れます。"
+
+#~ msgid "Stock Valuation"
+#~ msgstr "在庫評価"

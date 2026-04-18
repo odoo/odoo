@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-04-13 19:25+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
+"PO-Revision-Date: 2026-04-18 13:41+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/mail/"
 "de/>\n"
@@ -5150,6 +5150,13 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"Fehler beim Rendern der QWeb-Vorlage für %(template_label)s\n"
+"Zielmodell: %(model_name)s\n"
+"Sprachkontext: %(lang_context)s\n"
+"Fehler: %(error_details)s\n"
+"\n"
+"Snippet der Vorlagenquelle:\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
@@ -5158,6 +5165,8 @@ msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
+"Fehler beim Rendern der Vorlage inline_template: %(template_txt)s\n"
+"Fehlerdetails: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -7527,7 +7536,7 @@ msgstr "Zurücksetzung einer E-Mail-Vorlage"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "E-Mail-Vorlage: „%(name)s“ (ID: %(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -7708,7 +7717,7 @@ msgstr "Als ungelesen markiert"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Vorlage für Massenmails: „%(name)s“ (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -8484,7 +8493,7 @@ msgstr "Kein Nachrichtenverlauf"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "No language detected in context"
-msgstr ""
+msgstr "Keine Sprache im Kontext erkannt"
 
 #. module: mail
 #. odoo-javascript
@@ -9138,6 +9147,11 @@ msgid ""
 "\n"
 "Correct it and try again."
 msgstr ""
+"Hoppla! Wir konnten Ihre Vorlage aufgrund eines Problems nicht speichern.\n"
+"\n"
+"Fehler: %(error_details)s\n"
+"\n"
+"Korrigieren Sie den Fehler und versuchen Sie es erneut."
 
 #. module: mail
 #. odoo-javascript
@@ -10085,26 +10099,9 @@ msgstr "Audio der Präsentation"
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
 "Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
-"(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)s%(save_keyboard_shortcut)s%"
+"(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"Drücken Sie %(open_samp)sESC%(close_samp)s %(open_em)s zum %"
-"(open_cancel)sAbbrechen%(close_cancel)s%(close_em)s, %(open_samp)sStrg-Enter%"
-"(close_samp)s %(open_em)s zum %(open_save)sSpeichern%(close_save)s%"
-"(close_em)s"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
-msgid ""
-"Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
-"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %"
-"(open_save)ssave%(close_save)s%(close_em)s"
-msgstr ""
-"Drücken Sie %(open_samp)sESC%(close_samp)s %(open_em)s zum %"
-"(open_cancel)sAbbrechen%(close_cancel)s%(close_em)s, %(open_samp)sEnter%"
-"(close_samp)s %(open_em)s zum %(open_save)sSpeichern%(close_save)s%"
-"(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -11272,7 +11269,7 @@ msgstr "Eine Vorlage auswählen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Select a record"
-msgstr ""
+msgstr "Einen Datensatz auswählen"
 
 #. module: mail
 #. odoo-javascript
@@ -12282,7 +12279,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Template name not identified"
-msgstr ""
+msgstr "Vorlagenname nicht identifiziert"
 
 #. module: mail
 #. odoo-python
@@ -13569,13 +13566,13 @@ msgstr "%(record_model_name)s unbenannt (%(record_id)s)"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "Unbenannte E-Mail-Vorlage"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "Unbenanntes Mailing"
 
 #. module: mail
 #. odoo-javascript
@@ -15013,7 +15010,7 @@ msgstr "hat diesen Kanal erstellt."
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
 msgid "d"
-msgstr ""
+msgstr "T"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -15583,13 +15580,33 @@ msgstr "„%(member_name)s“ in „%(channel_name)s“"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
-msgstr ""
+msgstr "„%s“"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid ""
+#~ "Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
+#~ "(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+#~ "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
+#~ msgstr ""
+#~ "Drücken Sie %(open_samp)sESC%(close_samp)s %(open_em)s zum %"
+#~ "(open_cancel)sAbbrechen%(close_cancel)s%(close_em)s, %(open_samp)sStrg-"
+#~ "Enter%(close_samp)s %(open_em)s zum %(open_save)sSpeichern%(close_save)s%"
+#~ "(close_em)s"
+
+#~ msgid ""
+#~ "Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
+#~ "(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %"
+#~ "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
+#~ msgstr ""
+#~ "Drücken Sie %(open_samp)sESC%(close_samp)s %(open_em)s zum %"
+#~ "(open_cancel)sAbbrechen%(close_cancel)s%(close_em)s, %(open_samp)sEnter%"
+#~ "(close_samp)s %(open_em)s zum %(open_save)sSpeichern%(close_save)s%"
+#~ "(close_em)s"
 
 #~ msgid "111.222.333.444"
 #~ msgstr "111.222.333.444"

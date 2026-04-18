@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-04-13 08:43+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
+"PO-Revision-Date: 2026-04-18 13:41+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
 "hr_work_entry/ja/>\n"
@@ -179,6 +179,13 @@ msgstr "すべて"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "All Countries"
 msgstr "すべての国"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_res_company__allowed_work_entry_type_ids
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__allowed_work_entry_type_ids
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__allowed_work_entry_type_ids
+msgid "Allowed Work Entry Type"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
@@ -635,7 +642,7 @@ msgstr "試験休暇"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_tr_work_entry_type_excuse_leave
 msgid "Excuse Leave"
-msgstr ""
+msgstr "届出休暇"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_end_of_carreer_exemption
@@ -703,7 +710,7 @@ msgstr "FSJ(社会裁判官職務)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
 msgid "FVS"
-msgstr ""
+msgstr "FVS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_family_reason_leave
@@ -713,7 +720,7 @@ msgstr "家族事情による休暇"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
 msgid "Fictitious Variable Salary"
-msgstr ""
+msgstr "架空の変動賃金"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_construction_bad_weather_first_day
@@ -832,7 +839,7 @@ msgstr "HW(在宅勤務)"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_hajj
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_hajj
 msgid "Hajj Leave"
-msgstr ""
+msgstr "ハッジ休暇"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_home_working
@@ -936,7 +943,7 @@ msgstr "病気による就労不能(一般/包括)(IWM)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_iddah
 msgid "Iddah Leave"
-msgstr ""
+msgstr "イドダ休暇"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
@@ -1764,6 +1771,7 @@ msgstr "社会人教育訓練(SPT)"
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_sick_leave_without_certificate
 #: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_sick_leave
@@ -1920,6 +1928,11 @@ msgstr "病気休暇 4-10 (55%支給)"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_0
 msgid "Sick Time Off Day up to 52 weeks (Paid at 55% by social security)"
 msgstr "病気休暇 最長52週 (社会保障より55%支給)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_sick_leave_without_certificate
+msgid "Sick Time Off Without Certificate"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75

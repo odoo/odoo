@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-04-11 14:37+0000\n"
+"PO-Revision-Date: 2026-04-18 13:40+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-2/"
 "stock/id/>\n"
@@ -402,12 +402,12 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
-"* Baru: Pergerakkan stok ini dibuat tapi belum dikonfirmasi.\n"
-"* Menunggu Pergerakkan Lain: Pergerakkan stok yang di-link harus dilakukan "
-"sebelum pergerakkan ini.\n"
-"* Menunggu: Pergerakkan stok dikonfirmasi tapi produk tidak dapat "
+"* Baru: Pergerakan stok ini dibuat, tapi belum dikonfirmasi.\n"
+"* Menunggu Pergerakan Lain: Pergerakan stok yang dihubungkan harus dilakukan "
+"sebelum pergerakan ini.\n"
+"* Menunggu: Pergerakan stok dikonfirmasi, tapi produk tidak dapat "
 "direservasi.\n"
-"* Tersedia: Produk dari pergerakkan stok sudah direservasi.\n"
+"* Tersedia: Produk dari pergerakan stok sudah direservasi.\n"
 "* Selesai: Produk sudah ditransfer dan transfer telah dikonfirmasi."
 
 #. module: stock
@@ -707,7 +707,7 @@ msgstr "<span class=\"o_stat_text\">Min:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Moves</span>"
-msgstr "<span class=\"o_stat_text\">Pergerakkan</span>"
+msgstr "<span class=\"o_stat_text\">Pergerakan</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1955,7 +1955,7 @@ msgid ""
 "Changing the Lot/Serial number for move lines with different products is not "
 "allowed."
 msgstr ""
-"Mengubah nomor Seri/Lot untuk baris pergerakkan dengan produk yang berbeda "
+"Mengubah nomor Seri/Lot untuk baris pergerakan dengan produk yang berbeda "
 "tidak diizinkan."
 
 #. module: stock
@@ -2602,9 +2602,9 @@ msgid ""
 "Creation date of this move line until updated due to: quantity being "
 "increased, 'picked' status has updated, or move line is done."
 msgstr ""
-"Tanggal pembuatan baris pergerakkan ini sampai diupdate oleh karena: "
+"Tanggal pembuatan baris pergerakan ini sampai diupdate oleh karena: "
 "kuantitas ditingkatkan, status 'picked' telah diupdate, atau baris "
-"pergerakkan sudah selesai."
+"pergerakan sudah selesai."
 
 #. module: stock
 #. odoo-python
@@ -2772,7 +2772,7 @@ msgstr "Tanggal pada mana replenishment seharusnya terjadi."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_adjustment_name__counting_date
 msgid "Date at which the resulting moves will be dated."
-msgstr "Tanggal di mana pergerakkan yang dihasilkan akan diberikan tanggal."
+msgstr "Tanggal di mana pergerakan yang dihasilkan akan diberikan tanggal."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -3010,10 +3010,10 @@ msgid ""
 "\n"
 "Try changing the “done” quantity to 0 instead."
 msgstr ""
-"Menghapus pergerakkan produk setelah transfer selesai?\n"
+"Menghapus pergerakan produk setelah transfer selesai?\n"
 "\n"
 "Ini seperti kembali ke masa lalu untuk memutar balikkan semua operasi yang "
-"dipicu setelah pergerakkan ini. Siapa yang tahu apa hasilnya, jadi mari kita "
+"dipicu setelah pergerakan ini. Siapa yang tahu apa hasilnya, jadi mari kita "
 "jangan lakukan hal ini.\n"
 "\n"
 "Alih-alih coba ubah kuantitas \"selesai\" menjadi 0."
@@ -4682,7 +4682,7 @@ msgstr "Lokasi Internal"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Internal Move"
-msgstr "Pergerakkan Interna"
+msgstr "Pergerakan Internal"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__ref
@@ -5807,12 +5807,12 @@ msgstr "Baris Pergerakan"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_lines_count
 msgid "Move Lines Count"
-msgstr "Jumlah Baris Pergerakkan"
+msgstr "Jumlah Baris Pergerakan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_quantity
 msgid "Move Quantity"
-msgstr "Kuantitas Pergerakkan"
+msgstr "Kuantitas Pergerakan"
 
 #. module: stock
 #. odoo-javascript
@@ -5823,7 +5823,7 @@ msgstr "Gerakkan Paket"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__move_line_ids
 msgid "Move lines"
-msgstr "Baris pergerakkan"
+msgstr "Baris pergerakan"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
@@ -5841,14 +5841,14 @@ msgstr "Pergerakan"
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.ui.menu,name:stock.stock_move_menu
 msgid "Moves Analysis"
-msgstr "Analisis Pergerakkan"
+msgstr "Analisis Pergerakan"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
 #: model:ir.ui.menu,name:stock.stock_move_line_menu
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_pivot
 msgid "Moves History"
-msgstr "Sejarah Pergerakkan"
+msgstr "Sejarah Pergerakan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -6243,7 +6243,7 @@ msgstr "Jumlah kesalahan"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_in
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_in
 msgid "Number of incoming stock moves in the past 12 months"
-msgstr "Jumlah pergerakkan stok masuk dalam 12 bulan terakhir"
+msgstr "Jumlah pergerakan stok masuk dalam 12 bulan terakhir"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
@@ -6261,7 +6261,7 @@ msgstr "Jumlah pesan dengan kesalahan pengiriman"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_out
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_out
 msgid "Number of outgoing stock moves in the past 12 months"
-msgstr "Jumlah pergerakkan stok keluar dalam 12 bulan terakhir"
+msgstr "Jumlah pergerakan stok keluar dalam 12 bulan terakhir"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__days_to_order
@@ -8393,7 +8393,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "Reverted Moves"
-msgstr "Pergerakkan yang Diputar Balik"
+msgstr "Pergerakan yang Diputar Balik"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
@@ -8592,7 +8592,7 @@ msgstr "Dijadwalkan pada"
 #: model:ir.model.fields,help:stock.field_stock_move_line__scheduled_date
 msgid "Scheduled date until move is done, then date of actual move processing"
 msgstr ""
-"Jadwalkan tanggal sampai pergerakan selesai, lalu proses tanggal pergerakkan "
+"Jadwalkan tanggal sampai pergerakan selesai, lalu proses tanggal pergerakan "
 "sebetulnya"
 
 #. module: stock
@@ -8849,7 +8849,7 @@ msgstr ""
 "Nomor seri (%(serial_number)s) tidak ada di lokasi %(source_location)s, tapi "
 "ada di lokasi: %(other_locations)s.\n"
 "\n"
-"Sumber lokasi untuk pergerakkan in akan dipindah ke %(recommended_location)s."
+"Sumber lokasi untuk pergerakan in akan dipindah ke %(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -9338,7 +9338,7 @@ msgstr "Lokasi Stok"
 #: model:ir.model,name:stock.model_stock_move
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_move_ids
 msgid "Stock Move"
-msgstr "Pergerakkan Stok"
+msgstr "Pergerakan Stok"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids
@@ -9354,12 +9354,12 @@ msgstr "Pergerakan Stock"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action_outgoing
 msgid "Stock Moves (deliveries)"
-msgstr "Pergerakkan Stok (pengiriman)"
+msgstr "Pergerakan Stok (pengiriman)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action_incoming
 msgid "Stock Moves (receipts)"
-msgstr "Pergerakkan Stok (kwitansi)"
+msgstr "Pergerakan Stok (kuitansi)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_graph
@@ -9453,7 +9453,7 @@ msgstr "Tipe Validasi Teks Stok"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_text_confirmation
 msgid "Stock Text Validation with stock move"
-msgstr "Validasi Teks Stok dengan pergerakkan stok"
+msgstr "Validasi Teks Stok dengan pergerakan stok"
 
 #. module: stock
 #. odoo-javascript
@@ -10060,8 +10060,8 @@ msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
 msgstr ""
-"Kotak centang ini hanya indikatif, tidak memvalidasi atau membuat "
-"pergerakkan produk apapun."
+"Kotak centang ini hanya indikatif, tidak memvalidasi atau membuat pergerakan "
+"produk apapun."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -10104,7 +10104,7 @@ msgid ""
 msgstr ""
 "Ini adalah kuantitas produk yang direncanakan untuk digerakkan. Menurunkan "
 "kuantitas ini tidak akan membuat backorder. Mengubah kuantitas ini pada "
-"pergerakkan berdampak pada reservasi produk, dan harus dilakukan dengan hati-"
+"pergerakan berdampak pada reservasi produk, dan harus dilakukan dengan hati-"
 "hati."
 
 #. module: stock
@@ -10123,7 +10123,7 @@ msgid ""
 "This location will be used as the source location for stock moves generated "
 "by an inventory adjustment."
 msgstr ""
-"Lokasi ini akan digunakan sebagai lokasi sumber untuk pergerakkan stok yang "
+"Lokasi ini akan digunakan sebagai lokasi sumber untuk pergerakan stok yang "
 "dibuat oleh penyesuaian inventaris."
 
 #. module: stock
@@ -10133,7 +10133,7 @@ msgid ""
 "This location will be used as the source location for stock moves generated "
 "by a manufacturing order."
 msgstr ""
-"Lokasi ini akan digunakan sebagai lokasi sumber untuk pergerakkan stok yang "
+"Lokasi ini akan digunakan sebagai lokasi sumber untuk pergerakan stok yang "
 "dibuat oleh pesanan manufaktur."
 
 #. module: stock
@@ -11530,7 +11530,7 @@ msgid ""
 "in order to reverse the moves which took place."
 msgstr ""
 "Anda tidak dapat membatalkan pergerakan stok yang sudah ditetapkan sebagai "
-"'Selesai.' Buat pengembalian agar dapat mengembalikkan pergerakkan yang "
+"'Selesai.' Buat pengembalian agar dapat mengembalikkan pergerakan yang "
 "terjadi."
 
 #. module: stock
@@ -11631,7 +11631,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Anda tidak dapat membelah pergerakkan stok yang sudah ditetapkan sebagai "
+"Anda tidak dapat membelah pergerakan stok yang sudah ditetapkan sebagai "
 "'Selesai' atau 'Dibatalkan'."
 
 #. module: stock

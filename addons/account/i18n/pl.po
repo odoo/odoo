@@ -57,7 +57,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
 "PO-Revision-Date: 2026-04-13 11:44+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -216,6 +216,18 @@ msgstr "%(exception)s dla %(user)s%(end_datetime_string)s%(reason)s."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s (Draft)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
@@ -226,12 +238,6 @@ msgstr ""
 "wyciągu.\n"
 "Aby zachować spójność, wpis w dzienniku musi zawsze mieć dokładnie jeden "
 "wiersz zawieszenia."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "%(name)s - Draft at (%(currency_amount)s)"
-msgstr "%(name)s - Wersja robocza (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -3345,6 +3351,12 @@ msgid "Accumulated Depreciation"
 msgstr "Skumulowana amortyzacja"
 
 #. module: account
+#: model:account.account,name:account.1_retained_earnings
+#: model:account.account,name:account.2_account_account_us_retained_earnings
+msgid "Accumulated Retained Earnings"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
 #: model:ir.model.fields,field_description:account.field_account_report_line__action_id
 msgid "Action"
@@ -4292,6 +4304,11 @@ msgstr ""
 "spełnione są kryteria dopasowania (VAT/kraj)."
 
 #. module: account
+#: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Appropriation of the profit or loss"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
 msgid "April"
 msgstr "Kwiecień"
@@ -4437,6 +4454,17 @@ msgstr "Sierpień"
 #: model:account.account,name:account.2_account_account_us_auto_insurance
 msgid "Auto Insurance"
 msgstr "Ubezpieczenie samochodu"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Auto-Complete"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
+#: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
+msgid "Auto-complete from a previous bill or refund."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -4657,8 +4685,8 @@ msgstr "Procent salda nie może wynosić 0"
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_44
-#: model:account.account,name:account.2_bank_journal_default_account_163
+#: model:account.account,name:account.1_bank_journal_default_account_46
+#: model:account.account,name:account.2_bank_journal_default_account_166
 #: model:account.journal,name:account.1_bank
 #: model:account.journal,name:account.2_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
@@ -5436,7 +5464,7 @@ msgstr "Przeniesienie do"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.1_cash_journal_default_account_174
+#: model:account.account,name:account.1_cash_journal_default_account_176
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5449,12 +5477,12 @@ msgid "Cash Account"
 msgstr "Konto gotówkowe"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_171
+#: model:account.account,name:account.1_cash_journal_default_account_173
 msgid "Cash Bakery"
 msgstr "Piekarnia Gotówka"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_173
+#: model:account.account,name:account.1_cash_journal_default_account_175
 msgid "Cash Bar"
 msgstr "Bar gotówka"
 
@@ -5496,7 +5524,7 @@ msgid "Cash Basis Transition Account"
 msgstr "Rachunek przejściowy dla metody kasowej"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_170
+#: model:account.account,name:account.1_cash_journal_default_account_172
 msgid "Cash Clothes Shop"
 msgstr "Sklep odzieżowy Gotówka"
 
@@ -5558,7 +5586,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Dyskonto gotówkowe Konto odpisów strat"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_169
+#: model:account.account,name:account.1_cash_journal_default_account_171
 msgid "Cash Furn. Shop"
 msgstr "Sklep meblowy Gotówka"
 
@@ -5569,7 +5597,7 @@ msgid "Cash Registers"
 msgstr "Kasy"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_172
+#: model:account.account,name:account.1_cash_journal_default_account_174
 msgid "Cash Restaurant"
 msgstr "Gotówka z restauracji"
 
@@ -6825,6 +6853,11 @@ msgstr ""
 msgid "Cumulative amortization recorded for vehicle assets."
 msgstr ""
 "Skumulowana amortyzacja zaksięgowana dla środków trwałych w postaci pojazdów."
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_retained_earnings
+msgid "Cumulative undistributed profits and losses"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -11038,6 +11071,12 @@ msgid "Invoice Totals"
 msgstr "Sumy faktur"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_vendor_bill_id
+#: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_bill_id
+msgid "Invoice Vendor Bill"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid ""
@@ -11325,6 +11364,12 @@ msgstr "Jest edytorem"
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
 msgid "Is Entries"
 msgstr "Jest wpisem"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
+#: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
+msgid "Is Exact Move Duplicate"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -15072,6 +15117,14 @@ msgid "Profit Account"
 msgstr "Konto wynikowe"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_profit_or_loss
+#: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Profit or Loss Appropriation"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
 msgstr "Nota kredytowa proforma"
@@ -16368,6 +16421,11 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 msgid "Select a type"
 msgstr "Wybierz typ"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Select an old purchase document"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -20162,14 +20220,6 @@ msgid "Undefined Yet"
 msgstr "Jeszcze niezdefiniowane"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-#: model:account.account,name:account.1_unaffected_earnings_account
-#: model:account.account,name:account.2_unaffected_earnings_account
-msgid "Undistributed Profits/Losses"
-msgstr "Niepodzielone zyski/straty"
-
-#. module: account
 #: model:account.account,name:account.2_account_account_us_unemployment_insurance
 msgid "Unemployment Insurance"
 msgstr "Ubezpieczenie na wypadek bezrobocia"
@@ -22573,6 +22623,12 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Samodzielnie rozliczana faktura (nr ref. "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid "%(name)s - Draft at (%(currency_amount)s)"
+#~ msgstr "%(name)s - Wersja robocza (%(currency_amount)s)"
+
+#~ msgid "Undistributed Profits/Losses"
+#~ msgstr "Niepodzielone zyski/straty"
 
 #~ msgid "1.00"
 #~ msgstr "1.00"

@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:36+0000\n"
-"PO-Revision-Date: 2026-04-13 08:45+0000\n"
+"PO-Revision-Date: 2026-04-18 13:40+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/sale/"
 "ja/>\n"
@@ -1521,8 +1521,8 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
-"請求ポリシー(オーダ数量または配送済数量に基づく)に従い、請求書発行の準備が"
-"整った全オーダ明細と標準請求書を発行します。"
+"請求ポリシー(オーダ数量または納品済数量に基づく)に従い、請求書発行の準備が整"
+"った全オーダ明細と標準請求書を発行します。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_storable
@@ -1561,8 +1561,8 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されま"
-"す：\n"
+"プロダクト構成に応じて、納品済数量はメカニズムによって自動的に計算されます"
+"：\n"
 "  - 手動：数量を明細上で手動で設定します\n"
 "  - 費用からの分析： 数量は計上された費用からの合計数量です\n"
 "  - タイムシート：数量は、この売上明細にリンクされたタスクに記録された時間の"
@@ -1796,7 +1796,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "分析勘定"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -1952,8 +1952,8 @@ msgid ""
 "            Green: Fully Delivered"
 msgstr ""
 "青: 配送/開始待ち\n"
-"            オレンジ: 一部配送済\n"
-"            緑: 全配送済"
+"            オレンジ: 一部納品済\n"
+"            緑: 全納品済"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -2678,18 +2678,18 @@ msgstr "Eメールで内容を配信"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered"
-msgstr "配送済"
+msgstr "納品済"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Delivered Quantity: %s"
-msgstr "配送済数量:%s"
+msgstr "納品済数量:%s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
 msgid "Delivered quantities"
-msgstr "配送済数量"
+msgstr "納品済数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_shipping_id
@@ -3544,7 +3544,7 @@ msgstr "請求書ステータス"
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
-msgstr "オーダ数量ではなく配送済数量を配送後に請求。"
+msgstr "オーダ数量ではなく納品済数量を納品後に請求。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__reinvoice_move_id
@@ -3570,7 +3570,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
 msgid "Invoice what is delivered"
-msgstr "配送済数量を請求"
+msgstr "納品済数量を請求"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
@@ -4313,7 +4313,7 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
-"オーダ数量:顧客がオーダした請求書の数量。配送済数量:顧客に納品された請求書の"
+"オーダ数量:顧客がオーダした請求書の数量。納品済数量:顧客に納品された請求書の"
 "数量。"
 
 #. module: sale
@@ -4470,7 +4470,7 @@ msgstr "支払取引金額"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
-msgstr "支払期限"
+msgstr "支払条件"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pending_email_template_id
@@ -5009,7 +5009,7 @@ msgstr "見積を確認してください"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS送信エラー"
+msgstr "SMS配信エラー"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5546,7 +5546,7 @@ msgid ""
 "Sold in the last 365 days. Outgoing represents confirmed sales orders not "
 "delivered, or partially delivered"
 msgstr ""
-"過去365日間の販売数です。出庫数は、未配送または一部のみ配送済みの、確定した販"
+"過去365日間の販売数です。出庫数は、未納品または一部のみ納品済みの、確定した販"
 "売オーダを表します"
 
 #. module: sale
@@ -6169,7 +6169,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "To Invoice"
-msgstr "未請求"
+msgstr "請求対象"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
