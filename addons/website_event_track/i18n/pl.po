@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-02-28 13:42+0000\n"
+"PO-Revision-Date: 2026-04-18 13:52+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
 "website_event_track/pl/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -135,6 +135,34 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Dzień dobry <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br/>\n"
+"    Z przyjemnością informujemy Cię, że Twoja propozycja <t t-"
+"out=\"object.name or ''\">What This Event Is All About</t> została "
+"zaakceptowana i potwierdzona na wydarzenie <t t-out=\"object.event_id.name "
+"or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    <br/>\n"
+"    Poniżej znajdziesz więcej szczegółów:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ "
+"object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; background-color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:3px\">"
+"\n"
+"            Zobacz prelekcję\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Dziękujemy,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -144,18 +172,18 @@ msgstr "<i class=\"fa fa-ban me-2\"/>Nieopublikowane"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
 msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
-msgstr ""
+msgstr "<i class=\"fa fa-bell mx-2 text-muted\"/> Ulubione prelekcje"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
 msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "<span class=\"fa fa-plus me-1\"/> Schedule Tracks"
-msgstr ""
+msgstr "<span class=\"fa fa-plus me-1\"/> Zaplanuj prelekcje"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -167,6 +195,12 @@ msgid ""
 "class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Błąd\" title=\"Błąd\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -174,6 +208,8 @@ msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
 "                                        <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">Wstęp do prelekcji</span>\n"
+"                                        <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -181,11 +217,13 @@ msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
 "                                        <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">Tytuł prelekcji</span>\n"
+"                                        <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 msgid "<span class=\"text-muted\"> tracks</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> ścieżki</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
@@ -602,6 +640,384 @@ msgid ""
 "            </table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"            <t t-set=\"event_organizer\" t-"
+"value=\"object.event_id.organizer_id\"/>\n"
+"            <t t-set=\"event_address\" t-"
+"value=\"object.event_id.address_id\"/>\n"
+"            <t t-set=\"is_online\" t-value=\"'is_published' in "
+"object.event_id and object.event_id.is_published\"/>\n"
+"            <t t-set=\"agenda_urls\" t-"
+"value=\"object._get_track_calendar_urls()\"/>\n"
+"            <t t-set=\"google_url\" t-value=\"agenda_urls.get('google_url')"
+"\"/>\n"
+"            <t t-set=\"iCal_url\" t-value=\"agenda_urls.get('iCal_url')\"/>\n"
+"            <t t-set=\"yahoo_url\" t-value=\"agenda_urls.get('yahoo_url')\"/>"
+"\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\">\n"
+"            <tbody>\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"middle\">\n"
+"                                <span style=\"font-size: 10px;\">Twój plan "
+"wydarzenia</span><br/>\n"
+"                                <span style=\"font-size: 20px; font-weight: "
+"bold;\" t-out=\"object.name\"/>\n"
+"                            </td><td valign=\"middle\" align=\"right\">\n"
+"                                <t t-if=\"not "
+"object.company_id.uses_default_logo\">\n"
+"                                    <img t-att-src=\"'/logo.png?company=%s' "
+"% object.company_id.id\" style=\"padding: 0px; margin: 0px; margin-right: "
+"10px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"/>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"                            <tr><td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
+"                              <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- TALK DESCRIPTION -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: "
+"14px;\">\n"
+"                                <div>\n"
+"                                    Dzień dobry<t t-if=\"not "
+"user_id.is_public\" t-out=\"' ' + user_id.name\"/>,\n"
+"                                    <br/><br/>\n"
+"                                    Niedawno wyraziłeś zainteresowanie "
+"prelekcją\n"
+"                                    <a t-if=\"object.description or "
+"object.partner_biography\" t-attf-href=\"{{ object.get_base_url() }}{{ "
+"object.website_url }}\" style=\"font-weight:bold;color:#875A7B;text-"
+"decoration:none;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</a>\n"
+"                                    <span t-else=\"\" style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</span>.\n"
+"                                </div>\n"
+"                                <div t-if=\"agenda_urls\">\n"
+"                                    <br/>\n"
+"                                    <strong>Dodaj tę prelekcję do swojego "
+"kalendarza</strong>\n"
+"                                    <a t-if=\"google_url\" t-att-"
+"href=\"google_url\" t-attf-style=\"padding:3px 5px; color: {"
+"{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                                        <img src=\"/web_editor/font_to_img/"
+"61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" "
+"alt=\"\"/>\n"
+"                                        Google\n"
+"                                    </a>\n"
+"                                    <a t-if=\"iCal_url\" t-att-"
+"href=\"iCal_url\" t-attf-style=\"padding:3px 5px; color:{"
+"{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"text-decoration:none;border-radius:3px;\">\n"
+"                                        <img src=\"/web_editor/font_to_img/"
+"61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" "
+"alt=\"\"/>\n"
+"                                        iCal/Outlook\n"
+"                                    </a>\n"
+"                                    <a t-if=\"yahoo_url\" t-att-"
+"href=\"yahoo_url\" t-attf-style=\"padding:3px 5px; color: {"
+"{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"text-decoration:none;border-radius:3px;\" target=\"new\">\n"
+"                                        <img src=\"/web_editor/font_to_img/"
+"61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" "
+"alt=\"\"/> Yahoo\n"
+"                                    </a>\n"
+"                                    <br/><br/>\n"
+"                                </div>\n"
+"                                <div>\n"
+"                                    See you soon,<br/>\n"
+"                                    <span style=\"color: #454748;\">\n"
+"                                    -- <br/>\n"
+"                                    <t t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</t>\n"
+"                                    </span>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                              <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- DETAILS -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: "
+"14px;\">\n"
+"                                <table style=\"width:100%;\">\n"
+"                                    <tr>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <img src=\"/web_editor/"
+"font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-"
+"width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                            <div t-if=\"object.is_one_day\">"
+"\n"
+"                                                <t t-out=\"object.date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">May 4, 2021</t>\n"
+"                                                <t t-out=\"object.date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">"
+"7:00 AM</t>\n"
+"                                                 - <t t-"
+"out=\"object.date_end\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: "
+"&quot;short&quot;}\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div t-else=\"\">\n"
+"                                                <strong>Od</strong>\n"
+"                                                <t t-out=\"object.date or "
+"object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">May 4, "
+"2021</t>\n"
+"                                                 - <t t-out=\"object.date or "
+"object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: "
+"&quot;short&quot;}\">7:00 AM</t>\n"
+"                                                <strong>Do</strong>\n"
+"                                                <t t-out=\"object.date_end "
+"or object.event_id.date_end\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">May 6, "
+"2021</t>\n"
+"                                                 - <t t-"
+"out=\"object.date_end or object.event_id.date_end\" t-options=\""
+"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, "
+"&quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: "
+"True, &quot;format&quot;: &quot;short&quot;}\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div style=\"font-"
+"size:12px;color:#9e9e9e\"><i><t t-out=\"object.event_id.date_tz or ''\">"
+"Europe/Brussels</t></i></div>\n"
+"                                        </td>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address or "
+"object.location_id\">\n"
+"                                                <img src=\"/web_editor/"
+"font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-"
+"width:inherit;\" height=\"34\" alt=\"\"/>\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address\">\n"
+"                                                <t t-set=\"location\" t-"
+"value=\"''\"/>\n"
+"                                                <t t-"
+"if=\"event_address.name\">\n"
+"                                                    <div t-"
+"out=\"event_address.name or ''\">Teksa SpA</div>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"event_address.street\">\n"
+"                                                    <div t-"
+"out=\"event_address.street or ''\">Puerto Madero 9710</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"event_address.street\"/>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"event_address.street2\">\n"
+"                                                    <div t-"
+"out=\"event_address.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"'%s, %s' % (location, event_address.street2)\"/>\n"
+"                                                </t>\n"
+"                                                <div>\n"
+"                                                    <t t-"
+"if=\"event_address.city\">\n"
+"                                                        <t t-"
+"out=\"event_address.city or ''\">Pudahuel</t>,\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.city)\"/>\n"
+"                                                    </t>\n"
+"                                                    <t t-"
+"if=\"event_address.state_id.name\">\n"
+"                                                        <t t-"
+"out=\"event_address.state_id.name or ''\">C1</t>,\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.state_id.name)"
+"\"/>\n"
+"                                                    </t>\n"
+"                                                    <t t-"
+"if=\"event_address.zip\">\n"
+"                                                        <t t-"
+"out=\"event_address.zip or ''\">98450</t>\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.zip)\"/>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <t t-"
+"if=\"event_address.country_id.name\">\n"
+"                                                    <div t-"
+"out=\"event_address.country_id.name or ''\">Argentina</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"'%s, %s' % (location, event_address.country_id.name)\"/>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <div t-if=\"object.location_id\" "
+"t-out=\"'Talk location:' + object.location_id.name\"/>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </td></tr>\n"
+"                            <tr t-if=\"not object.date\">\n"
+"                                <td>\n"
+"                                    <strong><u>Uwaga</u></strong>: W "
+"momencie wysyłania tej wiadomości czas rozpoczęcia i zakończenia prelekcji "
+"nie był jeszcze zdefiniowany. Czas podany w tej wiadomości odpowiada "
+"przedziałowi czasowemu całego wydarzenia. \n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <t t-if=\"event_organizer\">\n"
+"                                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: "
+"14px;\">\n"
+"                                <!-- CONTACT ORGANIZER -->\n"
+"                                <t t-if=\"object.event_id.organizer_id.name "
+"or object.event_id.company_id.name\">\n"
+"                                    <div>\n"
+"                                        <span style=\"font-"
+"weight:300;margin:10px 0px\">Masz pytania na temat tej prelekcji?</span>\n"
+"                                        <div>Skontaktuj się z "
+"organizatorem:</div>\n"
+"                                        <ul>\n"
+"                                            <li t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</li>\n"
+"                                            <t t-"
+"if=\"event_organizer.email\">\n"
+"                                                <li>Mail: <a t-attf-"
+"href=\"mailto:{{ event_organizer.email }}\" style=\"text-"
+"decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"/></li>"
+"\n"
+"                                            </t>\n"
+"                                            <t t-"
+"if=\"object.event_id.organizer_id.phone or "
+"object.event_id.company_id.phone\">\n"
+"                                                <li>Phone: <t t-"
+"out=\"object.event_id.organizer_id.phone or "
+"object.event_id.company_id.phone\"/></li>\n"
+"                                            </t>\n"
+"                                        </ul>\n"
+"                                    </div>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                                <hr t-if=\"is_online or event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: "
+"14px;\">\n"
+"                                <!-- PWA MARKGETING -->\n"
+"                                <div t-if=\"is_online\">\n"
+"                                    <strong>Najlepsza obsługa mobilna.</"
+"strong>\n"
+"                                    <a href=\"/event\">Zainstaluj naszą "
+"aplikację</a>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- PWA MARKGETING SEPARATION-->\n"
+"                                <hr t-if=\"is_online and event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: "
+"14px;\">\n"
+"                                <!-- GOOGLE MAPS LINK -->\n"
+"                                <table t-if=\"event_address and location\" "
+"style=\"width:100%;\"><tr><td>\n"
+"                                    <div>\n"
+"                                        <img src=\"/web_editor/font_to_img/"
+"61505/rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
+"                                        <a t-attf-href=\"https://"
+"maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                            <img t-"
+"if=\"event_address.static_map_url and "
+"event_address.static_map_url_is_valid\" t-attf-src=\"{{ "
+"event_address.static_map_url }}\" style=\"vertical-align:bottom; width: "
+"100%;\" alt=\"Google Maps\"/>\n"
+"                                            <span t-else=\"\">Zobacz "
+"lokalizację wydarzenia na Mapach Google</span>\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td></tr></table>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"            </table>\n"
+"            </td></tr>\n"
+"            <!-- FOOTER BY -->\n"
+"            <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table t-if=\"object.company_id\" width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                  <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"                    Wysłane przez <a target=\"_blank\" t-attf-href=\"{{ "
+"object.get_base_url() }}\" style=\"color: #875A7B;\" t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</a>\n"
+"                    <t t-if=\"'website_url' in object.event_id and "
+"object.event_id.website_url\">\n"
+"                        <br/>\n"
+"                        Odkryj <a href=\"/event\" style=\"color:#875A7B;\">"
+"Wszystkie nasze wydarzenia</a>.\n"
+"                    </t>\n"
+"                  </td></tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            </table>\n"
+"        "
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
@@ -674,7 +1090,7 @@ msgstr "Dodaj nowy poziom w lejku zadań"
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_reminder
 msgid "Add reminder via email"
-msgstr ""
+msgstr "Dodaj przypomnienie przez e-mail"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
@@ -687,23 +1103,23 @@ msgstr ""
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_reminder
 msgid "Add talk reminder"
-msgstr ""
+msgstr "Dodaj przypomnienie o prelekcji"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_reminder
 msgid "Add talk reminder: {{ object.name }}"
-msgstr ""
+msgstr "Dodaj przypomnienie o prelekcji: {{ object.name }}"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Add this talk to your agenda ?"
-msgstr ""
+msgstr "Dodać tę prelekcję do Twojego programu?"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management: tips and tricks from the fields"
-msgstr ""
+msgstr "Zaawansowane zarządzanie leadami: porady i triki z praktyki"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
@@ -720,7 +1136,7 @@ msgstr "Plan spotkania"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
 msgid "Agenda Color"
-msgstr ""
+msgstr "Kolor programu"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
@@ -751,6 +1167,9 @@ msgid ""
 "Allow video and audio recording of their\n"
 "                            presentation, for publishing on our website."
 msgstr ""
+"Zezwalaj na nagrywanie wideo i dźwięku\n"
+"                                    prezentacji, w celu opublikowania na "
+"naszej stronie internetowej."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
@@ -821,12 +1240,12 @@ msgstr "Dostępne znaczniki śledzenia"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 msgid "Available on all event Agenda pages"
-msgstr ""
+msgstr "Dostępne na wszystkich stronach programu wydarzeń"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
 msgid "Back to All Talks"
-msgstr ""
+msgstr "Powrót do wszystkich prelekcji"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -900,7 +1319,7 @@ msgstr "Anulowano"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
 msgid "Cancelled Stage"
-msgstr ""
+msgstr "Anulowany etap"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -916,7 +1335,7 @@ msgstr "Kategoria"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Check your email to add the track to your agenda."
-msgstr ""
+msgstr "Sprawdź swoją skrzynkę e-mail, aby dodać to wydarzenie do kalendarza."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_12
@@ -1077,6 +1496,8 @@ msgid ""
 "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES "
 "OF ALL EVENTS"
 msgstr ""
+"UMIEŚĆ TUTAJ BLOKI KONSTRUKCYJNE, ABY BYŁY DOSTĘPNE NA WSZYSTKICH STRONACH "
+"PROPOZYCJI WSZYSTKICH WYDARZEŃ"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1216,7 +1637,7 @@ msgstr "E-mail"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Email Error"
-msgstr ""
+msgstr "Błąd e-mail"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
@@ -1350,7 +1771,7 @@ msgstr "Ulubione"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Filter Tracks"
-msgstr ""
+msgstr "Filtruj ścieżki"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1418,7 +1839,7 @@ msgstr "Przyszłe czynności"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Get prepared and"
-msgstr ""
+msgstr "Przygotuj się i"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1479,7 +1900,7 @@ msgstr "Najwyższy"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
 msgid "Home page"
-msgstr ""
+msgstr "Strona główna"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -1668,7 +2089,7 @@ msgstr "Nieprawidłowe dane"
 #. odoo-python
 #: code:addons/website_event_track/controllers/event_track.py:0
 msgid "Invalid data."
-msgstr ""
+msgstr "Nieprawidłowe dane."
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1830,7 +2251,7 @@ msgstr "Życie w domu dookoła świata: Historia Williama"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Lightning Talks"
-msgstr ""
+msgstr "Krótkie prelekcje"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
@@ -2031,13 +2452,13 @@ msgstr "Na ten moment brak odwiedzających!"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "No thanks"
-msgstr ""
+msgstr "Nie, dziękuję"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "No thanks & don't ask again"
-msgstr ""
+msgstr "Nie, dziękuję i nie pytaj mnie ponownie"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
@@ -2091,7 +2512,7 @@ msgstr "Stare jest nowe"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
 msgid "Our Last Day Together!"
-msgstr ""
+msgstr "Nasz ostatni wspólny dzień!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
@@ -2173,7 +2594,7 @@ msgstr "Propozycja"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Proposals are closed."
-msgstr ""
+msgstr "Propozycje są zamknięte."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
@@ -2232,7 +2653,7 @@ msgstr "Odmówiono"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Regular Talks"
-msgstr ""
+msgstr "Normalne prelekcje"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
@@ -2288,7 +2709,7 @@ msgstr "Błąd dostarczenia wiadomości SMS"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "Search a talk ..."
-msgstr ""
+msgstr "Wyszukaj prelekcję..."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_6
@@ -2299,7 +2720,7 @@ msgstr "Zabezpieczanie drewna podczas transportu"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/website_event_track_proposal_form_tags.js:0
 msgid "Select Categories"
-msgstr ""
+msgstr "Wybierz kategorie"
 
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
@@ -2332,7 +2753,7 @@ msgstr "Ustaw jako ulubione"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
 msgid "Show Button"
-msgstr ""
+msgstr "Pokaż przycisk"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -2358,7 +2779,7 @@ msgstr "Biografia Mówcy"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Speaker Name"
-msgstr ""
+msgstr "Imię prelegenta"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__image
@@ -2368,7 +2789,7 @@ msgstr "Zdjęcie mówcy"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker Profile"
-msgstr ""
+msgstr "Profil prelegenta"
 
 #. module: website_event_track
 #. odoo-python
@@ -2450,7 +2871,7 @@ msgstr "Tagi"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Intro"
-msgstr ""
+msgstr "Wstęp do prelekcji"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2459,6 +2880,8 @@ msgid ""
 "Talk already in your Favorites. The page does not seem to be up-to-date and "
 "needs a refresh."
 msgstr ""
+"Prelekcja znajduje się już w Twoich ulubionych. Wygląda na to, że strona nie "
+"jest aktualna i wymaga odświeżenia."
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2535,13 +2958,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event_track/controllers/event_track.py:0
 msgid "The talk has already begun."
-msgstr ""
+msgstr "Ta prelekcja się już rozpoczęła."
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/controllers/event_track.py:0
 msgid "The talk is already finished."
-msgstr ""
+msgstr "Ta prelekcja się już zakończyła."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
@@ -2571,11 +2994,15 @@ msgid ""
 "These are 30 minutes talks on many different topics. Most topics are "
 "accepted in lightning talks."
 msgstr ""
+"Są to 30-minutowe wystąpienia na wiele różnych tematów. Większość tematów "
+"jest akceptowana w ramach krótkich prelekcji."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "These are standard talks with slides, alocated in slots of 60 minutes."
 msgstr ""
+"Są to standardowe prezentacje ze slajdami, przydzielone w 60-minutowych "
+"slotach."
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
@@ -2633,6 +3060,9 @@ msgid ""
 "Timely release of presentation material (slides),\n"
 "                            for publishing on our website."
 msgstr ""
+"Terminowe udostępnianie materiałów prezentacyjnych (slajdów)\n"
+"                                    do publikacji na naszej stronie "
+"internetowej."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
@@ -2789,7 +3219,7 @@ msgstr "Wystapienie zablokowane"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Track successfully added to your favorites."
-msgstr ""
+msgstr "Ścieżka pomyślnie dodana do ulubionych."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
@@ -2854,7 +3284,7 @@ msgstr "Nieprzeczytane wiadomości"
 #: code:addons/website_event_track/models/event_track.py:0
 #: code:addons/website_event_track/models/website_visitor.py:0
 msgid "Unsupported 'Not In' operation on track wishlist visitors"
-msgstr ""
+msgstr "Operacja 'Not In' nie jest obsługiwana na liście życzeń odwiedzających"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
@@ -2888,7 +3318,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Values set here are website-specific."
-msgstr ""
+msgstr "Wartości skonfigurowane tutaj są specyficzne dla strony internetowej."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2935,13 +3365,13 @@ msgstr "Poczekaj na odwiedzających by dodali wystąpienia do ich ulubionych"
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "We could not find any track at this moment."
-msgstr ""
+msgstr "W tej chwili nie znaleźliśmy żadnej ścieżki."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "We could not find any track matching your search for:"
-msgstr ""
+msgstr "Nie znaleźliśmy żadnych wyników pasujących do Twojego wyszukiwania:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2979,12 +3409,13 @@ msgstr "Ocenimy Twoją propozycję i wkrótce skontaktujemy się z Tobą."
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "We will send you a link to add this talk to your agenda."
-msgstr ""
+msgstr "Wyślemy Ci link do dodania tego wykładu do swojego programu."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We're sorry, this event does not accept proposals anymore"
 msgstr ""
+"Przepraszamy, ale nie przyjmujemy już zgłoszeń dotyczących tego wydarzenia"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website
@@ -3083,7 +3514,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2
 msgid "Who's OpenWood anyway?"
-msgstr ""
+msgstr "Kto to w ogóle jest OpenWood?"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -3147,7 +3578,7 @@ msgstr "np. \"John Doe urodził się w...\"."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "e.g. \"Main Conference Room\""
-msgstr ""
+msgstr "np. „Główna sala konferencyjna”"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -3158,7 +3589,7 @@ msgstr "np. \"Ta mowa będzie o...\"."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Get Yours Now!"
-msgstr ""
+msgstr "np. Zdobądź swoją kopię już teraz!"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
@@ -3186,18 +3617,18 @@ msgstr "id"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/event_track_timer.js:0
 msgid "in %s"
-msgstr ""
+msgstr "w %s"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "minutes after Track start"
-msgstr ""
+msgstr "minut po rozpoczęciu wystąpienia"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "register to your favorites talks now."
-msgstr ""
+msgstr "zarejestruj się już teraz, aby dodać prelekcje do ulubionych."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -3213,7 +3644,7 @@ msgstr "zaczyna się"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid ""
 #~ "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"

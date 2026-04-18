@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-02-28 13:44+0000\n"
+"POT-Creation-Date: 2026-04-17 18:34+0000\n"
+"PO-Revision-Date: 2026-04-18 13:47+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/ko/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -1841,7 +1841,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr "해당 국가에 해외 부가가치세 관련 재정 위치 자료가 이미 존재합니다."
+msgstr "해당 국가에 해외 부가가치세 관련 재정 포지션 자료가 이미 존재합니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -2500,7 +2500,7 @@ msgstr "계정"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "재정 위치 계정 매핑"
+msgstr "재정 포지션 계정 매핑"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -5349,7 +5349,7 @@ msgstr "주소록에 신규 고객 정보를 생성합니다."
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
 msgid "Create a new fiscal position"
-msgstr "새로운 재정 위치 항목을 생성합니다."
+msgstr "새로운 재정 포지션 항목을 생성합니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -6909,7 +6909,7 @@ msgstr "국내"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__domestic_fiscal_position_id
 msgid "Domestic Fiscal Position"
-msgstr "재정 위치 문서"
+msgstr "국내 재정 포지션"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7843,13 +7843,13 @@ msgstr "회계 기간"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Fiscal Position"
-msgstr "재정 위치"
+msgstr "재정 포지션"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "재정 위치"
+msgstr "재정 포지션"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -8382,7 +8382,7 @@ msgstr "항목 있음"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
 #: model:ir.model.fields,field_description:account.field_account_move__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr "재정 위치가 변경되었습니다."
+msgstr "재정 포지션이 변경되었습니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
@@ -10485,7 +10485,7 @@ msgstr "유동성 이동"
 msgid ""
 "List of taxes to replace when applying any of the stipulated fiscal "
 "positions."
-msgstr "지정된 재정 위치가 적용될 경우 대체용으로 사용될 세금 목록입니다."
+msgstr "지정된 재정 포지션이 적용될 경우 대체용으로 사용될 세금 목록입니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__load_more_limit
@@ -11133,6 +11133,12 @@ msgstr "가장 가까운"
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
 msgid "Need Cancel Request"
 msgstr "취소 요청 필요"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Need to update"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -14074,7 +14080,7 @@ msgstr "검색창"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr "재정 위치 검색"
+msgstr "재정 포지션 검색"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
@@ -15381,7 +15387,7 @@ msgstr "회사 통화 기준 세액"
 msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
-msgstr "해당 국가의 세무, 재정 위치, 계정과목표 및 법률 문서입니다."
+msgstr "해당 국가의 세무, 재정 포지션, 계정과목표 및 법률 문서입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -16036,7 +16042,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
-msgstr "재정 위치에 따라서 연락처에 적용될 세금이나 계정이 결정됩니다."
+msgstr "재정 포지션에 따라서 연락처에 적용될 세금이나 계정이 결정됩니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -17689,6 +17695,12 @@ msgstr "용어 업데이트"
 #: code:addons/account/models/res_config_settings.py:0
 msgid "Update Terms & Conditions"
 msgstr "이용약관 업데이트"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Update app"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -19362,7 +19374,7 @@ msgstr "일반적인 범위를 벗어납니다."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "fiscal position [%s]"
-msgstr "재정 위치 [%s]"
+msgstr "재정 포지션 [%s]"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
