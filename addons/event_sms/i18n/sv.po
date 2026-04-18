@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_sms
+# * event_sms
 #
 # Translators:
 # Wil Odoo, 2025
 #
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:37+0000\n"
-"PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"PO-Revision-Date: 2026-04-14 15:14+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s18-2/"
+"event_sms/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__display_name
@@ -30,17 +33,17 @@ msgstr "Visningsnamn"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
 msgid "Event Automated Mailing"
-msgstr "Automatiska evenemangsutskick"
+msgstr "Automatiserade evenemangsutskick"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr "Evenemang: anmälan"
+msgstr "Evenemang: Anmälan"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
 msgid "Event: Reminder"
-msgstr "Evenemang: påminnelse"
+msgstr "Evenemang: Påminnelse"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__id
@@ -53,7 +56,7 @@ msgstr "ID"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr "Schemalägg e-post för evenemangskategori"
+msgstr "Schemalägg e-post per evenemangskategori"
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_reminder
@@ -68,18 +71,19 @@ msgid ""
 "%i!' % (object.get_base_url(), object.event_id.id) }}"
 msgstr ""
 "Redo för \"{{ object.event_id.name }}\" {{ object.event_date_range }}?\n"
-"{{ 'Det börjar kl %s' % format_time(time=object.event_begin_date, "
+"{{ 'Evenemanget börjar kl %s' % format_time(time=object.event_begin_date, "
 "tz=object.event_id.date_tz, time_format='short', "
-"lang_code=object.partner_id.lang) + (', at %s' % "
+"lang_code=object.partner_id.lang) + (', på %s' % "
 "object.event_id.address_inline if object.event_id.address_inline else '') + "
-"'.\\nSå ses vi där!' if object.event_id.address_inline or "
-"'website_published' not in object.event_id._fields else 'Gå med oss pån %s/"
-"event/%i!' % (object.get_base_url(), object.event_id.id) }}"
+"'.\\n"
+"Vi ses där!' if object.event_id.address_inline or 'website_published' not in "
+"object.event_id._fields else 'Läs mer på %s/event/%i!' % (object.get_base_url"
+"(), object.event_id.id) }}"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr "Schemaläggare för evenemangsanmälningar"
+msgstr "Schemaläggning av e-post relaterade till evenemangsanmälningar"
 
 #. module: event_sms
 #. odoo-javascript
@@ -94,7 +98,7 @@ msgstr "SMS"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_sms_template
 msgid "SMS Templates"
-msgstr "SMS-mallar"
+msgstr "Sms-mallar"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
@@ -116,5 +120,5 @@ msgid ""
 "{{ object.event_id.name }} event."
 msgstr ""
 "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name }}: Vi är glada att bekräfta din registrering till "
-"{{ object.event_id.name }}."
+"user.env.company.name }}: Vi är glada att bekräfta din anmälan till "
+"evenemanget {{ object.event_id.name }}."
