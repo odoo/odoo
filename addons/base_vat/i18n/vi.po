@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -67,6 +67,11 @@ msgid "AR200-5536168-2 or 20055361682"
 msgstr "AR200-5536168-2 hoặc 20055361682"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -87,16 +92,6 @@ msgstr "Công ty"
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "Cài đặt cấu hình"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
-"Kết nối với máy chủ VIES không thành công. Không thể xác thực mã số thuế "
-"GTGT %s."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -165,6 +160,12 @@ msgstr "Hợp lệ trong cộng đồng"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "MXGODE561231GR8 or GODE561231GR8"
 msgstr "MXGODE561231GR8 hoặc GODE561231GR8"
 
@@ -204,8 +205,20 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "Máy chủ VIES không thể phiên dịch mã số thuế GTGT %s. "
+msgid "The Intra-Community validity has been updated."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -227,16 +240,6 @@ msgid ""
 msgstr ""
 "Không thể phát hiện quốc gia của mã số thuế GTGT nước ngoài. Vui lòng chỉ "
 "định quốc gia cho vị trí tài chính hoặc thiết lập nhóm quốc gia"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
-msgstr ""
-"Yêu cầu xác thực thuế GTGT không được xử lý. Dịch vụ VIES gửi thông tin lỗi "
-"sau: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -284,6 +287,23 @@ msgstr "vị trí tài chính [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "đối tác [%s]"
+
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr ""
+#~ "Kết nối với máy chủ VIES không thành công. Không thể xác thực mã số thuế "
+#~ "GTGT %s."
+
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr "Máy chủ VIES không thể phiên dịch mã số thuế GTGT %s. "
+
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "Yêu cầu xác thực thuế GTGT không được xử lý. Dịch vụ VIES gửi thông tin "
+#~ "lỗi sau: %s"
 
 #~ msgid "3101012009"
 #~ msgstr "3101012009"

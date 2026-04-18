@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-03-29 12:21+0000\n"
+"PO-Revision-Date: 2026-04-14 16:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
 "cloud_storage_migration/fi/>\n"
@@ -22,12 +22,12 @@ msgstr ""
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_model_ids
 msgid "All Attachments"
-msgstr ""
+msgstr "Kaikki liitteet"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_to_migrate
 msgid "All Attachments Migration"
-msgstr ""
+msgstr "Kaikkien liitteiden siirto"
 
 #. module: cloud_storage_migration
 #: model:ir.model,name:cloud_storage_migration.model_ir_attachment
@@ -41,6 +41,8 @@ msgid ""
 "Attachment (%s) does not have a stored filename and cannot be migrated to "
 "cloud storage."
 msgstr ""
+"Liitteellä (%s) ei ole tallennettua tiedostonimeä, eikä sitä voi siirtää "
+"pilvitallennustilaan."
 
 #. module: cloud_storage_migration
 #. odoo-python
@@ -49,44 +51,45 @@ msgid ""
 "Attachment (%s) is not a binary attachment and cannot be migrated to cloud "
 "storage."
 msgstr ""
+"Liite (%s) ei ole binääriliite, eikä sitä voi siirtää pilvitallennustilaan."
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Attachments Report"
-msgstr ""
+msgstr "Liitteiden raportti"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Cloud Storage Migration"
-msgstr ""
+msgstr "Pilvitallennustilasiirto"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_models
 msgid "Cloud Storage Migration All Models"
-msgstr ""
+msgstr "Kaikkien mallien pilvitallennustilasiirto"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.act_window,name:cloud_storage_migration.action_cloud_storage_migration_cron
 msgid "Cloud Storage Migration Cron"
-msgstr ""
+msgstr "Pilvitallennustilan Cron-siirto"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_models
 msgid "Cloud Storage Migration Message Models"
-msgstr ""
+msgstr "Pilvitallennustilasiirron viestimallit"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.act_window,name:cloud_storage_migration.action_cloud_storage_migration_report
 #: model:ir.model,name:cloud_storage_migration.model_cloud_storage_migration_report
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.view_cloud_storage_migration_report_list
 msgid "Cloud Storage Migration Report"
-msgstr ""
+msgstr "Pilvitallennustilasiirron raportti"
 
 #. module: cloud_storage_migration
 #. odoo-python
 #: code:addons/cloud_storage_migration/models/ir_attachment.py:0
 msgid "Cloud storage provider is not configured"
-msgstr ""
+msgstr "Pilvitallennuspalvelun tarjoajaa ei ole määritetty"
 
 #. module: cloud_storage_migration
 #: model:ir.model,name:cloud_storage_migration.model_res_config_settings
@@ -96,7 +99,7 @@ msgstr "Asetukset"
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Cron Job"
-msgstr ""
+msgstr "Cron-tehtävä"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__display_name
@@ -106,7 +109,7 @@ msgstr "Näyttönimi"
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__has_attachment_rel
 msgid "Has Attachment Field"
-msgstr ""
+msgstr "Sisältää liitetiedostokentän"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__id
@@ -119,6 +122,8 @@ msgid ""
 "Indicates whether all attachments associated with this model are scheduled "
 "for cloud storage migration"
 msgstr ""
+"Ilmaisee, onko kaikkien tämän mallin liitteiden pilvitallennustilasiirrot "
+"aikataulutettu"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_to_migrate
@@ -126,6 +131,8 @@ msgid ""
 "Indicates whether attachments linked to mail messages for this model are "
 "scheduled for cloud storage migration"
 msgstr ""
+"Ilmaisee, onko tämän mallin viesteihin linkitettyjen liitteiden "
+"pilvitallennustilasiirrot aikataulutettu"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__has_attachment_rel
@@ -133,61 +140,63 @@ msgid ""
 "Indicates whether this model has a relational field linking to ir.attachment"
 " model"
 msgstr ""
+"Ilmaisee, onko tällä mallilla ir.attachment-malliin linkittyvää "
+"relaatiokenttää"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_max_size
 msgid "Largest Attachment (MB)"
-msgstr ""
+msgstr "Suurin liite (MB)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_model_ids
 msgid "Message Attachments"
-msgstr ""
+msgstr "Viestiliitteet"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_count
 msgid "Message Attachments Count"
-msgstr ""
+msgstr "Viestiliitteiden lukumäärä"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_to_migrate
 msgid "Message Attachments Migration"
-msgstr ""
+msgstr "Viestiliitteiden siirto"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_sum_size
 msgid "Message Attachments Size (MB)"
-msgstr ""
+msgstr "Viestiliitteiden koko (MB)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_max_size
 msgid "Message Largest Attachment (MB)"
-msgstr ""
+msgstr "Viestin suurin liite (MB)"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.server,name:cloud_storage_migration.ir_cron_manual_migrate_local_to_cloud_storage_ir_actions_server
 msgid "Migrate Local Attachment Binaries to Cloud Storage"
-msgstr ""
+msgstr "Siirrä paikallisten liitetiedostojen binäärit pilvitallennustilaan"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_model_ids
 msgid "Migrate Models' All Attachments"
-msgstr ""
+msgstr "Siirrä mallien kaikki liitteet"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_model_ids
 msgid "Migrate Models' Message Attachments"
-msgstr ""
+msgstr "Siirrä mallien viestiliitteet"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Migrate local attachments to cloud storage"
-msgstr ""
+msgstr "Siirrä paikalliset liitteet pilvitallennustilaan"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_progress
 msgid "Migration Progress"
-msgstr ""
+msgstr "Siirron eteneminen"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__res_model
@@ -202,13 +211,13 @@ msgstr "Mallin nimi"
 #. module: cloud_storage_migration
 #: model_terms:ir.actions.act_window,help:cloud_storage_migration.action_cloud_storage_migration_report
 msgid "No attachment data found"
-msgstr ""
+msgstr "Liitetiedostodataa ei löytynyt"
 
 #. module: cloud_storage_migration
 #. odoo-python
 #: code:addons/cloud_storage_migration/models/ir_attachment.py:0
 msgid "No model for cloud storage migration"
-msgstr ""
+msgstr "Ei mallia pilvitallennustilan siirrolle"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
@@ -218,7 +227,7 @@ msgstr "Parametrit"
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_progress
 msgid "Shows the progress of cloud storage migration (current/total)"
-msgstr ""
+msgstr "Näyttää pilvitallennustilasiirron edistymisen (tämänhetkinen/yhteensä)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_max_size
@@ -226,13 +235,15 @@ msgid ""
 "Size in megabytes of the largest attachment associated with any record of "
 "this model"
 msgstr ""
+"Tämän mallin mihin tahansa tietueeseen liittyvän suurimman liitteen koko "
+"megatavuina"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_max_size
 msgid ""
 "Size in megabytes of the largest attachment linked to mail messages for this"
 " model"
-msgstr ""
+msgstr "Suurimman tämän mallin viesteihin linkitetyn liitteen koko megatavuina"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.actions.act_window,help:cloud_storage_migration.action_cloud_storage_migration_report
@@ -240,33 +251,35 @@ msgid ""
 "This report shows statistics about attachments that could be migrated to "
 "cloud storage."
 msgstr ""
+"Tämä raportti näyttää tilastotietoja liitteistä, jotka voisi siirtää "
+"pilvitallennustilaan."
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_count
 msgid "Total Attachments Count"
-msgstr ""
+msgstr "Liitteiden kokonaismäärä"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_sum_size
 msgid "Total Attachments Size (MB)"
-msgstr ""
+msgstr "Liitteiden koko yhteensä (MB)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_count
 msgid "Total number of attachments associated with all records of this model"
-msgstr ""
+msgstr "Tämän mallin kaikkien tietueiden liitteiden kokonaismäärä"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_count
 msgid "Total number of attachments linked to mail messages for this model"
-msgstr ""
+msgstr "Tämän mallin viesteihin linkitettyjen liitteiden kokonaismäärä"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_sum_size
 msgid ""
 "Total size in megabytes of all attachments associated with records of this "
 "model"
-msgstr ""
+msgstr "Tämän mallin tietueiden liitteiden koko yhteensä megatavuina"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_sum_size
@@ -274,3 +287,4 @@ msgid ""
 "Total size in megabytes of all attachments linked to mail messages for this "
 "model"
 msgstr ""
+"Tämän mallin viesteihin linkitettyjen liitteiden koko yhteensä megatavuina"

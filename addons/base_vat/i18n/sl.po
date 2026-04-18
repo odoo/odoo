@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
@@ -67,6 +67,11 @@ msgid "AR200-5536168-2 or 20055361682"
 msgstr "AR200-5536168-2 ali 20055361682"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -87,16 +92,6 @@ msgstr "Podjetja"
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "Uredi nastavitve"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
-"Povezava s strežnikom VIES ni uspela. Davčne številke%s ni bilo mogoče "
-"potrditi."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -167,6 +162,12 @@ msgstr "Veljavno znotraj skupnosti"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "MXGODE561231GR8 or GODE561231GR8"
 msgstr "MXGODE561231GR8 ali GODE561231GR8"
 
@@ -206,8 +207,20 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "DDV številka %s strežnik VIES ni mogel interpretirati."
+msgid "The Intra-Community validity has been updated."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -228,16 +241,6 @@ msgid ""
 msgstr ""
 "Države tuje številke za DDV ni bilo mogoče zaznati. Prosimo, dodelite državo "
 "fiskalnemu položaju ali nastavite skupino držav."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
-msgstr ""
-"Zahteva za potrditev DDV ni bila obdelana. Storitev VIES je odgovorila z "
-"naslednjo napako: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -286,6 +289,23 @@ msgstr "fiskalni položaj [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partner [%s]"
+
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr ""
+#~ "Povezava s strežnikom VIES ni uspela. Davčne številke%s ni bilo mogoče "
+#~ "potrditi."
+
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr "DDV številka %s strežnik VIES ni mogel interpretirati."
+
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "Zahteva za potrditev DDV ni bila obdelana. Storitev VIES je odgovorila z "
+#~ "naslednjo napako: %s"
 
 #~ msgid "3101012009"
 #~ msgstr "3101012009"
