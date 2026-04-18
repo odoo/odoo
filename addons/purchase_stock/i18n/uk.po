@@ -8,12 +8,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Oleksii Lytvynov <oleksii.lytvynov@self-erp.com>, 2026.
+# Lohushchenko <nadiia.lohushchenko@self-erp.com>, 2026.
+# Vlad Patenko <vlad.patenko@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-03-25 08:40+0000\n"
+"PO-Revision-Date: 2026-04-16 08:25+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "purchase_stock/uk/>\n"
@@ -21,10 +23,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 5.16.2\n"
 
 #. module: purchase_stock
@@ -297,6 +299,15 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
+"Визначте, чи слід групувати RFQ (запити цінових пропозицій) разом на основі "
+"очікуваного прибуття, за винятком операцій прямої доставки (dropship).\n"
+"Під замовлення (On Order): Потреби в поповненні будуть згруповані разом, за "
+"винятком MTO (виготовлення на замовлення).\n"
+"Щодня (Daily): Потреби в поповненні будуть згруповані, якщо очікуване "
+"прибуття припадає на той самий день.\n"
+"Щотижня (Weekly): Потреби в поповненні будуть згруповані, якщо очікуване "
+"прибуття припадає на той самий тиждень або день тижня.\n"
+"Завжди (Always): Потреби в поповненні завжди будуть групуватися."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -467,7 +478,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__group_rfq
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__group_rfq
 msgid "Group RFQ"
-msgstr ""
+msgstr "Груповий запит на комерційну пропозицію"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
@@ -1241,7 +1252,7 @@ msgstr "Щотижня"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "При купівлі товари можуть бути доставлені на цей склад."
+msgstr "При купівлі товари можуть бути доставлені на цей склад"
 
 #. module: purchase_stock
 #. odoo-python

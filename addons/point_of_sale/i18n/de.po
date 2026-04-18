@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-13 20:46+0000\n"
+"PO-Revision-Date: 2026-04-17 06:53+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/de/>\n"
@@ -264,6 +264,37 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Guten Tag <t t-"
+"out=\"client_name\">Name des Kunden</t>,</t>\n"
+"                        <t t-else=\"\">Guten Tag,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Vielen Dank für Ihren Einkauf bei <t t-"
+"out=\"store_name\">Name des Shops</t>!</div>\n"
+"                    <div>Im Anhang finden Sie Ihren Beleg für den Einkauf "
+"vom <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+"dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
+"''\">''\">                          lang_code=lg) or ''\">Datum</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">Uhrzeit</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Mit freundlichen Grüßen</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Name des Shops</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2870,7 +2901,7 @@ msgstr "Tägliche Sitzungen enthalten Verkäufe aus dem Kassensystem."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid "Dangerous: Too Many Products"
-msgstr ""
+msgstr "Gefährlich: Zu viele Produkte"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
@@ -4771,7 +4802,7 @@ msgstr "Laptop Modell X"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid "Large Product Count Detected"
-msgstr ""
+msgstr "Große Produktanzahl erkannt"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -9620,6 +9651,8 @@ msgstr ""
 msgid ""
 "The points of sale for the payment method %s must belong to its company."
 msgstr ""
+"Die Kassensysteme für die Zahlungsmethode „%s“ müssen zu dem entsprechenden "
+"Unternehmen gehören."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
@@ -9887,6 +9920,9 @@ msgid ""
 "(limit)s). Loading all products may slow down the Point of Sale. Do you want "
 "to continue with Full Synchronization?"
 msgstr ""
+"Für dieses Kassensystem sind %(count)s Produkte verfügbar (konfiguriertes "
+"Limit: %(limit)s). Das Laden aller Produkte kann das Kassensystem "
+"verlangsamen. Möchten Sie mit der vollständigen Synchronisierung fortfahren?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9897,6 +9933,11 @@ msgid ""
 "may cause it to crash or become unresponsive. It is strongly recommended to "
 "use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
+"Für dieses Kassensystem sind %(count)s Produkte verfügbar (konfiguriertes "
+"Limit: %(limit)s). Das Laden dieser Menge an Produkten verlangsamt das "
+"Kassensystem erheblich und kann dazu führen, dass es abstürzt oder nicht "
+"mehr reagiert. Es wird dringend empfohlen, stattdessen die eingeschränkte "
+"Synchronisation zu verwenden. Möchten Sie dennoch fortfahren?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10882,7 +10923,7 @@ msgstr "Möchten Sie ohne Drucken fortfahren oder es erneut versuchen?"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11280,7 +11321,7 @@ msgstr "Ihr Beleg {{ object.config_id.name }}"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11597,7 +11638,7 @@ msgstr "mit einem Wert von"
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sales_detail_report.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "0.00"
 #~ msgstr "0,00"

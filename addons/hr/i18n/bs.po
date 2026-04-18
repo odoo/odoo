@@ -6,32 +6,34 @@
 # Martin Trigaux, 2018
 # Boško Stojaković <bluesoft83@gmail.com>, 2018
 # Bole <bole@dajmi5.com>, 2018
+# Zvonimir Galić <zvonimir.galic@viavista.ba>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2018\n"
-"Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
+"PO-Revision-Date: 2026-04-15 22:04+0000\n"
+"Last-Translator: Zvonimir Galić <zvonimir.galic@viavista.ba>\n"
+"Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-19/hr/bs/>\n"
 "Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid " Records"
-msgstr ""
+msgstr "Records"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email_amount
 msgid "# emails to send"
-msgstr ""
+msgstr "# e-mailova za slanje"
 
 #. module: hr
 #. odoo-python
@@ -52,16 +54,24 @@ msgid ""
 "- Create a new employee if this employee should have multiple active "
 "contracts."
 msgstr ""
+"%s već ima ugovor koji je pokrenut tokom odabranog perioda.\n"
+"\n"
+"Molimo ili:\n"
+"\n"
+"- Promijenite datum početka tako da se ne preklapa sa postojećim ugovorom, "
+"ili\n"
+"- Kreirajte novog zaposlenika ako bi ovaj zaposlenik trebao imati više "
+"aktivnih ugovora."
 
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'Značka - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "/ month"
-msgstr ""
+msgstr "/ mjesec"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -71,7 +81,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Onsite Interview"
-msgstr ""
+msgstr "1 intervju u kompaniji"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -81,7 +91,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Phone Call"
-msgstr ""
+msgstr "1 telefonski poziv"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -90,7 +100,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
-msgstr ""
+msgstr "12 dana / godina, uključujući<br>6 po vašem izboru."
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -100,7 +110,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "2 open days"
-msgstr ""
+msgstr "2 otvorena dana"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -110,7 +120,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "4 Days after Interview"
-msgstr ""
+msgstr "4 dana nakon razgovora"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -123,6 +133,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
+"<small><b>PROČITAJ</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -131,6 +143,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
+"<b>Čestitam!</b> Mogu li predložiti da definirate <a href=\"%s\">onboarding "
+"plan?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -138,6 +152,8 @@ msgid ""
 "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
 "title=\"Company\"/>"
 msgstr ""
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
+"title=\"Kompanija\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
@@ -145,6 +161,8 @@ msgid ""
 "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\" "
 "invisible=\"login == work_email\"/>"
 msgstr ""
+"<i class=\"fa fa-koverta fa-fw me-1 text-primary\" title=\"Poslovna e-"
+"pošta\" invisible=\"login == radna_e-pošta\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -153,6 +171,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\"/>"
 msgstr ""
+"<i class=\"fa fa-koverta fa-fw me-1 text-primary\" title=\"Poslovna e-"
+"pošta\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
@@ -162,6 +182,10 @@ msgid ""
 "                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
 "title=\"Login\" invisible=\"login == work_email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Login / Email\" "
+"invisible=\"login != work_email\"/>\n"
+" <i class=\"fa fa-fw fa-key me-1 text-primary\" title=\"Login\" "
+"invisible=\"login == work_email\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -169,30 +193,33 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
 msgstr ""
+"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Rođendan\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-briefcase text-primary\" title=\"Contract\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-aktovka text-primary\" title=\"Ugovor\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Telefon\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-suitcase text-primary\" title=\"Job Position\"/>"
 msgstr ""
+"<i class=\"fa fa-fw me-2 fa-suitcase text-primary\" title=\"Pozicija "
+"posla\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -202,6 +229,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-mobile fa-fw me-1 text-primary\" title=\"Work Mobile\"/>"
 msgstr ""
+"<i class=\"fa fa-mobile fa-fw me-1 text-primary\" title=\"Work Mobile\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -210,101 +238,102 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
 msgstr ""
+"<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Poslovni telefon\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"fa fa-tags fa-fw me-1 text-primary\" title=\"Tags\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-tags fa-fw me-1 text-primary\" title=\"Tags\"/>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>AI</small>"
-msgstr ""
+msgstr "<small>AI</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Dashboard</small>"
-msgstr ""
+msgstr "<small>Kontrolna tabla</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Documents</small>"
-msgstr ""
+msgstr "<small>Dokumenti</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Fleet</small>"
-msgstr ""
+msgstr "<small>Flota</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Hiring</small>"
-msgstr ""
+msgstr "<small>Zapošljavanje</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Leaves</small>"
-msgstr ""
+msgstr "<small>Lišće</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Lunch</small>"
-msgstr ""
+msgstr "<small>Ručak</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Payroll</small>"
-msgstr ""
+msgstr "<small>Platni spisak</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Performance</small>"
-msgstr ""
+msgstr "<small>Performanse</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Planning</small>"
-msgstr ""
+msgstr "<small>Planiranje</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Referral</small>"
-msgstr ""
+msgstr "<small>Preporuka</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Sign</small>"
-msgstr ""
+msgstr "<small>Znak</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Talent</small>"
-msgstr ""
+msgstr "<small>Talent</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Trainings</small>"
-msgstr ""
+msgstr "<small>Obuke</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>eLearning</small>"
-msgstr ""
+msgstr "<small>eLearning</small>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -316,16 +345,22 @@ msgid ""
 "is_trusted_bank_account\" class=\"text-success\">Trusted</span>\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"d-flex w-50\">\n"
+" <span invisible=\"is_trusted_bank_account\" class=\"text-muted\">"
+"Nepouzdano</span>\n"
+" <span invisible=\"not is_trusted_bank_account\" class=\"text-success\">"
+"Pouzdano</span>\n"
+"</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">IP adrese</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">Sent Emails</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">Poslane e-poruke</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -333,6 +368,8 @@ msgid ""
 "<span class=\"o_form_label o_hr_form_label cursor-default\">Close "
 "Activities</span>"
 msgstr ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Zatvori "
+"aktivnosti</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -340,21 +377,23 @@ msgid ""
 "<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed Reason</"
 "span>"
 msgstr ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Detaljan razlog</"
+"span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "<span class=\"o_stat_text\">Contact</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kontakt</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton_inherited
 msgid "<span class=\"o_stat_text\">Contacts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kontakti</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Djelatnik</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -364,7 +403,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "<span class=\"text-muted small\">Days to get an Offer</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">Broj dana za dobivanje ponude</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -374,7 +413,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "<span class=\"text-muted small\">Process</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">Postupak</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -384,17 +423,17 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "<span class=\"text-muted small\">Time to Answer</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">Vrijeme do odgovora</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
-msgstr ""
+msgstr "<span invisible=\"not contract_date_start\">do</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
-msgstr ""
+msgstr "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -403,149 +442,152 @@ msgid ""
 "                                                (User is Inactive)\n"
 "                                            </span>"
 msgstr ""
+"<span invisible=\"not user_id or is_user_active\">\n"
+" (Korisnik je neaktivan)\n"
+" </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Contract Overview</span>"
-msgstr ""
+msgstr "<span>Pregled ugovora</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span>Days</span>"
-msgstr ""
+msgstr "<span>Dana</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Izvještaji</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>View</span>"
-msgstr ""
+msgstr "<span>Pogled</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "<span>new employees</span>"
-msgstr ""
+msgstr "<span>novi zaposleni</span>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Adaptability</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Prilagodljivost</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Administrativni poslovi</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Autonomija</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Be enthusiastic</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Budite entuzijastični</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Client Interaction</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Interakcija s kupcem</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Collaboration</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Saradnja</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Compliance and Regulations</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Skladnost i propisi</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Conflict Resolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Rješavanje sukoba</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Customer Relationship</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Odnos s kupcima</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Cybersecurity</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Sajber sigurnost</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Diversity and Inclusion</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Različitost i inkluzija</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "<strong class=\"s_rating_title\">Innovation</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Inovacija</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Leadership</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Liderstvo</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Learning</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Učenje</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Management</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Upravljanje</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Lična evolucija</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Problem-Solving</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Rješavanje problema</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Problem-solving</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Rješavanje problema</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Skill Development</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Razvoj vještina</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Talent Acquisition</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Akvizicija talenata</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Technical Expertise</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Tehnička stručnost</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Technology Strategy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Tehnološka strategija</strong>"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
@@ -565,6 +607,19 @@ msgid ""
 "                aligning the workforce with the organization's goals and "
 "objectives."
 msgstr ""
+"Menadžer ljudskih resursa (HR) odgovoran je za nadgledanje radne snage "
+"organizacije i osigurava\n"
+" da se svim funkcijama ljudskih resursa efikasno upravlja. Ovo uključuje "
+"zapošljavanje, uključivanje i\n"
+" obuku novih zaposlenika, kao i upravljanje odnosima sa zaposlenima, učinkom "
+"i kompenzacijama. Menadžer HR\n"
+" također osigurava usklađenost sa zakonima o radu i politikama kompanije, "
+"istovremeno njegujući pozitivno radno\n"
+" okruženje. Oni se mogu baviti rješavanjem sukoba, provoditi evaluacije "
+"zaposlenih i implementirati programe\n"
+" za poboljšanje angažmana i zadržavanja zaposlenika. Osim toga, HR menadžeri "
+"igraju stratešku ulogu u\n"
+" usklađivanju radne snage s ciljevima i zadacima organizacije."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -573,32 +628,33 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "A full-time position <br>Attractive salary package."
-msgstr ""
+msgstr "Pozicija na puno radno vrijeme <br>Privlačan paket plaća."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "A good company embraces technological innovation"
-msgstr ""
+msgstr "Dobra kompanija prihvata tehnološke inovacije"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
 msgid "A user cannot be linked to multiple employees in the same company."
 msgstr ""
+"Korisnik ne može biti povezan sa više zaposlenika unutar iste kompanije."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Ability to build client relationships."
-msgstr ""
+msgstr "Sposobnost izgradnje odnosa sa kupcima."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Ability to handle confidential information"
-msgstr ""
+msgstr "Sposobnost rukovanja povjerljivim informacijama"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Ability to manage multiple tasks"
-msgstr ""
+msgstr "Sposobnost upravljanja više zadataka"
 
 #. module: hr
 #. odoo-javascript
@@ -607,18 +663,18 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
 msgid "Absent"
-msgstr ""
+msgstr "Odsutan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__acc_number
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Account Number"
-msgstr ""
+msgstr "Broj računa"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Achieve monthly sales objectives"
-msgstr ""
+msgstr "Postignite mjesečne ciljeve u prodaji"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
@@ -633,6 +689,7 @@ msgstr "Potrebna akcija"
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
 msgstr ""
+"Aktivirajte daljinski rad da omogućite zaposlenicima da navedu odakle rade."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -648,7 +705,7 @@ msgstr "Aktivan"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__active_employee
 #: model:ir.model.fields,field_description:hr.field_hr_version__active_employee
 msgid "Active Employee"
-msgstr ""
+msgstr "Aktivni zaposlenik"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_ids
@@ -662,12 +719,12 @@ msgstr "Aktivnosti"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Oznaka izuzetka aktivnosti"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan
 msgid "Activity Plan"
-msgstr ""
+msgstr "Plan aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_state
@@ -681,18 +738,18 @@ msgstr "Status aktivnosti"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikona tipa aktivnosti"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_activites_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Activity by"
-msgstr ""
+msgstr "Aktivnost po"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan_template
 msgid "Activity plan template"
-msgstr ""
+msgstr "Predložak plana aktivnosti"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
@@ -700,18 +757,21 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Offboarding\", ...)"
 msgstr ""
+"Planovi aktivnosti se koriste za dodjeljivanje liste aktivnosti u samo "
+"nekoliko klikova\n"
+"     (npr. \"Onboarding\", \"Offboarding\"...)"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Čarobnjak za zakazivanje i planiranje aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_description
 msgid "Additional Information"
-msgstr ""
+msgstr "Dodatne informacije"
 
 #. module: hr
 #. odoo-python
@@ -720,13 +780,15 @@ msgid ""
 "Additional Information: \n"
 " %(description)s"
 msgstr ""
+"Dodatne informacije:\n"
+"%(description)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
 #: model:ir.model.fields,field_description:hr.field_hr_version__additional_note
 #: model:ir.model.fields,field_description:hr.field_res_users__additional_note
 msgid "Additional Note"
-msgstr ""
+msgstr "Dodatna napomena"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -734,32 +796,32 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Additional languages"
-msgstr ""
+msgstr "Dodatni jezici"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__address_id
 msgid "Address"
-msgstr ""
+msgstr "Adresa"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_administration
 msgid "Administration"
-msgstr ""
+msgstr "Administracija"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
 msgid "Advanced Presence Control"
-msgstr ""
+msgstr "Napredna kontrola prisutnosti"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Advanced presence of employees"
-msgstr ""
+msgstr "Napredna prisutnost zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
@@ -772,40 +834,40 @@ msgstr "Sigurnosni nadimak kontakta"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_employee_all_activities
 msgid "All activities"
-msgstr ""
+msgstr "Sve aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__allocation_ids
 msgid "Allocations"
-msgstr ""
+msgstr "Dodjele"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__allowed_country_state_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__allowed_country_state_ids
 msgid "Allowed Country State"
-msgstr ""
+msgstr "Dozvoljena država"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__allowed_user_ids
 msgid "Allowed User"
-msgstr ""
+msgstr "Dozvoljeni korisnik"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount_type
 msgid "Amount Type"
-msgstr ""
+msgstr "Vrsta iznosa"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "An element name parent of the radio to observe updates"
-msgstr ""
+msgstr "Naziv nadređenog elementa radio dugmeta za praćenje ažuriranja"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_unique_date_version
@@ -813,37 +875,39 @@ msgid ""
 "An employee cannot have multiple active versions sharing the same effective "
 "date."
 msgstr ""
+"Zaposleni ne može imati više aktivnih verzija koje dijele isti datum "
+"stupanja na snagu."
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "An object to link select options and element id to move"
-msgstr ""
+msgstr "Objekt za povezivanje odabira opcija i id elementa za premještanje"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Application Settings"
-msgstr ""
+msgstr "Postavke aplikacije"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Apply"
-msgstr ""
+msgstr "Primijeni"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_apprenticeship
 msgid "Apprenticeship"
-msgstr ""
+msgstr "Naukovanje"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Approvers"
-msgstr ""
+msgstr "Odobravatelji"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "Arhiviraj"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_archive
@@ -886,6 +950,25 @@ msgid ""
 "                                culture while enhancing employee "
 "satisfaction and productivity."
 msgstr ""
+"Kao menadžer ljudskih resursa u našoj kompaniji,<b>blisko ćete sarađivati sa "
+"svim\n"
+" odjelima na dizajniranju i implementaciji HR inicijativa koje su u skladu s "
+"našim poslovnim\n"
+" ciljevima</b>. Pridružite se našoj organizaciji koja se širi, koja nudi "
+"konkurentske prednosti i\n"
+" široke mogućnosti za rast uz saradnju sa iskusnim profesionalcima.\n"
+" <br>\n"
+" Ova uloga je i <b>strateška i operativna</b>, fokusirajući se na "
+"zapošljavanje, angažman\n"
+" zaposlenika i upravljanje učinkom. Tražimo proaktivnog lidera koji može "
+"efikasno\n"
+" upravljati sticanjem talenata, razvijati programe obuke i provoditi "
+"strategije zadržavanja\n"
+". Uspjeh na ovoj poziciji zahtijeva snažne analitičke vještine, dubinsko\n"
+" poznavanje zakona o radu i sposobnost njegovanja raznolike i inkluzivne "
+"kulture\n"
+" radnog mjesta uz istovremeno povećanje zadovoljstva i produktivnosti "
+"zaposlenih."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -914,6 +997,27 @@ msgid ""
 "for building rapport with stakeholders across\n"
 "                                all levels of the organization."
 msgstr ""
+"Kao konsultant u našoj kompaniji, <b>sarađivat ćete s različitim odjelima "
+"da\n"
+" procijenite poslovne potrebe, osmislite prilagođene strategije i potaknete "
+"uspješnu implementaciju\n"
+" rješenja</b>. Pridružite se naprednoj organizaciji koja nudi konkurentske "
+"prednosti\n"
+" i mogućnosti za napredovanje, radeći zajedno sa stručnjacima iz industrije. "
+"Tražimo\n"
+" uspješnog konsultanta sa jakim iskustvom u pružanju mjerljivih\n"
+" rezultata.\n"
+" <br>\n"
+" Ova uloga zahtijeva i <b>kreativno rješavanje problema i stratešku analizu</"
+"b>,\n"
+" zahtijevajući da kritički razmišljate o izazovima klijenata. Očekujemo da "
+"kandidati budu\n"
+" samomotivisani, sa jakim \\\"uradi to\\\" mentalitetom. Da biste uspjeli na "
+"ovoj poziciji,\n"
+" trebate posjedovati odlične analitičke vještine, sposobnost prevođenja "
+"uvida u\n"
+" praktične preporuke i talent za izgradnju odnosa sa dionicima na\n"
+" svim nivoima organizacije."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -942,6 +1046,26 @@ msgid ""
 "                                tackle complex challenges and deliver high-"
 "quality results in a fast-paced environment."
 msgstr ""
+"Kao programer u našoj kompaniji, <b>sarađivat ćete s menadžerima proizvoda, "
+"dizajnerima,\n"
+" i drugim inženjerima kako biste dizajnirali, razvili i implementirali "
+"inovativna softverska rješenja</b>.\n"
+" Pridružite nam se u brzorastućoj organizaciji koja nudi konkurentske "
+"prednosti i\n"
+" mogućnosti za napredovanje u karijeri dok radite zajedno s liderima u "
+"industriji.\n"
+" Tražimo stručnjaka za razvoj i profesionalnu tehnologiju. <br>\n"
+" U ovoj ulozi bit ćete odgovorni za <b>pisanje čistog koda koji se može "
+"održavati,\n"
+" učešće u pregledima koda i rješavanje problema</b>. Vaš rad će uključivati\n"
+" i kreativno <b>rješavanje problema i rigoroznu analizu</b>, zahtijevajući "
+"da razmišljate\n"
+" izvan okvira kako biste pružili efikasna rješenja. Tražimo proaktivnog "
+"kandidata sa\n"
+" jakim mentalitetom \"uradite to\". Uspjeh na ovoj poziciji ovisi o vašoj "
+"sposobnosti\n"
+" da se uhvatite u koštac sa složenim izazovima i pružite visokokvalitetne "
+"rezultate u brzom okruženju."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -962,6 +1086,19 @@ msgid ""
 "within the company based on their fit and\n"
 "                                performance."
 msgstr ""
+"Kao pripravnik u našoj kompaniji, <b>radit ćete s različitim odjelima kako "
+"biste pomogli u\n"
+" stvaranju i lansiranju inovativnih proizvoda</b>. Pridružite se našem "
+"rastućem timu, nudeći\n"
+" odlične pogodnosti i vrijedne prilike za učenje zajedno s iskusnim\n"
+" profesionalcima.\n"
+" <br>\n"
+" Ova uloga je i <b>kreativna i strukturirana</b>, ohrabruje razmišljanje "
+"izvan okvira.\n"
+" Tražimo proaktivnu osobu sa snažnim načinom razmišljanja. Uspješni\n"
+" kandidati će imati priliku da rastu unutar kompanije na osnovu njihove "
+"sposobnosti i\n"
+" učinka."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -980,6 +1117,19 @@ msgid ""
 "have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
+"Kao zaposlenik u našoj kompaniji <b>surađivat ćete sa svim odjelima kako bi "
+"ste stvorili i implementirali\n"
+"                                disruptivne artikle.</b> Dođite raditi za "
+"rastuću kompaniju koja nudi velike benefite s mogućnošću\n"
+"                                napretka i učenja uz ostvarene vođe. Tražimo "
+"iskusne i izvanredne članove osoblja.\n"
+"                                <br><br>\n"
+"                                Ova pozicija je istovremeno <b>kreativna i "
+"rigorozna</b> te ćete morati moći razmišljati izvan okvira.\n"
+"                                Od kandidata očekujemo da je proaktivan i "
+"ima duh za dobro odrađivanje posla. Kako bi ste bili uspješni,\n"
+"                                morate imati solidne vještine za rješavanje "
+"problema."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1016,21 +1166,49 @@ msgid ""
 "                                fostering collaboration across all "
 "departments."
 msgstr ""
+"Kao naš glavni tehnološki direktor, vi ćete <b>blisko surađivati s timovima "
+"za proizvode, marketing i\n"
+" operacije kako biste kreirali i lansirali inovativna tehnološka rješenja "
+"koja nas izdvajaju\n"
+" u industriji</b>. Pridružite se našoj brzorastućoj kompaniji, gdje ćete "
+"uživati u konkurentskim pogodnostima i prilikama za profesionalni razvoj dok "
+"saradnjete s vrhunskim stručnjacima\n"
+" u ovoj oblasti.\n"
+" <br>\n"
+" U ovoj ulozi ćete <b>definirati i provoditi našu tehnološku strategiju i "
+"mapu puta</b>,\n"
+" osiguravajući da je u skladu s našim poslovnim ciljevima. Ova pozicija je i "
+"<b>kreativna i\n"
+" analitička</b>, zahtijevajući da razmišljate izvan okvira dok "
+"implementirate efikasna\n"
+" rješenja. Tražimo proaktivnog vođu sa jakim mentalitetom \"učinite to\"\n"
+" koji se može uhvatiti u koštac s izazovima i dovesti projekte do uspješnog "
+"završetka.\n"
+" <br>\n"
+" Da biste se istakli na ovoj poziciji, trebat će vam <b>obimno iskustvo u "
+"softverskoj\n"
+" arhitekturi, računalstvu u oblaku i sigurnosti podataka</b>, zajedno sa "
+"jakom pozadinom u\n"
+" vođenju projekta i gipkovodstvu projekta. Vaše odlične komunikacijske "
+"vještine će\n"
+" biti od vitalnog značaja za prenošenje složenih tehničkih ideja netehničkim "
+"dionicima i\n"
+" poticanje suradnje u svim odjelima."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
 msgid "Assignment"
-msgstr ""
+msgstr "Dodjeljivanje"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Assist in organizing company events"
-msgstr ""
+msgstr "Pomozite u organizaciji događaja kompanije"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Assist with daily project tasks"
-msgstr ""
+msgstr "Pomozite u svakodnevnim projektnim zadacima"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -1044,12 +1222,12 @@ msgstr "Broj zakački"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Attendance PIN"
-msgstr ""
+msgstr "PIN za prisustvo"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Attendance/Point of Sale"
-msgstr ""
+msgstr "Prisustvo/POS blagajna"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -1059,156 +1237,156 @@ msgstr "Prijavljeni zaposlenici"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.discuss_channel_view_form
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "Odjeli sa automatskom pretplatom"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_discuss_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr ""
+msgstr "Automatsko dodijeljivanje članova odabranih odjela na kanal."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_activity_plan_view_form
 msgid "Available for all Departments"
-msgstr ""
+msgstr "Dostupno za sve odjele"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1920
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Avatar 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Avatar 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Avatar 512"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Bachelor"
-msgstr ""
+msgstr "Prvostupnik"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Bachelor Degree or Higher"
-msgstr ""
+msgstr "Stupanj prvostupnika ili viši"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Background in project management"
-msgstr ""
+msgstr "Pozadina u upravljanju projektima"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
 #: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
-msgstr ""
+msgstr "ID značke"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__bank_account_id
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankovni račun"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
 msgid "Bank Account Allocation"
-msgstr ""
+msgstr "Dodjela bankovnog računa"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard_line
 msgid "Bank Account Allocation Line (Wizard)"
-msgstr ""
+msgstr "Linija za dodjelu bankovnog računa (čarobnjak)"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard
 msgid "Bank Account Allocation Wizard"
-msgstr ""
+msgstr "Čarobnjak za dodjelu bankovnog računa"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_bank_account_allocation_wizard
 msgid "Bank Account Allocations"
-msgstr ""
+msgstr "Alokacije bankovnog računa"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner_bank
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_ids
 #: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Bankovni računi"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Bank Address"
-msgstr ""
+msgstr "Adresa banke"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Bank Information"
-msgstr ""
+msgstr "Informacije o banci"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Bank Name"
-msgstr ""
+msgstr "Naziv banke"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/wizard/hr_bank_account_wizard.py:0
 msgid ""
 "Bank account %s not found within the salary distribution of the employee"
-msgstr ""
+msgstr "Bankovni račun %s nije pronađen u okviru raspodjele plaća zaposlenog"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
 msgid "Base"
-msgstr ""
+msgstr "Osnovica"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
 msgid "Based on IP Address"
-msgstr ""
+msgstr "Prema IP adresi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_attendance
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_attendance
 msgid "Based on attendances"
-msgstr ""
+msgstr "Prema prisustvu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email
 msgid "Based on number of emails sent"
-msgstr ""
+msgstr "Prema broju poslanih e-mailova"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_login
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_login
 msgid "Based on user status in system"
-msgstr ""
+msgstr "Prema statusu korisnika u sistemu"
 
 #. module: hr
 #. odoo-python
@@ -1216,35 +1394,37 @@ msgstr ""
 msgid ""
 "Before creating a new contract, close the current one by setting an end date."
 msgstr ""
+"Prije kreiranja novog ugovora, zatvorite trenutni tako što ćete postaviti "
+"datum završetka."
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/background_image/background_image.xml:0
 msgid "Binary file"
-msgstr ""
+msgstr "Binarni fajl"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
 msgid "Birthday"
-msgstr ""
+msgstr "Rođendan"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Boolean display as radio field with translatable labels"
-msgstr ""
+msgstr "Boolean prikaz kao radio polje sa prevodivim oznakama"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
 msgid "Cancel"
-msgstr ""
+msgstr "Otkaži"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Cannot archive all the active versions of an employee."
-msgstr ""
+msgstr "Nije moguće arhivirati sve aktivne verzije zaposlenika."
 
 #. module: hr
 #. odoo-python
@@ -1253,33 +1433,35 @@ msgid ""
 "Cannot modify multiple versions contract dates with different contracts at "
 "once."
 msgstr ""
+"Ne može se modificirati više verzija datuma ugovora s različitim ugovorima "
+"odjednom."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Cannot unassign all the active versions of an employee."
-msgstr ""
+msgstr "Nije moguće poništiti dodjelu svih aktivnih verzija zaposlenika."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 msgid "Certificate Level"
-msgstr ""
+msgstr "Nivo certifikata"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Challenge the customer idea"
-msgstr ""
+msgstr "Izazovite ideju kupca"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.res_users_action_my
 msgid "Change my Preferences"
-msgstr ""
+msgstr "Promijeni moje postavke"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
 msgid "Chat"
-msgstr ""
+msgstr "Chat"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
@@ -1294,12 +1476,12 @@ msgstr "Pododjeljenja"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Child departments"
-msgstr ""
+msgstr "Podređeni odjeli"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship"
-msgstr ""
+msgstr "Državljanstvo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_city
@@ -1308,7 +1490,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "City"
-msgstr ""
+msgstr "Grad"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
@@ -1321,29 +1503,29 @@ msgstr "Trener"
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Coach of employee %s is not set."
-msgstr ""
+msgstr "Trener zaposlenika %s nije postavljen."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__code
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Collaborate with cross-functional departments"
-msgstr ""
+msgstr "Sarađujte sa međufunkcionalnim odjelima"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Collaboration across teams is encouraged"
-msgstr ""
+msgstr "Potiče se saradnja između timova"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__color
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Color"
-msgstr ""
+msgstr "Boja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
@@ -1373,17 +1555,17 @@ msgstr "Kompanija"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "Država kompanije"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_code
 msgid "Company Country Code"
-msgstr ""
+msgstr "Kod države kompanije"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Company Logo"
-msgstr ""
+msgstr "Logo kompanije"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
@@ -1393,12 +1575,12 @@ msgstr "Radni sati kompanije"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_version__company_country_id
 msgid "Company country"
-msgstr ""
+msgstr "Država kompanije"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_id
 msgid "Company employee"
-msgstr ""
+msgstr "Zaposlenik kompanije"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
@@ -1408,12 +1590,12 @@ msgstr "Puni naziv"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Conduct thorough business needs assessments"
-msgstr ""
+msgstr "Sprovedite detaljnu procjenu poslovnih potreba"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfiguracijske postavke"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -1425,7 +1607,7 @@ msgstr "Konfiguracija"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Confirm"
-msgstr ""
+msgstr "Potvrdi"
 
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
@@ -1441,18 +1623,18 @@ msgstr "Kontakt"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Contact Name"
-msgstr ""
+msgstr "Naziv kontakta"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Contact Phone"
-msgstr ""
+msgstr "Telefon kontakta"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "Contacts"
-msgstr ""
+msgstr "Kontakti"
 
 #. module: hr
 #. odoo-javascript
@@ -1462,7 +1644,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Contract"
-msgstr ""
+msgstr "Ugovor"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
@@ -1471,23 +1653,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Contract End Date"
-msgstr ""
+msgstr "Završni datum ugovora"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Contract Expiration Notice Period"
-msgstr ""
+msgstr "Period obavijesti o isteku ugovora"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__contract_expiration_notice_period
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__contract_expiration_notice_period
 msgid "Contract Expiry Notice Period"
-msgstr ""
+msgstr "Period obavijesti o isteku ugovora"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "Contract Overview"
-msgstr ""
+msgstr "Pregled ugovora"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_date_start
@@ -1495,7 +1677,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Contract Start Date"
-msgstr ""
+msgstr "Početni datum ugovora"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_template_id
@@ -1503,24 +1685,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__contract_template_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "Contract Template"
-msgstr ""
+msgstr "Predložak ugovora"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_version_wizard_action
 msgid "Contract Template Load"
-msgstr ""
+msgstr "Učitavanje predloška ugovora"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_version_wizard
 msgid "Contract Template Wizard"
-msgstr ""
+msgstr "Čarobnjak za predložak ugovora"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_contract_templates
 #: model:ir.ui.menu,name:hr.menu_hr_employee_contract_templates
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_list_view
 msgid "Contract Templates"
-msgstr ""
+msgstr "Predlošci ugovora"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_contract_type
@@ -1529,39 +1711,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contract Type"
-msgstr ""
+msgstr "Vrsta ugovora"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
 msgid "Contract Types"
-msgstr ""
+msgstr "Vrste ugovora"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_wage
 #: model:ir.model.fields,field_description:hr.field_hr_version__contract_wage
 msgid "Contract Wage"
-msgstr ""
+msgstr "Ugovorena plaća"
 
 #. module: hr
 #: model:mail.message.subtype,description:hr.mt_contract_pending
 #: model:mail.message.subtype,description:hr.mt_department_contract_pending
 msgid "Contract about to expire"
-msgstr ""
+msgstr "Ugovor uskoro ističe"
 
 #. module: hr
 #: model:mail.message.subtype,description:hr.mt_contract_close
 msgid "Contract expired"
-msgstr ""
+msgstr "Ugovor istekao"
 
 #. module: hr
 #: model:mail.message.subtype,name:hr.mt_department_contract_pending
 msgid "Contract to Renew"
-msgstr ""
+msgstr "Ugovor za obnoviti"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__contractor
 msgid "Contractor"
-msgstr ""
+msgstr "Izvođač"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_country
@@ -1573,7 +1755,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Country"
-msgstr ""
+msgstr "Država"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_code
@@ -1582,27 +1764,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_version__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "Šifra države"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
 msgid "Country of Birth"
-msgstr ""
+msgstr "Država rođenja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_type
 msgid "Cover Image"
-msgstr ""
+msgstr "Naslovna slika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
 msgid "Create Date"
-msgstr ""
+msgstr "Datum kreiranja"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
 msgid "Create Employee"
-msgstr ""
+msgstr "Kreiraj zaposlenika"
 
 #. module: hr
 #. odoo-python
@@ -1611,38 +1793,38 @@ msgstr ""
 #: model:ir.actions.server,name:hr.action_hr_employee_create_users_confirmation
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Create User"
-msgstr ""
+msgstr "Kreiraj korisnika"
 
 #. module: hr
 #: model:ir.model,website_form_label:hr.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Kreiraj kupca"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_create_job_position
 msgid "Create a Job Position"
-msgstr ""
+msgstr "Kreiraj poslovnu poziciju"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
-msgstr ""
+msgstr "Kreiraj novi odjel"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new employment type"
-msgstr ""
+msgstr "Kreirajte novu vrstu zaposlenja"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
 msgid "Create a new work location"
-msgstr ""
+msgstr "Kreiraj novu lokaciju rada"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
 msgid "Create an Activity Plan"
-msgstr ""
+msgstr "Kreiraj plan aktivnosti"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1651,12 +1833,12 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Create content that will help our users on a daily basis"
-msgstr ""
+msgstr "Stvarajte sadržaje koji će našim korisnicima pomagati na dnevnoj bazi"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "Create employee"
-msgstr ""
+msgstr "Kreiraj zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__create_uid
@@ -1697,18 +1879,18 @@ msgstr "Kreirano"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_account_setup_bank_manual_config__currency_symbol
 #: model:ir.model.fields,help:hr.field_res_partner_bank__currency_symbol
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "Oznaka valute, koristi se prilikom ispisa iznosa."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_date_version
 msgid "Current Date Version"
-msgstr ""
+msgstr "Trenutni datum verzija"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
@@ -1718,46 +1900,46 @@ msgstr "Trenutni broj zaposlenih"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_version_id
 msgid "Current Version"
-msgstr ""
+msgstr "Trenutna verzija"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Currently enrolled in final study years"
-msgstr ""
+msgstr "Trenutno upisan na završne godine studija"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__date_end
 #: model:ir.model.fields,field_description:hr.field_hr_version__date_end
 msgid "Date End"
-msgstr ""
+msgstr "Datum završetka"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__date_start
 #: model:ir.model.fields,field_description:hr.field_hr_version__date_start
 msgid "Date Start"
-msgstr ""
+msgstr "Datum početka"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__date_version
 #: model:ir.model.fields,field_description:hr.field_hr_version__date_version
 msgid "Date Version"
-msgstr ""
+msgstr "Verzija datuma"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Debug and resolve software issues"
-msgstr ""
+msgstr "Otklanjanje grešaka i rješavanje problema sa softverom"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Deep understanding of technology trends"
-msgstr ""
+msgstr "Duboko razumijevanje tehnoloških trendova"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_departure_reason.py:0
 msgid "Default departure reasons cannot be deleted."
-msgstr ""
+msgstr "Zadane razloge prestanka radnog odnosa ne možete izbrisati."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1765,11 +1947,15 @@ msgid ""
 "Define the allowed IP to be displayed as Present. In case of multiple "
 "addresses, separate them by a coma."
 msgstr ""
+"Definirajte dozvoljeni IP koji će se prikazati kao Prisutan. U slučaju više "
+"adresa, razdvojite ih zarezom."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Define the minimum number of sent emails to be displayed as Present."
 msgstr ""
+"Definirajte minimalni broj poslanih e-poruka koje će se prikazati kao "
+"Prisutno."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_resource_resource__calendar_id
@@ -1777,6 +1963,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
+"Definirajte raspored rada resursa. Ako nije postavljeno, resurs će imati "
+"potpuno fleksibilno radno vrijeme."
 
 #. module: hr
 #. odoo-javascript
@@ -1801,7 +1989,7 @@ msgstr "Odjeljenje"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan__department_assignable
 msgid "Department Assignable"
-msgstr ""
+msgstr "Odjel dodjeljiv"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
@@ -1812,7 +2000,7 @@ msgstr "Naziv odjeljenja"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 msgid "Department Organization"
-msgstr ""
+msgstr "Organizacija odjela"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_department_kanban_action
@@ -1825,13 +2013,13 @@ msgstr "Odjeljenja"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Departure"
-msgstr ""
+msgstr "Odlazak"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_date
 msgid "Departure Date"
-msgstr ""
+msgstr "Datum odlaska"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_reason
@@ -1839,74 +2027,74 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_reason_id
 msgid "Departure Reason"
-msgstr ""
+msgstr "Razlog odlaska"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
 #: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
 msgid "Departure Reasons"
-msgstr ""
+msgstr "Razlozi odlaska"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr ""
+msgstr "Čarobnjak odlaska"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
 msgid ""
 "Departure date can't be earlier than the start date of current contract."
-msgstr ""
+msgstr "Završni datum ugovora ne može biti manji od početnog datuma ugovora."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
 #: model:ir.model.fields,field_description:hr.field_hr_version__children
 msgid "Dependent Children"
-msgstr ""
+msgstr "Zavisna djeca"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Details"
-msgstr ""
+msgstr "Detalji"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Develop and implement training programs"
-msgstr ""
+msgstr "Razviti i implementirati programe obuke"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Develop customized strategies and solutions"
-msgstr ""
+msgstr "Razvijte prilagođene strategije i rješenja"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Develop technology strategy and vision"
-msgstr ""
+msgstr "Razviti tehnološku strategiju i viziju"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Development"
-msgstr ""
+msgstr "Razvoj"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_ids
 msgid "Direct subordinates"
-msgstr ""
+msgstr "Direktno podređeni"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_employee
 msgid "Directory"
-msgstr ""
+msgstr "Imenik"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_wizard_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Odbaci"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1916,12 +2104,12 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Discover our products."
-msgstr ""
+msgstr "Otkrijte naše proizvode."
 
 #. module: hr
 #: model:ir.model,name:hr.model_discuss_channel
 msgid "Discussion Channel"
-msgstr ""
+msgstr "Kanal za diskusiju"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_discuss_channel__display_name
@@ -1961,7 +2149,7 @@ msgstr "Prikazani naziv"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/fields/many2one_avatar_employee_field/kanban_many2one_avatar_employee_field.js:0
 msgid "Display avatar name"
-msgstr ""
+msgstr "Prikaži naziv avatara"
 
 #. module: hr
 #. odoo-python
@@ -1973,28 +2161,28 @@ msgstr "Razveden/a"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Doctor"
-msgstr ""
+msgstr "Doktor"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Document"
-msgstr ""
+msgstr "Dokument"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Documents"
-msgstr ""
+msgstr "Dokumenti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
 msgid "Driving License"
-msgstr ""
+msgstr "Vozačka dozvola"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Each amount percentage must be a number between 0 and 100."
-msgstr ""
+msgstr "Svaki postotak iznosa mora biti broj između 0 i 100."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2012,11 +2200,18 @@ msgid ""
 "                            sports sessions, team building events, monthly "
 "drink, and much more."
 msgstr ""
+"Svaki zaposlenik ima mogućnost vidjeti utjecaj njegovog rada.\n"
+"                        Možete imati stvaran doprinos za uspjeh kompanije.\n"
+"                        <br>\n"
+"                        Nekoliko aktivnosti često je organizirano kroz "
+"čitavu godinu, poput tjednih\n"
+"                        sportskih sesija, team building događaja, mjesečnih "
+"pića, i mnogih drugih."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Eagerness to learn and adapt"
-msgstr ""
+msgstr "Želja za učenjem i prilagođavanjem"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2025,7 +2220,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Eat &amp; Drink"
-msgstr ""
+msgstr "Hrana &amp; piće"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2035,19 +2230,19 @@ msgstr "Edukacija"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Effective Date"
-msgstr ""
+msgstr "Efektivni datum"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Element association"
-msgstr ""
+msgstr "Asocijacija elemenata"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Element to observe"
-msgstr ""
+msgstr "Element za promatranje"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_email
@@ -2056,7 +2251,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_email
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Email"
-msgstr ""
+msgstr "E-pošta"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
@@ -2069,13 +2264,13 @@ msgstr "Alias e-maila"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Emergency Contact"
-msgstr ""
+msgstr "Kontakt za hitne slučajeve"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
 msgid "Emergency Phone"
-msgstr ""
+msgstr "Telefon za hitne slučajeve"
 
 #. module: hr
 #. odoo-python
@@ -2108,7 +2303,7 @@ msgstr "Zaposleni"
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Employee %s must always have at least one active version."
-msgstr ""
+msgstr "Zaposleni %s uvijek mora imati barem jednu aktivnu verziju."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
@@ -2118,45 +2313,45 @@ msgstr "Kategorija uposlenika"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_version
 msgid "Employee Contract"
-msgstr ""
+msgstr "Ugovor zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_count
 msgid "Employee Count"
-msgstr ""
+msgstr "Broj zaposlenika"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Employee Image"
-msgstr ""
+msgstr "Slika zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
 msgid "Employee Name"
-msgstr ""
+msgstr "Naziv zaposlenika"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
 msgid "Employee Plans"
-msgstr ""
+msgstr "Planovi zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
 msgid "Employee Properties"
-msgstr ""
+msgstr "Svojstva zaposlenika"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_version
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_graph_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_pivot_view
 msgid "Employee Records"
-msgstr ""
+msgstr "Zapisi zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount_is_percentage
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount_is_percentage
 msgid "Employee Salary Amount Is Percentage"
-msgstr ""
+msgstr "Iznos plaće zaposlenika je postotak"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -2169,42 +2364,42 @@ msgstr "Oznake zaposlenih"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/archive_employee_hook.js:0
 msgid "Employee Termination"
-msgstr ""
+msgstr "Prekid radnog odnosa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
 #: model:ir.model.fields,field_description:hr.field_hr_version__employee_type
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Employee Type"
-msgstr ""
+msgstr "Tip zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_ids
 msgid "Employee Versions"
-msgstr ""
+msgstr "Verzije zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
-msgstr ""
+msgstr "Bankovni računi zaposlenika za isplatu plaća"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Employee development is a core focus"
-msgstr ""
+msgstr "Razvoj zaposlenika je ključni fokus"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee will be excluded from Pay Runs"
-msgstr ""
+msgstr "Zaposlenik će biti isključen iz obračuna plaća"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
 msgid "Employee's Bank Accounts"
-msgstr ""
+msgstr "Bankovni računi zaposlenika"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -2218,13 +2413,13 @@ msgstr "Ime zaposlenog"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
 msgid "Employee's Working Hours"
-msgstr ""
+msgstr "Radni sati zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__wage
 #: model:ir.model.fields,help:hr.field_hr_version__wage
 msgid "Employee's monthly gross wage."
-msgstr ""
+msgstr "Mjesečna bruto plaća zaposlenika."
 
 #. module: hr
 #. odoo-python
@@ -2258,7 +2453,7 @@ msgstr "Zaposleni"
 #: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
 #: model:ir.model.fields,field_description:hr.field_res_users__employees_count
 msgid "Employees Count"
-msgstr ""
+msgstr "Broj zaposlenika"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
@@ -2269,57 +2464,57 @@ msgstr "Ozanake zaposlenih"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Employees profile"
-msgstr ""
+msgstr "Profil zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Employment Type"
-msgstr ""
+msgstr "Vrsta zaposlenja"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_contract_type_action
 #: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
 msgid "Employment Types"
-msgstr ""
+msgstr "Vrste zaposlenja"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "End"
-msgstr ""
+msgstr "Kraj"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "End Date"
-msgstr ""
+msgstr "Završni datum"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__contract_date_end
 #: model:ir.model.fields,help:hr.field_hr_version__contract_date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
-msgstr ""
+msgstr "Završni datum (ako je ugovor sklopljen na određeno vrijeme)."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__trial_date_end
 #: model:ir.model.fields,help:hr.field_hr_version__trial_date_end
 msgid "End date of the trial period (if there is one)."
-msgstr ""
+msgstr "Kraj probnog roka (ako postoji)."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
 #: model:ir.model.fields,field_description:hr.field_hr_version__trial_date_end
 msgid "End of Trial Period"
-msgstr ""
+msgstr "Kraj probnog roka"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Enrich employee profiles with skills and resumes"
-msgstr ""
+msgstr "Nadogradite profile zaposlenika vještinama i CVima"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Ensure compliance with labor laws"
-msgstr ""
+msgstr "Osigurati usklađenost sa zakonima o radu"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__identification_id
@@ -2329,16 +2524,19 @@ msgid ""
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
 msgstr ""
+"Unesite nacionalni identifikacioni broj zaposlenog koji je izdala vlada "
+"(npr. Aadhaar, SIN, NIN). Ovo se koristi za službenu evidenciju i zakonsku "
+"usklađenost."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Ethical practices guide all operations"
-msgstr ""
+msgstr "Etičke prakse vode sve operacije"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Excellent problem-solving abilities"
-msgstr ""
+msgstr "Odlične sposobnosti rješavanja problema"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2348,7 +2546,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Expand your knowledge of various business industries"
-msgstr ""
+msgstr "Proširite svoje znanje o raznim poslovnim granama"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
@@ -2361,32 +2559,32 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Experience"
-msgstr ""
+msgstr "Iskustvo"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Experience in prioritizing product features"
-msgstr ""
+msgstr "Iskustvo u određivanju prioriteta karakteristika proizvoda"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Experience in writing online content"
-msgstr ""
+msgstr "Iskustvo u pisanju online sadržaja"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Experience with agile methodologies"
-msgstr ""
+msgstr "Iskustvo sa agilnim metodologijama"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Experience with open-source technologies"
-msgstr ""
+msgstr "Iskustvo sa tehnologijama otvorenog koda"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Experience with our HR software systems"
-msgstr ""
+msgstr "Iskustvo sa našim softverskim sistemima za ljudske resurse"
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
@@ -2396,17 +2594,17 @@ msgstr "Developer sa iskustvom"
 #. module: hr
 #: model:mail.message.subtype,name:hr.mt_contract_close
 msgid "Expired"
-msgstr ""
+msgstr "Isteklo"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Expired Contracts"
-msgstr ""
+msgstr "Istekli ugovori"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Expires on"
-msgstr ""
+msgstr "Ističe"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
@@ -2415,58 +2613,60 @@ msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
 msgstr ""
+"Vanjski korisnik sa ograničenim pristupom, kreiran samo u svrhu dijeljenja "
+"podataka."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Facilitate workshops and stakeholder meetings"
-msgstr ""
+msgstr "Omogućite radionice i sastanke zainteresovanih strana"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "False association"
-msgstr ""
+msgstr "Lažna asocijacija"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Familiarity with Agile methodologies"
-msgstr ""
+msgstr "Poznavanje Agile metodologija"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Familiarity with DevOps practices"
-msgstr ""
+msgstr "Poznavanje DevOps praksi"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Familiarity with employee wellness programs"
-msgstr ""
+msgstr "Poznavanje wellness programa za zaposlenike"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Familiarity with industry-specific tools"
-msgstr ""
+msgstr "Poznavanje alata specifičnih za industriju"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Familiarity with user experience (UX) principles"
-msgstr ""
+msgstr "Poznavanje principa korisničkog iskustva (UX)"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Familiarity with web development frameworks"
-msgstr ""
+msgstr "Poznavanje okvira za web razvoj"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Family"
-msgstr ""
+msgstr "Porodica"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_state
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_state
 msgid "Fed. State"
-msgstr ""
+msgstr "Federalna država/Pokrajina"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__female
@@ -2476,12 +2676,12 @@ msgstr "Ženski"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
 msgid "Field of Study"
-msgstr ""
+msgstr "Područje školovanja"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
 msgid "Fired"
-msgstr ""
+msgstr "Otpušten"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -2504,7 +2704,7 @@ msgstr "Pratioci (Partneri)"
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
 #: model:ir.model.fields,help:hr.field_hr_version__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikona npr. fa-tasks"
 
 #. module: hr
 #. odoo-python
@@ -2513,21 +2713,23 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the department "
 "auto-subscription."
 msgstr ""
+"Za %(channels)s, channel_type treba da bude „kanal“ da bi se sektor "
+"automatski pretplatio."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Foster a positive workplace cultures"
-msgstr ""
+msgstr "Njegujte pozitivnu kulturu radnog mjesta"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Foster innovation and new solutions"
-msgstr ""
+msgstr "Potičite inovacije i nova rješenja"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__freelance
 msgid "Freelancer"
-msgstr ""
+msgstr "Honorarac"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2536,23 +2738,23 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Fruit, coffee and <br>snacks provided."
-msgstr ""
+msgstr "Nudimo voće, kavu i <br> grickalice."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_full_time
 msgid "Full-Time"
-msgstr ""
+msgstr "Puno radno vrijeme"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Buduće aktivnosti"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Future Contracts"
-msgstr ""
+msgstr "Budući ugovori"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sex
@@ -2564,29 +2766,29 @@ msgstr "Spol"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Generate"
-msgstr ""
+msgstr "Generiši"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Give more details about the reason of archiving the employee."
-msgstr ""
+msgstr "Navedite više detalja o razlogu arhiviranja zaposlenog."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "Go to contact"
-msgstr ""
+msgstr "Idi na kontakt"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Google Adwords experience"
-msgstr ""
+msgstr "Iskustvo s Google Adwords"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Graduate"
-msgstr ""
+msgstr "Apsolvent"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2595,39 +2797,39 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Great team of smart people, in a friendly and open culture"
-msgstr ""
+msgstr "Izvrstan tim pametnih ljudi, u prijateljskoj i otvorenoj kulturi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_discuss_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "HR odjeli"
 
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_employee_notify_expiring_contract_work_permit_ir_actions_server
 msgid "HR Employee: Notify Expiring Contract or Work Permit"
-msgstr ""
+msgstr "HR zaposlenik: Obavijesti o isteku ugovora ili radne dozvole"
 
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_employee_update_current_version_ir_actions_server
 msgid "HR Employee: Update Current Version"
-msgstr ""
+msgstr "HR zaposlenik: Ažuriraj trenutnu verziju"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 msgid "HR Presence Status"
-msgstr ""
+msgstr "HR status prisutnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_responsible_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__hr_responsible_id
 msgid "HR Responsible"
-msgstr ""
+msgstr "Odgovoran iz HR"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__has_department_manager_access
 msgid "Has Department Manager Access"
-msgstr ""
+msgstr "Ima pristup voditelja odjela"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__has_message
@@ -2635,79 +2837,79 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_version__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Ima poruku"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_has_multiple_bank_accounts
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_multiple_bank_accounts
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_has_multiple_bank_accounts
 msgid "Has Multiple Bank Accounts"
-msgstr ""
+msgstr "Ima više bankovnih računa"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Highly creative and autonomous"
-msgstr ""
+msgstr "Visoko kreativan i autonoman"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Hiring"
-msgstr ""
+msgstr "Zapošljavanje"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Hiring Process"
-msgstr ""
+msgstr "Proces zapošljavanja"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "History"
-msgstr ""
+msgstr "Historija"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__home
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__home
 msgid "Home"
-msgstr ""
+msgstr "Početna"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work
 #: model:ir.model.fields,field_description:hr.field_hr_version__distance_home_work
 msgid "Home-Work Distance"
-msgstr ""
+msgstr "Udaljenost od kuće do posla"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_hr_version__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
-msgstr ""
+msgstr "Udaljenost od kuće do posla u km"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work_unit
 #: model:ir.model.fields,field_description:hr.field_hr_version__distance_home_work_unit
 msgid "Home-Work Distance unit"
-msgstr ""
+msgstr "Jedinica udaljenosti kuća-posao"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_resource_resource__hr_icon_display
 msgid "Hr Icon Display"
-msgstr ""
+msgstr "Prikaz HR ikone"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_manager_department_report
 msgid "Hr Manager Department Report"
-msgstr ""
+msgstr "Izvještaj menadžera odjela ljudskih resursa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 msgid "Hr Presence State"
-msgstr ""
+msgstr "HR stanje prisutnosti"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -2756,33 +2958,33 @@ msgstr "ID"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
 msgid "ID Card Copy"
-msgstr ""
+msgstr "Kopija lične karte"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
 #: model:ir.model.fields,help:hr.field_res_users__barcode
 msgid "ID used for employee identification."
-msgstr ""
+msgstr "ID korišten za identifikaciju zaposlenika."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__im_status
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__im_status
 msgid "IM Status"
-msgstr ""
+msgstr "IM Status"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_exception_icon
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "Ikona"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_exception_icon
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
 #: model:ir.model.fields,help:hr.field_hr_version__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz iznimki."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
@@ -2796,7 +2998,7 @@ msgstr "Identifikacijski broj"
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_version__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
+msgstr "Ako je označeno, nove poruke će zahtjevati vašu pažnju."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
@@ -2808,12 +3010,12 @@ msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
 #: model:ir.model.fields,help:hr.field_hr_version__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_version__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_wizard__remove_related_user
 msgid "If checked, the related user will be removed from the system."
-msgstr ""
+msgstr "Ako je označeno, povezani korisnik će biti uklonjen iz sistema."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -2830,87 +3032,89 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
 msgstr ""
+"Ako imate više od jednog auta, samo odvojite registracijske oznake s "
+"razmakom."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1920
 msgid "Image"
-msgstr ""
+msgstr "Slika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Slika 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Slika 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Slika 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "Slika 512"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Import Template for Employees"
-msgstr ""
+msgstr "Uvoz predloška za zaposlenike"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "In Contract"
-msgstr ""
+msgstr "U ugovoru"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "In-depth knowledge of labor laws"
-msgstr ""
+msgstr "Detaljno poznavanje zakona o radu"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Indefinite"
-msgstr ""
+msgstr "Neodređeno"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_interim
 msgid "Interim"
-msgstr ""
+msgstr "Privremeni"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_intern
 msgid "Intern"
-msgstr ""
+msgstr "Pripravnik"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_current
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_current
 msgid "Is Current"
-msgstr ""
+msgstr "Trenutno"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_custom_job_title
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_custom_job_title
 msgid "Is Custom Job Title"
-msgstr ""
+msgstr "Je prilagođen naziv radnog mjesta"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_flexible
 msgid "Is Flexible"
-msgstr ""
+msgstr "Je fleksibilno"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -2924,55 +3128,55 @@ msgstr "Je pratilac"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_fully_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_fully_flexible
 msgid "Is Fully Flexible"
-msgstr ""
+msgstr "Je potpuno fleksibilno"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_future
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_future
 msgid "Is Future"
-msgstr ""
+msgstr "Buduće"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_hr_user
 msgid "Is Hr User"
-msgstr ""
+msgstr "Je HR korisnik"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_in_contract
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_in_contract
 msgid "Is In Contract"
-msgstr ""
+msgstr "U ugovoru"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
 msgid "Is Manager"
-msgstr ""
+msgstr "Je menadžer"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_past
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_past
 msgid "Is Past"
-msgstr ""
+msgstr "Prošlo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
 msgid "Is System"
-msgstr ""
+msgstr "Je sistemski"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_trusted_bank_account
 msgid "Is Trusted Bank Account"
-msgstr ""
+msgstr "Je pouzdan bankovni račun"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_user
 msgid "Is User"
-msgstr ""
+msgstr "Je korisnik"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "It prioritizes data-driven decision-making"
-msgstr ""
+msgstr "On daje prioritet odlučivanju zasnovanom na podacima"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
@@ -3009,7 +3213,7 @@ msgstr "Radno mjesto"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Job Posting"
-msgstr ""
+msgstr "Oglas za posao"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -3019,7 +3223,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_resource_resource__job_title
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "Job Title"
-msgstr ""
+msgstr "Naziv radnog mjesta"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
@@ -3030,36 +3234,36 @@ msgstr "Poslovi"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Knowledge of diversity and inclusion initiatives"
-msgstr ""
+msgstr "Poznavanje različitosti i inicijativa za inkluziju"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__lang
 msgid "Lang"
-msgstr ""
+msgstr "Jezik"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity
 msgid "Last Activity"
-msgstr ""
+msgstr "Posljednja aktivnost"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity_time
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
 msgid "Last Activity Time"
-msgstr ""
+msgstr "Vrijeme posljednje aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_modified_uid
 #: model:ir.model.fields,field_description:hr.field_hr_version__last_modified_uid
 msgid "Last Modified by"
-msgstr ""
+msgstr "Zadnji put izmijenio"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_modified_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__last_modified_date
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnja promjena"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__write_uid
@@ -3101,103 +3305,103 @@ msgstr "Zadnje ažurirano"
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Zakašnjele aktivnosti"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.plan_wizard_action
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Launch Plan"
-msgstr ""
+msgstr "Plan pokretanja"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Lead engineering and development teams"
-msgstr ""
+msgstr "Vodite inženjerske i razvojne timove"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Lead the entire sales cycle"
-msgstr ""
+msgstr "Vodite cijeli prodajni ciklus"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Learn company processes and tools"
-msgstr ""
+msgstr "Naučite procese i alate kompanije"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Legal Cohabitant"
-msgstr ""
+msgstr "Zakonski supružnik"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__legal_name
 msgid "Legal Name"
-msgstr ""
+msgstr "Službeno ime"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position"
-msgstr ""
+msgstr "Kreirajmo radnu poziciju"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_contract_templates
 msgid "Let's create one"
-msgstr ""
+msgstr "Kreirajmo jednu"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean False value."
-msgstr ""
+msgstr "Povežite element s logičkom False vrijednošću."
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean True value."
-msgstr ""
+msgstr "Povežite element s logičkom vrijednošću True."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_wizard_view_form
 msgid "Load"
-msgstr ""
+msgstr "Učitaj"
 
 #. module: hr
 #: model:ir.actions.server,name:hr.action_hr_employee_load_demo_data
 msgid "Load Sample Data"
-msgstr ""
+msgstr "Učitaj podatke uzorka"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Load a Template"
-msgstr ""
+msgstr "Učitaj predložak"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Load sample data."
-msgstr ""
+msgstr "Učitajte uzorke podataka."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Location"
-msgstr ""
+msgstr "Lokacija"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
 msgid "Location Number"
-msgstr ""
+msgstr "Broj lokacije"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "Login"
-msgstr ""
+msgstr "Korisničko ime"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
-msgstr ""
+msgstr "Dugoročni projekti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
@@ -3208,12 +3412,12 @@ msgstr "Glavna zakačka"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Main Work Location"
-msgstr ""
+msgstr "Glavna radna lokacija"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Maintain and update existing systems"
-msgstr ""
+msgstr "Održavajte i ažurirajte postojeće sisteme"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__male
@@ -3223,17 +3427,17 @@ msgstr "Muški"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Manage employee performance evaluations"
-msgstr ""
+msgstr "Upravljajte evaluacijama učinka zaposlenika"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Manage technology budget and resources"
-msgstr ""
+msgstr "Upravljajte tehnološkim budžetom i resursima"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_management
 msgid "Management"
-msgstr ""
+msgstr "Menadžment"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
@@ -3249,7 +3453,7 @@ msgstr "Upravitelj"
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Manager of employee %s is not set."
-msgstr ""
+msgstr "Menadžer zaposlenika %s nije postavljen."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -3266,35 +3470,35 @@ msgstr "Upravitelj marketinga i odnosa sa javnošću"
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Married"
-msgstr ""
+msgstr "U braku"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Master"
-msgstr ""
+msgstr "Master"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__master_department_id
 msgid "Master Department"
-msgstr ""
+msgstr "Glavni odjel"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Master demos of our software"
-msgstr ""
+msgstr "Ovladajte demonstracijama našeg softvera"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
 msgid "Member Of Department"
-msgstr ""
+msgstr "Član odjela"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__member_of_department
 #: model:ir.model.fields,field_description:hr.field_hr_version__member_of_department
 msgid "Member of department"
-msgstr ""
+msgstr "Član odjela"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
@@ -3304,7 +3508,7 @@ msgstr "Članovi"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_ui_menu
 msgid "Menu"
-msgstr ""
+msgstr "Meni"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error
@@ -3312,7 +3516,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Greška pri isporuci poruke"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
@@ -3325,13 +3529,13 @@ msgstr "Poruke"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
 msgid "Mobile Phone"
-msgstr ""
+msgstr "Mobilni telefon"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
 msgid "More..."
-msgstr ""
+msgstr "Više..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3341,44 +3545,44 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Must Have"
-msgstr ""
+msgstr "Mora imati"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Moje aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr.field_hr_version__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Rok za moju aktivnost"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "My Department"
-msgstr ""
+msgstr "Moj odjel"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "My Team"
-msgstr ""
+msgstr "Moj tim"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.xml:0
 msgid "NO"
-msgstr ""
+msgstr "NO"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
 #: model:ir.model.fields,field_description:hr.field_hr_version__name
 msgid "Name"
-msgstr "Naziv:"
+msgstr "Naziv"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
@@ -3389,25 +3593,25 @@ msgstr "Nacionalnost (Država)"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Negotiate and contract"
-msgstr ""
+msgstr "Pregovarati i zaključiti ugovor"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/button_new_contract/button_new_contract.xml:0
 msgid "New Contract"
-msgstr ""
+msgstr "Novi ugovor"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
 msgid "New Employee Record"
-msgstr ""
+msgstr "Novi zapis zaposlenika"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_pivot
 msgid "New Employees Over Time"
-msgstr ""
+msgstr "Novi zaposlenici tokom vremena"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__newly_hired
@@ -3415,14 +3619,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Newly Hired"
-msgstr ""
+msgstr "Novozaposleni"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_calendar_event_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Događaj sljedećeg kalendara aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_date_deadline
@@ -3453,23 +3657,23 @@ msgstr "Tip sljedeće aktivnosti"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
-msgstr ""
+msgstr "Poželjno"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "No Tags found ! Let's create one"
-msgstr ""
+msgstr "Nema pronađenih oznaka ! Kreirajmo novu"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_contract_templates
 msgid "No Template found"
-msgstr ""
+msgstr "Nije pronađen predložak"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 msgid "No contract"
-msgstr ""
+msgstr "Nema ugovora"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3479,11 +3683,13 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
 msgstr ""
+"Bez glupih menadžera, bez glupih alata za upotrebu, bez nefleksibilnog "
+"radnog vremena"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "No user linked"
-msgstr ""
+msgstr "Nijedan korisnik nije povezan"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3494,11 +3700,12 @@ msgstr ""
 msgid ""
 "No waste of time in enterprise processes, real responsibilities and autonomy"
 msgstr ""
+"Bez gubitka vremena u procesima kompanije, prave odgovornosti i autonomija"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not Employed"
-msgstr ""
+msgstr "Nije zaposlen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -3518,7 +3725,7 @@ msgstr "Broj akcija"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Number of Employees"
-msgstr ""
+msgstr "Broj zaposlenika"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -3526,18 +3733,20 @@ msgid ""
 "Number of days prior to the contract end date that a contract expiration "
 "warning is triggered."
 msgstr ""
+"Broj dana prije datuma završetka ugovora u kojem se aktivira upozorenje o "
+"isteku ugovora."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid ""
 "Number of days prior to the work permit expiration date that a warning is "
 "triggered."
-msgstr ""
+msgstr "Broj dana prije isteka radne dozvole za koje se aktivira upozorenje."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr "Broj zaposlenih na ovom radnom mjestu"
+msgstr "Broj zaposlenih na ovom radnom mjestu."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
@@ -3545,7 +3754,7 @@ msgstr "Broj zaposlenih na ovom radnom mjestu"
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
@@ -3553,7 +3762,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_version__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtijevaju radnju"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
@@ -3561,7 +3770,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_version__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Broj poruka sa greškama pri isporuci"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
@@ -3575,29 +3784,31 @@ msgstr "Broj novih zaposlenih koje planirate da zaposlite."
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
 msgid "Off-Hours"
-msgstr ""
+msgstr "Van radnog vremena"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__office
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
-msgstr ""
+msgstr "Kancelarija"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer: Manage all employees"
-msgstr ""
+msgstr "Službenik: Upravlja svim zaposlenicima"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
 msgid "Onboarding / Offboarding"
-msgstr ""
+msgstr "Onboarding / Offboarding"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Only HR users can access first version date on an employee."
 msgstr ""
+"Samo korisnici ljudskih resursa mogu pristupiti datumu prve verzije na "
+"zaposleniku."
 
 #. module: hr
 #. odoo-python
@@ -3608,18 +3819,22 @@ msgid ""
 "one in that loop is linked to a user.                        Please double-"
 "check that everyone reports to the correct manager."
 msgstr ""
+"Ups! Čini se da postoji problem sa strukturom vašeg "
+"tima.                        Pronašli smo kružnu petlju izvještavanja i niko "
+"u toj petlji nije povezan s korisnikom.                        Molimo vas "
+"još jednom provjerite da li se svi javljaju ispravnom menadžeru."
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/web/thread_actions.js:0
 msgid "Open Profile"
-msgstr ""
+msgstr "Otvori profil"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_department.py:0
 msgid "Operation not Supported."
-msgstr ""
+msgstr "Operacija nije podržana."
 
 #. module: hr
 #. odoo-python
@@ -3638,28 +3853,28 @@ msgstr "Drugo"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Our Product"
-msgstr ""
+msgstr "Naš proizvod"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Out of Contract"
-msgstr ""
+msgstr "Van ugovora"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Oversee recruitment and hiring processes"
-msgstr ""
+msgstr "Nadgledajte procese regrutacije i zapošljavanja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
 #: model:ir.model.fields,field_description:hr.field_res_users__pin
 msgid "PIN"
-msgstr ""
+msgstr "PIN"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "PIN Code"
-msgstr ""
+msgstr "PIN kôd"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
@@ -3669,6 +3884,8 @@ msgid ""
 "enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
+"PIN se koristi za prijavu/odjavu u Kiosk modu modula Prisutnosti (ako je "
+"definirano u postavama) i za promjenu blagajnika u modulu POS blagajna."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -3678,34 +3895,34 @@ msgstr "Nadređeno odjeljenje"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Putanja nadređenih"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Part-Time"
-msgstr ""
+msgstr "Skraćeno radno vrijeme"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Participate in team meetings and discussions"
-msgstr ""
+msgstr "Učestvujte u timskim sastancima i diskusijama"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,help:hr.field_hr_employee_public__user_partner_id
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "Partnerski podaci korisnika"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Passion for software products"
-msgstr ""
+msgstr "Strast za softverske proizvode"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_expiration_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__passport_expiration_date
 msgid "Passport Expiration Date"
-msgstr ""
+msgstr "Datum isteka pasoša"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
@@ -3717,12 +3934,12 @@ msgstr "Broj pasoša"
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Pay Category"
-msgstr ""
+msgstr "Kategorija plaće"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Payroll"
-msgstr ""
+msgstr "Obračun plaće"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3731,7 +3948,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perfect written English"
-msgstr ""
+msgstr "Savršen pisani engleski"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3740,39 +3957,39 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perks"
-msgstr ""
+msgstr "Pogodnosti"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_permanent
 msgid "Permanent"
-msgstr ""
+msgstr "Trajno"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__hr_responsible_id
 #: model:ir.model.fields,help:hr.field_hr_version__hr_responsible_id
 msgid "Person responsible for validating the employee's contracts."
-msgstr ""
+msgstr "Ovlaštena osoba za ovjeru ugovora zaposlenika."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Personal"
-msgstr ""
+msgstr "Lično"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Personal Information"
-msgstr ""
+msgstr "Osobni podaci"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Personal Project"
-msgstr ""
+msgstr "Lični projekat"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid "Personal information update."
-msgstr ""
+msgstr "Ažuriranje ličnih podataka."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_phone
@@ -3781,7 +3998,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_phone
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -3791,7 +4008,7 @@ msgstr "Mjesto rođenja"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__plan_ids
 msgid "Plan"
-msgstr ""
+msgstr "Plan"
 
 #. module: hr
 #. odoo-python
@@ -3800,11 +4017,13 @@ msgid ""
 "Plan %(plan_names)s cannot use a department as it is used only for some HR "
 "plans."
 msgstr ""
+"Plan %(plan_names)s ne može da koristi sektor jer se koristi samo za neke HR "
+"planove."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__plan_department_filterable
 msgid "Plan Department Filterable"
-msgstr ""
+msgstr "Odjeljenje plana može se filtrirati"
 
 #. module: hr
 #. odoo-python
@@ -3813,16 +4032,18 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
+"Plan aktivnosti %(template_names)s ne može koristiti trenera, menadžera ili "
+"odgovornog zaposlenika jer se koristi samo za planove zaposlenika."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "Plans"
-msgstr ""
+msgstr "Planovi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__plans_count
 msgid "Plans Count"
-msgstr ""
+msgstr "Broj planova"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3831,7 +4052,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Play any sport with colleagues, <br>the bill is covered."
-msgstr ""
+msgstr "Igrajte bilo koji sport s kolegama, <br>račun je pokriven."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_crm_team__alias_contact
@@ -3845,36 +4066,40 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
+"Pravila za objavu poruke na dokumentu putem poštanskog sandučića.\n"
+"- svatko: svatko može objaviti poruku\n"
+"- partneri: samo autentificirani partner\n"
+"- pratitelji: samo pratitelji srodne dokumentacije\n"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_simple_modif
 msgid "Preferences"
-msgstr ""
+msgstr "Postavke"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Presence"
-msgstr ""
+msgstr "Prisustvo"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Condition"
-msgstr ""
+msgstr "Uslov prisustva"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Display"
-msgstr ""
+msgstr "Prikaz prisustva"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence of employees"
-msgstr ""
+msgstr "Prisutnost zaposlenika"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence reporting screen, email and IP address control."
-msgstr ""
+msgstr "Zaslon za izvješćivanje o prisutnosti, kontrola e-mail i IP adresa."
 
 #. module: hr
 #. odoo-javascript
@@ -3883,28 +4108,28 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
 msgid "Present"
-msgstr ""
+msgstr "Prisutan"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Previous internship or project experience"
-msgstr ""
+msgstr "Prethodni staž ili projektno iskustvo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__primary_bank_account_id
 msgid "Primary Bank Account"
-msgstr ""
+msgstr "Primarni bankovni račun"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Print Badge"
-msgstr ""
+msgstr "Štampaj značku"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Private"
-msgstr ""
+msgstr "Privatno"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -3915,33 +4140,33 @@ msgstr "Privatna adresa"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
 msgid "Private Car Plate"
-msgstr ""
+msgstr "Privatna registarska oznaka"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_city
 #: model:ir.model.fields,field_description:hr.field_hr_version__private_city
 #: model:ir.model.fields,field_description:hr.field_res_users__private_city
 msgid "Private City"
-msgstr ""
+msgstr "Privatna adresa - grad"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Contact"
-msgstr ""
+msgstr "Privatni kontakt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_country_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__private_country_id
 #: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
 msgid "Private Country"
-msgstr ""
+msgstr "Privatna adresa - država"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
 #: model:ir.model.fields,field_description:hr.field_res_users__private_email
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Private Email"
-msgstr ""
+msgstr "Privatni e-mail"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -3953,99 +4178,99 @@ msgstr "Privatne informacije"
 #: model:ir.model.fields,field_description:hr.field_res_users__private_phone
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Private Phone"
-msgstr ""
+msgstr "Privatni telefon"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_state_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__private_state_id
 #: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
 msgid "Private State"
-msgstr ""
+msgstr "Privatna adresa - federalna država"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_street
 #: model:ir.model.fields,field_description:hr.field_hr_version__private_street
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street
 msgid "Private Street"
-msgstr ""
+msgstr "Privatna adresa - ulica"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_street2
 #: model:ir.model.fields,field_description:hr.field_hr_version__private_street2
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street2
 msgid "Private Street2"
-msgstr ""
+msgstr "Privatna adresa - ulica 2"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_zip
 #: model:ir.model.fields,field_description:hr.field_hr_version__private_zip
 #: model:ir.model.fields,field_description:hr.field_res_users__private_zip
 msgid "Private Zip"
-msgstr ""
+msgstr "Privatna adresa - poštanski broj"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_ps
 msgid "Professional Services"
-msgstr ""
+msgstr "Profesionalne usluge"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Proficiency in data analytics tools"
-msgstr ""
+msgstr "Poznavanje alata za analizu podataka"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Proficiency in relevant industry tools"
-msgstr ""
+msgstr "Poznavanje relevantnih industrijskih alata"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_properties
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Properties"
-msgstr ""
+msgstr "Svojstva"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Proven track record in innovation"
-msgstr ""
+msgstr "Dokazano iskustvo u inovacijama"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Provide additional information about this version..."
-msgstr ""
+msgstr "Navedite dodatne informacije o ovoj verziji..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Provide ongoing support and guidance"
-msgstr ""
+msgstr "Pružajte stalnu podršku i usmjeravanje"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display_string
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__birthday_public_display_string
 msgid "Public Date of Birth"
-msgstr ""
+msgstr "Javni datum rođenja"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Javni zaposlenik"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Qualify the customer needs"
-msgstr ""
+msgstr "Kvalifikacija potreba kupaca"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_be
 msgid "R&D USA"
-msgstr ""
+msgstr "R&D USA"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Radio followed by element"
-msgstr ""
+msgstr "Radio praćen elementom"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__rating_ids
@@ -4053,18 +4278,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__rating_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Ocjene"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
-msgstr ""
+msgstr "Spremni ste za efikasnije zapošljavanje?"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Ready to start your experience?"
-msgstr ""
+msgstr "Spremni ste za početak svog iskustva?"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4073,22 +4298,22 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Real responsibilities and challenges in a fast evolving company"
-msgstr ""
+msgstr "Stvarne odgovornosti i izazovi u brzo rastućoj kompaniji"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
 msgid "Reason"
-msgstr ""
+msgstr "Razlog"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Records"
-msgstr ""
+msgstr "Zapisi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__user_id
 msgid "Recruiter"
-msgstr ""
+msgstr "Regruter"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
@@ -4099,32 +4324,32 @@ msgstr "Regrutovanje"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Register Departure"
-msgstr ""
+msgstr "Registruj odlazak"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "Related Contact"
-msgstr ""
+msgstr "Povezani kontakt"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton_inherited
 msgid "Related Contacts"
-msgstr ""
+msgstr "Povezani kontakti"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
 msgid "Related Employees"
-msgstr ""
+msgstr "Povezani zaposlenici"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_partners_count
 msgid "Related Partners Count"
-msgstr ""
+msgstr "Broj povezanih partnera"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__remove_related_user
@@ -4137,12 +4362,12 @@ msgstr "Srodni korisnik"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
 msgid "Related employee"
-msgstr ""
+msgstr "Povezani zaposlenik"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee_ids
 msgid "Related employees based on their private address"
-msgstr ""
+msgstr "Povezani zaposlenici na temelju njihove privatne adrese"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
@@ -4163,12 +4388,12 @@ msgstr "Zahtjevi"
 #. module: hr
 #: model:hr.department,name:hr.dep_rd
 msgid "Research & Development"
-msgstr ""
+msgstr "Istraživanje i razvoj"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
 msgid "Resigned"
-msgstr ""
+msgstr "Dao ostavku"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
@@ -4179,22 +4404,22 @@ msgstr "Resurs"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_calendar_id
 msgid "Resource Calendar"
-msgstr ""
+msgstr "Kalendar resursa"
 
 #. module: hr
 #: model:ir.model,name:hr.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr ""
+msgstr "Detalji odsustva"
 
 #. module: hr
 #: model:ir.model,name:hr.model_resource_calendar
 msgid "Resource Working Time"
-msgstr ""
+msgstr "Radno vrijeme resursa"
 
 #. module: hr
 #: model:ir.model,name:hr.model_resource_resource
 msgid "Resources"
-msgstr ""
+msgstr "Resursi"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4217,17 +4442,17 @@ msgstr "Odgovorni korisnik"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Resume"
-msgstr ""
+msgstr "CV"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_retired
 msgid "Retired"
-msgstr ""
+msgstr "Penzionisan"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Running Contract"
-msgstr ""
+msgstr "Aktivni ugovor"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_sms_error
@@ -4235,7 +4460,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_sms_error
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Greška u slanju SMSa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
@@ -4249,17 +4474,17 @@ msgstr "SSN broj"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Salary Allocation"
-msgstr ""
+msgstr "Raspodjela plaće"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__salary_distribution
 msgid "Salary Distribution"
-msgstr ""
+msgstr "Raspodjela plaće"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "Salary Information"
-msgstr ""
+msgstr "Informacije o plaći"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_payroll_structure_type
@@ -4268,34 +4493,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_version__structure_type_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Salary Structure Type"
-msgstr ""
+msgstr "Vrsta strukture plaće"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_sales
 msgid "Sales"
-msgstr ""
+msgstr "Prodaja"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
 msgid "Save"
-msgstr ""
+msgstr "Spremi"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
-msgstr ""
+msgstr "Raspored"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
 msgid "School"
-msgstr ""
+msgstr "Škola"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_seasonal
 msgid "Seasonal"
-msgstr ""
+msgstr "Sezonski"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__contract_template_id
@@ -4305,6 +4530,9 @@ msgid ""
 "Select a contract template to auto-fill the contract form with predefined "
 "values. You can still edit the fields as needed after applying the template."
 msgstr ""
+"Odaberite predložak ugovora da automatski ispunite obrazac ugovora unaprijed "
+"definiranim vrijednostima. I dalje možete uređivati polja po potrebi nakon "
+"primjene predloška."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -4312,6 +4540,8 @@ msgid ""
 "Select the \"Employee\" who is the coach of this employee.\n"
 "The \"Coach\" has no specific rights or responsibilities by default."
 msgstr ""
+"Odaberite \"Zaposlenika\" koji će mentorirati ovog zaposlenika\n"
+"\"Trener\" po predefiniranom nema posebna prava ili odgovornosti."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__sequence
@@ -4319,22 +4549,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
 #: model:ir.model.fields,field_description:hr.field_hr_job__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sekvenca"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__set_date_end
 msgid "Set Contract End Date"
-msgstr ""
+msgstr "Unesite završni datum ugovora"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
 msgstr ""
+"Postavite zadano radno vrijeme kompanije kako bi ste upravljali radnim "
+"vremenom svojih zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_wizard__set_date_end
 msgid "Set the end date on the current contract."
-msgstr ""
+msgstr "Unesite datum završetka aktualnog ugovora."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -4347,24 +4579,24 @@ msgstr "Postavke"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__share
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__share
 msgid "Share User"
-msgstr ""
+msgstr "Dijeljeni korisnik"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__show_hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__show_hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_resource_resource__show_hr_icon_display
 msgid "Show Hr Icon Display"
-msgstr ""
+msgstr "Prikaži HR ikonu"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Prikaži sve zapise čiji je datum sljedeće aktivnosti prošao"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
 msgid "Show to all employees"
-msgstr ""
+msgstr "Prikazati svim zaposlenicima"
 
 #. module: hr
 #. odoo-python
@@ -4375,7 +4607,7 @@ msgstr "Samac"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
-msgstr ""
+msgstr "Upravljanje vještinama"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__ssnid
@@ -4387,7 +4619,7 @@ msgstr "Broj socijalnog"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Some employee already have a work contact"
-msgstr ""
+msgstr "Neki zaposlenik već ima poslovni kontakt"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4396,30 +4628,30 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Sport Activity"
-msgstr ""
+msgstr "Sportska aktivnost"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 #: model:ir.model.fields,field_description:hr.field_hr_version__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr ""
+msgstr "Datum rođenja bračnog druga"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_version__spouse_complete_name
 msgid "Spouse Legal Name"
-msgstr ""
+msgstr "Zakonsko ime supružnika"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Start Date"
-msgstr ""
+msgstr "Početni datum"
 
 #. module: hr
 #. odoo-python
@@ -4427,13 +4659,15 @@ msgstr ""
 msgid ""
 "Start date (%(start)s) must be earlier than contract end date (%(end)s)."
 msgstr ""
+"Datum početka (%(start)s) mora biti raniji od datuma završetka ugovora (%"
+"(end)s)."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "State"
-msgstr ""
+msgstr "Županija/fed.država"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_state
@@ -4445,47 +4679,51 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status po aktivnostima\n"
+"U kašnjenju: Datum aktivnosti je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_statutory
 msgid "Statutory"
-msgstr ""
+msgstr "Statutarni"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_street
 msgid "Street"
-msgstr ""
+msgstr "Ulica"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Street 2..."
-msgstr ""
+msgstr "Ulica 2..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Street..."
-msgstr ""
+msgstr "Ulica..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street2
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_street2
 msgid "Street2"
-msgstr ""
+msgstr "Ulica2"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Strong analytical skills"
-msgstr ""
+msgstr "Jake analitičke vještine"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Strong communication and interpersonal skills"
-msgstr ""
+msgstr "Snažne komunikacijske i međuljudske vještine"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -4494,34 +4732,36 @@ msgid ""
 "Structure Employees per department and have an overview of e.g.\n"
 "                    expenses, timesheets, time off, recruitment, etc."
 msgstr ""
+"Struktura Zaposleni po odjelu i imaju pregled npr.\n"
+" troškova, rasporeda, slobodnog vremena, zapošljavanja, itd."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_student
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__student
 msgid "Student"
-msgstr ""
+msgstr "Student"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Summary"
-msgstr ""
+msgstr "Sažetak"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__currency_symbol
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__symbol
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__currency_symbol
 msgid "Symbol"
-msgstr ""
+msgstr "Simbol"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
 msgid "Tag Name"
-msgstr ""
+msgstr "Naziv taga"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Naziv oznake već postoji !"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
@@ -4533,32 +4773,34 @@ msgstr "Oznake"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
 msgid "Target"
-msgstr ""
+msgstr "Cilj"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Team-oriented mindset"
-msgstr ""
+msgstr "Timski orijentisan način razmišljanja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
 msgid "Technical field, bind user to this employee on create"
 msgstr ""
+"Tehničko polje, povežite korisnika s ovim zaposlenikom prilikom kreiranja "
+"nove kartice zaposlenika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee
 msgid "Technical field, whether to create an employee"
-msgstr ""
+msgstr "Tehnička oblast, da li kreirati zaposlenog"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "Template Name"
-msgstr ""
+msgstr "Naziv predloška"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_temporary
 msgid "Temporary"
-msgstr ""
+msgstr "Privremeno"
 
 #. module: hr
 #. odoo-python
@@ -4566,7 +4808,7 @@ msgstr ""
 msgid ""
 "The Badge ID must be alphanumeric without any accents and no longer than 18 "
 "characters."
-msgstr ""
+msgstr "ID značke mora biti alfanumerički bez akcenta i ne duži od 18 znakova."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -4574,6 +4816,7 @@ msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr ""
+"ID značke mora biti jedinstven, ovaj je već dodijeljen drugom zaposleniku."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -4585,6 +4828,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO oznaka države u dva slova.\n"
+"Možete koristiti za brzo pretraživanje."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_marketing
@@ -4597,12 +4842,19 @@ msgid ""
 "plan. This mission requires strong\n"
 "                collaboration with Technical Service and Sales."
 msgstr ""
+"Marketing menadžer definira srednjoročnu do dugoročnu marketinšku strategiju "
+"za svoje pokrivene tržišne segmente\n"
+" u svijetu. Izrađuje i prati godišnji budžet u saradnji sa prodajnim mestom. "
+"On definira\n"
+" portfelj proizvoda i kupaca prema marketinškom planu. Ova misija zahtijeva "
+"snažnu\n"
+" saradnju sa tehničkom službom i prodajom."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The PIN must be a sequence of digits."
-msgstr ""
+msgstr "PIN mora biti slijed znamenki."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__user_id
@@ -4611,29 +4863,31 @@ msgid ""
 "job             position. The Recruiter is automatically added to all "
 "meetings with the Applicant."
 msgstr ""
+"Regruter će biti zadana vrijednost za sve kandidate na ovom radnom mjestu. "
+"Regruter se automatski dodaje na sve sastanke sa aplikantom."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_contract_start_date_defined
 msgid "The contract must have a start date."
-msgstr ""
+msgstr "Ugovor mora imati datum početka."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The contract of %s is about to expire."
-msgstr ""
+msgstr "Ugovor koji %s uskoro ističe."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The default working hours are set in configuration."
-msgstr ""
+msgstr "Zadano radno vrijeme je postavljeno u Postavkama."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "The employee %s should be linked to a user."
-msgstr ""
+msgstr "Zaposlenik bi %s trebao biti povezan s korisnikom."
 
 #. module: hr
 #. odoo-python
@@ -4642,11 +4896,13 @@ msgid ""
 "The employee is already in contract on %s. Please select a date outside "
 "existing contracts"
 msgstr ""
+"Zaposlenik već ima ugovor na %s. Molimo odaberite datum izvan postojećih "
+"ugovora"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
 msgid "The expected number of new employees must be positive."
-msgstr ""
+msgstr "Očekivani broj novih zaposlenika mora biti pozitivan."
 
 #. module: hr
 #. odoo-python
@@ -4655,24 +4911,26 @@ msgid ""
 "The fields “%s”, which you are trying to read, are not available for "
 "employee public profiles."
 msgstr ""
+"Polja „%s“, koja pokušavate da pročitate, nisu dostupna za javne profile "
+"zaposlenih."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The following employees have the same work email address: %s"
-msgstr ""
+msgstr "Sljedeći zaposleni imaju istu radnu e-mail adresu: %s"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid "The following fields were modified by %s"
-msgstr ""
+msgstr "Sledeća polja je izmenio/la %s"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
 msgid "The following users have been archived: %s"
-msgstr ""
+msgstr "Sljedeći korisnici su arhivirani: %s"
 
 #. module: hr
 #. odoo-python
@@ -4681,12 +4939,14 @@ msgid ""
 "The following users have not been archived as they are still linked to "
 "another active employees: %s"
 msgstr ""
+"Sljedeći korisnici nisu arhivirani jer su još uvijek povezani sa drugim "
+"aktivnim zaposlenima: %s"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "The manager of %s should be linked to a user."
-msgstr ""
+msgstr "Menadžer %s treba da bude povezan sa korisnikom."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
@@ -4698,12 +4958,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "The user of %s's coach is not set."
-msgstr ""
+msgstr "Korisnik %s's za trenera nije definiran."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "The user will be able to create and edit employees."
-msgstr ""
+msgstr "Korisnik će moći kreirati i uređivati zaposlene."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
@@ -4711,29 +4971,31 @@ msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
+"Korisnik će imati pristup konfiguraciji ljudskih resursa kao i statističkim "
+"izvješćima."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The work permit of %s is about to expire."
-msgstr ""
+msgstr "Radna dozvola %s uskoro ističe."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
-msgstr ""
+msgstr "Teza"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
-msgstr ""
+msgstr "Ovaj djelatnik već ima korisnika."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
-msgstr ""
+msgstr "Ovo polje %(field_name)s ne postoji na ovom modelu (hr.verzija)."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -4742,23 +5004,25 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
+"Ovo se polje koristi za definiranje u kojoj vremenskoj zoni će resursi "
+"raditi."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sex
 #: model:ir.model.fields,help:hr.field_hr_version__sex
 msgid "This is the legal sex recognized by the state."
-msgstr ""
+msgstr "Ovo je legalni spol koji priznaje država."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
-msgstr ""
+msgstr "Ovaj blok postavki se koristi za upravljanje dizajnom frontenda."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Those responsible types are limited to Employee plans."
-msgstr ""
+msgstr "Ti tipovi odgovornih su ograničeni na planove za zaposlene."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -4771,12 +5035,12 @@ msgstr "Vremenska zona"
 #: model:digest.tip,name:hr.digest_tip_hr_0
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid "Tip: Where's Bryan?"
-msgstr ""
+msgstr "Savjet: Gdje je Bryan?"
 
 #. module: hr
 #: model:mail.message.subtype,name:hr.mt_contract_pending
 msgid "To Renew"
-msgstr ""
+msgstr "Za obnovu"
 
 #. module: hr
 #. odoo-python
@@ -4785,12 +5049,16 @@ msgid ""
 "To avoid multi company issues (losing the access to your previous contracts, "
 "leaves, ...), you should create another employee in the new company instead."
 msgstr ""
+"Kako biste izbjegli probleme koji se mogu nastati ukoliko u bazi imate više "
+"kompaniji (gubitak pristupa prethodnim ugovorima zaposlenika , odsustvima "
+"zaposlenika,...) trebali biste kreirati novu karticu zaposlenika u novoj "
+"tnrtki."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "Današnje aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -4801,13 +5069,13 @@ msgstr "Ukupno prognoziranih zaposlenih"
 #. odoo-python
 #: code:addons/hr/wizard/hr_bank_account_wizard.py:0
 msgid "Total percentage allocation must equal 100%."
-msgstr ""
+msgstr "Ukupna postotualna alokacija mora biti jednaka 100%."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Total salary distribution on bank accounts must be exactly 100%."
-msgstr ""
+msgstr "Ukupna raspodjela plaća na bankovnim računima mora biti tačno 100%."
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -4822,56 +5090,56 @@ msgstr "Trener"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Trainings"
-msgstr ""
+msgstr "Treniranja"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "True association"
-msgstr ""
+msgstr "Prava asocijacija"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Trust Bank Account"
-msgstr ""
+msgstr "Povjerite bankovni račun"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__trusted
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Trusted"
-msgstr ""
+msgstr "Pouzdano"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Type"
-msgstr ""
+msgstr "Vrsta"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_exception_decoration
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
 #: model:ir.model.fields,help:hr.field_hr_version__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Vrsta aktivnosti iznimke na zapisu."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Unarchive"
-msgstr ""
+msgstr "Vrati iz arhive"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Understanding of IT strategy development"
-msgstr ""
+msgstr "Razumijevanje razvoja IT strategije"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Understanding of user experience (UX) principles"
-msgstr ""
+msgstr "Razumijevanje principa korisničkog iskustva (UX)"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
 msgid "Undetermined"
-msgstr ""
+msgstr "Neodređeno"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
@@ -4883,17 +5151,17 @@ msgstr "Nepročitane poruke"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Untrust Bank Account"
-msgstr ""
+msgstr "Nepouzdan bankovni račun"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Update and maintain project documentation"
-msgstr ""
+msgstr "Ažuriranje i održavanje projektne dokumentacije"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "Use tags to categorize your Employees."
-msgstr ""
+msgstr "Koristi oznake za kategorizaciju djelatnika."
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -4908,58 +5176,58 @@ msgstr "Korisnik"
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
 msgid "User Archive Notification"
-msgstr ""
+msgstr "Obavijest o arhivi korisnika"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "User Creation Notification"
-msgstr ""
+msgstr "Obavijest o kreiranju korisnika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__is_user_employee
 msgid "User Employee"
-msgstr ""
+msgstr "User Employee"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "User already exists for Those Employees %s"
-msgstr ""
+msgstr "Korisnik već postoji za Te zaposlenike %s"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "User already exists with the same email for Employees %s"
-msgstr ""
+msgstr "Korisnik već postoji sa istom e-poštom za zaposlenike %s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
 msgid "User's active"
-msgstr ""
+msgstr "Korisnik je aktivan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
-msgstr ""
+msgstr "Korisnikov partner"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Users %s creation successful"
-msgstr ""
+msgstr "Kreiranje %s korisnika uspješno"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies:"
-msgstr ""
+msgstr "Slobodna radna mjesta:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip_list
 msgid "Valid IP addresses"
-msgstr ""
+msgstr "Valjana IP adresa"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4969,28 +5237,28 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Valid work permit for Belgium"
-msgstr ""
+msgstr "Valjana dozvola za rad u Belgiji"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_id
 msgid "Version"
-msgstr ""
+msgstr "Verzija"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__versions_count
 msgid "Versions Count"
-msgstr ""
+msgstr "Broj verzija"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Visa & Work Permit"
-msgstr ""
+msgstr "Viza i radna dozvola"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "Datum isteka vize"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -5001,19 +5269,19 @@ msgstr "Broj Vize"
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Vidljivo svima"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__wage
 #: model:ir.model.fields,field_description:hr.field_hr_version__wage
 msgid "Wage"
-msgstr ""
+msgstr "Plaća"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Warning"
-msgstr ""
+msgstr "Upozorenje"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_consultant
@@ -5024,6 +5292,10 @@ msgid ""
 "proven track record in delivering results are\n"
 "                essential."
 msgstr ""
+"Tražimo Konsultanta koji će pružiti stručne savjete i strateška rješenja,\n"
+" potaknuti rast poslovanja. Snažne analitičke vještine i dokazano iskustvo u "
+"postizanju rezultata su\n"
+" neophodni."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -5033,6 +5305,10 @@ msgid ""
 "meet clients to explain the technical\n"
 "                possibilities that can meet their needs."
 msgstr ""
+"Tražimo razvojnog programera koji će se pridružiti našem web timu.\n"
+" Nekoga ko može izaći iz kodiranja i izvršiti analizu ili upoznati kupce "
+"kako bi objasnio tehničke\n"
+" mogućnosti koje mogu zadovoljiti njihove potrebe."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
@@ -5040,7 +5316,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Poruke webstranica"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
@@ -5048,7 +5324,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
 #: model:ir.model.fields,help:hr.field_hr_version__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Historija komunikacije Web stranice"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -5057,7 +5333,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "What We Offer"
-msgstr ""
+msgstr "Što nudimo"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -5067,7 +5343,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "What's great in the job?"
-msgstr ""
+msgstr "Što je sjajno u poslu?"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__member_of_department
@@ -5076,12 +5352,14 @@ msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
 msgstr ""
+"Bilo da je zaposlenik član aktivnog korisničkog odjela ili neko od njegovih "
+"podređenih odjela."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee
 #: model:ir.model.fields,help:hr.field_res_users__employee
 msgid "Whether this contact is an Employee."
-msgstr ""
+msgstr "Da li je ovaj kontakt zaposlenik."
 
 #. module: hr
 #. odoo-python
@@ -5092,13 +5370,13 @@ msgstr "Udovac"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__wizard_id
 msgid "Wizard"
-msgstr ""
+msgstr "Čarobnjak"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work"
-msgstr ""
+msgstr "Posao"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -5112,7 +5390,7 @@ msgstr "Adresa na poslu"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_contact_id
 #: model:ir.model.fields,field_description:hr.field_res_users__work_contact_id
 msgid "Work Contact"
-msgstr ""
+msgstr "Kreirana kartica kontakta"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
@@ -5146,20 +5424,20 @@ msgstr "Lokacija posla"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_name
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_name
 msgid "Work Location Name"
-msgstr ""
+msgstr "Naziv lokacije rada"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_type
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_type
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_type
 msgid "Work Location Type"
-msgstr ""
+msgstr "Vrsta lokacije rada"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
-msgstr ""
+msgstr "Lokacije rada"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
@@ -5184,18 +5462,18 @@ msgstr "Radna dozvola"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
 msgid "Work Permit Expiration Date"
-msgstr ""
+msgstr "Datum isteka radne dozvole"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Permit Expiration Notice Period"
-msgstr ""
+msgstr "Rok za obavijest o isteku radne dozvole"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__work_permit_expiration_notice_period
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__work_permit_expiration_notice_period
 msgid "Work Permit Expiry Notice Period"
-msgstr ""
+msgstr "Period najave isteka radne dozvole"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
@@ -5205,7 +5483,7 @@ msgstr "Broj radne dozvole"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
 msgid "Work Permit Scheduled Activity"
-msgstr ""
+msgstr "Zakazana radnja za Radnu dozvolu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
@@ -5222,7 +5500,7 @@ msgstr "Broj telefona na poslu"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__worker
 msgid "Worker"
-msgstr ""
+msgstr "Radnik"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
@@ -5234,23 +5512,23 @@ msgstr "Radni sati"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Working Schedule"
-msgstr ""
+msgstr "Raspored rada"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_resource_calendar_view
 msgid "Working Schedules"
-msgstr ""
+msgstr "Radni raspored"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_resource_resource__calendar_id
 msgid "Working Time"
-msgstr ""
+msgstr "Radno vrijeme"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.xml:0
 msgid "YES"
-msgstr ""
+msgstr "DA"
 
 #. module: hr
 #. odoo-python
@@ -5259,6 +5537,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "We can redirect you to the public employee list."
 msgstr ""
+"Nije vam dozvoljen pristup evidenciji \"Zaposleni\" (hr.employee).\n"
+"Možemo vas preusmjeriti na listu javnih službenika."
 
 #. module: hr
 #. odoo-python
@@ -5267,6 +5547,8 @@ msgid ""
 "You are not allowed to create an employee because the user does not have "
 "access rights for %s"
 msgstr ""
+"Nije vam dozvoljeno da kreirate zaposlenog jer korisnik nema prava pristupa "
+"za %s"
 
 #. module: hr
 #. odoo-python
@@ -5275,18 +5557,21 @@ msgid ""
 "You are receiving this message because you are the HR Responsible of this "
 "employee."
 msgstr ""
+"Ovu poruku ste primili jer ste odgovorni za ljudske resurse ovog zaposlenika."
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/store_service_patch.js:0
 msgid "You can only chat with employees that have a dedicated user."
 msgstr ""
+"Moguće je voditi razgovor samo sa zaposlenicima koji imaju dodijeljenog "
+"korisnika."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_department.py:0
 msgid "You cannot create recursive departments."
-msgstr ""
+msgstr "Ne možete stvoriti rekurzivne odjele."
 
 #. module: hr
 #. odoo-python
@@ -5295,6 +5580,8 @@ msgid ""
 "You cannot delete contact that are linked to an employee, please archive "
 "them instead."
 msgstr ""
+"Ne možete izbrisati kontakte koji su povezani sa zaposlenikom, umjesto toga "
+"ih arhivirajte."
 
 #. module: hr
 #. odoo-python
@@ -5305,24 +5592,28 @@ msgid ""
 "\n"
 "Affected contact(s): %(names)s"
 msgstr ""
+"Ne možete izbrisati kontakt(e) povezane sa zaposlenicima.\n"
+"Molimo ih umjesto toga arhivirajte.\n"
+"\n"
+"Pogođeni kontakt(i): %(names)s"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You do not have access to this document."
-msgstr ""
+msgstr "Nemate dovoljne ovlasti za pristup ovom dokumentu."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You need to set a valid work email address for %s"
-msgstr ""
+msgstr "Morate postaviti važeću poslovnu adresu e-pošte za %s"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You need to set the work email address for %s"
-msgstr ""
+msgstr "Morate postaviti poslovnu adresu e-pošte za %s"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_trainee
@@ -5348,6 +5639,26 @@ msgid ""
 "being involved into satisfaction surveys in order to have a better knowledge "
 "of how the support given is seen by the customers."
 msgstr ""
+"Sudjelujete u ažuriranju naših alata za tutorial i alata za pretprodaju "
+"nakon lansiranja nove verzije Odoo-a. Zaista, svaka nova verzija softvera "
+"donosi značajna poboljšanja u smislu funkcionalnosti, ergonomije i "
+"konfiguracije.\n"
+"Morat ćete se upoznati sa postojećim alatima (knjige, podrška za klase, "
+"slajdovi prezentacije Odooa, komercijalni alati),\n"
+"da učestvujete u ažuriranju tih alata kako bi ih učinili prikladnima za novu "
+"verziju softvera i, svakako,\n"
+"da biste predložili nova poboljšanja u domeni. Odeljenje za pomoć. Ovaj tim "
+"od 3 osobe ide s Odoo kupcima u postavljanje softvera. Vaša uloga će biti\n"
+"animirati webinare kako biste prikazali različite funkcionalnosti softvera.\n"
+"da budete uključeni u podršku korisnicima i\n"
+"da odgovorite na njihova pitanja.\n"
+"Pomažete menadžeru podrške da uspostavi nove usluge podrške tako što ćete\n"
+"učestvovati u tretmanu novih slučajeva,\n"
+"pridonoseći postavljanju nove politike,\n"
+"pridonoseći postavljanju nove politike,\n"
+"uključenost u postavljanje nove politike,\n"
+"uključivanje u način na koji korisnici imaju bolje znanje kako bi se pružila "
+"podrška putem ankete."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_cto
@@ -5363,6 +5674,16 @@ msgid ""
 "The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-"
 "Neuve and Namur)."
 msgstr ""
+"Učestvovat ćete u konsultantskim uslugama koje pružamo našim partnerima i "
+"kupcima: dizajn, analiza, razvoj, testiranje, upravljanje projektima, "
+"podrška/coaching. Radit ćete autonomno, kao i koordinirati i nadzirati male "
+"distribuirane razvojne timove za neke projekte. Opciono, održavat ćete Odoo "
+"trening sesije partnerima i kupcima (8-10 ljudi/sesiji). Podnosit ćete "
+"izvještaj šefu stručnih službi i blisko surađivati sa svim programerima i "
+"konsultantima.\n"
+"\n"
+"Posao se nalazi u Grand-Rosièreu (1367), Belgija (između Louvain-La-Neuve i "
+"Namur)."
 
 #. module: hr
 #. odoo-python
@@ -5372,37 +5693,40 @@ msgid ""
 "user template's rights. Adding new users may increase your subscription "
 "cost. Do you wish to continue?"
 msgstr ""
+"Upravo ćete pozvati nove korisnike. %s korisnici će biti kreirani s pravima "
+"zadanog korisničkog predloška. Dodavanje novih korisnika može povećati "
+"cijenu vaše pretplate. Da li želite da nastavite?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "ZIP"
-msgstr ""
+msgstr "Poštanski broj"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_zip
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_zip
 msgid "Zip"
-msgstr ""
+msgstr "Poštanski br."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_alias.py:0
 msgid "addresses linked to registered employees"
-msgstr ""
+msgstr "adrese povezane sa registriranim zaposlenicima"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "bachelor"
-msgstr ""
+msgstr "neženja"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "cohabitant"
-msgstr ""
+msgstr "kohabitant"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -5413,28 +5737,28 @@ msgstr "odjeljenje"
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "divorced"
-msgstr ""
+msgstr "razveden"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "doctor"
-msgstr ""
+msgstr "doktore"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Building 2, Remote, etc."
-msgstr ""
+msgstr "npr. Zgrada 2, Od kuće, itd."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Founder, Motorized, Building B, ..."
-msgstr ""
+msgstr "npr. Osnivač, motorizovan, zgrada B, ..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "npr. John Doe"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -5446,80 +5770,80 @@ msgstr "npr.: Upravitelj prodajom"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Summarize the position in one or two lines..."
-msgstr ""
+msgstr "npr. Sažetak ove pozicije u jednom do dva retka..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. johndoe@example.com"
-msgstr ""
+msgstr "npr. ivanhorvat@example.com"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
-msgstr ""
+msgstr "npr. mojprivatnimail@example.com"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_mixin
 msgid "hr.mixin"
-msgstr ""
+msgstr "hr.mixin"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__distance_home_work_unit__kilometers
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "married"
-msgstr ""
+msgstr "oženjen"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "master"
-msgstr ""
+msgstr "majstor"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__distance_home_work_unit__miles
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "other"
-msgstr ""
+msgstr "ostalo"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/models.py:0
 msgid "restricted to employees"
-msgstr ""
+msgstr "ograničeno na zaposlenike"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "widower"
-msgstr ""
+msgstr "udovac"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "work"
-msgstr ""
+msgstr "rad"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
-msgstr ""
+msgstr "naziv_radne_dozvole"
 
 #~ msgid "&amp;nbsp;"
 #~ msgstr "&amp;nbsp;"

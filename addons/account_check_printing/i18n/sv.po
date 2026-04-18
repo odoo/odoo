@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-03-30 10:42+0000\n"
+"PO-Revision-Date: 2026-04-16 15:35+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/sv/>\n"
@@ -38,13 +38,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 msgid "%(journal)s: Check Number Sequence"
-msgstr "%(journal)s: Kontrollera nummersekvens"
+msgstr "%(journal)s: Checkens nummerserie"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "%(number)s in journal %(journal)s"
-msgstr "%(number)s i journal %(journal)s"
+msgstr "%(number)s i journalen %(journal)s"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -62,13 +62,13 @@ msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
 msgstr ""
-"Justera marginalerna på genererade checkar så att de passar skrivarens "
+"Justera marginalerna för skapade checkar så att de passar till skrivarens "
 "inställningar."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
 msgid "Amount in Words"
-msgstr "Summa i ord"
+msgstr "Summa angiven i ord"
 
 #. module: account_check_printing
 #. odoo-python
@@ -86,13 +86,13 @@ msgstr "Avbryt"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr "Kontrollera layout"
+msgstr "Checkens layout"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 msgid "Check Left Margin"
-msgstr "Kontrollera vänstermarginal"
+msgstr "Checkens vänstermarginal"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
@@ -102,41 +102,40 @@ msgstr "Checknummer"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr "Utskrift av checkar"
+msgstr "Utskrifter av checkar"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
-msgstr "Kontrollera högermarginal"
+msgstr "Checkens högermarginal"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
 msgid "Check Sequence"
-msgstr "Sekvens för kontroll"
+msgstr "Checkens nummerserie"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
-msgstr "Kontrollera högsta marginal"
+msgstr "Checkens övre marginal"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Check numbers can only consist of digits"
-msgstr "Kontrollnummer kan endast bestå av siffror"
+msgstr "Checknummer får endast bestå av siffror"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr ""
-"Välj det här alternativet om dina för-printade checkar inte är numrerade."
+msgstr "Välj det här alternativet om dina förtryckta checkar inte är numrerade."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Check to print"
-msgstr "Kontrollera för att skriva ut"
+msgstr "Checkar att skriva ut"
 
 #. module: account_check_printing
 #. odoo-python
@@ -148,7 +147,7 @@ msgstr "Kontroller"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr "Kontrollerar numreringsföljden."
+msgstr "Checkens nummerserie."
 
 #. module: account_check_printing
 #. odoo-python
@@ -267,21 +266,24 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
-"Manuellt: Betala eller få betalt med valfri metod utanför Odoo.\n"
+"Manuella betalningar: Betala eller få betalt genom valfri extern metod.\n"
 "Betalningsleverantörer: Varje betalningsleverantör har sin egen "
-"betalningsmetod. Begär en transaktion på/till ett kort tack vare en "
-"betalningstoken som sparats av partnern när du köper eller prenumererar "
-"online.\n"
-"Check: Betala räkningar med check och skriv ut den från Odoo.\n"
-"Batchinsättning: Samla in flera kundcheckar samtidigt, generera och skicka "
-"in en batchinsättning till din bank. Modulen account_batch_payment är "
-"nödvändig.\n"
-"SEPA-kreditöverföring: Betala i SEPA-zonen genom att skicka in en SEPA-"
-"kreditöverföringsfil till din bank. Modulen account_iso20022 är nödvändig.\n"
-"SEPA-autogiro: Få betalt i SEPA-zonen tack vare ett medgivande som din "
-"partner har beviljat dig. Modulen account_iso20022 är nödvändig.\n"
-"U.S. ISO20022: Betala i USA genom att skicka in en ISO20022-fil till din "
-"bank. Modulen account_iso20022 är nödvändig.\n"
+"betalningsmetod. Begär en transaktion genom/till ett kort tack vare en "
+"betalningstoken som sparas av partnern när du gör ett engångsköp eller "
+"registrerar en prenumeration online.\n"
+"Checkbetalningar: Betala fakturor genom en check och skriv ut den enkelt "
+"direkt från Odoo.\n"
+"Batch-insättningar: Ta emot flera betalningar samtidigt genom att skapa och "
+"skicka in en batch-insättning till din bank. Modulen account_batch_payment "
+"är nödvändig för att aktivera funktionen.\n"
+"Kreditöverföring inom SEPA: Betala inom SEPA-zonen genom att skicka in en "
+"kreditöverföringsfil till din bank. Modulen account_sepa är nödvändig för "
+"att aktivera funktionen.\n"
+"SEPA-autogiro: Få betalt inom SEPA-zonen tack vare ett medgivande som din "
+"partner har beviljat dig. Modulen account_sepa är nödvändig för att aktivera "
+"funktionen.\n"
+"USA ISO20022: Betala inom USA genom att skicka in en ISO20022-fil till din "
+"bank. Modulen account_iso20022 är nödvändig för att aktivera funktionen.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -293,14 +295,14 @@ msgstr "Kontrollstumpar för flera sidor"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__next_check_number
 msgid "Next Check Number"
-msgstr "Nästa kontrollnummer"
+msgstr "Nästa checknummer"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 msgid "Next Check Number should only contains numbers."
-msgstr "Nästa nummerkontroll ska endast innehålla siffror."
+msgstr "Nästa checknummer får endast innehålla siffror."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -358,7 +360,7 @@ msgstr "Skriv ut checkar"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid "Print Date Label"
-msgstr "Etikett för utskriftsdatum"
+msgstr "Skriv ut datumetikett"
 
 #. module: account_check_printing
 #. odoo-python
@@ -366,7 +368,7 @@ msgstr "Etikett för utskriftsdatum"
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Print Pre-numbered Checks"
-msgstr "Skriva ut numrerade checkar"
+msgstr "Skriv ut förnumrerade checkar"
 
 #. module: account_check_printing
 #. odoo-python
@@ -399,12 +401,12 @@ msgstr "Skickad"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr "Sekvensnummer för nästa utskrivna check."
+msgstr "Nummerserie för nästa check att skriva ut."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
 msgid "Show Check Number"
-msgstr "Visa kontrollnummer"
+msgstr "Visa checknummer"
 
 #. module: account_check_printing
 #. odoo-python
@@ -433,7 +435,7 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
-"Följande nummer är redan använda:\n"
+"Följande nummer har redan använts:\n"
 "%s"
 
 #. module: account_check_printing
@@ -443,8 +445,8 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
-"Det senaste kontrollnumret var %s. För att undvika att en check avvisas av "
-"banken kan du bara använda ett större nummer."
+"Det senaste checknumret var %s. För att undvika att en check avvisas av "
+"banken är det bara möjligt att använda ett större nummer."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -501,8 +503,9 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
-"Du måste välja en checklayout. Gå till Inställningar för fakturering/"
-"redovisning, sök efter \"Checklayout\" och ställ in en."
+"Du måste välja en checklayout. För att göra detta kan du navigera till "
+"inställningarna för Fakturering eller Bokföring, och hitta fliken "
+"\"Checklayout\"."
 
 #. module: account_check_printing
 #. odoo-python

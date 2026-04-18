@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 18:38+0000\n"
-"PO-Revision-Date: 2026-04-14 13:16+0000\n"
+"PO-Revision-Date: 2026-04-17 06:53+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "pos_safaricom/de/>\n"
@@ -36,12 +36,12 @@ msgstr "Betrag"
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Arrived at"
-msgstr ""
+msgstr "Angekommen:"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__business_short_code
 msgid "Business Short Code"
-msgstr ""
+msgstr "Kurzcode des Unternehmens"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
@@ -49,80 +49,91 @@ msgid ""
 "C2B callback URLs must be registered with Safaricom for Lipa na M-PESA to work.\n"
 "                            This happens automatically on creation, but you can re-register if you deleted them from the business portal."
 msgstr ""
+"C2B-Callback-URLs müssen bei Safaricom registriert sein, damit Lipa na M-"
+"PESA funktioniert.\n"
+"                            Dies geschieht automatisch bei der Erstellung. "
+"Sie können sie jedoch erneut registrieren, falls Sie sie im "
+"Unternehmensportal gelöscht haben."
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Cancel"
-msgstr ""
+msgstr "Stornieren"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Cannot process transactions with float numbers. Round it please."
 msgstr ""
+"Transaktionen mit Gleitkommazahlen können nicht verarbeitet werden. Runden "
+"Sie den Wert."
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Cannot process transactions with negative amount."
-msgstr ""
+msgstr "Transaktion mit negativem Betrag kann nicht durchgeführt werden."
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_key
 msgid "Consumer Key"
-msgstr ""
+msgstr "Verbraucherschlüssel"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Consumer Key and Consumer Secret are required for Safaricom M-Pesa"
 msgstr ""
+"Verbraucherschlüssel und Verbrauchergeheimnis sind für Safaricom M-Pesa "
+"erforderlich"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_secret
 msgid "Consumer Secret"
-msgstr ""
+msgstr "Verbrauchergesheimnis"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Erstellt von"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Anzeigename"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Failed to generate QR code"
-msgstr ""
+msgstr "QR-Code konnte nicht generiert werden"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to register URLs"
-msgstr ""
+msgstr "Fehler beim Registrieren von URLs"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to register URLs. Check your credentials and try again."
 msgstr ""
+"Die Registrierung der URLs ist fehlgeschlagen. Überprüfen Sie Ihre "
+"Anmeldedaten und versuchen Sie es erneut."
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to retrieve access token from Safaricom"
-msgstr ""
+msgstr "Zugriffstoken von Safaricom konnte nicht abgerufen werden"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__id
@@ -134,7 +145,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Invalid phone number format. Please use format: 2547XXXXXXXX"
-msgstr ""
+msgstr "Ungültiges Telefonnummernformat. Verwenden Sie das Format: 2547XXXXXXXX"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_uid
@@ -165,125 +176,127 @@ msgstr "M-PESA Express"
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "M-Pesa Phone Number"
-msgstr ""
+msgstr "M-Pesa-Telefonnummer"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "M-Pesa QR Code"
-msgstr ""
+msgstr "M-Pesa-QR-Code"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__name
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__number
 msgid "Number"
-msgstr ""
+msgstr "Nummer"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__passkey
 msgid "Passkey"
-msgstr ""
+msgstr "Passkey"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
 msgid "Payment Failed"
-msgstr ""
+msgstr "Zahlung fehlgeschlagen"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_payment_type
 msgid "Payment Type"
-msgstr ""
+msgstr "Zahlungsart"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Payment line not found"
-msgstr ""
+msgstr "Zahlungszeile nicht gefunden"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
 msgid "Payment was not completed"
-msgstr ""
+msgstr "Die Zahlung wurde nicht abgeschlossen"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Phone number is required for M-Pesa payment."
-msgstr ""
+msgstr "Für die Zahlung mit M-Pesa ist eine Telefonnummer erforderlich."
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Zahlungsmethoden des Kassensystems"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__received_at
 msgid "Received At"
-msgstr ""
+msgstr "Erhalten:"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Refresh"
-msgstr ""
+msgstr "Aktualisieren"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid "Register URLs"
-msgstr ""
+msgstr "URLs registrieren"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid "Register or re-register C2B callback URLs with Safaricom"
 msgstr ""
+"Registrieren oder erneutes Registrieren von C2B-Callback-URLs bei Safaricom"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Safaricom M-Pesa Error"
-msgstr ""
+msgstr "Safaricom-M-Pesa-Fehler"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Scan to Pay with M-Pesa"
-msgstr ""
+msgstr "Scannen und bezahlen mit M-Pesa"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_test_mode
 msgid "Test Mode"
-msgstr ""
+msgstr "Testmodus"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__passkey
 msgid "The passkey is used to generate the password for the STK Push"
 msgstr ""
+"Der Passkey wird zur Generierung des Passworts für den STK Push verwendet"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__trans_id
 msgid "Transaction ID"
-msgstr ""
+msgstr "Transaktions-ID"
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_transaction_lipa_na_mpesa
 msgid "Transaction Lipa na M-PESA"
-msgstr ""
+msgstr "Transaktion mit Lipa auf M-PESA"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__safaricom_test_mode
 msgid "Use sandbox environment"
-msgstr ""
+msgstr "Sandbox-Umgebung verwenden"
