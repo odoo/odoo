@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-11 11:52+0000\n"
+"POT-Creation-Date: 2026-04-17 18:40+0000\n"
+"PO-Revision-Date: 2026-04-18 11:31+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-3/"
 "account_edi_ubl_cii/de/>\n"
@@ -52,19 +52,31 @@ msgid "(Un)Group lines by tax"
 msgstr "Zeilen pro Steuer (ent-)gruppieren"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "<span class=\"text-muted\">FROM</span>"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "<span class=\"text-muted\">TO</span>"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "A payment of %s was detected."
 msgstr "Eine Zahlung von %s wurde entdeckt."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "A rounding amount of %s was detected."
 msgstr "Es wurde ein Rundungsbetrag in Höhe von %s erfasst."
 
@@ -180,6 +192,8 @@ msgstr "Netzwerk der Unternehmensregister"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Cannot decode the origin file, try by importing it again"
 msgstr ""
+"Die Quelldatei kann nicht entschlüsselt werden. Versuchen Sie, sie erneut zu "
+"importieren"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -247,6 +261,7 @@ msgstr "Kontakt"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid ""
 "Could not retrieve a partner corresponding to '%s'. A new partner was "
 "created."
@@ -257,6 +272,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and "
 "activate the currency?"
@@ -274,6 +290,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'."
 msgstr ""
 "Die Steuer konnte nicht abgerufen werden: %(tax_percentage)s %% für Zeile „%"
@@ -282,6 +299,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Could not retrieve the tax: %s for the document level allowance/charge."
 msgstr ""
 "Steuer konnte nicht abgerufen werden: %s für die Zulage/Gebühr auf "
@@ -491,6 +509,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Format used to import the invoice: %s"
 msgstr "Für den Import der Rechnung verwendetes Format: %s"
 
@@ -538,7 +557,7 @@ msgstr "Generiert von Odoo"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0246
 msgid "German Electronic Business Address"
-msgstr ""
+msgstr "Deutsche elektronische Geschäftsadresse"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung
@@ -758,7 +777,7 @@ msgstr "Niederlande - MwSt."
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0244
 msgid "Nigeria Tax Identification"
-msgstr ""
+msgstr "Steueridentifikationsnummer in Nigeria"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0192
@@ -845,6 +864,7 @@ msgstr "Rumänien - MwSt."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Rounding"
 msgstr "Rundung"
 
@@ -876,7 +896,7 @@ msgstr "SIA-Objektkennungen"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0245
 msgid "SK Tax identification number (DIČ)"
-msgstr ""
+msgstr "SK-Steueridentifikationsnummer (DIČ)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9951
@@ -938,6 +958,11 @@ msgstr "Schweiz - MwSt."
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Tax '%(tax_name)s' is invalid: %(error_message)s"
 msgstr "Steuer „%(tax_name)s“ ist ungültig: %(error_message)s"
+
+#. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "Tax ID"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1004,6 +1029,7 @@ msgstr "Die USt-IdNr. von %s sollte den Präfix seines Ländercodes enthalten."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "The bank account couldn't be fetched: %s"
 msgstr "Das Bankkonto konnte nicht abgerufen werden: %s"
 
@@ -1016,6 +1042,7 @@ msgstr "Das Land ist für %s erforderlich."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "The currency '%s' is not active."
 msgstr "Die Währung „%s“ ist nicht aktiv."
 
@@ -1040,6 +1067,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 msgid ""
@@ -1142,6 +1170,11 @@ msgid "Vatican VAT"
 msgstr "Vatikan - MwSt."
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "View Partner(s)"
@@ -1173,7 +1206,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You can only group lines of an invoice"
-msgstr ""
+msgstr "Sie können nur Zeilen einer Rechnung gruppieren"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

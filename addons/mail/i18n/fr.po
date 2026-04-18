@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-11 11:56+0000\n"
+"PO-Revision-Date: 2026-04-18 11:31+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-3/mail/"
 "fr/>\n"
@@ -299,6 +299,8 @@ msgstr "%(recipientCount)s en plus"
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "%(user)s just connected for the first time. Wish them luck!"
 msgstr ""
+"%(user)s vient de se connecter pour la première fois. Souhaitez-lui bonne "
+"chance !"
 
 #. module: mail
 #. odoo-python
@@ -3574,7 +3576,7 @@ msgstr "Ignorer"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Discard editing"
-msgstr ""
+msgstr "Annuler la modification"
 
 #. module: mail
 #. odoo-javascript
@@ -4469,6 +4471,13 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"Échec du rendu du modèle QWeb pour %(template_label)s\n"
+"Modèle cible : %(model_name)s\n"
+"Contexte de langue : %(lang_context)s\n"
+"Erreur : %(error_details)s\n"
+"\n"
+"Extrait source du modèle :\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
@@ -6797,7 +6806,7 @@ msgstr "Marquer comme terminé"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Modèle d'e-mail marketing : '%(name)s' (ID : %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -9960,6 +9969,8 @@ msgstr "Sélectionner un utilisateur..."
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
 msgstr ""
+"L’utilisateur \" %(user)s\" sélectionné ne peut pas uploader de documents "
+"sur le modèle \"%(model)s\""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
@@ -11893,7 +11904,7 @@ msgstr "Sans nom"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
-msgstr ""
+msgstr "Sans nom %(record_model_name)s (%(record_id)s)"
 
 #. module: mail
 #. odoo-python
@@ -13579,7 +13590,7 @@ msgstr "“%(member_name)s” dans “%(channel_name)s”"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
-msgstr ""
+msgstr "\"%s\""
 
 #~ msgid "111.222.333.444"
 #~ msgstr "111.222.333.444"
