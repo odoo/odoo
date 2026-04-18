@@ -540,8 +540,6 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      * @private
      */
     _toggleCookiesBar() {
-        this.cookieValue = cookie.get(this.el.id);
-
         const popupEl = this.el.querySelector(".modal");
         $(popupEl).modal("toggle");
         // As we're using Bootstrap's events, the PopupWidget prevents the modal
@@ -608,6 +606,11 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      * @override
      */
     _onHideModal() {
+        // cookieValue starts as true and is only replaced after consent.
+        // If it is still true here, the modal closed without a choice.
+        if (this.cookieValue === true) {
+            return;
+        }
         this._super(...arguments);
         const params = new URLSearchParams(window.location.search);
         const trackingFields = {

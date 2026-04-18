@@ -14,6 +14,7 @@ from . import test_profiler
 from . import test_session_info
 from . import test_assets
 from . import test_login
+from . import test_web_read
 from . import test_web_search_read
 from . import test_web_read_group
 from . import test_domain
