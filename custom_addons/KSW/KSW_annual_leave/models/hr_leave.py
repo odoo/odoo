@@ -352,7 +352,6 @@ class HrLeave(models.Model):
     x_return_state = fields.Selection([
         ('not_applicable', 'N/A'),
         ('on_vacation', 'On Vacation'),
-        ('manager_confirmed', 'Manager Confirmed'),
         ('hr_confirmed', 'Return Confirmed'),
     ], string='Return Status', default='not_applicable',
         tracking=True, copy=False,
@@ -396,19 +395,14 @@ class HrLeave(models.Model):
     @api.depends_context('uid')
     @api.depends('state', 'x_return_state', 'x_return_date')
     def _compute_return_permissions(self):
-        is_hr_officer = self.env.user.has_group(
-            'hr_holidays.group_hr_holidays_user')
         for leave in self:
             leave.x_can_confirm_return_manager = (
                 leave.state == 'validate'
                 and leave.x_return_state == 'on_vacation'
                 and leave.x_return_date
             )
-            leave.x_can_confirm_return_hr = (
-                leave.state == 'validate'
-                and leave.x_return_state == 'manager_confirmed'
-                and is_hr_officer
-            )
+            # HR step removed — manager confirms directly
+            leave.x_can_confirm_return_hr = False
 
     def action_confirm_return_manager(self):
         for leave in self:
@@ -418,14 +412,14 @@ class HrLeave(models.Model):
                 raise UserError(
                     'Please set the Return Date before confirming.')
             leave.write({
-                'x_return_state': 'manager_confirmed',
+                'x_return_state': 'hr_confirmed',
                 'x_manager_return_confirmed_by':
                     self.env.user.employee_id.id,
                 'x_manager_return_date': fields.Datetime.now(),
             })
             leave.message_post(
                 body=Markup(
-                    '<strong>📋 Return Confirmed by Manager</strong><br/>'
+                    '<strong>✅ Return Confirmed</strong><br/>'
                     '<b>Employee:</b> %(employee)s<br/>'
                     '<b>Return Date:</b> %(return_date)s<br/>'
                     '<b>Confirmed by:</b> %(confirmer)s'
@@ -433,34 +427,6 @@ class HrLeave(models.Model):
                     'employee': leave.employee_id.name,
                     'return_date': leave.x_return_date,
                     'confirmer': self.env.user.name,
-                },
-                subtype_xmlid='mail.mt_note',
-            )
-
-    def action_confirm_return_hr(self):
-        for leave in self:
-            if leave.x_return_state != 'manager_confirmed':
-                raise UserError(
-                    'Manager confirmation is required before HR '
-                    'confirmation.')
-            leave.write({
-                'x_return_state': 'hr_confirmed',
-                'x_hr_return_confirmed_by': self.env.user.employee_id.id,
-                'x_hr_return_date': fields.Datetime.now(),
-            })
-            leave.message_post(
-                body=Markup(
-                    '<strong>✅ Return Confirmed by HR</strong><br/>'
-                    '<b>Employee:</b> %(employee)s<br/>'
-                    '<b>Return Date:</b> %(return_date)s<br/>'
-                    '<b>Manager Confirmed by:</b> %(manager)s<br/>'
-                    '<b>HR Confirmed by:</b> %(hr)s'
-                ) % {
-                    'employee': leave.employee_id.name,
-                    'return_date': leave.x_return_date,
-                    'manager':
-                        leave.x_manager_return_confirmed_by.name or '',
-                    'hr': self.env.user.name,
                 },
                 subtype_xmlid='mail.mt_note',
             )

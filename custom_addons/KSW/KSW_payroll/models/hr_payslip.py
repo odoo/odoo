@@ -351,7 +351,7 @@ class HrPayslip(models.Model):
             ('employee_id', '=', payslip.employee_id.id),
             ('state', '=', 'validate'),
             ('holiday_status_id.is_annual_leave', '=', True),
-            ('x_return_state', 'in', ('on_vacation', 'manager_confirmed')),
+            ('x_return_state', '=', 'on_vacation'),
             ('request_date_from', '<=', payslip.date_to),
         ])
         # Exclude leaves where this payslip is one of the vacation payslips

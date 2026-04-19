@@ -26,16 +26,11 @@
 
             <!-- Return confirmation buttons in header -->
             <xpath expr="//button[@name='action_refuse']" position="after">
-                <button string="✅ Confirm Return (Manager)"
+                <button string="✅ Confirm Return"
                         name="action_confirm_return_manager"
                         type="object"
                         class="oe_highlight"
                         invisible="not x_can_confirm_return_manager"/>
-                <button string="✅ Confirm Return (HR)"
-                        name="action_confirm_return_hr"
-                        type="object"
-                        class="oe_highlight"
-                        invisible="not x_can_confirm_return_hr"/>
             </xpath>
 
             <!-- ===== Multi-Step Approval Buttons ===== -->
@@ -92,9 +87,6 @@
                 <widget name="web_ribbon" title="🏖️ On Vacation"
                         bg_color="text-bg-warning"
                         invisible="x_return_state != 'on_vacation'"/>
-                <widget name="web_ribbon" title="⏳ Return Pending HR"
-                        bg_color="text-bg-info"
-                        invisible="x_return_state != 'manager_confirmed'"/>
                 <widget name="web_ribbon" title="⚠ Full Clearance"
                         bg_color="text-bg-danger"
                         invisible="not x_is_full_clearance"/>
@@ -135,12 +127,9 @@
                        required="x_return_state == 'on_vacation' and x_can_confirm_return_manager"/>
                 <field name="x_return_state" widget="badge"
                        decoration-warning="x_return_state == 'on_vacation'"
-                       decoration-info="x_return_state == 'manager_confirmed'"
                        decoration-success="x_return_state == 'hr_confirmed'"
                        invisible="x_return_state == 'not_applicable'"/>
                 <field name="x_manager_return_confirmed_by"
-                       invisible="x_return_state not in ('manager_confirmed', 'hr_confirmed')"/>
-                <field name="x_hr_return_confirmed_by"
                        invisible="x_return_state != 'hr_confirmed'"/>
             </xpath>
 
@@ -242,7 +231,6 @@
                 <field name="x_return_state" widget="badge" optional="show"
                        string="Return Status"
                        decoration-warning="x_return_state == 'on_vacation'"
-                       decoration-info="x_return_state == 'manager_confirmed'"
                        decoration-success="x_return_state == 'hr_confirmed'"/>
                 <field name="x_return_date" optional="hidden" string="Return Date"/>
             </xpath>
@@ -262,9 +250,6 @@
                 <filter string="🏖️ Currently On Vacation"
                         name="on_vacation"
                         domain="[('x_return_state', '=', 'on_vacation')]"/>
-                <filter string="⏳ Return Pending HR"
-                        name="return_pending_hr"
-                        domain="[('x_return_state', '=', 'manager_confirmed')]"/>
                 <filter string="✅ Return Confirmed"
                         name="return_confirmed"
                         domain="[('x_return_state', '=', 'hr_confirmed')]"/>

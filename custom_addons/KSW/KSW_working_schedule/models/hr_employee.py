@@ -100,3 +100,20 @@ class HrEmployee(models.Model):
         if 'main_calendar_id' in vals and 'resource_calendar_id' not in vals:
             vals['resource_calendar_id'] = vals['main_calendar_id']
         return super().write(vals)
+
+    def _compute_leave_status(self):
+        """Override to fall back to the leave's date_to when
+        _get_first_working_interval returns None (no attendance_ids)."""
+        super()._compute_leave_status()
+        for employee in self:
+            if employee.is_absent and not employee.leave_date_to:
+                # Find the current validated leave
+                holiday = self.env['hr.leave'].sudo().search([
+                    ('employee_id', '=', employee.id),
+                    ('date_from', '<=', fields.Datetime.now()),
+                    ('date_to', '>=', fields.Datetime.now()),
+                    ('holiday_status_id.time_type', '=', 'leave'),
+                    ('state', '=', 'validate'),
+                ], limit=1)
+                if holiday:
+                    employee.leave_date_to = holiday.date_to.date()
