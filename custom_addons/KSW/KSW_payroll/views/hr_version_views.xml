@@ -6,6 +6,37 @@
         <field name="model">hr.version</field>
         <field name="inherit_id" ref="om_hr_payroll.hr_contract_form_inherit"/>
         <field name="arch" type="xml">
+
+            <!-- Hide DA -->
+            <xpath expr="//group[@name='allowances']//label[@for='da']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='allowances']//field[@name='da']/.." position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Relabel Travel → Transportation -->
+            <xpath expr="//group[@name='allowances']//label[@for='travel_allowance']" position="attributes">
+                <attribute name="string">Transportation Allowance</attribute>
+            </xpath>
+
+            <!-- Hide Meal -->
+            <xpath expr="//group[@name='allowances']//label[@for='meal_allowance']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='allowances']//field[@name='meal_allowance']/.." position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Hide Medical -->
+            <xpath expr="//group[@name='allowances']//label[@for='medical_allowance']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='allowances']//field[@name='medical_allowance']/.." position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Add Mobile Allowance before Other -->
             <xpath expr="//group[@name='allowances']//label[@for='other_allowance']" position="before">
                 <label for="mobile_allowance"/>
                 <div class="o_row">
@@ -13,6 +44,12 @@
                     <span>/ month</span>
                 </div>
             </xpath>
+
+            <!-- Relabel Other → Other Allowances -->
+            <xpath expr="//group[@name='allowances']//label[@for='other_allowance']" position="attributes">
+                <attribute name="string">Other Allowances</attribute>
+            </xpath>
+
         </field>
     </record>
 

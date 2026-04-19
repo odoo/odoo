@@ -19,24 +19,29 @@ result = max(result, 0.0)
             </field>
         </record>
 
+        <!-- Hide DA, Meal, Medical rules (condition always false) -->
         <record id="om_hr_payroll.hr_rule_da" model="hr.salary.rule">
             <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.da)</field>
+            <field name="condition_python">result = False</field>
+            <field name="appears_on_payslip" eval="False"/>
         </record>
 
         <record id="om_hr_payroll.hr_rule_travel" model="hr.salary.rule">
+            <field name="name">Transportation Allowance</field>
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.travel_allowance)</field>
         </record>
 
         <record id="om_hr_payroll.hr_rule_meal" model="hr.salary.rule">
             <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.meal_allowance)</field>
+            <field name="condition_python">result = False</field>
+            <field name="appears_on_payslip" eval="False"/>
         </record>
 
         <record id="om_hr_payroll.hr_rule_medical" model="hr.salary.rule">
             <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.medical_allowance)</field>
+            <field name="condition_python">result = False</field>
+            <field name="appears_on_payslip" eval="False"/>
         </record>
 
         <!-- ========================================================= -->

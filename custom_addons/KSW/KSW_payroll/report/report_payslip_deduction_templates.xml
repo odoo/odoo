@@ -119,39 +119,10 @@
                 </t>
 
                 <!-- ══════════════════════════════════════════════════ -->
-                <!--  Section 3: Salary Computation (all visible)     -->
+                <!--  Section 3: Attendance Deduction Breakdown       -->
                 <!-- ══════════════════════════════════════════════════ -->
-                <h4>Salary Computation</h4>
-                <table class="table table-sm table-bordered">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Description</th>
-                            <th>Code</th>
-                            <th class="text-end">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr t-foreach="o.line_ids.filtered(lambda l: l.appears_on_payslip).sorted('sequence')"
-                            t-as="line"
-                            t-attf-class="#{'table-success fw-bold' if line.code == 'NET' else 'table-danger' if line.total &lt; 0 else 'fw-bold' if line.code in ('BASIC','GROSS') else 'text-muted' if line.total == 0 else ''}">
-                            <td t-out="line.name"/>
-                            <td t-out="line.code"/>
-                            <td class="text-end" t-out="'%.0f' % line.total"/>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <!-- ══════════════════════════════════════════════════ -->
-                <!--  Section 4: Attendance Deduction Breakdown       -->
-                <!-- ══════════════════════════════════════════════════ -->
-                <t t-set="deduction_records"
-                   t-value="request.env['hr.attendance'].sudo().search([
-                       ('employee_id', '=', o.employee_id.id),
-                       ('check_in', '&gt;=', str(o.date_from) + ' 00:00:00'),
-                       ('check_in', '&lt;=', str(o.date_to) + ' 23:59:59'),
-                       ('x_deduction_amount', '&gt;', 0),
-                   ], order='check_in asc')"/>
-                <t t-if="deduction_records">
+                <t t-set="deduction_rows" t-value="o.get_deduction_breakdown()"/>
+                <t t-if="deduction_rows">
                     <h4>Attendance Deduction Breakdown</h4>
                     <table class="table table-sm table-bordered">
                         <thead class="table-light">
@@ -166,16 +137,16 @@
                         </thead>
                         <tbody>
                             <t t-set="total_ded" t-value="0"/>
-                            <tr t-foreach="deduction_records" t-as="att"
-                                t-attf-class="#{'table-danger' if att.x_net_is_absent else 'table-warning'}">
-                                <td t-out="att.check_in.strftime('%Y-%m-%d')"/>
-                                <td t-out="att.x_day_of_week"/>
-                                <td class="text-end" t-out="'%.0f' % (att.x_net_late_minutes or 0)"/>
-                                <td class="text-end" t-out="'%.0f' % (att.x_net_early_leave_minutes or 0)"/>
-                                <td class="text-center" t-out="'Yes' if att.x_net_is_absent else ''"/>
-                                <td class="text-end" t-out="'%.0f' % att.x_deduction_amount"/>
+                            <tr t-foreach="deduction_rows" t-as="row"
+                                t-attf-class="#{'table-danger' if row['is_absent'] else 'table-warning'}">
+                                <td t-out="row['date']"/>
+                                <td t-out="row['day']"/>
+                                <td class="text-end" t-out="'%.0f' % row['late_min']"/>
+                                <td class="text-end" t-out="'%.0f' % row['early_min']"/>
+                                <td class="text-center" t-out="'Yes' if row['is_absent'] else ''"/>
+                                <td class="text-end" t-out="'%.2f' % row['deduction']"/>
                                 <t t-set="total_ded"
-                                   t-value="total_ded + att.x_deduction_amount"/>
+                                   t-value="total_ded + row['deduction']"/>
                             </tr>
                         </tbody>
                         <tfoot class="fw-bold table-light">
@@ -186,6 +157,37 @@
                         </tfoot>
                     </table>
                 </t>
+
+                <!-- ══════════════════════════════════════════════════ -->
+                <!--  Section 4: Salary Computation (all visible)     -->
+                <!-- ══════════════════════════════════════════════════ -->
+                <t t-set="basic_total" t-value="sum(l.total for l in o.line_ids if l.code == 'BASIC')"/>
+                <t t-set="attded_total" t-value="sum(l.total for l in o.line_ids if l.code == 'ATTDED')"/>
+                <h4>Salary Computation</h4>
+                <table class="table table-sm table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Description</th>
+                            <th>Code</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="o.line_ids.filtered(lambda l: l.appears_on_payslip).sorted('sequence')"
+                            t-as="line">
+                            <tr t-attf-class="#{'table-success fw-bold' if line.code == 'NET' else 'table-danger' if line.total &lt; 0 else 'fw-bold' if line.code in ('BASIC','GROSS') else 'text-muted' if line.total == 0 else ''}">
+                                <td t-out="line.name"/>
+                                <td t-out="line.code"/>
+                                <td class="text-end" t-out="'%.0f' % line.total"/>
+                            </tr>
+                            <tr t-if="line.code == 'BASIC'" class="table-info">
+                                <td>Net Basic Salary (Basic - ATTDED)</td>
+                                <td></td>
+                                <td class="text-end" t-out="'%.0f' % (basic_total + attded_total)"/>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
 
                 <p class="text-end mt-4">
                     <strong>Authorized Signature</strong>

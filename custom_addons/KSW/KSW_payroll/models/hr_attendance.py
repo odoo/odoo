@@ -63,10 +63,8 @@ class HrAttendance(models.Model):
 
     @api.depends(
         'employee_id.current_version_id.wage',
-        'employee_id.current_version_id.da',
         'employee_id.current_version_id.travel_allowance',
-        'employee_id.current_version_id.meal_allowance',
-        'employee_id.current_version_id.medical_allowance',
+        'employee_id.current_version_id.mobile_allowance',
         'employee_id.current_version_id.other_allowance',
         'x_net_late_minutes',
         'x_net_early_leave_minutes',
@@ -92,10 +90,8 @@ class HrAttendance(models.Model):
             # Deductible base: wage + allowances excluding housing (HRA)
             base = (
                 (version.wage or 0.0)
-                + (version.da or 0.0)
                 + (version.travel_allowance or 0.0)
-                + (version.meal_allowance or 0.0)
-                + (version.medical_allowance or 0.0)
+                + (version.mobile_allowance or 0.0)
                 + (version.other_allowance or 0.0)
             )
             att.x_deductible_base = round(base)

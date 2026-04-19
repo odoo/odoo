@@ -112,6 +112,19 @@ class HrLeave(models.Model):
 
             leave.write({'x_vacation_payslip_id': payslip.id})
 
+    @staticmethod
+    def _vacation_month_count(leave):
+        """Return the number of distinct calendar months the leave spans.
+
+        E.g. Apr 15 – Jun 20 → 3 (April, May, June).
+        """
+        d_from = leave.request_date_from
+        d_to = leave.request_date_to
+        if not d_from or not d_to:
+            return 1
+        months = (d_to.year - d_from.year) * 12 + (d_to.month - d_from.month) + 1
+        return max(months, 1)
+
     def _build_vacation_input_lines(self, leave, employee, payslip):
         """Build the list of hr.payslip.input values for vacation items."""
         vals_list = []
@@ -211,6 +224,36 @@ class HrLeave(models.Model):
                 'amount': visa_recovery,
             })
 
+        # 8. Multi-month HRA pre-payment
+        extra_months = self._vacation_month_count(leave) - 1
+        if extra_months > 0:
+            version = payslip.version_id or employee.current_version_id
+            hra = version.hra or 0.0
+            if hra > 0:
+                vals_list.append({
+                    'payslip_id': payslip.id,
+                    'version_id': version_id,
+                    'name': 'HRA for %d extra vacation month(s)' % extra_months,
+                    'code': 'VACATION_HRA',
+                    'amount': hra * extra_months,
+                })
+
+            # 9. Multi-month GOSI pre-deduction
+            wage = version.wage or 0.0
+            if employee.country_id and employee.country_id.code == 'SA' and (wage + hra) > 0:
+                gosi_rate = float(
+                    self.env['ir.config_parameter'].sudo().get_param(
+                        'ksw_payroll.gosi_rate', '9.75'))
+                gosi_per_month = round((wage + hra) * gosi_rate / 100.0)
+                if gosi_per_month > 0:
+                    vals_list.append({
+                        'payslip_id': payslip.id,
+                        'version_id': version_id,
+                        'name': 'GOSI for %d extra vacation month(s)' % extra_months,
+                        'code': 'VACATION_GOSI',
+                        'amount': gosi_per_month * extra_months,
+                    })
+
         return vals_list
 
     # ------------------------------------------------------------------
@@ -259,10 +302,3 @@ class HrLeave(models.Model):
         if annual_multi:
             annual_multi._cancel_vacation_payslips()
         return result
-
-
-
-
-
-
-

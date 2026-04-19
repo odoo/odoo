@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -106,18 +106,16 @@ class HrPayslip(models.Model):
         help='Daily wage / 8 hours.',
     )
 
-    @api.depends('version_id.wage', 'version_id.da',
-                 'version_id.travel_allowance', 'version_id.meal_allowance',
-                 'version_id.medical_allowance', 'version_id.other_allowance')
+    @api.depends('version_id.wage',
+                 'version_id.travel_allowance', 'version_id.mobile_allowance',
+                 'version_id.other_allowance')
     def _compute_wage_rates(self):
         for slip in self:
             v = slip.version_id
             base = (
                 (v.wage or 0.0)
-                + (v.da or 0.0)
                 + (v.travel_allowance or 0.0)
-                + (v.meal_allowance or 0.0)
-                + (v.medical_allowance or 0.0)
+                + (v.mobile_allowance or 0.0)
                 + (v.other_allowance or 0.0)
             )
             daily = base / DAYS_PER_MONTH if base else 0.0
@@ -438,10 +436,8 @@ class HrPayslip(models.Model):
         v = version.employee_id.sudo().current_version_id or version
         base = (
             (v.wage or 0.0)
-            + (v.da or 0.0)
             + (v.travel_allowance or 0.0)
-            + (v.meal_allowance or 0.0)
-            + (v.medical_allowance or 0.0)
+            + (v.mobile_allowance or 0.0)
             + (v.other_allowance or 0.0)
         )
         daily_rate = base / DAYS_PER_MONTH if base else 0.0
@@ -595,10 +591,8 @@ class HrPayslip(models.Model):
             v = employee.sudo().current_version_id or version
             base = (
                 (v.wage or 0.0)
-                + (v.da or 0.0)
                 + (v.travel_allowance or 0.0)
-                + (v.meal_allowance or 0.0)
-                + (v.medical_allowance or 0.0)
+                + (v.mobile_allowance or 0.0)
                 + (v.other_allowance or 0.0)
             )
             daily_rate = base / DAYS_PER_MONTH if base else 0.0
@@ -653,10 +647,8 @@ class HrPayslip(models.Model):
         v = employee.sudo().current_version_id or version
         base = (
             (v.wage or 0.0)
-            + (v.da or 0.0)
             + (v.travel_allowance or 0.0)
-            + (v.meal_allowance or 0.0)
-            + (v.medical_allowance or 0.0)
+            + (v.mobile_allowance or 0.0)
             + (v.other_allowance or 0.0)
         )
         daily_rate = base / DAYS_PER_MONTH if base else 0.0
@@ -753,16 +745,101 @@ class HrPayslip(models.Model):
 
         return lines
 
+    def get_deduction_breakdown(self):
+        """Return a list of dicts for the payslip report's Attendance
+        Deduction Breakdown section.  Includes both attendance records
+        with deductions AND unpresented calendar days (no attendance
+        record at all), so the breakdown total matches ATT_DED.
+        """
+        self.ensure_one()
+        rows = []
 
+        d_from = self.date_from
+        d_to = self.date_to
+        employee = self.employee_id
+        if not employee or not d_from or not d_to:
+            return rows
 
+        # Daily rate for absent / unpresented days
+        v = employee.sudo().current_version_id
+        base = (
+            (v.wage or 0.0)
+            + (v.travel_allowance or 0.0)
+            + (v.mobile_allowance or 0.0)
+            + (v.other_allowance or 0.0)
+        ) if v else 0.0
+        daily_rate = base / DAYS_PER_MONTH if base else 0.0
 
+        day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
+                     'Friday', 'Saturday', 'Sunday']
 
+        # Check for vacation return — must mirror the worked-day logic
+        return_date = self._get_vacation_return_date(self)
+        eff_from = return_date if return_date else d_from
 
+        # Pre-return days (vacation period) — all counted as absent
+        if return_date and return_date > d_from:
+            current = d_from
+            while current < return_date:
+                rows.append({
+                    'date': current.strftime('%Y-%m-%d'),
+                    'day': day_names[current.weekday()],
+                    'late_min': 0,
+                    'early_min': 0,
+                    'is_absent': True,
+                    'deduction': daily_rate,
+                    'type': 'pre_return',
+                })
+                current += timedelta(days=1)
 
+        # Attendance records with deductions (from effective start)
+        att_recs = self.env['hr.attendance'].sudo().search([
+            ('employee_id', '=', employee.id),
+            ('check_in', '>=', datetime.combine(eff_from, time.min)),
+            ('check_in', '<=', datetime.combine(d_to, time.max)),
+            ('x_deduction_amount', '>', 0),
+        ], order='check_in asc')
 
+        for att in att_recs:
+            # For absent records, use the exact daily_rate (not the
+            # rounded x_deduction_amount) so all absent rows are
+            # consistent with unpresented-day rows.
+            if att.x_net_is_absent:
+                ded = daily_rate
+            else:
+                ded = att.x_deduction_amount or 0
+            rows.append({
+                'date': att.check_in.strftime('%Y-%m-%d'),
+                'day': att.x_day_of_week or '',
+                'late_min': att.x_net_late_minutes or 0,
+                'early_min': att.x_net_early_leave_minutes or 0,
+                'is_absent': att.x_net_is_absent,
+                'deduction': ded,
+                'type': 'absent' if att.x_net_is_absent else 'issue',
+            })
 
+        # Unpresented days (from effective start, no attendance at all)
+        all_att = self.env['hr.attendance'].sudo().search([
+            ('employee_id', '=', employee.id),
+            ('check_in', '>=', datetime.combine(eff_from, time.min)),
+            ('check_in', '<=', datetime.combine(d_to, time.max)),
+        ])
+        attended_dates = {a.check_in.date() for a in all_att if a.check_in}
 
+        current = eff_from
+        while current <= d_to:
+            if current not in attended_dates:
+                rows.append({
+                    'date': current.strftime('%Y-%m-%d'),
+                    'day': day_names[current.weekday()],
+                    'late_min': 0,
+                    'early_min': 0,
+                    'is_absent': True,
+                    'deduction': daily_rate,
+                    'type': 'unpresented',
+                })
+            current += timedelta(days=1)
 
-
-
-
+        # Sort by date
+        rows.sort(key=lambda r: r['date'])
+        return rows

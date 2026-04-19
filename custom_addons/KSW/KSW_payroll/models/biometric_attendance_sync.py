@@ -26,10 +26,8 @@ class BiometricAttendanceSyncPayroll(models.AbstractModel):
 
         base = (
             (version.wage or 0.0)
-            + (version.da or 0.0)
             + (version.travel_allowance or 0.0)
-            + (version.meal_allowance or 0.0)
-            + (version.medical_allowance or 0.0)
+            + (version.mobile_allowance or 0.0)
             + (version.other_allowance or 0.0)
         )
         daily_rate = round(base / DAYS_PER_MONTH)

@@ -324,7 +324,7 @@ class TestMidMonthVacationScenarios(TransactionCase):
 
         vac_bal = self._get_input(vac, 'VACATION_BAL')
         if vac_bal:
-            self.assertAlmostEqual(vac_bal.amount, 7 * (self.WAGE / 30.0),
+            self.assertAlmostEqual(vac_bal.amount, 7 * ((self.WAGE + self.HRA) / 30.0),
                                    places=0, msg='S1-Vac: VACATION_BAL = 1400.')
 
         # ── Monthly payslip checks ──
@@ -406,7 +406,7 @@ class TestMidMonthVacationScenarios(TransactionCase):
 
         vac_bal = self._get_input(vac, 'VACATION_BAL')
         if vac_bal:
-            self.assertAlmostEqual(vac_bal.amount, 3 * (self.WAGE / 30.0),
+            self.assertAlmostEqual(vac_bal.amount, 3 * ((self.WAGE + self.HRA) / 30.0),
                                    places=0, msg='S2-Vac: VACATION_BAL = 600.')
 
         # ── Monthly payslip ──
@@ -489,7 +489,7 @@ class TestMidMonthVacationScenarios(TransactionCase):
 
         vac_bal = self._get_input(vac, 'VACATION_BAL')
         if vac_bal:
-            self.assertAlmostEqual(vac_bal.amount, 10 * (self.WAGE / 30.0),
+            self.assertAlmostEqual(vac_bal.amount, 10 * ((self.WAGE + self.HRA) / 30.0),
                                    places=0, msg='S3-Vac: VACATION_BAL = 2000.')
 
         # ── Monthly payslip ──
@@ -575,7 +575,7 @@ class TestMidMonthVacationScenarios(TransactionCase):
 
         vac_bal = self._get_input(vac, 'VACATION_BAL')
         if vac_bal:
-            self.assertAlmostEqual(vac_bal.amount, 7 * (self.WAGE / 30.0),
+            self.assertAlmostEqual(vac_bal.amount, 7 * ((self.WAGE + self.HRA) / 30.0),
                                    places=0, msg='S4-Vac: VACATION_BAL = 1400.')
 
         # ── Monthly payslip ──
@@ -651,7 +651,7 @@ class TestMidMonthVacationScenarios(TransactionCase):
 
         vac_bal = self._get_input(vac, 'VACATION_BAL')
         if vac_bal:
-            self.assertAlmostEqual(vac_bal.amount, 5 * (self.WAGE / 30.0),
+            self.assertAlmostEqual(vac_bal.amount, 5 * ((self.WAGE + self.HRA) / 30.0),
                                    places=0, msg='S5-Vac: VACATION_BAL = 1000.')
 
         # ── Monthly payslip ──
@@ -735,7 +735,7 @@ class TestMidMonthVacationScenarios(TransactionCase):
 
         vac_bal = self._get_input(vac, 'VACATION_BAL')
         if vac_bal:
-            self.assertAlmostEqual(vac_bal.amount, 2 * (self.WAGE / 30.0),
+            self.assertAlmostEqual(vac_bal.amount, 2 * ((self.WAGE + self.HRA) / 30.0),
                                    places=0, msg='S6-Vac: VACATION_BAL = 400.')
 
         # ── Monthly payslip ──

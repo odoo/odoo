@@ -125,13 +125,13 @@
             <!-- ===== Hide return confirmation fields for unpaid ===== -->
             <xpath expr="//field[@name='x_return_date']" position="attributes">
                 <attribute name="invisible">
-                    x_return_state == 'not_applicable' or (holiday_status_id and holiday_status_id.is_unpaid_leave)
+                    x_return_state == 'not_applicable' or x_is_unpaid_leave_type
                 </attribute>
             </xpath>
 
             <xpath expr="//field[@name='x_return_state'][@widget='badge']" position="attributes">
                 <attribute name="invisible">
-                    x_return_state == 'not_applicable' or (holiday_status_id and holiday_status_id.is_unpaid_leave)
+                    x_return_state == 'not_applicable' or x_is_unpaid_leave_type
                 </attribute>
             </xpath>
 

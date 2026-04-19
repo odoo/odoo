@@ -335,7 +335,7 @@ class TestVacationMonthlyOverlap(TransactionCase):
         vac_bal_input = self._get_input(vac_slip, 'VACATION_BAL')
         if vac_bal_input:
             # 5 calendar days × (6000/30) = 5 × 200 = 1000
-            expected_vac_bal = 5 * (self.WAGE / 30.0)
+            expected_vac_bal = 5 * ((self.WAGE + self.HRA) / 30.0)
             self.assertAlmostEqual(
                 vac_bal_input.amount, expected_vac_bal, places=0,
                 msg='VACATION_BAL should be 5 days × daily basic wage.')
@@ -851,7 +851,7 @@ class TestVacationMonthlyOverlap(TransactionCase):
         # The combined NET should not be more than a normal month + vac balance
         normal_net = (self.WAGE + self.HRA + self.TRAVEL + self.MEAL
                       + self.MEDICAL + self.GOSI_FULL)  # 8500 - 731 = 7769
-        vac_bal = 5 * (self.WAGE / 30.0)  # 1000
+        vac_bal = 5 * ((self.WAGE + self.HRA) / 30.0)  # 1000
         max_reasonable = normal_net + vac_bal  # 8769
 
         self.assertLessEqual(
