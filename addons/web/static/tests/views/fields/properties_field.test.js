@@ -28,6 +28,7 @@ import {
     defineModels,
     fields,
     getService,
+    makeServerError,
     models,
     mountView,
     mountWithCleanup,
@@ -1010,6 +1011,63 @@ test("properties: many2one", async () => {
         "Created:New User",
         { message: "Should have created a new user" }
     );
+});
+
+test.tags("desktop");
+test("properties: a relational property with an unevaluable domain shows no record count", async () => {
+    onRpc(({ method, model }) => {
+        if (method === "has_access") {
+            return true;
+        } else if (method === "get_available_models" && model === "ir.model") {
+            return [{ model: "res.users", display_name: "User" }];
+        } else if (method === "fields_get" && model === "res.users") {
+            return { name: { searchable: true, string: "Name", type: "char" } };
+        } else if (method === "search_count" && model === "res.users") {
+            throw makeServerError({ message: "Wrong path" });
+        }
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties"); // Start the edition mode
+
+    for (const propertyType of ["many2one", "many2many"]) {
+        await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
+        await waitFor(".o_property_field_popover");
+        const popover = queryFirst(".o_property_field_popover");
+        await changeType(propertyType);
+
+        // Selecting the model triggers the matching-records count, which fails here.
+        await click(".o_field_property_definition_model input", { root: popover });
+        await animationFrame();
+        await click(".o_field_property_definition_model .ui-menu-item:first-child", {
+            root: popover,
+        });
+        await animationFrame();
+
+        expect(".o_property_field_popover").toHaveCount(1, {
+            message: `the ${propertyType} property editor stays open`,
+        });
+        expect(queryFirst(".o_property_field_popover").textContent).not.toInclude("record(s)", {
+            message: "no matching record count is shown when the domain cannot be evaluated",
+        });
+        await closePopover();
+    }
 });
 
 /**
