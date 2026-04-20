@@ -93,7 +93,7 @@ class MailPresence(models.Model):
             # sudo: res.users/mail.guest can update presence of accessible user/guest
             self.env["mail.presence"].sudo().create(values)
 
-    def _send_presence(self, im_status=None, bus_target=None):
+    def _send_presence(self, im_status=None):
         """Send notification related to bus presence update.
 
         :param im_status: 'online', 'away' or 'offline'
@@ -101,10 +101,14 @@ class MailPresence(models.Model):
         stores = Store.Stores()
         for presence in self:
             persona = presence.guest_id or presence.user_id
-            target = bus_target or (persona, "presence")
-            stores[target].add(persona, {"im_status": im_status or persona.im_status})
-            if bus_target is None or persona == bus_target:
-                stores[persona].add(persona, {"presence_status": im_status or presence.status})
+            stores[persona, "presence"].add(
+                persona,
+                {"im_status": im_status or persona.im_status},
+            )
+            stores[persona].add(
+                persona,
+                {"presence_status": im_status or presence.status},
+            )
         stores.bus_send()
 
     @api.autovacuum

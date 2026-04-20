@@ -14,7 +14,7 @@ export class BusBus extends models.Model {
      * @param {any} message
      */
     _sendone(channel, notificationType, message) {
-        this._sendmany([[channel, notificationType, message]]);
+        return this._sendmany([[channel, notificationType, message]]);
     }
 
     /** @param {[models.Model | string, string, any][]} notifications */
@@ -60,7 +60,10 @@ export class BusBus extends models.Model {
                 message: { payload: JSON.parse(JSON.stringify(payload)), type },
             });
         }
-        getWebSocketWorker().broadcast("BUS:NOTIFICATION", values);
+        getWebSocketWorker()._onWebsocketMessage(
+            new MessageEvent("message", { data: JSON.stringify(values) })
+        );
+        return this.lastBusNotificationId;
     }
 
     /**

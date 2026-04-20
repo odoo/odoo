@@ -7,6 +7,8 @@ import os
 import selectors
 import threading
 import time
+from collections import defaultdict
+
 from psycopg2 import InterfaceError
 from psycopg2.pool import PoolError
 
@@ -45,26 +47,27 @@ NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
 SKIP_NOTIFICATION = object()
 
 
-def fetch_bus_notifications(cr, channels, last=0, ignore_ids=None):
+def fetch_bus_notifications(cr, min_id_by_channel, ignore_ids=None):
     """Fetch notifications from the bus table.
 
     :param cr: Database cursor.
-    :param channels: List of channels for which notifications should be fetched.
-        May contain channel names, model instances, or (model, string) tuples.
-    :param last: The ID of the last fetched notification. Defaults to 0.
+    :param min_id_by_channel: Dictionary mapping channels to the ID of the last fully
+        processed id. See `Websocket._notif_history`.
     :param ignore_ids: IDs to exclude.
     :return: List of notifications.
 
     """
-    conditions = [
-        SQL("channel IN %s", tuple(json_dump(channel_with_db(cr.dbname, c)) for c in channels)),
-        SQL("create_date > %s", fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT))
-        if last == 0
-        else SQL("id > %s", last),
-    ]
+    threshold = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
+    channels_by_id = defaultdict(list)
+    for channel, min_id in min_id_by_channel.items():
+        channels_by_id[min_id].append(json_dump(channel_with_db(cr.dbname, channel)))
+    channel_conditions = []
+    for min_id, channels in channels_by_id.items():
+        since = SQL("create_date > %s", threshold) if min_id == 0 else SQL("id > %s", min_id)
+        channel_conditions.append(SQL("(channel IN %s AND %s)", tuple(channels), since))
+    where = SQL(" OR ").join(channel_conditions)
     if ignore_ids:
-        conditions.append(SQL("id NOT IN %s", tuple(ignore_ids)))
-    where = SQL(" AND ").join(conditions)
+        where = SQL("(%s) AND id NOT IN %s", where, tuple(ignore_ids))
     cr.execute(SQL("SELECT id, message FROM bus_bus WHERE %s ORDER BY id", where))
     return [{"id": r[0], "message": orjson.loads(r[1])} for r in cr.fetchall()]
 
@@ -204,7 +207,7 @@ class BusBus(models.Model):
 
     @api.model
     def _poll(self, channels, last=0, ignore_ids=None):
-        return fetch_bus_notifications(self.env.cr, channels, last, ignore_ids)
+        return fetch_bus_notifications(self.env.cr, {c: last for c in channels}, ignore_ids)
 
     def _bus_last_id(self):
         last = self.env['bus.bus'].search([], order='id desc', limit=1)
@@ -229,7 +232,7 @@ class ImDispatch(threading.Thread):
         channels = {hashable(channel_with_db(db, c)) for c in channels}
         for channel in channels:
             self._channels_to_ws.setdefault(channel, set()).add(websocket)
-        outdated_channels = websocket._channels - channels
+        outdated_channels = websocket._min_id_by_channel.keys() - channels
         self._clear_outdated_channels(websocket, outdated_channels)
         websocket.subscribe(channels, last)
         with contextlib.suppress(RuntimeError):
@@ -237,7 +240,7 @@ class ImDispatch(threading.Thread):
                 self.start()
 
     def unsubscribe(self, websocket):
-        self._clear_outdated_channels(websocket, websocket._channels)
+        self._clear_outdated_channels(websocket, websocket._min_id_by_channel.keys())
 
     def _clear_outdated_channels(self, websocket, outdated_channels):
         """ Remove channels from channel to websocket map. """

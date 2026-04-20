@@ -112,13 +112,3 @@ class TestMailPresence(WebsocketCase, MailCommon):
             ],
         ):
             self.env["mail.presence"].with_user(bob)._update_presence(bob)
-        other_user = new_test_user(self.env, login="other_user", groups="base.group_user")
-        with self.assertBus(
-            BusResult(
-                other_user,
-                "mail.record/insert",
-                {"res.users": [{"id": bob.id, "im_status": "online"}]},
-            ),
-        ):
-            bob_presence = self.env["mail.presence"].search([("user_id", "=", bob.id)])
-            bob_presence._send_presence(bus_target=other_user)

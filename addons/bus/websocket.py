@@ -286,17 +286,17 @@ class Websocket:
     # they are requested), but the notifications are dispatched at the time of
     # the commit. This means lower id notifications might be dispatched after
     # higher id notifications.
-    # Simply incrementing the last id is sufficient to guarantee no duplicates,
+    # Simply incrementing the min id is sufficient to guarantee no duplicates,
     # but it is not sufficient to guarantee all notifications are dispatched,
     # and in particular not sufficient for those with a lower id coming after a
     # higher id was dispatched.
     # To solve the issue of missed notifications, the lowest id, stored in
-    # ``_last_notif_sent_id``, is held back by a few seconds to give time for
+    # ``_min_id_by_channel``, is held back by a few seconds to give time for
     # concurrent transactions to finish. To avoid dispatching duplicate
     # notifications, the history of already dispatched notifications during this
     # period is kept in memory in ``_notif_history`` and the corresponding
     # notifications are discarded from subsequent dispatching even if their id
-    # is higher than ``_last_notif_sent_id``.
+    # is higher than the corresponding ``_min_id_by_channel``.
     # In practice, what is important functionally is the time between the create
     # of the notification and the commit of the transaction in business code.
     # If this time exceeds this threshold, the notification will never be
@@ -326,12 +326,11 @@ class Websocket:
         # as triggering notification dispatching or terminating the connection.
         self.__cmd_queue = PollablePriorityQueue()
         self._waiting_for_dispatch = False
-        self._channels = set()
-        # For ``_last_notif_sent_id and ``_notif_history``, see
+        # For ``_min_id_by_channel and ``_notif_history``, see
         # ``MAX_NOTIFICATION_HISTORY_SEC`` for more details.
-        # id of the last sent notification that is no longer in _notif_history
-        self._last_notif_sent_id = 0
-        # history of last sent notifications in the format (notif_id, send_time)
+        # Id of the last sent notification that is no longer in ``_notif_history``, by channel.
+        self._min_id_by_channel = {}
+        # History of last sent notifications in the format (notif_id, send_time)
         # always sorted by notif_id ASC
         self._notif_history = []
         # Websocket start up
@@ -398,12 +397,9 @@ class Websocket:
         return func
 
     def subscribe(self, channels, last):
-        """ Subscribe to bus channels. """
-        self._channels = channels
-        # Only assign the last id according to the client once: the server is
-        # more reliable later on, see ``MAX_NOTIFICATION_HISTORY_SEC``.
-        if self._last_notif_sent_id == 0:
-            self._last_notif_sent_id = last
+        self._min_id_by_channel = {
+            c: self._min_id_by_channel.get(c, last) for c in channels
+        }
         # Dispatch past notifications if there are any.
         self.trigger_notification_dispatching()
 
@@ -787,18 +783,20 @@ class Websocket:
         self._waiting_for_dispatch = False
         with acquire_cursor(self._session.db) as cr:
             notifications = fetch_bus_notifications(
-                cr, self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
+                cr,
+                self._min_id_by_channel,
+                [n[0] for n in self._notif_history],
             )
         if not notifications:
             return
         for notif in notifications:
             bisect.insort(self._notif_history, (notif['id'], time.time()), key=lambda x: x[0])
         # Discard all the smallest notification ids that have expired and
-        # increment the last id accordingly. History can only be trimmed of ids
-        # that are below the new last id otherwise some notifications might be
+        # increment the min id accordingly. History can only be trimmed of ids
+        # that are below the new min id otherwise some notifications might be
         # dispatched again.
         # For example, if the theshold is 10s, and the state is:
-        # last id 2, history [(3, 8s), (6, 10s), (7, 7s)]
+        # min id 2, history [(3, 8s), (6, 10s), (7, 7s)]
         # If 6 is removed because it is above the threshold, the next query will
         # be (id > 2 AND id NOT IN (3, 7)) which will fetch 6 again.
         # 6 can only be removed after 3 reaches the threshold and is removed as
@@ -811,7 +809,21 @@ class Websocket:
             else:
                 break
         if last_index != -1:
-            self._last_notif_sent_id = self._notif_history[last_index][0]
+            new_min_id = self._notif_history[last_index][0]
+            for channel, current_min in self._min_id_by_channel.items():
+                # Ensure the min_id doesn't rollback, as lower notification ids can be
+                # fetched by other channels.
+                #
+                # For example, starting with the A channel, with 99 as its min id and the
+                # following history : [A(100, 0s)]. The client subscribes to B, with 80 as
+                # its min id. The resulting history looks like this:
+                # [B(90, 0s), B(91, 0s), A(100, 1s)].
+                #
+                # Then, the C channel is added: [B(90, 1s), B(91, 1s), C(95, 0s), A(100, 2s)].
+                # 9 seconds later, the new id considered as safe would be 91, since 10 seconds
+                # have passed. But A min_id shouldn't rollback.
+                if current_min < new_min_id:
+                    self._min_id_by_channel[channel] = new_min_id
             self._notif_history = self._notif_history[last_index + 1 :]
         self._send(notifications)
 

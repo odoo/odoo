@@ -72,8 +72,10 @@ export const busService = {
                 }
                 case "BUS:NOTIFICATION": {
                     const notifications = data.map(({ id, message }) => ({ id, ...message }));
-                    state.lastNotificationId = notifications.at(-1).id;
-                    localStorage.setItem("bus.last_notification_id", state.lastNotificationId);
+                    if (notifications.at(-1).id > state.lastNotificationId) {
+                        state.lastNotificationId = notifications.at(-1).id;
+                        localStorage.setItem("bus.last_notification_id", state.lastNotificationId);
+                    }
                     for (const { id, type, payload } of notifications) {
                         notificationBus.trigger(type, { id, payload });
                         busService._onMessage(env, id, type, payload);

@@ -1,4 +1,4 @@
-import { debounce, Logger } from "@bus/workers/bus_worker_utils";
+import { BoundedSet, debounce, Logger } from "@bus/workers/bus_worker_utils";
 
 /**
  * Type of events that can be sent from the worker to its clients.
@@ -49,10 +49,16 @@ const logger = new Logger("bus_websocket_worker");
  * for SharedWorker and this class implements it.
  */
 export class WebsocketWorker {
-    static OUTGOING_BATCH_DELAY = 300;
+    static OUTGOING_BATCH_DELAY = 500;
     INITIAL_RECONNECT_DELAY = 1000;
     RECONNECT_JITTER = 1000;
     CONNECTION_CHECK_DELAY = 60_000;
+
+    /**
+     * @type {Set<number>} Notifications ids that were already received. Used to
+     * guaarantee at-most-once delivery.
+     */
+    seenNotificationIds = new BoundedSet(10_000);
 
     constructor(name) {
         this.active = true;
@@ -66,7 +72,7 @@ export class WebsocketWorker {
         this.isWaitingForNewUID = true;
         this.lastChannelSubscription = null;
         this.lastNotificationId = 0;
-        /** @type {{force: boolean}|null} */
+        /** @type {{force: boolean, minId: number}|null} */
         this.nextSubscribeData = null;
         this.loggingEnabled = null;
         this.messageWaitQueue = [];
@@ -363,8 +369,13 @@ export class WebsocketWorker {
         this._restartConnectionCheckInterval();
         const notifications = JSON.parse(messageEv.data);
         this._logDebug("_onWebsocketMessage", notifications);
-        this.lastNotificationId = notifications[notifications.length - 1].id;
-        this.broadcast("BUS:NOTIFICATION", notifications);
+        const newNotifications = notifications.filter((n) => !this.seenNotificationIds.has(n.id));
+        if (!newNotifications.length) {
+            return;
+        }
+        newNotifications.forEach((n) => this.seenNotificationIds.add(n.id));
+        this.lastNotificationId = Math.max(this.lastNotificationId, newNotifications.at(-1).id);
+        this.broadcast("BUS:NOTIFICATION", newNotifications);
     }
 
     async _logDebug(title, ...args) {
@@ -525,7 +536,7 @@ export class WebsocketWorker {
      * `_scheduleUpdateChannels` only.
      */
     _debouncedUpdateChannels = debounce(() => {
-        const { force } = this.nextSubscribeData;
+        const { force, minId } = this.nextSubscribeData;
         this.nextSubscribeData = null;
         const allTabsChannels = [
             ...new Set([].concat.apply([], [...this.channelsByClient.values()])),
@@ -537,7 +548,7 @@ export class WebsocketWorker {
             this.lastChannelSubscription = allTabsChannelsString;
             this._sendToServer({
                 event_name: "subscribe",
-                data: { channels: allTabsChannels, last: this.lastNotificationId },
+                data: { channels: allTabsChannels, last: minId },
             });
             this.firstSubscribeResolver.resolve();
         }
@@ -552,7 +563,7 @@ export class WebsocketWorker {
      * channel list has not changed.
      */
     _scheduleUpdateChannels({ force = false } = {}) {
-        this.nextSubscribeData ??= {};
+        this.nextSubscribeData ??= { minId: this.lastNotificationId };
         this.nextSubscribeData.force ||= force;
         this._debouncedUpdateChannels();
     }

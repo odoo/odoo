@@ -60,14 +60,9 @@ class IrWebsocket(models.AbstractModel):
         last = 0 if last > self.env["bus.bus"].sudo()._bus_last_id() else last
         return {"channels": OrderedSet(self._build_bus_channel_list(list(channels))), "last": last}
 
-    def _after_subscribe_data(self, data):
-        """Function invoked after subscribe data have been processed.
-        Modules can override this method to add custom behavior."""
-
     def _subscribe(self, og_data):
         data = self._prepare_subscribe_data(og_data["channels"], og_data["last"])
         dispatch.subscribe(data["channels"], data["last"], self.env.registry.db_name, wsrequest.ws)
-        self._after_subscribe_data(data)
 
     def _on_websocket_closed(self, cookies):
         """Function invoked upon WebSocket termination.

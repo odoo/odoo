@@ -11,7 +11,7 @@ import {
     WebsocketWorker,
     WORKER_STATE,
 } from "@bus/workers/websocket_worker";
-import { describe, expect, test } from "@odoo/hoot";
+import { advanceTime, describe, expect, test } from "@odoo/hoot";
 import { Deferred, manuallyDispatchProgrammaticEvent, runAllTimers, waitFor } from "@odoo/hoot-dom";
 import { mockWebSocket } from "@odoo/hoot-mock";
 import {
@@ -24,6 +24,7 @@ import {
     mountWithCleanup,
     patchWithCleanup,
     restoreRegistry,
+    serverState,
 } from "@web/../tests/web_test_helpers";
 import { getWebSocketWorker, onWebsocketEvent } from "./mock_websocket";
 
@@ -562,4 +563,47 @@ test("channel is kept until deleted as many times as added", async () => {
     await expect.waitForSteps([]);
     busService.deleteChannel("foo");
     await expect.waitForSteps(["delete channel", "subscribe - []"]);
+});
+
+test("subscription last id is captured from the initial call to update channel", async () => {
+    // Large delay so lastNotificationId can advance before the subscription is sent.
+    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 120_000 });
+    await makeMockEnv();
+    const worker = getWebSocketWorker();
+    patchWithCleanup(worker, {
+        _addChannel(client, channel) {
+            super._addChannel(client, channel);
+            expect.step(`add_channel - ${channel}`);
+        },
+    });
+    addBusServiceListeners(["BUS:CONNECT", () => expect.step("BUS:CONNECT")]);
+    onWebsocketEvent("subscribe", (data) =>
+        expect.step(`subscribe - [${data.channels.toString()}] - ${data.last}`)
+    );
+    await startBusService();
+    const busService = getService("bus_service");
+    await expect.waitForSteps(["BUS:CONNECT"]);
+    await advanceTime(120_000);
+    await expect.waitForSteps(["subscribe - [] - 0"]);
+    let lastReceivedId = MockServer.env["bus.bus"]._sendone(
+        serverState.partnerId,
+        "message_type",
+        "message_1"
+    );
+    await waitNotifications(["message_type", "message_1"]);
+    expect(worker.lastNotificationId).toBe(lastReceivedId);
+    const fooBusId = lastReceivedId;
+    busService.addChannel("foo");
+    await expect.waitForSteps(["add_channel - foo"]);
+    lastReceivedId = MockServer.env["bus.bus"]._sendone(
+        serverState.partnerId,
+        "message_type",
+        "message_2"
+    );
+    await waitNotifications(["message_type", "message_2"]);
+    expect(worker.lastNotificationId).toBe(lastReceivedId);
+    busService.addChannel("bar");
+    await expect.waitForSteps(["add_channel - bar"]);
+    await advanceTime(120_000);
+    await expect.waitForSteps([`subscribe - [bar,foo] - ${fooBusId}`]);
 });

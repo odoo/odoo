@@ -3,12 +3,11 @@
 import logging
 import re
 from collections import defaultdict
-from datetime import datetime, timedelta
 
 from odoo import models
-from odoo.fields import Domain
 from odoo.addons.mail.tools.discuss import add_guest_to_context
 from odoo.tools.misc import verify_limited_field_access_token
+
 
 PRESENCE_CHANNEL_PREFIX = "odoo-presence-"
 PRESENCE_CHANNEL_REGEX = re.compile(
@@ -41,18 +40,19 @@ class IrWebsocket(models.AbstractModel):
             return
         self.env["mail.presence"]._try_update_presence(user or guest, inactivity_period)
 
-    def _prepare_subscribe_data(self, channels, last):
-        data = super()._prepare_subscribe_data(channels, last)
+    def _build_bus_channel_list(self, channels):
         model_ids_to_token = defaultdict(dict)
+        channels_to_clear = set()
         for channel in channels:
             if not isinstance(channel, str) or not channel.startswith(PRESENCE_CHANNEL_PREFIX):
                 continue
-            data["channels"].discard(channel)
+            channels_to_clear.add(channel)
             if not (match := re.match(PRESENCE_CHANNEL_REGEX, channel)):
                 _logger.warning("Malformed presence channel: %s", channel)
                 continue
             model, record_id, token = match.groups()
             model_ids_to_token[model][int(record_id)] = token or ""
+        channels = [c for c in channels if c not in channels_to_clear]
         # sudo - res.partner, mail.guest: can access presence targets to decide whether
         # the current user is allowed to read it or not.
         user_ids = model_ids_to_token["res.users"].keys()
@@ -69,7 +69,7 @@ class IrWebsocket(models.AbstractModel):
                 lambda p: verify_limited_field_access_token(
                     p, "im_status", model_ids_to_token["res.users"][p.id], scope="mail.presence"
                 )
-                or p.has_access("read")
+                or p.has_access("read"),
             )
             | user
         )
@@ -85,23 +85,9 @@ class IrWebsocket(models.AbstractModel):
             | guest
         )
         # sudo - res.users: can access users of allowed partners
-        data["channels"].update((user, "presence") for user in allowed_users)
-        data["channels"].update((guest, "presence") for guest in allowed_guests)
-        # There is a gap between a subscription client side (which is debounced)
-        # and the actual subcription thus presences can be missed. Send a
-        # notification to avoid missing presences during a subscription.
-        presence_domain = Domain("last_poll", ">", datetime.now() - timedelta(seconds=2)) & (
-            Domain("user_id", "in", allowed_users.ids)
-            | Domain("guest_id", "in", allowed_guests.ids)
-        )
-        # sudo: mail.presence: access to presence was validated with access token.
-        data["missed_presences"] = self.env["mail.presence"].sudo().search(presence_domain)
-        return data
-
-    def _after_subscribe_data(self, data):
-        user, guest = self.env["res.users"]._get_current_persona()
-        if user or guest:
-            data["missed_presences"]._send_presence(bus_target=user or guest)
+        channels.extend((user, "presence") for user in allowed_users)
+        channels.extend((guest, "presence") for guest in allowed_guests)
+        return super()._build_bus_channel_list(channels)
 
     def _on_websocket_closed(self, cookies):
         super()._on_websocket_closed(cookies)
