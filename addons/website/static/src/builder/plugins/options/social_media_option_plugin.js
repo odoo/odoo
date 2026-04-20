@@ -125,12 +125,14 @@ export class SocialMediaOptionPlugin extends Plugin {
         "removeIconClasses",
         "reorderSocialMediaLink",
         "prefillSocialMediaLinks",
+        "setLinkLabelText",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         // Added to commits by the `SocialMediaLinks` `BaseOptionComponent`:
         so_content_addition_selectors: [".s_share", ".s_social_media"],
         builder_actions: {
+            AdaptSocialMediaTitlePositionAction,
             ResetSocialMediaIconSizeAction,
             DeleteSocialMediaLinkAction,
             EditSocialMediaLinkAction,
@@ -142,8 +144,10 @@ export class SocialMediaOptionPlugin extends Plugin {
         content_not_editable_selectors: [".s_share"],
         content_editable_selectors: [
             ".s_share a > i",
+            ".s_share a > span",
             ".s_share .s_share_title",
             ".s_social_media a > i",
+            ".s_social_media a > span",
             ".s_social_media .s_social_media_title",
         ],
         auto_unfold_container_providers: [
@@ -270,7 +274,28 @@ export class SocialMediaOptionPlugin extends Plugin {
         }
         el.href = "https://www.example.com";
         el.setAttribute("aria-label", "example");
+        this.setLinkLabelText(el, "example");
         return el;
+    }
+
+    /**
+     * Ensures the link has a `<span>` sibling to its icon and sets its text.
+     * The span is what's shown when the snippet uses the "Text" layout.
+     * @param { HTMLElement } el the link element
+     * @param { String|LazyTranslatedString } text
+     */
+    setLinkLabelText(el, text) {
+        let spanEl = el.querySelector(":scope > span");
+        if (!spanEl) {
+            spanEl = el.ownerDocument.createElement("span");
+            el.appendChild(spanEl);
+        }
+        // Preserve the inline icon (used by the "Icon & Text" layout).
+        const iconEl = spanEl.querySelector(":scope > i");
+        spanEl.textContent = text;
+        if (iconEl) {
+            spanEl.prepend(iconEl);
+        }
     }
 
     /**
@@ -342,6 +367,22 @@ export class SocialMediaOptionPlugin extends Plugin {
     }
 }
 
+export class AdaptSocialMediaTitlePositionAction extends BuilderAction {
+    static id = "adaptSocialMediaTitlePosition";
+    apply({ editingElement }) {
+        // In vertical direction, a "left" (or "right") title position is not
+        // meaningful, so fall back to "top" when it was previously set.
+        const titleEl = editingElement.querySelector(".s_share_title, .s_social_media_title");
+        if (
+            titleEl &&
+            !titleEl.classList.contains("d-block") &&
+            !titleEl.classList.contains("d-none")
+        ) {
+            titleEl.classList.add("d-block");
+        }
+    }
+}
+
 export class ResetSocialMediaIconSizeAction extends BuilderAction {
     static id = "resetSocialMediaIconSize";
     apply({ editingElement }) {
@@ -384,6 +425,17 @@ export class EditSocialMediaLinkAction extends BuilderAction {
         if (iconEl) {
             iconEl.dataset.icon = iconDataIcon;
         }
+
+        // Update the inline icon inside the span (used by the "Icon & Text" layout).
+        const inlineIconEl = editingElement.querySelector(":scope > span > i");
+        if (inlineIconEl) {
+            inlineIconEl.dataset.icon = iconDataIcon;
+        }
+
+        this.dependencies.socialMediaOptionPlugin.setLinkLabelText(
+            editingElement,
+            info.media?.label || info.name || ""
+        );
     }
 }
 export class AddSocialMediaLinkAction extends BuilderAction {
