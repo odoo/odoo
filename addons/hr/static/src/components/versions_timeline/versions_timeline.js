@@ -4,6 +4,8 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
 import { _t } from "@web/core/l10n/translation";
+import { useEffect } from "@odoo/owl";
+
 
 export class VersionsTimeline extends StatusBarField {
     static template = "hr.VersionsTimeline";
@@ -25,6 +27,44 @@ export class VersionsTimeline extends StatusBarField {
                 return { type: "date" };
             },
         });
+
+        const { specialDataCaches } = this.props.record.model;
+        const fieldsToCheck = [
+            "versions_count",
+            "contract_date_start",
+            "contract_date_end",
+            "contract_type_id",
+        ];
+
+        let lastEmployeeId = this.props.record.evalContext.id;
+
+        useEffect(
+            () => {
+                const currentEmployeeId = this.props.record.evalContext.id;
+                const employeeChanged = currentEmployeeId !== lastEmployeeId;
+                lastEmployeeId = currentEmployeeId;
+
+                Object.keys(specialDataCaches).forEach((key) => {
+                    if (JSON.parse(key)[0] === "hr.version") {
+                        delete specialDataCaches[key];
+                    }
+                });
+
+                const baseContext = this.props.record.model.env.searchModel.context;
+                this.props.record.model.load({
+                    context: employeeChanged
+                        // clear stale version_id when switching employees
+                        ? { ...baseContext, version_id: undefined }
+                        : baseContext,
+                });
+            },
+            () => [
+                this.props.record.evalContext.id,
+                ...fieldsToCheck.map((field) =>
+                    JSON.stringify(this.props.record.data[field])
+                ),
+            ]
+        );
     }
 
     /** @override **/
@@ -37,11 +77,11 @@ export class VersionsTimeline extends StatusBarField {
     /** @override **/
     getFieldNames() {
         const fieldNames = super.getFieldNames();
-        fieldNames.push([
+        fieldNames.push(
             "contract_type_id",
             "contract_date_start",
             "contract_date_end",
-        ]);
+        );
         return fieldNames.filter((fName) => fName in this.props.record.fields);
     }
 
@@ -92,7 +132,7 @@ export class VersionsTimeline extends StatusBarField {
             return luxon.DateTime.fromISO(dateString).toFormat("MMM dd, yyyy");
         }
         const items = super.getAllItems();
-        if (!this.displayContractLines) {
+        if (!this.displayContractLines()) {
             return items;
         }
         const dataById = new Map(this.specialData.data.map((d) => [d.id, d]));
@@ -100,7 +140,7 @@ export class VersionsTimeline extends StatusBarField {
         const selectedVersion = items.find((item) => item.isSelected)?.value;
         const selectedContractDate = dataById.get(selectedVersion)?.contract_date_start;
 
-        return items.map((item, index) => {
+        return items.map((item) => {
             const itemSpecialData = dataById.get(item.value) || {};
             const contractDateStart = itemSpecialData.contract_date_start;
             let contractDateEnd = itemSpecialData.contract_date_end;
