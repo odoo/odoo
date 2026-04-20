@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 class EditableButtonPlugin extends Plugin {
     static id = "editableButton";
     resources = {
-        normalize_handlers: this.wrapEditableButtons.bind(this),
+        normalize_processors: this.wrapEditableButtons.bind(this),
     };
 
     /**
