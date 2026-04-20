@@ -327,7 +327,7 @@
                 <form string="Scrap Products">
                     <header invisible="context.get('from_order')">
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
-                        <button name="action_scrap" type="object" string="Confirm" class="btn-primary" invisible="state in ('done', 'cancel')"/>
+                        <button name="action_scrap" type="object" string="Confirm" class="btn-primary" invisible="state in ('done', 'cancel')" context="{'not_unlink_on_discard': True}"/>
                     </header>
                     <sheet>
                         <field name="is_scrap" invisible="1"/>
