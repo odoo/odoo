@@ -67,6 +67,7 @@ class TestSuite(BaseTestSuite):
                         if not (result.had_failure or quiet_log.had_error_log):
                             break
                         test = test.__class__(test._testMethodName)  # re-create the test to reset its state
+                        odoo.modules.module.current_test = test
                     else:  # last try
                         test(result)
                         if not result.wasSuccessful() and default_tests_run_count != 1:
