@@ -162,6 +162,14 @@ class AccountMove(models.Model):
                     warnings.add(product.display_name + ' - ' + product_msg)
             move.purchase_warning_text = '\n'.join(warnings)
 
+    @api.depends_context('uid')
+    def _compute_show_invoice_vendor_bill(self):
+        super()._compute_show_invoice_vendor_bill()
+        # If the user doesn't have purchase access, `invoice_vendor_bill_id` is displayed,
+        # as the user doesn't have access to `purchase_vendor_bill_id`.
+        for move in self:
+            move.show_invoice_vendor_bill &= not self.env.user.has_group('purchase.group_purchase_user')
+
     def action_purchase_matching(self):
         self.ensure_one()
         return {
