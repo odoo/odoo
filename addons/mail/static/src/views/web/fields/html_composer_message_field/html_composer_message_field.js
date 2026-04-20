@@ -8,6 +8,7 @@ import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { DisableBannerCommandsPlugin } from "./disable_banner_commands_plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { markup, onWillUnmount } from "@odoo/owl";
+import { SIGNATURE_CLASS } from "@html_editor/main/user_signature_plugin";
 
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
@@ -19,7 +20,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
             });
             useBus(this.env.fullComposerBus, "SAVE_CONTENT", (ev) => {
                 const emailAddSignature = Boolean(
-                    this.editor.editable.querySelector(".o-signature-container")
+                    this.editor.editable.querySelector(`.${SIGNATURE_CLASS}`)
                 );
                 const composerHtml = markup(this.getNoSignatureElContent().innerHTML);
                 ev.detail.onSaveContent({ composerHtml, emailAddSignature });
@@ -93,9 +94,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
 
     getNoSignatureElContent() {
         const elContent = this.editor.getElContent();
-        for (const el of elContent.querySelectorAll(".o-signature-container")) {
-            el.remove();
-        }
+        this.editor.shared.userSignature.cleanSignatures({ rootClone: elContent });
         return elContent;
     }
 
