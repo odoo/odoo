@@ -1030,6 +1030,8 @@ class TransactionCase(BaseCase):
                 *vars(model),
                 # __annotations__ pops up during testing on *some* models
                 '__annotations__',
+                '__annotate_func__',
+                '__annotations_cache__',
                 # if model is transient & transient fields are accessed
                 '_transient_max_count',
                 '_transient_max_hours',
