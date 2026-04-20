@@ -24,6 +24,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         cls.user = new_test_user(cls.env, 'xav', email='em@il.com', notification_type='inbox')
         cls.partner = cls.user.partner_id
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite(self):
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
@@ -118,6 +119,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         with self.assertNoNotifications():
             self.event.start_date += relativedelta(days=-1)
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_add_and_date_changed(self):
         self.event.partner_ids -= self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
