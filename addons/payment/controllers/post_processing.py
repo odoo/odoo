@@ -69,14 +69,24 @@ class PaymentPostProcessing(http.Controller):
 
         # Post-process the transaction before redirecting the user to the landing route and its
         # document.
+        _logger.info(
+            "Post-processing tx with id %s, is_post_processed set to %s",
+            monitored_tx.id,
+            monitored_tx.is_post_processed,
+        )
         if not monitored_tx.is_post_processed:
             try:
+                _logger.info("Post-processing tx with id %s, entered try block", monitored_tx.id)
                 monitored_tx._post_process()
+                _logger.info(
+                    "Post-processing tx with id %s, finished _post_process()", monitored_tx.id
+                )
             except PG_CONCURRENCY_EXCEPTIONS_TO_RETRY as ce:
                 # Raising ConcurrencyError to trigger the framework's retrying mechanism.
                 concurrency_error_message = (
                     "Post-processing failed because of a consurrency error, retrying"
                 )
+                _logger.exception(concurrency_error_message)
                 raise ConcurrencyError(concurrency_error_message) from ce
             except Exception as e:
                 # Error is silenced here since to avoid displaying it in the frontend for the
