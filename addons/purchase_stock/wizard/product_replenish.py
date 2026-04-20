@@ -43,6 +43,7 @@ class ProductReplenish(models.TransientModel):
 
     def _prepare_run_values(self):
         res = super()._prepare_run_values()
+        res['consider_lead'] = True
         if self.partner_id:
             res['procurement_partner'] = self.partner_id
         return res
