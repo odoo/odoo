@@ -821,12 +821,14 @@ export function useActionManager(router = _router) {
             "_noBreadcrumbs" in action ? action._noBreadcrumbs : target === "new";
 
         // selecting an embedded action replaces the current action, which isn't
-        // the action of the dialog, so we don't display them in a dialog either
+        // the action of the dialog, so we don't display them in a dialog. A form
+        // view only displays them if it is the view of the action itself, not a
+        // record opened from a multi-record view of the action
         const embeddedActions =
-            view.type === "form" || target === "new"
+            target === "new" || (view.type === "form" && views.some((v) => v.multiRecord))
                 ? []
                 : context.parent_action_embedded_actions || action.embedded_action_ids;
-        const parentActionId = (view.type !== "form" && context.parent_action_id) || false;
+        const parentActionId = (embeddedActions?.length && context.parent_action_id) || false;
         const currentEmbeddedActionId = context.current_embedded_action_id || false;
         return {
             props: viewProps,
