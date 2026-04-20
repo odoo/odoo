@@ -482,7 +482,7 @@ class TestReportsRendering(TestReportsRenderingCommon):
         self.assertEqual(pages_contents, expected_pages_contents)
 
     def test_pdf_render_page_overflow(self):
-        nb_lines = 80
+        nb_lines = 120
 
         page_content = f'''
             <div class="page">
@@ -540,7 +540,7 @@ class TestReportsRendering(TestReportsRenderingCommon):
         """
             Check that thead and t-foot are repeated after page break inside a tbody
         """
-        nb_lines = 50
+        nb_lines = 60
         page_content = f'''
             <div class="page">
                 <table class="table">
