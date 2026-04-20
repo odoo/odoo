@@ -811,3 +811,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             },
         )
         self.start_tour(self.env["website"].get_client_action_url('/', True), 'background_color_gradient_precedence', login='admin')
+
+    def test_seo_multilang_alt_check(self):
+        self.add_fr_language_to_website()
+        self.start_tour(self.env['website'].get_client_action_url("/", True), "seo_multilang_alt_check", login="admin")

@@ -105,6 +105,14 @@ CONFIGURATOR_PREVIEW_FALLBACK_IMAGES = {
     ]
 }
 
+# Matches the translation marker inside attribute values
+# (e.g. alt="<span data-oe-translation-source-sha="...">term</span>")
+# when a record is read with edit_translations=True.
+_TRANSLATION_MARKER_MATCHER = re.compile(
+    r'<span[^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*?)</span>',
+    re.DOTALL,
+)
+
 
 class QueryURL:
     def __init__(self, path='', path_args=None, **args):
@@ -1378,27 +1386,45 @@ class Website(Home):
     @http.route(['/website/get_alt_images'], type='jsonrpc', auth="user", website=True)
     def get_alt_images(self, models):
         result = []
+        current_lang = self.env.context.get('lang')
+        is_translated = current_lang != self.env.website.default_lang_id.code
         for model in models:
             record = request.env[model['model']].browse(model['id'])
-            model['field'] = 'arch_db' if model['field'] == 'arch' else model['field']
-            tree = html.fromstring(str(record[model['field']]))
+            field_name = 'arch_db' if model['field'] == 'arch' else model['field']
+            record = record.with_context(edit_translations=True) if is_translated else record
+            tree = html.fromstring(str(record[field_name]))
             # Only process static img elements (with src) - skip dynamic
             # template images (t-att*)
             for index, el in enumerate(tree.xpath('//img[@src]')):
                 role = el.get('role')
                 decorative = role == "presentation"
-                alt = el.get('alt')
-                if not decorative or alt is None:
-                    result.append({
-                        "src": el.get("src"),
-                        "alt": alt or "",
-                        "decorative": False,
-                        "updated": False,
-                        "res_model": model['model'],
-                        "res_id": model['id'],
-                        "id": f"{model['model']}-{model['id']}-{index}",
-                        "field": model.get('field'),
-                    })
+                raw_alt = el.get('alt')
+                if decorative and raw_alt is not None:
+                    continue
+                source_sha = None
+                if is_translated:
+                    # The alt attribute carries the translation marker
+                    # instead of plain text; extract the source hash and
+                    # the original (base language) term.
+                    match = _TRANSLATION_MARKER_MATCHER.search(raw_alt or '')
+                    if not match:
+                        # No source term to translate from, skip.
+                        continue
+                    source_sha, raw_alt = match.group(1), match.group(2)
+                alt = (raw_alt or '').strip()
+                values = {
+                    "src": el.get("src"),
+                    "alt": alt,
+                    "decorative": False,
+                    "updated": False,
+                    "res_model": model['model'],
+                    "res_id": model['id'],
+                    "id": f"{model['model']}-{model['id']}-{index}",
+                    "field": field_name,
+                }
+                if is_translated:
+                    values["source_sha"] = source_sha
+                result.append(values)
         return json.dumps(result)
 
     @http.route(['/website/update_alt_images'], type='jsonrpc', auth="user", website=True)

@@ -89,7 +89,7 @@
                         <img class="o-img-thumbnail" alt="Preview image" t-att-src="img.src"></img>
                     </div>
                     <div role="form" class="flex-grow-1">
-                        <div class="form-check">
+                        <div t-if="this.props.isDefaultLang" class="form-check">
                             <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + img.id" t-custom-model="img.decorative" t-on-change="() => this.imgUpdated(img)"/>
                             <label t-att-for="'decorative-' + img.id">Mark as decorative
                                 <i class="fa fa-question-circle text-primary" data-tooltip-position="right" data-tooltip="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
@@ -103,30 +103,32 @@
             </t>
         </div>
 
-        <h4 class="border-bottom pb-2">
-            Broken Links
-        </h4>
-        <div class="mt-2" t-if="this.state.checkingLinks">
-            <div><i class="fa fa-spin fa-circle-o-notch text-info me-2"></i>Checking hyperlinks...</div>
-            <div class="progress rounded mt-2" style="height: 10px;">
-                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" t-att-aria-valuenow="this.state.counterLinks" aria-valuemin="0" t-att-aria-valuemax="this.state.totalLinks" t-attf-style="width:#{(this.state.counterLinks / this.state.totalLinks) * 100}%;" aria-label="Progress bar"/>
+        <t t-if="this.props.isDefaultLang">
+            <h4 class="border-bottom pb-2">
+                Broken Links
+            </h4>
+            <div class="mt-2" t-if="this.state.checkingLinks">
+                <div><i class="fa fa-spin fa-circle-o-notch text-info me-2"></i>Checking hyperlinks...</div>
+                <div class="progress rounded mt-2" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" t-att-aria-valuenow="this.state.counterLinks" aria-valuemin="0" t-att-aria-valuemax="this.state.totalLinks" t-attf-style="width:#{(this.state.counterLinks / this.state.totalLinks) * 100}%;" aria-label="Progress bar"/>
+                </div>
             </div>
-        </div>
-        <div class="mt-2" t-elif="this.state.checkedLinks">
-            <t t-if="this.seoContext.brokenLinks.length > 0">
-                <t t-if="!this.seoContext.brokenLinks.filter(link => link.broken).length">
+            <div class="mt-2" t-elif="this.state.checkedLinks">
+                <t t-if="this.seoContext.brokenLinks.length > 0">
+                    <t t-if="!this.seoContext.brokenLinks.filter(link => link.broken).length">
+                        <p><i class="fa fa-check text-success me-2"></i>No broken link</p>
+                    </t>
+                    <t t-foreach="this.seoContext.brokenLinks" t-as="link" t-key="link_index">
+                        <div t-if="!link.remove" class="row align-items-center mb-2">
+                            <BrokenLink link="link"/>
+                        </div>
+                    </t>
+                </t>
+                <t t-else="">
                     <p><i class="fa fa-check text-success me-2"></i>No broken link</p>
                 </t>
-                <t t-foreach="this.seoContext.brokenLinks" t-as="link" t-key="link_index">
-                     <div t-if="!link.remove" class="row align-items-center mb-2">
-                        <BrokenLink link="link"/>
-                    </div>
-                </t>
-            </t>
-            <t t-else="">
-                <p><i class="fa fa-check text-success me-2"></i>No broken link</p>
-            </t>
-        </div>
+            </div>
+        </t>
     </section>
 </t>
 
@@ -325,7 +327,7 @@
             pageImages="this.pageImages"
             url="this.url"/>
         <MetaKeywords t-if="this.canEditSeo"/>
-        <SeoChecks t-if="this.canEditSeo and this.isDefaultLang"/>
+        <SeoChecks t-if="this.canEditSeo" isDefaultLang="this.isDefaultLang"/>
     </WebsiteDialog>
 </t>
 </templates>
