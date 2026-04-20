@@ -1,21 +1,22 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { CallPreview } from "@mail/discuss/call/common/call_preview";
+import { Component, proxy, signal } from "@odoo/owl";
 
-import { Component, markup, proxy } from "@odoo/owl";
+import { CallPreview } from "@mail/discuss/call/common/call_preview";
+import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 
 export class WelcomePage extends Component {
     static props = ["proceed?"];
     static template = "mail.WelcomePage";
-    static components = { CallPreview };
+    static components = { AvatarStack, CallPreview };
 
     cameraPermissionOnMountChecked = false;
 
     setup() {
         super.setup();
+        this.description = signal();
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
@@ -26,6 +27,8 @@ export class WelcomePage extends Component {
             activateMicrophone: 0,
             hasMicrophone: undefined,
             hasCamera: undefined,
+            isDescriptionLong: false,
+            isDescriptionUnfolded: false,
         });
         useLayoutEffect(
             (showCallPreview, cameraPermission, microphonePermission) => {
@@ -45,12 +48,29 @@ export class WelcomePage extends Component {
             },
             () => [this.showCallPreview, this.rtc.cameraPermission, this.rtc.microphonePermission]
         );
+        useLayoutEffect(
+            (isDescriptionUnfolded, description) => {
+                const descriptionEl = this.description();
+                this.state.isDescriptionLong =
+                    !isDescriptionUnfolded &&
+                    description &&
+                    descriptionEl?.scrollWidth > descriptionEl?.clientWidth;
+            },
+            () => [this.state.isDescriptionUnfolded, this.channel.description]
+        );
     }
 
     onKeydownInput(ev) {
         if (ev.key === "Enter" && this.canJoin) {
             this.joinChannel();
         }
+    }
+
+    unfoldDescription() {
+        if (this.state.isDescriptionUnfolded) {
+            return;
+        }
+        this.state.isDescriptionUnfolded = true;
     }
 
     async joinChannel() {
@@ -71,25 +91,16 @@ export class WelcomePage extends Component {
         );
     }
 
-    get noActiveParticipants() {
-        return !this.store.discuss.thread.channel.hasRtcSessionActive;
-    }
-
-    get subtitle() {
-        return _t(
-            "%(open_tag_1)swith%(close_tag_1)s %(open_tag_2)s%(company_name)s%(close_tag_2)s",
-            {
-                open_tag_1: markup`<span class="text-muted">`,
-                close_tag_1: markup`</span>`,
-                open_tag_2: markup`<span>`,
-                close_tag_2: markup`</span>`,
-                company_name: this.store.companyName,
-            }
-        );
+    get channel() {
+        return this.store.discuss.thread.channel;
     }
 
     get showCallPreview() {
-        return this.store.discuss.thread.channel.default_display_mode === "video_full_screen";
+        return this.channel.default_display_mode === "video_full_screen";
+    }
+
+    get shouldShowMoreDescription() {
+        return this.state.isDescriptionLong;
     }
 
     /** @param {{ microphone?: boolean, camera?: boolean }} settings */
