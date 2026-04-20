@@ -782,7 +782,7 @@ font[class*='bg-'] {
             }
         }
         // Default, if no background-color already selected
-        background-color: $gray-100;
+        background-color: var(--o-color-3);
     }
     &.img-thumbnail {
         padding: 0;
@@ -3482,7 +3482,7 @@ input[value*="data-oe-translation-source-sha"] {
     }
 }
 
-.s_social_media, .s_share {
+%old_s_social_icons {
     $-size: map-get($spacers, 5);
     a {
         text-decoration: none;
@@ -3529,6 +3529,96 @@ input[value*="data-oe-translation-source-sha"] {
     &.no_icon_color {
         a {
             color: inherit !important;
+        }
+    }
+}
+
+// Shared styles for social media icons (version 001)
+%s_social_icons {
+    // Default icon size used by the builder RangeWithNumberInput control
+    // Inherit to icons so the option panel reads 40px initially
+    --social-icon-size: 40px;
+    --social-text-size: var(--body-font-size);
+
+    user-select: none;
+
+    > * {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    &[data-icon-underline="hover"] a:hover > span, &[data-icon-underline="always"] a > span {
+        text-decoration: underline;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: none;
+        }
+
+        & > i.fa, & > span.fa, .social_media_img {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: var(--social-icon-size);
+            height: var(--social-icon-size);
+            margin: map-get($spacers, 1) map-get($spacers, 1) map-get($spacers, 1) 0;
+            // Prevent background-color applied by default on icons with rounded class
+            // Without this, it would be impossible to remove completely the background color
+            background-color: inherit;
+            // Keep roughly the default small 16px glyph for a 40px disk (0.4 ratio)
+            font-size: calc(var(--social-icon-size) * 0.4);
+            line-height: var(--social-icon-size);
+        }
+
+        > span {
+            display: none;
+            padding: 0 calc(var(--social-text-size) * 0.5) calc(var(--social-text-size) * 0.25) 0;
+            // Responsive font-size
+            font-size: clamp(calc(var(--social-text-size) * 0.4), calc(var(--social-text-size) * 0.4 + 2vw), var(--social-text-size));
+
+            // Inline icon for "Icon & Text" layout, hidden by default
+            > i {
+                display: none;
+            }
+        }
+
+        i.d-none ~ span, i.o_sm_with_text ~ span > i {
+            display: inline-block;
+        }
+    }
+
+    &:not(.no_icon_color) {
+        .fa {
+            // Prevent bg-o-color-* classes from overriding the "Brand Color"
+            // when the option is checked
+            color: inherit;
+            border-color: currentColor !important;
+        }
+
+        $-social-networks: (
+            "facebook": "facebook",
+            "twitter": "twitter",
+            "linkedin": "linkedin",
+            "google": "google-plus",
+            "whatsapp": "whatsapp",
+            "pinterest": "pinterest",
+            "github": "github",
+            "instagram": "instagram",
+            "youtube": "youtube",
+            "tiktok": "tiktok",
+            "discord": "discord",
+        );
+
+        @each $network, $color in $-social-networks {
+            [class*="_#{$network}"] {
+                &, &:hover, &:focus {
+                    @extend .text-#{$color};
+                }
+            }
         }
     }
 }
