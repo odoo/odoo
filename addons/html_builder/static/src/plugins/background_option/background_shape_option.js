@@ -3,6 +3,7 @@ import { useDomState } from "@html_builder/core/utils";
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
 import { BackgroundShapeSelector } from "./background_shape_selector";
+import { ratioValueConverter } from "@html_builder/utils/utils";
 
 export class BackgroundShapeOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundShapeOption";
@@ -11,6 +12,7 @@ export class BackgroundShapeOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.backgroundShapePlugin = this.dependencies.backgroundShapeOption;
+        this.ratioValueConverter = ratioValueConverter();
         this.state = useDomState((editingElement) => {
             const shapeData = this.backgroundShapePlugin.getShapeData(editingElement);
             const shapeInfo = this.backgroundShapePlugin.getBackgroundShapes()[shapeData.shape];

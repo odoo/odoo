@@ -452,6 +452,9 @@ test("Should change the speed of an animated shape", async () => {
 
     expect(`:iframe .test-options-target img`).toHaveAttribute("data-shape-animation-speed", "2");
     expect(`:iframe .test-options-target img`).not.toHaveAttribute("src", originalSrc);
+    expect(`[data-action-id="setImageShapeSpeed"] input[type="number"]`).toHaveValue(3);
+    await setInputRange(`[data-action-id="setImageShapeSpeed"] input`, -2);
+    expect(`[data-action-id="setImageShapeSpeed"] input[type="number"]`).toHaveValue(0.33);
 });
 describe("toggle ratio", () => {
     test("Should not be able to toggle the ratio of a pattern_wave_4", async () => {
