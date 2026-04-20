@@ -48,6 +48,10 @@ class StripeController(http.Controller):
                 payload={'expand[]': 'payment_method'},  # Expand all required objects.
                 method='GET',
             )
+            if tx_sudo.reference != payment_intent["description"]:
+                _logger.warning("Received payment data with incorrect reference")
+                raise Forbidden()
+
             secret_keys = tx_sudo._get_specific_secret_keys()
             logged_intent = {k: v for k, v in payment_intent.items() if k not in secret_keys}
             _logger.info("Received payment_intents response:\n%s", pprint.pformat(logged_intent))
