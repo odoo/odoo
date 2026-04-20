@@ -154,14 +154,17 @@ class MigrationManager(object):
 
             full_version = convert_version(version)
             majorless_version = (version != full_version)
-
+            parsed_full_version = parse_version(full_version)
             if majorless_version:
                 # We should not re-execute major-less scripts when upgrading to new Odoo version
                 # a module in `9.0.2.0` should not re-execute a `2.0` script when upgrading to `10.0.2.0`.
                 # In which case we must compare just the module version
                 return parsed_installed_version[2:] < parse_version(full_version)[2:] <= current_version[2:]
-
-            return parsed_installed_version < parse_version(full_version) <= current_version
+            if not (parsed_installed_version < parsed_full_version <= current_version):
+                return False
+            if parsed_installed_version[0] == parsed_full_version[0] and parsed_installed_version[1] <= parsed_full_version[1]:
+                return False  # Skip same-major version scripts with module version difference e.g. 2.2, 2.3
+            return True
 
         versions = _get_migration_versions(pkg, stage)
         for version in versions:
