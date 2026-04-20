@@ -228,6 +228,7 @@ HOMEPAGE_OUTDATED = """
 <t name="Homepage" t-name="website.homepage1">
   <t t-call="website.layout" pageName.f="homepage">
     <div id="wrap" class="oe_structure oe_empty">
+      <div class="s_share text-center o_not_editable" data-snippet="s_share" data-name="Share"/>
       <form action="/website_form/" method="post" class="s_website_form container-fluid mt32 o_fake_not_editable" enctype="multipart/form-data" data-name="Form Builder" data-model_name="mail.mail" data-success_page="/contactus-thank-you" data-snippet="s_website_form">
         <div class="container">
         </div>
