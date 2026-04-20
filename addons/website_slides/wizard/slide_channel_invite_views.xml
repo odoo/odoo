@@ -13,7 +13,7 @@
                         <group col="1">
                             <group col="2" invisible="enroll_mode or channel_visibility != 'public'">
                                 <field name="channel_invite_url" readonly="1" widget="CopyClipboardChar"/>
-                                <field name="send_email" widget="boolean_toggle" options="{'autosave': False}"/>
+                                <field name="send_email" widget="boolean_toggle"/>
                             </group>
                             <group col="2" invisible="not send_email">
                                 <field name="partner_ids"

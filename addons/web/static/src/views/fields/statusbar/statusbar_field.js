@@ -1,4 +1,10 @@
-import { onWillRender, render, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import {
+    onWillRender,
+    render,
+    useExternalListener,
+    useLayoutEffect,
+    useRef,
+} from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
@@ -181,7 +187,7 @@ export class StatusBarField extends Component {
      * Override this to change the fields to fetch
      */
     getFieldNames() {
-        return ['display_name'];
+        return ["display_name"];
     }
 
     /**
@@ -347,7 +353,6 @@ export class StatusBarField extends Component {
                 ? { id: item.value, display_name: item.label }
                 : item.value;
         await record.update({ [name]: value });
-        await record.save();
     }
 
     /**

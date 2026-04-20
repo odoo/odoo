@@ -17,7 +17,6 @@ export class StateSelectionField extends Component {
         ...standardFieldProps,
         showLabel: { type: Boolean, optional: true },
         withCommand: { type: Boolean, optional: true },
-        autosave: { type: Boolean, optional: true },
     };
     static defaultProps = {
         showLabel: true,
@@ -47,9 +46,10 @@ export class StateSelectionField extends Component {
         }
     }
     get options() {
-        return this.props.record.fields[this.props.name].selection.map(([state, label]) => {
-            return [state, this.props.record.data[`legend_${state}`] || label];
-        });
+        return this.props.record.fields[this.props.name].selection.map(([state, label]) => [
+            state,
+            this.props.record.data[`legend_${state}`] || label,
+        ]);
     }
     get currentValue() {
         return this.props.record.data[this.props.name] || this.options[0][0];
@@ -69,7 +69,7 @@ export class StateSelectionField extends Component {
     }
 
     async updateRecord(value) {
-        await this.props.record.update({ [this.props.name]: value }, { save: this.props.autosave });
+        await this.props.record.update({ [this.props.name]: value });
     }
 }
 
@@ -77,15 +77,6 @@ export const stateSelectionField = {
     component: StateSelectionField,
     displayName: _t("Label Selection"),
     supportedOptions: [
-        {
-            label: _t("Autosave"),
-            name: "autosave",
-            type: "boolean",
-            default: true,
-            help: _t(
-                "If checked, the record will be saved immediately when the field is modified."
-            ),
-        },
         {
             label: _t("Hide label"),
             name: "hide_label",
@@ -95,10 +86,9 @@ export const stateSelectionField = {
     supportedTypes: ["selection"],
     extractProps({ options, viewType }, dynamicInfo) {
         return {
-            showLabel: 'hide_label' in options ? !options.hide_label : false,
+            showLabel: "hide_label" in options ? !options.hide_label : false,
             withCommand: viewType === "form",
             readonly: dynamicInfo.readonly,
-            autosave: "autosave" in options ? !!options.autosave : true,
         };
     },
 };

@@ -10,7 +10,6 @@ export class BooleanFavoriteField extends Component {
     static props = {
         ...standardFieldProps,
         noLabel: { type: Boolean, optional: true },
-        autosave: { type: Boolean, optional: true },
     };
     static defaultProps = {
         noLabel: false,
@@ -31,7 +30,7 @@ export class BooleanFavoriteField extends Component {
             return;
         }
         const changes = { [this.props.name]: !this.props.record.data[this.props.name] };
-        await this.props.record.update(changes, { save: this.props.autosave });
+        await this.props.record.update(changes);
     }
 }
 
@@ -41,20 +40,8 @@ export const booleanFavoriteField = {
     supportedTypes: ["boolean"],
     isEmpty: () => false,
     listViewWidth: ({ hasLabel }) => (!hasLabel ? 20 : false),
-    supportedOptions: [
-        {
-            label: _t("Autosave"),
-            name: "autosave",
-            type: "boolean",
-            default: true,
-            help: _t(
-                "If checked, the record will be saved immediately when the field is modified."
-            ),
-        },
-    ],
-    extractProps: ({ attrs, options }, dynamicInfo) => ({
+    extractProps: ({ attrs }, dynamicInfo) => ({
         noLabel: exprToBoolean(attrs.nolabel),
-        autosave: "autosave" in options ? Boolean(options.autosave) : true,
         readonly: dynamicInfo.readonly,
     }),
 };

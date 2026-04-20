@@ -10153,3 +10153,24 @@ test("[Offline] create record when offline QuickCreate", async () => {
     await getService("action").doAction(1);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
 });
+
+test("widgets in kanban view: verify immediate autosave", async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                        <field name="bar" widget="boolean_toggle"/>
+                    </div>
+                </templates>
+            </kanban>`,
+    });
+
+    await contains(".o_field_boolean_toggle input").click();
+    expect.verifySteps(["web_save"]);
+});
