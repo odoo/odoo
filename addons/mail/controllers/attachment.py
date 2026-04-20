@@ -94,7 +94,7 @@ class AttachmentController(ThreadController):
             raise NotFound()
         message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
-        if message:
+        if message and message.message_type == 'comment':
             thread = request.env[message.model].browse(message.res_id)
             thread._message_update_content(message, body=message.body)  # marks the message edited
         # sudo: ir.attachment: access is validated with _has_attachments_ownership
