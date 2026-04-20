@@ -1,6 +1,8 @@
+import json
+
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo import Command, _
 from odoo.tests import tagged
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
 
@@ -897,3 +899,24 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                   }
                 }
             )
+
+    def test_get_l10n_in_edi_response_json(self):
+        """Ensure EDI response JSON is returned and no IRN is set (no side-effect)."""
+        move = self.invoice
+        json_content = {
+            "Irn": "TEST_IRN_123",
+            "AckNo": "ACK_001"
+        }
+        attachment = self.env['ir.attachment'].create({
+            'name': 'edi_response.json',
+            'raw': json.dumps(json_content).encode('utf-8'),
+            'res_model': 'account.move',
+            'res_id': move.id,
+        })
+        move.l10n_in_edi_attachment_id = attachment
+        result = move._get_l10n_in_edi_response_json()
+        self.assertDictEqual(result, json_content)
+        self.assertFalse(move.l10n_in_irn_number, _("IRN should not be set by _get_l10n_in_edi_response_json anymore."))
+        move.l10n_in_edi_attachment_id = False
+        result_empty = move._get_l10n_in_edi_response_json()
+        self.assertEqual(result_empty, {})

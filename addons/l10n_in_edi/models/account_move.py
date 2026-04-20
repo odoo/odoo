@@ -191,7 +191,9 @@ class AccountMove(models.Model):
     def _get_l10n_in_edi_response_json(self):
         self.ensure_one()
         if self.l10n_in_edi_attachment_id:
-            return json.loads(self.l10n_in_edi_attachment_id.sudo().raw.decode("utf-8"))
+            json_data = json.loads(self.l10n_in_edi_attachment_id.sudo().raw.decode("utf-8"))
+            self.l10n_in_irn_number = json_data.get('Irn') if json_data.get('Irn') else ""
+            return json_data
         return {}
 
     def _l10n_in_lock_invoice(self):
