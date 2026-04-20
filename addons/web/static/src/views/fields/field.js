@@ -28,7 +28,7 @@ const validFieldTypes = {
     reference: { availableOffline: false },
     many2one_reference: { availableOffline: false },
     many2one: { availableOffline: true },
-    one2many: { availableOffline: false },
+    one2many: { availableOffline: true },
     many2many: { availableOffline: true },
     selection: { availableOffline: true },
     date: { availableOffline: true },

@@ -287,8 +287,8 @@ export class X2ManyField extends Component {
         return this.props.context;
     }
 
-    async onAdd({ context, editable } = {}) {
-        context = makeContext([this.props.context, context]);
+    async onAdd({ context: controlContext, editable } = {}) {
+        const context = makeContext([this.props.context, controlContext]);
         if (this.isMany2Many) {
             const domain = getFieldDomain(this.props.record, this.props.name, this.props.domain);
             const { string } = this.props;
@@ -304,7 +304,7 @@ export class X2ManyField extends Component {
                 await this.list.leaveEditMode({ canAbandon: false });
             }
             if (!this.list.editedRecord) {
-                return this.addInLine({ context, editable });
+                return this.addInLine({ context, editable, controlContext });
             }
             return;
         }

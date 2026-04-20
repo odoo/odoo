@@ -918,6 +918,21 @@ export class ListRenderer extends Component {
         );
     }
 
+    isControlAvailableOffline(control) {
+        if (!this.offlineService.offline) {
+            return true;
+        }
+        const fieldContexts = this.offlineService.isAvailableOffline(
+            this.env.config.actionId,
+            "form",
+            this.props.nestedKeyOptionalFieldsData.field // this.props.list._fieldName ?
+        );
+        if (!fieldContexts) {
+            return false;
+        }
+        return fieldContexts.includes(control.context || null);
+    }
+
     isSortable(column) {
         const { hasLabel, name, options, type } = column;
         if (type === "count") {

@@ -25,6 +25,7 @@ import {
     makeActiveField,
 } from "./utils";
 import { FetchRecordError } from "./errors";
+import { hashCode } from "@web/core/utils/strings";
 
 /**
  * @typedef {import("@web/core/context").Context} Context
@@ -764,20 +765,29 @@ export class RelationalModel extends Model {
         let { actionId, viewType } = this.env.config;
         let resId = config.resId;
         let markAsAvailableOffline = actionId;
-        if (config.isMonoRecord && ["list", "kanban"].includes(viewType)) {
-            viewType = viewType + "_quick_create"; // list_quick_create or kanban_quick_create
-            resId = false;
-        }
-        if (!config.isMonoRecord) {
+        const params = {};
+        if (config.isMonoRecord) {
+            if (["list", "kanban"].includes(viewType)) {
+                viewType = viewType + "_quick_create"; // list_quick_create or kanban_quick_create
+                resId = false;
+            }
+            if (config.fieldName) {
+                params.resId = false;
+                params.fieldName = config.fieldName;
+                params.fieldContext = {
+                    key: hashCode(JSON.stringify(config.controlContext)),
+                    context: JSON.stringify(config.controlContext),
+                };
+            }
+            params.resId = resId;
+        } else {
             const hasRecords = config.groupBy.length
                 ? result.groups.some((group) => group.__count > 0)
                 : result.length > 0;
             markAsAvailableOffline = markAsAvailableOffline && hasRecords;
+            params.search = this.env.searchModel.getCurrentSearch();
         }
         if (markAsAvailableOffline) {
-            const params = config.isMonoRecord
-                ? { resId }
-                : { search: this.env.searchModel.getCurrentSearch() };
             this.offline.setAvailableOffline(actionId, viewType, params);
         }
     }

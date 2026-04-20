@@ -166,6 +166,7 @@
                             t-attf-class="btn btn-link #{control_index !== 0 ? 'ml16' : ''}"
                             t-att-tabindex="this.props.list.editedRecord ? '-1' : '0'"
                             t-att-data-hotkey="control.hotkey || false"
+                            t-att-data-available-offline="this.isControlAvailableOffline(control)"
                             t-on-click.stop.prevent="() => this.add({ context: control.context })"
                         >
                             <t t-out="control.string"/>
@@ -399,6 +400,7 @@
                             name="delete"
                             aria-label="Delete row"
                             tabindex="-1"
+                            data-available-offline=""
                         />
                     </td>
                 </t>

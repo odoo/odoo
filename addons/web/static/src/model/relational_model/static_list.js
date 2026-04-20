@@ -87,6 +87,7 @@ export class StaticList extends DataPoint {
      */
     setup(_config, data, options = {}) {
         this._parent = options.parent;
+        this._fieldName = options.fieldName;
         this._onUpdate = options.onUpdate;
 
         this._cache = markRaw({});
@@ -170,7 +171,7 @@ export class StaticList extends DataPoint {
      */
     addNewRecord(params) {
         return this.model.mutex.exec(async () => {
-            const { activeFields, context, mode, position, withoutParent } = params;
+            const { activeFields, context, mode, position, withoutParent, controlContext } = params;
             const record = await this._createNewRecordDatapoint({
                 activeFields,
                 context,
@@ -178,6 +179,7 @@ export class StaticList extends DataPoint {
                 withoutParent,
                 manuallyAdded: true,
                 mode,
+                controlContext,
             });
             await this._addRecord(record, { position });
             await this._onUpdate({ withoutOnchange: !record._checkValidity({ silent: true }) });
@@ -848,14 +850,29 @@ export class StaticList extends DataPoint {
                 changes[this.config.relationField].id = this._parent.resId;
             }
         }
+        const { promise, resolve } = Promise.withResolvers();
+        const context = Object.assign({}, this.context, params.context);
+
         const values = await this.model._loadNewRecord(
             {
                 resModel: this.resModel,
                 activeFields: params.activeFields || this.activeFields,
                 fields: this.fields,
-                context: Object.assign({}, this.context, params.context),
+                context,
             },
-            { changes, evalContext: this.evalContext }
+            {
+                cache: this.model._getCacheParams(
+                    {
+                        ...this.config,
+                        isMonoRecord: true,
+                        fieldName: this._fieldName,
+                        controlContext: params.controlContext,
+                    },
+                    promise
+                ),
+                changes,
+                evalContext: this.evalContext,
+            }
         );
 
         if (this.canResequence() && this.records.length) {
@@ -886,12 +903,15 @@ export class StaticList extends DataPoint {
             }
             values[this.handleField] = value;
         }
-        return this._createRecordDatapoint(values, {
+        const record = this._createRecordDatapoint(values, {
             mode: params.mode || "edit",
             virtualId: getId("virtual"),
             activeFields: params.activeFields,
             manuallyAdded: params.manuallyAdded,
         });
+
+        resolve({ root: record, loadId: this.config.loadId });
+        return record;
     }
 
     _createRecordDatapoint(data, params = {}) {
