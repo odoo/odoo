@@ -844,7 +844,7 @@ export function useRecordObserver(callback) {
                     .then(resolve)
                     .catch(reject);
             } else {
-                batched(effectId, props.record, props, resolve, reject);
+                batchedCallback(effectId, props.record, props, resolve, reject);
             }
         });
         return promise;
