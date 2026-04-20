@@ -105,6 +105,7 @@ class TestSnippets(HttpCase):
                 ._prepare_category_list_data(parent_id=category.id)
             )
 
-        # Assert that the returned cover_image uses the mocked base URL
-        self.assertTrue(data[0]["cover_image"].startswith(original_get_base_url))
-        self.assertNotIn(website.domain, data[0]["cover_image"])
+        # Assert that the returned cover_image use absolute URL without domain
+        self.assertTrue(data[0]['cover_image'].startswith('/'))
+        self.assertNotIn(original_get_base_url, data[0]['cover_image'])
+        self.assertNotIn(website.domain, data[0]['cover_image'])
