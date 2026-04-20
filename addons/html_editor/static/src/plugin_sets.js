@@ -77,6 +77,7 @@ import { DoubleClickImagePreviewPlugin } from "./main/media/dblclick_image_previ
 import { StylePlugin } from "./core/style_plugin";
 import { ContentEditablePlugin } from "./core/content_editable_plugin";
 import { SelectionPlaceholderPlugin } from "./main/selection_placeholder_plugin";
+import { UserSignaturePlugin } from "./main/user_signature_plugin";
 
 export const CORE_PLUGINS = [
     BaseContainerPlugin,
@@ -145,6 +146,7 @@ export const MAIN_PLUGINS = [
     InlineCodePlugin,
     TableResizePlugin,
     FilePlugin,
+    UserSignaturePlugin,
     PlaceholderPlugin,
     SelectionPlaceholderPlugin,
 ];
