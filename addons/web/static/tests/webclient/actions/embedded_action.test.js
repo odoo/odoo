@@ -371,6 +371,38 @@ test("can click on a embedded action and execute the corresponding action (with 
     });
 });
 
+test("embedded actions are displayed in the form view of an embedded action", async () => {
+    await mountWithCleanup(WebClient);
+    onRpc("do_python_method", () => ({
+        name: "Partner form from python action",
+        res_model: "partner",
+        res_id: 1,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    }));
+    await getService("action").doAction(1);
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await waitFor(".o_popover.dropdown-menu");
+    await contains(
+        ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
+    ).click();
+    await contains(
+        ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 3')"
+    ).click();
+    await contains(".o_embedded_actions > button > span:contains('Embedded Action 3')").click();
+    expect(".o_form_view").toHaveCount(1);
+    expect(".o_embedded_actions > button.active").toHaveText("Embedded Action 3", {
+        message: "the embedded actions should be displayed in the form view of the action",
+    });
+
+    await contains(".o_embedded_actions > button > span:contains('Embedded Action 2')").click();
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1);
+    expect(".o_embedded_actions").toHaveCount(0, {
+        message: "the embedded actions should not be displayed on a record opened from the action",
+    });
+});
+
 test("breadcrumbs are updated when clicking on embeddeds", async () => {
     await mountWithCleanup(WebClient);
     onRpc("do_python_method", () => ({
