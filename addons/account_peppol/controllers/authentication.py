@@ -29,9 +29,10 @@ class PeppolAuthentication(http.Controller):
             _logger.warning("Invalid auth token auth_type=%s connect_token=%s auth_token=%s", auth_type, connect_token, auth_token)
             return redirect(success=False, partner=partner)
 
-        if auth_token == 'False':
+        # if the auth_token is unauthorized, it means the user doesn't have the correct credentials to activate peppol for that company
+        if auth_token == 'unauthorized':
             base_url = self.env['ir.config_parameter'].sudo().get_str('web.base.url')
-            portal_hash = connect_data["company"]._get_portal_hash()
+            portal_hash = connect_data['company']._get_portal_hash()
             return request.redirect(f"{base_url}/peppol/activate/{auth_type}/{portal_hash}/1")
 
         peppol_identifier = connect_data['peppol_identifier']
