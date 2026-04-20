@@ -24,11 +24,11 @@ export function getRottingDaysTitle(modelName, rotDays) {
     });
 }
 
-export class KanbanRottingField extends Component {
+export class RottingDaysField extends Component {
     static props = {
         ...standardFieldProps,
     };
-    static template = "mail.KanbanRottingField";
+    static template = "mail.RottingDaysField";
 
     setup() {
         // Preprocess all sentences as childless strings so they're easier to format in the DOM
@@ -37,7 +37,7 @@ export class KanbanRottingField extends Component {
         });
 
         this.title = getRottingDaysTitle(
-            this.props.record.model.config.resModel,
+            this.props.record.resModel,
             this.props.record.data.rotting_days
         );
     }
@@ -55,8 +55,8 @@ export class Many2OneFieldRotting extends Many2OneField {
     }
 }
 
-registry.category("fields").add("kanban.rotting", {
-    component: KanbanRottingField,
+registry.category("fields").add("rotting_days", {
+    component: RottingDaysField,
 });
 
 registry.category("fields").add("rotting", {
