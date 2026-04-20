@@ -78,12 +78,13 @@ class HrEmployee(models.Model):
 
     def action_archive(self):
         super().action_archive()
-        self.env['hr.attendance'].search([
-            ('employee_id', 'in', self.ids),
-            ('check_out', '=', False),
-        ]).write({
-            'check_out': fields.Datetime.now(),
-        })
+        if not self.env.context.get('no_wizard'):
+            self.env['hr.attendance'].sudo().search([
+                ('employee_id', 'in', self.ids),
+                ('check_out', '=', False),
+            ]).write({
+                'check_out': fields.Datetime.now(),
+            })
 
     @api.depends('overtime_ids.duration', 'attendance_ids')
     def _compute_total_overtime(self):

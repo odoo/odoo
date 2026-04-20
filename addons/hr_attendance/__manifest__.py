@@ -25,7 +25,8 @@ actions(Check in/Check out) performed by them.
         'views/hr_department_view.xml',
         'views/hr_employee_view.xml',
         'views/res_config_settings_views.xml',
-        'views/hr_attendance_kiosk_templates.xml'
+        'views/hr_attendance_kiosk_templates.xml',
+        'wizard/hr_employee_departure_wizard_views.xml'
     ],
     'demo': [
         'data/hr_attendance_demo.xml'

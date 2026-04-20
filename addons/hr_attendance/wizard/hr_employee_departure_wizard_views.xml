@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_departure_wizard_view_form_inherit_attendance" model="ir.ui.view">
+        <field name="name">hr.departure.wizard.view.form.inherit.attendance</field>
+        <field name="model">hr.departure.wizard</field>
+        <field name="inherit_id" ref="hr.hr_departure_wizard_view_form"/>
+        <field name="arch" type="xml">
+
+            <sheet position="inside">
+                <field name="has_ongoing_attendance" invisible="1"/>
+                <field name="has_multiple_attendances" invisible="1"/>
+
+                <div class="alert alert-warning" role="alert" invisible="not has_ongoing_attendance or has_multiple_attendances">
+                    <h5 class="alert-heading mb-2" role="alert">Ongoing Attendance Detected</h5>
+                    <p class="">This employee is currently checked in. Please choose how to handle the attendance:</p>
+                    <group class="mb-2">
+                        <group>
+                            <label for="attendance_check_in" string="Checked In At"/>
+                            <field name="attendance_check_in" readonly="1" nolabel="1"/>
+                            <label for="attendance_worked_hours" string="Hours Since Check-in"/>
+                            <field name="attendance_worked_hours" readonly="1" nolabel="1" widget="float_time"/>
+                        </group>
+                        <group>
+                            <field name="attendance_action" widget="radio" 
+                                required="has_ongoing_attendance and not has_multiple_attendances"/>
+                        </group>
+                    </group>
+                </div>
+
+                <div class="alert alert-warning" role="alert" invisible="not has_multiple_attendances">
+                    <h5 class="alert-heading mb-2" role="alert">Multiple Ongoing Attendances Detected</h5>
+                    <p class="mb-0">
+                        This employee has multiple ongoing attendances. 
+                        Please handle them manually in the Attendances app before archiving this employee.
+                    </p>
+                </div>
+
+            </sheet>
+            
+        </field>
+    </record>
+</odoo>
