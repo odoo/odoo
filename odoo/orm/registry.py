@@ -55,7 +55,6 @@ _REGISTRY_CACHES = {
     'assets': 512,
     'stable': 1024,
     'templates': 1024,
-    'template_code': 1024,
     'routing': 1024,  # 2 entries per website
     'routing.rewrites': 8192,  # url_rewrite entries
     'templates.cached_values': 2048, # arbitrary
@@ -325,6 +324,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # registry must be rebuilt.
         self.registry_sequence: int = -1
         self.cache_sequences: dict[str, int] = {}
+        self._template_code__ = LRU(_REGISTRY_CACHES['templates'])  # memo for code templates
 
         # Flags indicating invalidation of the registry or the cache.
         self._invalidation_flags = threading.local()

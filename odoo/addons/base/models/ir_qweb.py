@@ -1044,14 +1044,16 @@ class IrQweb(models.AbstractModel):
 
         view_hash = hash(document)
         cache_key = tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())
-        return self._generate_code_cached_memo(ref, memo_key=(view_hash, cache_key))
 
-    @tools.conditional(
-        'xml' not in tools.config['dev_mode'],
-        api.ormcache('ref', 'memo_key', cache='template_code'),
-    )
-    def _generate_code_cached_memo(self, ref: int, memo_key):
-        return self._generate_code_uncached(ref)
+        if 'xml' in tools.config['dev_mode']:
+            return self._generate_code_uncached(ref)
+        memo_key = (ref, view_hash, cache_key)
+        cache = self.env.registry._template_code__
+        code = cache.get(memo_key)
+        if code is None:
+            code = self._generate_code_uncached(ref)
+            cache[memo_key] = code
+        return code
 
     def _generate_code_uncached(self, template: int | str | etree._Element):
         assert isinstance(self, IrQweb)
