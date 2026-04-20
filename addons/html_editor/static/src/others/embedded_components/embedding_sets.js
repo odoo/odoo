@@ -10,17 +10,21 @@ import { videoEmbedding } from "@html_editor/others/embedded_components/backend/
 import { readonlyVideoEmbedding } from "@html_editor/others/embedded_components/core/video/readonly_video";
 import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
 import { readonlySyntaxHighlightingEmbedding } from "./core/syntax_highlighting/readonly_syntax_highlighting";
+import { dateEmbedding } from "./backend/date/date";
+import { readonlyDateEmbedding } from "./core/date/readonly_date";
 
 export const MAIN_EMBEDDINGS = [
     fileEmbedding,
     tableOfContentEmbedding,
     toggleBlockEmbedding,
+    dateEmbedding,
     videoEmbedding,
     captionEmbedding,
     syntaxHighlightingEmbedding,
 ];
 
 export const READONLY_MAIN_EMBEDDINGS = [
+    readonlyDateEmbedding,
     readonlyFileEmbedding,
     readonlyTableOfContentEmbedding,
     toggleBlockEmbedding,

@@ -5,6 +5,7 @@
             <t t-set-slot="buttons">
                 <div class="o_datetime_buttons d-flex gap-2">
                     <button
+                        t-if="this.props.showResetButton"
                         class="btn btn-sm btn-secondary"
                         title="Clear"
                         tabindex="-1"
