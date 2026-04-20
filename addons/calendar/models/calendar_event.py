@@ -839,7 +839,7 @@ class CalendarEvent(models.Model):
                 detached_events = event.with_context(skip_contact_description=True)._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
 
-        events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_invitation_emails()
+        events.attendee_ids._send_invitation_emails()
 
         # update activities based on calendar event data, unless already prepared
         # above manually. Heuristic: a new command (0, 0, vals) is considered as
@@ -977,13 +977,9 @@ class CalendarEvent(models.Model):
 
         current_attendees = self.filtered('active').attendee_ids
         skip_attendee_notification = self.env.context.get('skip_attendee_notification')
-        if not skip_attendee_notification and 'partner_ids' in values:
-            ignore_past_event_attendees = current_attendees.filtered(lambda attendee: attendee.event_id.start < fields.Datetime.now())
-            # we send to all partners and not only the new ones
-            (current_attendees - previous_attendees - ignore_past_event_attendees)._notify_attendees(
-                self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
-                force_send=True,
-            )
+        invited_attendees = self._get_new_invited_attendees(current_attendees, previous_attendees, vals)
+        if not skip_attendee_notification and invited_attendees:
+            invited_attendees._send_invitation_emails()
         if not skip_attendee_notification and not self.env.context.get('is_calendar_event_new') and 'start' in values:
             start_date = fields.Datetime.to_datetime(values.get('start'))
             # Only notify on future events
@@ -1800,6 +1796,12 @@ class CalendarEvent(models.Model):
                 contact_description.append("")  # To add a blank line between the organizer and partner details
             contact_description.extend(self._prepare_partner_contact_details_html(_("Contact Details"), contact_partners))
         return Markup("<br/>").join(contact_description)
+
+    @api.model
+    def _get_new_invited_attendees(self, current_attendees, previous_attendees, update_vals):
+        """Get the attendees who must receive an invitation for a modified calendar event. This method is meant
+        to be overridden."""
+        return current_attendees - previous_attendees
 
     @api.model
     def _prepare_partner_contact_details_html(self, section_title, partner):
