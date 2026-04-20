@@ -227,7 +227,7 @@ class Base(models.AbstractModel):
             })
         if next_id:
             record = record.browse(next_id)
-        return record.with_context(bin_size=True).web_read(specification)
+        return record.web_read(specification)
 
     def web_save_multi(self, vals_list: list[dict], specification: dict[str, dict]) -> list[dict]:
         """
@@ -255,7 +255,7 @@ class Base(models.AbstractModel):
         for record, val in zip(self, vals_list):
             record.write(val)
 
-        return self.with_context(bin_size=True).web_read(specification)
+        return self.web_read(specification)
 
     @api.readonly
     def web_read(self, specification: dict[str, dict]) -> list[dict]:
@@ -317,7 +317,7 @@ class Base(models.AbstractModel):
             # this also avoid a call to read on the co-model that might have different access rules
             values_list = [{'id': id_} for id_ in self._ids]
         else:
-            values_list: list[dict] = self.read(fields_to_read, load=None)
+            values_list: list[dict] = self.read(fields_to_read, load='web')
 
         if not values_list:
             return values_list

@@ -271,7 +271,7 @@ test("save record with signature field modified by onchange", async () => {
 
     Partner._fields.foo = fields.Char({
         onChange(data) {
-            data.sign = MYB64;
+            data.sign = {filename: "", content: MYB64};
         },
     });
 

@@ -238,7 +238,8 @@ class TestHttpWebJson_2(TestHttpBase):
             data=r'{"ids": [%d], "fields": ["image_128"]}' % self.jackoneill.id,
             headers=CT_JSON | self.bearer_header,
         ).raise_for_status()
-        self.assertIn('"image_128": "PD94bWw', res.text, "Base64 encoded SVG missing")  # starts with b'<?xml version...'
+        self.assertIn('"image_128": {"', res.text, "Image missing")
+        self.assertIn('"PD94bWw', res.text, "Base64 encoded SVG missing")  # starts with b'<?xml version...'
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
         attachment = self.env['ir.attachment'].with_user(self.jackoneill).create({
@@ -246,14 +247,24 @@ class TestHttpWebJson_2(TestHttpBase):
             'raw': b'x  \x01-',
         })
         expected_datas = 'eCAgAS0='  # base64-encoded raw value
-        values = (attachment.id, expected_datas)
         res = self.db_url_open(
             '/json/2/ir.attachment/search_read',
             data=r'{"domain": [["id", "=", %d]], "fields": ["raw"], "limit": 1}' % attachment.id,
             headers=CT_JSON | self.bearer_header,
         ).raise_for_status()
-        self.assertEqual(res.text, '[{"id": %d, "raw": "%s"}]' % values)
+        self.assertEqual(res.text, '[{"id": %d, "raw": {"filename": "test", "content": "%s", "size": %s}}]' % (
+            attachment.id, expected_datas, attachment.raw.size))
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
+
+        # writing
+        data = b'X \x01!'
+        data_b64 = 'WCABIQ=='
+        res = self.db_url_open(
+            '/json/2/ir.attachment/write',
+            data=r'{"ids": [%s], "vals": {"raw": "%s"}}' % (attachment.id, data_b64),
+            headers=CT_JSON | self.bearer_header,
+        ).raise_for_status()
+        self.assertEqual(attachment.raw.content, data)
 
     def test_webjson2_missing_method(self):
         res = self.db_url_open(

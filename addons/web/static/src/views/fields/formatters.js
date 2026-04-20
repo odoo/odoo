@@ -7,7 +7,7 @@ import {
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { humanSize, isBinarySize } from "@web/core/utils/binary";
+import { humanSize } from "@web/core/utils/binary";
 import {
     formatFloat as formatFloatNumber,
     humanNumber,
@@ -24,16 +24,19 @@ import { normalizeTimeStr } from "@web/core/l10n/time";
 // -----------------------------------------------------------------------------
 
 /**
- * @param {string} [value] base64 representation of the binary
+ * @param {Object} [value] filename, size, etc. of the binary
  * @returns {string}
  */
 export function formatBinary(value) {
-    if (!isBinarySize(value)) {
-        // Computing approximate size out of base64 encoded string
-        return humanSize(Math.round(value.length * 0.75));
+    if (!value) {
+        return "";
+    } else if (value.filename) {
+        return value.filename;
+    } else if (value.size) {
+        return humanSize(value.size);
+    } else {
+        return "(file)";
     }
-    // already bin_size
-    return value;
 }
 
 /**

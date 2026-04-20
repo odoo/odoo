@@ -3060,6 +3060,23 @@ class BaseModel(metaclass=MetaModel):
                 continue
 
             convert = field.convert_to_read
+            if field.type == 'binary' and load == 'web':
+                def binary_convert(value, record, use_display_name):
+                    if not value:
+                        return False
+                    res = {}
+                    # Include the file name
+                    filename = value.filename
+                    if filename and filename != field.name:
+                        res['filename'] = filename
+                    # For NewIds, always include the content
+                    include_content = not any(record._ids)
+                    if include_content:
+                        res['content'] = value.to_base64()
+                    res['size'] = value.size
+                    return res
+                convert = binary_convert
+
             for record, vals in data:
                 # missing records have their vals empty
                 if not vals:

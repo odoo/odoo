@@ -578,10 +578,7 @@ export class HierarchyModel extends Model {
     }
 
     get context() {
-        return {
-            bin_size: true,
-            ...(this.config.context || {}),
-        };
+        return this.config.context ? { ...this.config.context } : {};
     }
 
     exportState() {

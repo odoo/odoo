@@ -374,13 +374,16 @@ class IrAttachment(models.Model):
 
         _logger.info("filestore gc %d checked, %d removed", checked, removed)
 
-    @api.depends('store_fname', 'db_datas')
+    @api.depends('store_fname', 'db_datas', 'name')
     def _compute_raw(self):
         for attach in self:
             if attach.store_fname:
-                attach.raw = attach._file_read(attach.store_fname)
+                raw = attach._file_read(attach.store_fname)
+                if isinstance(raw, LocalBinaryFile):
+                    raw.filename = attach.name
             else:
-                attach.raw = attach.db_datas
+                raw = BinaryBytes(attach.db_datas, filename=attach.name)
+            attach.raw = raw
 
     def _get_pdf_raw(self):
         self.ensure_one()
@@ -518,7 +521,7 @@ class IrAttachment(models.Model):
                         output = img.image_quality(quality)
                     else:
                         output = img.image_quality()
-                    values['raw'] = BinaryBytes(output)
+                    values['raw'] = BinaryBytes(output, filename=raw.filename)
             except UserError as e:
                 # Catch error during test where we provide fake image
                 # raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
@@ -539,6 +542,8 @@ class IrAttachment(models.Model):
         if raw or 'raw' in values:
             values['raw'] = raw
 
+        if 'name' not in values and (filename := raw.filename or values.get('res_field')):
+            values['name'] = filename
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
                 'xml' in mimetype and    # other xml (svg, text/xml, etc)
@@ -1158,7 +1163,7 @@ class IrAttachment(models.Model):
 
 class LocalBinaryFile(BinaryValue):
     """Lazily loaded file."""
-    __slots__ = ('__content', '__mimetype', '__path', '__stat')
+    __slots__ = ('__content', '__mimetype', '__path', '__stat', 'filename')
 
     def __init__(self, path: str, model: IrAttachment):
         """ Open a file as a binary value.
@@ -1174,6 +1179,7 @@ class LocalBinaryFile(BinaryValue):
             raise FileNotFoundError(f"Path is not a regular file: {path}")
         self.__content: bytes | None = None
         self.__mimetype: str | None = None
+        self.filename = ''  # mutable property
 
     def open(self):
         assert isinstance(self, LocalBinaryFile)

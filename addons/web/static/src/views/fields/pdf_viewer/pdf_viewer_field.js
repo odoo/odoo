@@ -66,9 +66,11 @@ export class PdfViewerField extends Component {
     }
 
     update({ name, data }) {
-        const changes = {
-            [this.props.name]: data || false,
-        };
+        const payload = data || name ? {
+            filename: name || "",
+            content: data || false,
+        } : false;
+        const changes = { [this.props.name]: payload };
         if (this.props.fileNameField && this.props.record.data[this.props.fileNameField] !== name) {
             changes[this.props.fileNameField] = name || false;
         }

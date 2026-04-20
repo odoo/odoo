@@ -9,7 +9,7 @@ from operator import attrgetter
 import psycopg2
 
 from odoo.exceptions import UserError
-from odoo.tools import SQL, human_size
+from odoo.tools import SQL
 from odoo.tools.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
 
 from .fields import Field
@@ -90,6 +90,19 @@ class Binary(Field[BinaryValue]):
             # a string may come from RPC, it is base64 encoded
             decoded_value = base64.b64decode(value, validate=validate)
             return BinaryBytes(decoded_value)
+        if isinstance(value, dict):
+            # {filename, content}
+            if 'content' not in value:
+                if len(records) == 1 and 'filename' in value:
+                    # we support changing only the file name when the content
+                    # can be read from the record
+                    return BinaryBytes(records[self.name].content, filename=value['filename'])
+                raise ValueError(f"{self}: missing 'content' when writing a dict")
+            filename = value.get('filename') or ''
+            binary_value = self.convert_to_cache(value['content'], records)
+            if filename and binary_value.filename != filename:
+                binary_value = BinaryBytes(binary_value.content, filename=filename)
+            return binary_value
         # Error needed because we used to write base64 encoded data and we
         # cannot distinguish whether bytes are encoded or not in base64.
         if isinstance(value, bytes) and (self.related_field or self).name == 'raw':
@@ -118,15 +131,15 @@ class Binary(Field[BinaryValue]):
         if not value:
             return False
         value = self.convert_to_cache(value, record, validate=False)
-        if (
-            record.env.context.get('bin_size')
-            or record.env.context.get('bin_size_' + self.name)
-        ):
-            # TODO js detects that value looks like a size otherwise it
-            # supposes that this is base64 encoded and requests the image
-            return human_size(value.size)
-        # we read bytes in base64 format for RPC
-        return value.to_base64()
+        filename = value.filename
+        res = {
+            'filename': filename,
+            'content': value.to_base64(),
+            'size': value.size,
+        }
+        if not filename or filename == self.name:  # remove empty name
+            res.pop('filename')
+        return res
 
     def read(self, records):
         # values are stored in attachments, retrieve them
@@ -150,7 +163,6 @@ class Binary(Field[BinaryValue]):
         env = record_values[0][0].env
         env['ir.attachment'].sudo().create([
             {
-                'name': self.name,
                 'res_model': self.model_name,
                 'res_field': self.name,
                 'res_id': record.id,
@@ -190,20 +202,19 @@ class Binary(Field[BinaryValue]):
                     ('res_field', '=', self.name),
                     ('res_id', 'in', real_records.ids),
                 ])
-            if value:
+            if cache_value:
                 # update the existing attachments
-                atts.write({'raw': value})
+                atts.write({'raw': cache_value})
                 atts_records = records.browse(atts.mapped('res_id'))
                 # create the missing attachments
                 missing = (real_records - atts_records)
                 if missing:
                     atts.create([{
-                            'name': self.name,
                             'res_model': record._name,
                             'res_field': self.name,
                             'res_id': record.id,
                             'type': 'binary',
-                            'raw': value,
+                            'raw': cache_value,
                         }
                         for record in missing
                     ])
@@ -364,6 +375,13 @@ class BinaryValueAttachment(BinaryValue):
     def content(self) -> bytes:
         self._check_concurrent_modification()
         return self.__attachment.raw.content
+
+    @property
+    def filename(self) -> str:
+        self._check_concurrent_modification()
+        name = self.__attachment.name or ''
+        field_name = self.__attachment.res_field
+        return name if name != field_name else ''
 
     @property
     def mimetype(self) -> str:

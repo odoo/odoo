@@ -81,7 +81,7 @@ class IrActionsReport(models.Model):
         if not kwargs.get("load") or not len(self.printer_ids.exists()) or not docids:
             return res
 
-        jobs = self.with_context(bin_size=False).get_print_jobs(
+        jobs = self.get_print_jobs(
             self.report_name, docids, {}
         )
         for record in res:

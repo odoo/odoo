@@ -172,10 +172,10 @@ class TestXMLRPC(common.HttpCase):
 
     def test_xmlrpc_attachment_raw(self):
         ids = self.env['ir.attachment'].create({'name': 'n', 'raw': b'\x01\x09'}).ids
-        [att] = self.xmlrpc_object.execute(
+        [att] = self.xmlrpc_object.execute_kw(
             common.get_db_name(), self.admin_uid, 'admin',
-            'ir.attachment', 'read', ids, [])
-        self.assertEqual(att['raw'], 'AQk=',
+            'ir.attachment', 'read', [ids, []])
+        self.assertEqual(att['raw'], {'content': 'AQk=', 'filename': 'n', 'size': 2},
             "on read, binary data should be base64 encoded")
 
 # really just for the test cursor
