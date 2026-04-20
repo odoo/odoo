@@ -51,6 +51,10 @@ export class ChannelInvitation extends Component {
         });
     }
 
+    get searchLimit() {
+        return 15;
+    }
+
     get selectablePartners() {
         return this.props.state?.selectablePartners ?? this.state.selectablePartners;
     }
@@ -89,11 +93,8 @@ export class ChannelInvitation extends Component {
 
     get showingResultNarrowText() {
         return _t(
-            "Showing %(result_count)s results out of %(total_count)s. Narrow your search to see more choices.",
-            {
-                result_count: this.selectablePartners.length,
-                total_count: this.state.searchResultCount,
-            }
+            "Showing the first %(search_limit)s results. Narrow your search to see more choices.",
+            { search_limit: this.searchLimit }
         );
     }
 
@@ -106,10 +107,11 @@ export class ChannelInvitation extends Component {
 
     async fetchPartnersToInvite() {
         const results = await this.sequential(() =>
-            this.orm.call("res.partner", "search_for_channel_invite", [
-                this.searchStr,
-                this.props.channel?.id ?? false,
-            ])
+            this.orm.call("res.partner", "search_for_channel_invite", [], {
+                search_term: this.searchStr,
+                channel_id: this.props.channel?.id ?? false,
+                limit: this.searchLimit,
+            })
         );
         if (!results) {
             return;

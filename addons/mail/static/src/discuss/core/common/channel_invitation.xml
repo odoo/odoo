@@ -23,7 +23,7 @@
                         <t t-if="props.channel">No one found to invite.</t>
                         <t t-else="">No user found.</t>
                     </div>
-                    <div t-if="state.searchResultCount > selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-esc="showingResultNarrowText"/>
+                    <div t-if="state.searchResultCount > this.searchLimit" class="smaller text-muted mx-1 mb-1 fst-italic" t-esc="showingResultNarrowText"/>
                     <t t-foreach="selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
                         <t t-call="discuss.ChannelInvitation-selectableItem">
                             <t t-set="selectableItemIndex" t-value="selectablePartner_index"/>
