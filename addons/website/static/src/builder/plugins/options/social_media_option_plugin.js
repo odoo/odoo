@@ -290,12 +290,7 @@ export class SocialMediaOptionPlugin extends Plugin {
             spanEl = el.ownerDocument.createElement("span");
             el.appendChild(spanEl);
         }
-        // Preserve the inline icon (used by the "Icon & Text" layout).
-        const iconEl = spanEl.querySelector(":scope > i");
         spanEl.textContent = text;
-        if (iconEl) {
-            spanEl.prepend(iconEl);
-        }
     }
 
     /**
@@ -424,12 +419,6 @@ export class EditSocialMediaLinkAction extends BuilderAction {
         const iconEl = editingElement.querySelector(ICON_SELECTOR);
         if (iconEl) {
             iconEl.dataset.icon = iconDataIcon;
-        }
-
-        // Update the inline icon inside the span (used by the "Icon & Text" layout).
-        const inlineIconEl = editingElement.querySelector(":scope > span > i");
-        if (inlineIconEl) {
-            inlineIconEl.dataset.icon = iconDataIcon;
         }
 
         this.dependencies.socialMediaOptionPlugin.setLinkLabelText(

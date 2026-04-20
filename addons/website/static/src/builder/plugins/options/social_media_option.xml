@@ -77,12 +77,6 @@
     </BuilderRow>
 </t>
 
-<t t-name="website.SocialMediaLinkColorOption">
-    <BuilderRow label.translate="Color">
-        <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom']"/>
-    </BuilderRow>
-</t>
-
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <social_media_option
