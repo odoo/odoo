@@ -742,7 +742,8 @@ class HrEmployee(models.Model):
         self.ensure_one()
         active_versions = self.version_ids.filtered(lambda v: v.active)
         versions = active_versions.filtered_domain([('date_version', '<=', date)])
-        return max(versions, key=lambda v: v.date_version) if versions else active_versions[0]
+
+        return max(versions, key=lambda v: v.date_version) if versions else active_versions[0] or self.version_ids[0]
 
     def create_version(self, values):
         self.ensure_one()
