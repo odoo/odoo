@@ -46,5 +46,6 @@ class ResCompany(models.Model):
 
         return super().write(vals)
 
-    def _is_latam(self):
-        return super()._is_latam() or self.country_code == 'AR'
+    def _get_l10n_latam_base_country_codes(self):
+        # EXTENDS 'l10n_latam_base' - adds AR
+        return super()._get_l10n_latam_base_country_codes() + ['AR']
