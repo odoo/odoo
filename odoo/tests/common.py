@@ -870,7 +870,7 @@ class BaseCase(case.TestCase):
 
     def assertCanOpenTestCursor(self):
         """ Asserts that we can currently open a test cursor. """
-        if odoo.modules.module.current_test != self:
+        if odoo.modules.module.current_test is not self:
             message = f"Trying to open a test cursor for {self.canonical_tag} while already in a test {odoo.modules.module.current_test.canonical_tag}"
             _logger.runbot(message)
             raise BadRequest(message)
