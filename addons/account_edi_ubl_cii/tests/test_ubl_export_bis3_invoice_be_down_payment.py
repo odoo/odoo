@@ -7,12 +7,8 @@ from odoo.addons.account_edi_ubl_cii.tests.test_ubl_export_bis3_be import TestUb
 class TestUblExportBis3InvoiceBEDownPayment(TestUblExportBis3BE):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.ensure_installed('sale')
-
-    @classmethod
     def get_default_groups(cls):
+        cls.ensure_installed('sale')
         groups = super().get_default_groups()
         return groups | cls.env.ref('sales_team.group_sale_manager')
 
@@ -35,5 +31,26 @@ class TestUblExportBis3InvoiceBEDownPayment(TestUblExportBis3BE):
             amount=40.0,
             post=True,
         )
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 1206.08,
+            'amount_tax': 253.28,
+            'amount_total': 1459.36,
+            'amount_residual': 1459.36,
+        }])
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_sale_order_down_payment_first_invoice')
+
+        final_invoice = self._create_down_payment_invoice(
+            sale_order=sale_order,
+            amount_type='delivered',
+            amount=None,
+            post=True,
+        )
+        self.assertRecordValues(final_invoice, [{
+            'amount_untaxed': 1809.11,
+            'amount_tax': 379.91,
+            'amount_total': 2189.02,
+            'amount_residual': 2189.02,
+        }])
+        self._generate_invoice_ubl_file(final_invoice)
+        self._assert_invoice_ubl_file(final_invoice, 'test_sale_order_down_payment_final_invoice')

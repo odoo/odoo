@@ -200,3 +200,9 @@ class AccountMove(models.Model):
                 ) for sale_order in sale_orders
             )
             move.partner_credit += max(amount_total_currency - amount_to_invoice_currency, 0.0)
+
+    def _prepare_product_base_line_for_taxes_computation(self, product_line):
+        # EXTENDS 'account'
+        values = super()._prepare_product_base_line_for_taxes_computation(product_line)
+        values['special_type'] = 'down_payment' if product_line.is_downpayment else False
+        return values

@@ -641,13 +641,15 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             if terms_and_condition:
                 vals['document_node']['cbc:Note'].append({'_text': terms_and_condition})
 
-        # WithholdingTaxTotal is not allowed.
-        # Instead, withholding tax amounts are reported as a PrepaidAmount.
         AccountTax = self.env['account.tax']
         base_lines = vals['base_lines']
         currency = vals['currency']
+        ubl_values = vals['_ubl_values']
 
-        def grouping_function(base_line, tax_data):
+        # WithholdingTaxTotal is not allowed.
+        # Instead, withholding tax amounts are reported as a PrepaidAmount.
+
+        def grouping_function_withholding(base_line, tax_data):
             if not tax_data:
                 return
             tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
@@ -655,25 +657,37 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 return
             return tax_grouping_key['is_withholding']
 
-        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_withholding)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
-        ubl_values = vals['_ubl_values']
-        ubl_values['tax_withholding_amount'] = 0.0
-        for grouping_key, values in values_per_grouping_key.items():
-            if not grouping_key:
-                continue
+        ubl_values['tax_withholding_amount'] = sum(
+            -values['tax_amount_currency']
+            for grouping_key, values in values_per_grouping_key.items()
+            if grouping_key
+        )
+        if not currency.is_zero(ubl_values['tax_withholding_amount']):
+            nodes = vals['document_node']['cbc:Note']
+            nodes.insert(0, {'_text': _(
+                "The prepaid amount of %s corresponds to the withholding tax applied.",
+                formatLang(self.env, ubl_values['tax_withholding_amount'], currency_obj=vals['currency']).replace(NON_BREAKING_SPACE, ''),
+            )})
 
-            tax_amount = values['tax_amount_currency']
-            ubl_values['tax_withholding_amount'] -= tax_amount
+        # Down payment lines on the final invoice are also added as a PrepaidAmount.
+        def grouping_function_down_payment(base_line, tax_data):
+            return self._ubl_is_down_payment_base_line(vals, base_line)
 
-        if currency.is_zero(ubl_values['tax_withholding_amount']):
-            return
-
-        nodes = vals['document_node']['cbc:Note']
-        nodes.insert(0, {'_text': _(
-            "The prepaid amount of %s corresponds to the withholding tax applied.",
-            formatLang(self.env, ubl_values['tax_withholding_amount'], currency_obj=vals['currency']).replace(NON_BREAKING_SPACE, ''),
-        )})
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_down_payment)
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        ubl_values['down_payment_amount'] = sum(
+            values['total_excluded_currency'] + values['tax_amount_currency']
+            for grouping_key, values in values_per_grouping_key.items()
+            if grouping_key
+        )
+        if not currency.is_zero(ubl_values['down_payment_amount']):
+            nodes = vals['document_node']['cbc:Note']
+            nodes.insert(0, {'_text': _(
+                "This invoice contains a down payment amount of %s.",
+                formatLang(self.env, ubl_values['down_payment_amount'], currency_obj=vals['currency']).replace(NON_BREAKING_SPACE, ''),
+            )})
 
         # BIS3 allows only one Note.
         self._bis3_merge_notes_nodes(vals)
@@ -736,22 +750,26 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _ubl_add_legal_monetary_total_payable_rounding_amount_node(self, vals):
         # EXTENDS account.edi.xml.ubl
         super()._ubl_add_legal_monetary_total_payable_rounding_amount_node(vals)
-        tax_withholding_amount = vals['_ubl_values'].get('tax_withholding_amount')
         node = vals['legal_monetary_total_node']
-        payable_rounding_amount = node['cbc:PayableRoundingAmount']['_text']
-        if tax_withholding_amount and payable_rounding_amount is not None:
-            currency = vals['currency_id']
+        payable_rounding_amount = node['cbc:PayableRoundingAmount']['_text'] or 0.0
+        currency = vals['currency_id']
+
+        if tax_withholding_amount := vals['_ubl_values'].get('tax_withholding_amount'):
             payable_rounding_amount += tax_withholding_amount
-            if currency.is_zero(payable_rounding_amount):
-                node['cbc:PayableRoundingAmount'] = {
-                    '_text': None,
-                    'currencyID': None,
-                }
-            else:
-                node['cbc:PayableRoundingAmount'] = {
-                    '_text': FloatFmt(payable_rounding_amount, min_dp=currency.decimal_places),
-                    'currencyID': currency.name,
-                }
+
+        if down_payment_amount := vals['_ubl_values'].get('down_payment_amount'):
+            payable_rounding_amount -= down_payment_amount
+
+        if currency.is_zero(payable_rounding_amount):
+            node['cbc:PayableRoundingAmount'] = {
+                '_text': None,
+                'currencyID': None,
+            }
+        else:
+            node['cbc:PayableRoundingAmount'] = {
+                '_text': FloatFmt(payable_rounding_amount, min_dp=currency.decimal_places),
+                'currencyID': currency.name,
+            }
 
     def _ubl_add_legal_monetary_total_prepaid_payable_amount_node(self, vals, in_foreign_currency=True):
         # EXTENDS account.edi.xml.ubl
@@ -782,7 +800,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             # Suppose an invoice of 1000 with a tax 21% +100 -100.
             # The super will compute a PrepaidAmount or 0.0 and a PayableAmount or 1000.
             # This extension is there to increase PrepaidAmount to 210 and PayableAmount to 1210.
-            + vals['_ubl_values']['tax_withholding_amount'],
+            + vals['_ubl_values']['tax_withholding_amount']
+            # Down payment lines are also reported into PrepaidAmount instead of being
+            # negative lines inside the UBL document.
+            - vals['_ubl_values']['down_payment_amount'],
             max_dp=currency.decimal_places,
         )
 
@@ -1270,7 +1291,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # Early payment discount lines should not appear as lines but as allowances/charges.
         # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
         def new_filter_function(base_line):
-            if self._ubl_is_early_payment_base_line(base_line) or self._ubl_is_cash_rounding_base_line(base_line):
+            if (
+                self._ubl_is_early_payment_base_line(base_line)
+                or self._ubl_is_cash_rounding_base_line(base_line)
+                or self._ubl_is_down_payment_base_line(vals, base_line)
+            ):
                 return False
             return not filter_function or filter_function(base_line)
 
@@ -1590,9 +1615,16 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl
         tax_total_keys = super()._ubl_tax_totals_node_grouping_key(base_line, tax_data, vals, currency)
 
-        # WithholdingTaxTotal is not allowed.
-        # Instead, withholding tax amounts are reported as a PrepaidAmount.
-        if tax_total_keys['tax_total_key'] and tax_total_keys['tax_total_key']['is_withholding']:
+        if (
+            tax_total_keys['tax_total_key']
+            and (
+                # WithholdingTaxTotal is not allowed.
+                # Instead, withholding tax amounts are reported as a PrepaidAmount.
+                tax_total_keys['tax_total_key']['is_withholding']
+                # Down payment lines are reported into the PrepaidAmount.
+                or self._ubl_is_down_payment_base_line(vals, base_line)
+            )
+        ):
             tax_total_keys['tax_total_key'] = None
 
         tax_category_key = tax_total_keys['tax_category_key']
