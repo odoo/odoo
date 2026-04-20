@@ -928,6 +928,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "ai_agent_id": False,
                 "channel_type": "livechat",
+                "chatbot": False,
+                "chatbot_current_step_id": False,
                 "country_id": self.env.ref("base.in").id,
                 "create_uid": self.users[1].id,
                 "default_display_mode": False,
@@ -958,6 +960,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "ai_agent_id": False,
                 "channel_type": "livechat",
+                "chatbot": False,
+                "chatbot_current_step_id": False,
                 "country_id": self.env.ref("base.be").id,
                 "create_uid": self.env.ref("base.public_user").id,
                 "default_display_mode": False,

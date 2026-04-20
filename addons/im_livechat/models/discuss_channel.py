@@ -494,7 +494,6 @@ class DiscussChannel(models.Model):
 
     def _store_channel_fields(self, res: Store.FieldList):
         super()._store_channel_fields(res)
-        res.attr("chatbot_current_step")
         res.one("country_id", ["code", "name"], predicate=is_livechat_channel)
         res.attr("livechat_end_dt", predicate=is_livechat_channel)
         # sudo - visitor can access to the channel member history of an accessible channel
@@ -514,15 +513,11 @@ class DiscussChannel(models.Model):
             res.attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel)
             res.many("livechat_expertise_ids", ["name", "color"], predicate=is_livechat_channel)
 
-    def _to_store(self, store: Store, res: Store.FieldList):
-        """Extends the channel header by adding the livechat operator and the 'anonymous' profile"""
-        if add_current_step := "chatbot_current_step" in res:
-            res.remove("chatbot_current_step")
-        super()._to_store(store, res)
-        if not add_current_step:
-            return
         lang = self.env["chatbot.script"]._get_chatbot_language()
-        for channel in self.filtered(lambda channel: channel.chatbot_current_step_id):
+
+        def chatbot_data(channel):
+            if not channel.chatbot_current_step_id:
+                return False
             # sudo: chatbot.script.step - returning the current script/step of the channel
             current_step_sudo = channel.chatbot_current_step_id.sudo().with_context(lang=lang)
             chatbot_script = current_step_sudo.chatbot_script_id
@@ -539,14 +534,21 @@ class DiscussChannel(models.Model):
                 # sudo: discuss.channel - visitors/guests can check if an operator exists
                 and bool(channel.sudo().livechat_agent_partner_ids),
             }
-            store.add(current_step_sudo, "_store_script_step_fields")
-            store.add(chatbot_script, "_store_script_fields")
-            chatbot_data = {
+            return {
                 "script": chatbot_script.id,
                 "steps": [current_step],
                 "currentStep": current_step,
             }
-            store.add(channel, {"chatbot": chatbot_data})
+        res.attr("chatbot", chatbot_data, predicate=is_livechat_channel)
+        res.one(
+            "chatbot_current_step_id",
+            lambda res: (
+                res.from_method("_store_script_step_fields"),
+                res.one("chatbot_script_id", "_store_script_fields"),
+            ),
+            value=lambda c: c.chatbot_current_step_id.sudo().with_context(lang=lang),
+            predicate=is_livechat_channel,
+        )
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):

@@ -169,6 +169,8 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     {
                         "ai_agent_id": False,
                         "channel_type": "livechat",
+                        "chatbot": False,
+                        "chatbot_current_step_id": False,
                         "country_id": False,
                         "create_uid": self.user_public.id,
                         "default_display_mode": False,
@@ -344,6 +346,8 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 {
                     "ai_agent_id": False,
                     "channel_type": "livechat",
+                    "chatbot": False,
+                    "chatbot_current_step_id": False,
                     "country_id": False,
                     "create_uid": self.user_public.id,
                     "default_display_mode": False,
