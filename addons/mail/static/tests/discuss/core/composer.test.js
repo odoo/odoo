@@ -10,6 +10,7 @@ import {
     openDiscuss,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { Composer } from "@mail/core/common/composer";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
@@ -120,4 +121,35 @@ test("html composer: send a message in a channel", async () => {
     await click(".o-mail-Composer button[title='Send']:enabled");
     await click(".o-mail-Message[data-persistent]:contains(Hello)");
     await contains(".o-mail-Composer-html.odoo-editor-editable", { textContent: "" });
+});
+
+test.tags("html composer");
+test("html composer: trim boundary empty formatting on send", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    let body;
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("/mail/message/post");
+        body = args.post_data.body;
+    });
+    await start();
+    await openDiscuss(channelId);
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    triggerHotkey("Enter");
+    await htmlInsertText(editor, "Hello World");
+    triggerHotkey("shift+Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await expect.waitForSteps(["/mail/message/post"]);
+    // Expected editor shape before trimming: '<div><br></div><div">Hello World<br/></div>'
+    expect(body).toBe('<div>Hello World</div>');
+    await contains(".o-mail-Message[data-persistent]:contains(Hello)");
 });
