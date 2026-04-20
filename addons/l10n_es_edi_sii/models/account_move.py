@@ -147,6 +147,34 @@ class AccountMove(models.Model):
     # BUSINESS LOGIC
     # -------------------------------------------------------------------------
 
+    def _cron_send_to_es_sii(self, job_count=10):
+        domain = [
+            ('state', '!=', 'draft'),
+            ('move_type', 'in', ['out_invoice', 'out_refund', 'in_invoice', 'in_refund']),
+            ('sending_data', '!=', False),
+            ('company_id.account_fiscal_country_id.code', '=', 'ES'),
+            ('company_id.l10n_es_sii_tax_agency', '!=', False),
+            '|',
+                ('move_type', 'in', ['out_invoice', 'out_refund']),
+                ('invoice_line_ids.tax_ids.l10n_es_type', 'not in', [False, 'ignore']),
+        ]
+        moves = self.search(
+            domain=domain,
+            order='date asc, invoice_date asc, sequence_number asc, id asc',
+            limit=job_count
+        ).filtered(lambda m: 'l10n_es_edi_sii_through_cron' in m.sending_data)
+        if not moves:
+            return
+        for move in moves:
+            move._send_l10n_es_sii_document()
+        self.env['ir.cron']._commit_progress(len(moves), remaining=self.search_count(domain))
+
+    def _trigger_cron_es_edi_sii(self):
+        moves_to_process = self.filtered(lambda m: not m.sending_data and m.l10n_es_edi_is_required)
+        moves_to_process.sending_data = {'l10n_es_edi_sii_through_cron': True}
+        self.env.ref('l10n_es_edi_sii.ir_cron_es_sii')._trigger()
+
+
     def _send_l10n_es_sii_document(self, cancel=False):
         """ Creates doc, calls webservice and updates states. """
         self.ensure_one()
@@ -184,7 +212,8 @@ class AccountMove(models.Model):
         if result and result.get('error_1117') and not self.env.context.get('error_1117'):
             document.sudo().unlink()
             return self.with_context(error_1117=True)._send_l10n_es_sii_document(cancel=cancel)
-
+        if self.sending_data and 'l10n_es_edi_sii_through_cron' in self.sending_data:
+            self.sending_data = False
         return True
 
     def _l10n_es_sii_check_move_configuration(self):
@@ -284,7 +313,6 @@ class AccountMove(models.Model):
                 nif = self.company_id.vat[2:]
             else:
                 nif = self.company_id.vat
-
             info['IDFactura']['IDEmisorFactura'] = {'NIF': nif}
             info['IDFactura']['NumSerieFacturaEmisor'] = self.name[:60]
 
