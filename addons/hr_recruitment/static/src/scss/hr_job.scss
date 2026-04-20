@@ -33,10 +33,10 @@
 
             @include media-breakpoint-down(md) {
                 .o_hr_recruitment_kanban_card_large_screen {
-                    display: none;    
+                    display: none;
                 }
             }
-            
+
             @media only screen and (min-width: 768px) {
                 .o_hr_recruitment_kanban_card_mobile_screen {
                     display: none;
@@ -48,15 +48,16 @@
             line-height: 1.3rem !important;
             margin-bottom: 4px !important;
             margin-top: 1px !important;
+            column-gap: map-get($spacers, 1);
         }
 
         .o_kanban_card_header {
             margin-bottom: 1px;
 
-            .o_favorite {
+            .o_favorite button {
                 display: flex;
                 justify-content: center;
-                margin-right: map-get($spacers, 1);
+                margin-right: map-get($spacers, 2);
                 width: var(--Avatar-size);
 
                 i {
@@ -73,21 +74,36 @@
 
         @include media-breakpoint-down(xxl) {
             .o_hr_recruitment_activity-col {
-                width: map-get($spacers, 3) *  3.5;
+                width: map-get($spacers, 3) * 3.5;
             }
         }
 
-        .o_field_many2one_avatar_user .o_avatar{
+        .o_field_many2one_avatar_user .o_avatar {
             column-gap: map-get($spacers, 1);
         }
-        
+
         .o_hr_recruitment_kanban_card_mobile_screen {
             min-height: 130px;
+
+            .o_field_boolean_favorite {
+                display: flex;
+                align-items: center;
+                margin-right: map-get($spacers, 1);
+                max-width: 1.5rem;
+            }
+
+            .o_m2o_avatar {
+                margin-right: 0;
+
+                img {
+                    margin-left: map-get($spacers, 1);
+                }
+            }
         }
 
         &.o_kanban_grouped {
             .o_hr_recruitment_kanban_card_large_screen {
-                display: none;    
+                display: none;
             }
         }
 
@@ -119,7 +135,16 @@
     --Avatar-size: 1.5em;
 
     .o_m2o_avatar {
-        margin-right: 0px !important;
+        margin-right: map-get($spacers, 2);
+
+        a {
+            height: var(--Avatar-size);
+            aspect-ratio: 1;
+
+            i {
+                --oi-font-size: #{$h3-font-size};
+            }
+        }
     }
 
     .number {
@@ -130,7 +155,8 @@
     }
 }
 
-.oe_kanban_action i[aria-label="Activities"], .o_kanban_card_header i.fa-user {
+.oe_kanban_action i[aria-label="Activities"],
+.o_kanban_card_header i.fa-user {
     font-size: 1.2rem;
 }
 
