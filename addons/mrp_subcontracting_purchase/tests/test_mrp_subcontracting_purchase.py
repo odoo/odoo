@@ -276,10 +276,10 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         aml.price_unit = 60
         aml.move_id.invoice_date = Date.today()
         aml.move_id.action_post()
-        amls = self.env['account.move.line'].search([
+        bill_amls = self.env['account.move.line'].search([
             ('product_id', 'in', (self.comp1 | self.comp2 | self.finished).ids)
         ])
-        self.assertRecordValues(amls, [
+        self.assertRecordValues(bill_amls, [
             {'account_id': self.account_stock_valuation.id, 'debit': 120, 'product_id': self.finished.id},
         ])
 
@@ -292,14 +292,13 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertEqual(self.finished.standard_price, 90)
         amls = self.env['account.move.line'].search([
             ('product_id', 'in', (self.comp1 | self.comp2 | self.finished).ids)
-        ])
-        self.assertRecordValues(amls.sorted('id'), [
-            {'account_id': self.account_stock_valuation.id, 'debit': 120, 'credit': 0, 'product_id': self.finished.id},
-            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 20, 'product_id': self.comp1.id},
+        ]) - bill_amls
+        self.assertRecordValues(amls.sorted("account_id, product_id"), [
             {'account_id': self.account_production.id, 'debit': 20, 'credit': 0, 'product_id': self.comp1.id},
-            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 40, 'product_id': self.comp2.id},
             {'account_id': self.account_production.id, 'debit': 40, 'credit': 0, 'product_id': self.comp2.id},
             {'account_id': self.account_production.id, 'debit': 0, 'credit': 60, 'product_id': self.finished.id},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 20, 'product_id': self.comp1.id},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 40, 'product_id': self.comp2.id},
             {'account_id': self.account_stock_valuation.id, 'debit': 60, 'credit': 0, 'product_id': self.finished.id},
         ])
 
