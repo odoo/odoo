@@ -54,6 +54,8 @@ class PaymentTransaction(models.Model):
         transactions, we confirm the quotation; for confirmed transactions, we automatically confirm
         the quotation and generate invoices.
         """
+        super()._post_process()
+        return
         for pending_tx in self.filtered(lambda tx: tx.state == "pending"):
             super(PaymentTransaction, pending_tx)._post_process()
             sales_orders = pending_tx.sale_order_ids.filtered(
