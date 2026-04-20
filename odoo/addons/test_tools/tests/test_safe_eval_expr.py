@@ -1,4 +1,4 @@
-from odoo.tests.common import BaseCase, tagged
+from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools.safe_eval import expr_eval
 
 
@@ -190,13 +190,18 @@ class TestExprEval(BaseCase):
         with self.assertRaises(KeyError):
             expr_eval('{}["x"]')
 
-    def test_invalid_syntax(self):
-        for expr in ('2 +', '* 3', 'import os', 'a.b'):
+    def test_invalid_expressions(self):
+        for expr, exc in (
+            ('2 +', SyntaxError),
+            ('* 3', SyntaxError),
+            ('import os', SyntaxError),
+            ('a.b', NameError),
+            ('unknown_func()', NameError),
+            ('a.b = c', SyntaxError),
+        ):
             with self.subTest(expr=expr):
-                with self.assertRaises((SyntaxError, TypeError)):
+                with self.assertRaises(exc):
                     expr_eval(expr)
-        with self.assertRaises(NameError):
-            expr_eval('unknown_func()')
 
     def test_unsupported_constants(self):
         for expr in ('...', '1j'):
@@ -216,3 +221,31 @@ class TestExprEval(BaseCase):
         mutable_ctx['a'][0] = 2
         res2 = expr_eval('a[0] + a[1]', mutable_ctx)
         self.assertEqual(res2, 4)
+
+
+class TestExprEvalAttribute(TransactionCase):
+    def test_attribute(self):
+        user = self.env.user
+        context = {
+            'user': user,
+            's': "hello",
+        }
+        cases = {
+            'user.id': user.id,
+            'user.ids': user.ids,
+            'user._name + s': user._name + "hello",
+            'user.login': user.login,
+            'user.company_ids[:1].name': user.company_ids[:1].name,
+        }
+        for expr, expected in cases.items():
+            with self.subTest(expr=expr):
+                self.assertEqual(expr_eval(expr, context=context), expected)
+
+        for expr in (
+            'user.login.islower',
+            'user.env',
+            'user.new()',
+            's.lower',
+        ):
+            with self.subTest(expr=expr), self.assertRaises(Exception):
+                expr_eval(expr, context=context)

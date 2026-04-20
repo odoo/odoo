@@ -142,6 +142,28 @@ class _ExprEval(ast.NodeVisitor):
     def visit_IfExp(self, node):
         return self.visit(node.body) if self.visit(node.test) else self.visit(node.orelse)
 
+    def visit_Attribute(self, node):
+        from odoo.models import BaseModel  # noqa: PLC0415
+        if not isinstance(node.ctx, ast.Load):
+            raise SyntaxError("Only attribute loading is supported")  # noqa: TRY004
+
+        obj = self.visit(node.value)
+        if not isinstance(obj, BaseModel):
+            raise TypeError(
+                f"Attribute access is only supported on Odoo recordsets, got {type(obj).__name__!r} "
+                f"while accessing {node.attr!r}"
+            )
+
+        if field := obj._fields.get(node.attr):
+            return field.__get__(obj)
+
+        if node.attr == 'ids':
+            return obj.ids
+        if node.attr == '_name':
+            return obj._name
+
+        raise AttributeError(f"{obj._name!r} object has no field {node.attr!r}")
+
     def visit_Subscript(self, node):
         return self.visit(node.value)[self.visit(node.slice)]
 
