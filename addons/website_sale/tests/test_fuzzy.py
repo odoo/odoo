@@ -38,3 +38,21 @@ class TestFuzzy(ProductVariantsCommon):
         results_count, _, fuzzy_term = website._search_with_fuzzy("product_template", "SQWBRNZ", 0, 5, "name asc", options)
         self.assertEqual(0, results_count, "Should have found none")
         self.assertIsNone(fuzzy_term, "Should have no suggestion")
+
+    def test_search_products_accessibility_multi_company(self):
+        company_2 = self.env['res.company'].create({'name': 'test'})
+        website = self.env.ref('website.default_website')
+        self.product_template_sofa.company_id = company_2
+        self.env.user.company_ids = company_2
+        options = {'display_currency': False, 'allowFuzzy': True}
+        _, results, _ = website._search_with_fuzzy('product_template', 'Sofa', 0, 5, 'name asc', options)
+        self.assertNotIn(self.product_template_sofa, results[0]['results'])
+
+        self.env.user.company_ids += website.company_id
+        self.product_template_sofa.company_id = website.company_id
+        _, results, _ = website._search_with_fuzzy('product_template', 'Sofa', 0, 5, 'name asc', options)
+        self.assertIn(self.product_template_sofa, results[0]['results'])
+
+        self.product_template_sofa.company_id = False
+        _, results, _ = website._search_with_fuzzy('product_template', 'Sofa', 0, 5, 'name asc', options)
+        self.assertIn(self.product_template_sofa, results[0]['results'])
