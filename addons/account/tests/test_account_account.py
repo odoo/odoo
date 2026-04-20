@@ -1073,3 +1073,21 @@ class TestAccountAccount(TestAccountMergeCommon):
         # get the accounts from the parent company with the branch user
         accounts = self.env['account.account'].with_user(branch_user.id).search([('company_ids', 'parent_of', [branch.id])])
         self.assertEqual(len(accounts), 1, "Branch user should have access to the accounts of the parent company")
+
+    def test_no_multi_company_on_bank_cash_accounts(self):
+        """Ensure multiple companies cannot be selected on bank and cash accounts."""
+        parent_company = self.env['res.company'].create([{
+            'name': "Parent Company",
+        }])
+        branch = self.env['res.company'].create([{
+            'name': "Branch Company",
+            'parent_id': parent_company.id,
+        }])
+        account = self.env['account.account'].create({
+            'code': 'TE1000',
+            'name': 'Bank Account Test',
+            'account_type': 'asset_cash',
+            'company_ids': [Command.link(parent_company.id)],
+        })
+        with self.assertRaisesRegex(ValidationError, "Bank & Cash accounts cannot be shared between companies."):
+            account.write({'company_ids': [Command.link(branch.id)]})
