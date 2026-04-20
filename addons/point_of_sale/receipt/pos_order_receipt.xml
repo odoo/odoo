@@ -150,17 +150,17 @@
         <template id="point_of_sale.pos_orderline_receipt">
             <tr t-if="not line['combo_parent_id']" name="standard-line" class="lines">
                 <td class="text-start w-10 top">
-                    <span class="qty text-normal"><t t-out="line['qty']" /></span>
+                    <span class="qty text-large"><t t-out="line['qty']" /></span>
                 </td>
                 <td class="text-start w-60 top">
                     <t t-call="point_of_sale.pos_orderline_receipt_information" />
                 </td>
-                <td t-if="not conditions['basic_receipt']" class="text-end w-30 text-normal top price-incl font-monospace" t-out="line['price_subtotal_incl']" />
+                <td t-if="not conditions['basic_receipt']" class="text-end w-30 text-large top price-incl font-monospace" t-out="line['price_subtotal_incl']" />
             </tr>
             <tr t-else="" name="combo-child-line" class="lines">
                 <td class="text-start w-5 top"/>
                 <td class="text-start w-10 top">
-                    <span><t t-out="line['qty']" /></span>
+                    <span class="combo-child-qty text-large"><t t-out="line['qty']" /></span>
                 </td>
                 <td class="text-start w-80 top">
                     <t t-call="point_of_sale.pos_orderline_receipt_information" />
@@ -170,14 +170,14 @@
 
         <template id="point_of_sale.pos_orderline_receipt_information">
             <div class="name text-large" t-out="line['product_data']['display_name']" />
-            <span class="text-small price-unit font-monospace" name="standard-unit-price" t-if="not conditions['basic_receipt'] and not len(line['combo_line_ids'])">
+            <span class="text-normal price-unit font-monospace" name="standard-unit-price" t-if="not conditions['basic_receipt'] and not len(line['combo_line_ids'])">
                 <t t-out="line['unit_price']" /> / <t t-out="line['product_uom_name']" />
             </span>
-            <div t-if="line['customer_note']" class="text-small">
+            <div t-if="line['customer_note']" class="text-normal">
                 <strong>Note: </strong>
                 <span class="line-note" t-out="line['customer_note']" />
             </div>
-            <div t-if="line['lot_names']" class="text-small">
+            <div t-if="line['lot_names']" class="text-normal">
                 <ul t-foreach="line['lot_names']" t-as="lot_name" style="list-style: none; padding: 0; margin: 0;">
                     <li class="lot-number" t-out="lot_name" />
                 </ul>
@@ -188,7 +188,7 @@
         <template id="point_of_sale.pos_order_receipt_footer">
             <div class="w-100 text-center mt-3">
                 <div class="w-100 mt-2" name="footer" />
-                <div t-if="extra_data['formated_shipping_date']" class="mt-2 mb-2 w-100 text-start text-small">
+                <div t-if="extra_data['formated_shipping_date']" class="mt-2 mb-2 w-100 text-start text-normal">
                     <span>Expected delivery:</span> <span class="shipping-date" style="float:right;" t-out="extra_data['formated_shipping_date']"/>
                 </div>
                 <t t-call="point_of_sale.company_info_receipt" />
