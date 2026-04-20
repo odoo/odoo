@@ -161,15 +161,14 @@ class WebsiteSnippetFilter(models.Model):
         else:  # Only top-level categories
             categories = CategorySudo.search(domain & Domain('parent_id', '=', False))
 
-        base_url = CategorySudo.get_base_url()
         default_img_path = request.env['product.template']._get_product_placeholder_filename()
-        default_img_url = f'{base_url}/{default_img_path}'
+        default_img_url = f'/{default_img_path}'
         return [{
             'id': cat.id,
             'name': cat.name,
             'unpublished': not cat.has_published_products,
             'cover_image': (
-                f'{base_url}{request.website.image_url(cat, "cover_image")}'
+                request.website.image_url(cat, "cover_image")
                 if cat.cover_image else default_img_url
             ),
         } for cat in categories]
