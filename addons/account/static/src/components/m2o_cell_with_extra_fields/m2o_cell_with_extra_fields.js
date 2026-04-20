@@ -6,6 +6,9 @@ import { Many2OneField, extractM2OFieldProps } from "@web/views/fields/many2one/
 
 export class Many2XAccountAccountAutocomplete extends Many2XAutocomplete {
     addSearchMoreSuggestion(options) {
+        if (/\d/.test(options.request)) {
+            return super.addSearchMoreSuggestion(options);
+        }
         return true;
     }
 
