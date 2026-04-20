@@ -42,6 +42,15 @@ class WebsiteSaleForm(WebsiteForm):
 
         return json.dumps({'id': order_sudo.id})
 
+    def extract_data(self, model_sudo, values):
+        parent_name = values.pop('parent_name', None)
+        data = super().extract_data(model_sudo, values)
+        if model_sudo.model == 'res.partner' and parent_name:
+            # `parent_name` is a non-stored field, passing it in the record
+            # allows to create the parent company during record creation.
+            data['record']['parent_name'] = parent_name
+        return data
+
 
 class Website(main.Website):
 
