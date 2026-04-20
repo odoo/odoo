@@ -23,18 +23,6 @@ export class WebsiteEventTrackReminder extends Interaction {
                 }
             },
         },
-        ".o_form_button_cancel": {
-            "t-on-click": this.modalEmailReminderCancel,
-        },
-        "#o_wetrack_email_reminder_form": {
-            "t-on-submit.prevent": this.modalEmailReminderSubmit,
-        },
-        ".o_form_button_dont_ask_again": {
-            "t-on-click": () => {
-                sessionStorage.setItem("website_event_track.email_reminder_off", "true");
-                this.modalEmailReminderCancel();
-            },
-        }
     };
 
     setup() {
@@ -43,6 +31,7 @@ export class WebsiteEventTrackReminder extends Interaction {
         this.trackId = parseInt(this.el.dataset.trackId);
         this.reminderOn = this.el.dataset.reminderOn;
         this.bellSelectorEl = this.el.querySelector(".o_wetrack_js_reminder_bell");
+        this.emailReminderForm = renderToElement("website_event_track.email_reminder_modal", {"track_id": this.trackId});
     }
 
     async onReminderToggleClick() {
@@ -99,7 +88,13 @@ export class WebsiteEventTrackReminder extends Interaction {
         }
         else if (!sessionStorage.getItem("website_event_track.email_reminder_off")) {
             this.opacityManagerElement.style.opacity = 1;
-            this.insert(renderToElement("website_event_track.email_reminder_modal", {"track_id": this.trackId}));
+            this.insert(this.emailReminderForm, document.body);
+            this.addListener(this.emailReminderForm.querySelector("#o_wetrack_email_reminder_form"), "submit", this.modalEmailReminderSubmit);
+            this.addListener(this.emailReminderForm.querySelectorAll(".o_form_button_cancel"), "click", this.modalEmailReminderCancel);
+            this.addListener(this.emailReminderForm.querySelector(".o_form_button_dont_ask_again"), "click", () => {
+                sessionStorage.setItem("website_event_track.email_reminder_off", "true");
+                this.modalEmailReminderCancel();
+            });
         }
         else if (this.favoriteAddedConfirmation) {
             this.notification.add(this.favoriteAddedConfirmation, {type: "info"});
@@ -114,15 +109,13 @@ export class WebsiteEventTrackReminder extends Interaction {
     }
 
     _modalEmailReminderRemove() {
-        this.el.querySelector(".o_wetrack_js_modal_email_reminder").remove();
+        this.emailReminderForm.remove();
         this.opacityManagerElement.style.opacity = this.initialOpacity;
     }
 
     modalEmailReminderSubmit(ev) {
+        ev.preventDefault();
         const data = Object.fromEntries(new FormData(ev.target).entries());
-        if (this.favoriteAddedConfirmation) {
-            this.notification.add(this.favoriteAddedConfirmation, {type: "info"});
-        }
         if (data.track_id && !isNaN(data.track_id) && isEmail(data.email)) {
             sessionStorage.setItem("website_event_track.email_reminder_email", data.email);
             this._sendEmailReminder(data.email);
