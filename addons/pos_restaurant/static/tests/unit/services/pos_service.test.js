@@ -473,6 +473,6 @@ describe("restaurant pos_store.js", () => {
             new Set([...pos_categories]),
             {}
         );
-        expect(tableOrderChange[0].extra_data.order_label).toBe(`Table ${table.table_number}`);
+        expect(tableOrderChange[0].extra_data.order_label).toBe(`T ${table.table_number}`);
     });
 });
