@@ -45,6 +45,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             ProductScreen.isShown(),
             inLeftSide(ProductScreen.orderLineHas("Coca-Cola")),
             ProductScreen.totalAmountIs("-4.40"),
+            ...Chrome.waitForOrdersSync(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
