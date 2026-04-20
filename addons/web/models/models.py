@@ -227,7 +227,7 @@ class Base(models.AbstractModel):
             })
         if next_id:
             record = record.browse(next_id)
-        return record.with_context(bin_size=True).web_read(specification)
+        return record.web_read(specification)
 
     def web_save_multi(self, vals_list: list[dict], specification: dict[str, dict]) -> list[dict]:
         """
@@ -255,7 +255,7 @@ class Base(models.AbstractModel):
         for record, val in zip(self, vals_list):
             record.write(val)
 
-        return self.with_context(bin_size=True).web_read(specification)
+        return self.web_read(specification)
 
     @api.readonly
     def web_read(self, specification: dict[str, dict]) -> list[dict]:

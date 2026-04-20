@@ -247,7 +247,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             options=options,
         )
         search_result = (
-            details[0].get("results", self.env["product.template"]).with_context(bin_size=True)
+            details[0].get("results", self.env["product.template"])
         )
 
         return fuzzy_search_term, product_count, search_result

@@ -108,7 +108,7 @@
     <div class="oe_product_image position-relative flex-grow-0 overflow-hidden">
         <!-- Fetch Images Data -->
         <t
-            t-if="product_variant and product_variant.with_context(bin_size=True).image_128"
+            t-if="product_variant and product_variant.image_128"
             t-set="all_images_list"
             t-value="product_variant._get_images()"
         />

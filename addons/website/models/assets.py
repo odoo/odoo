@@ -134,7 +134,8 @@ class WebsiteAssets(models.AbstractModel):
         # If the file is not yet customized, the content is found by reading
         # the local file
         with file_open(url.strip('/'), 'rb', filter_ext=EXTENSIONS) as f:
-            return BinaryBytes(f.read())
+            name = f.name
+            return BinaryBytes(f.read(), filename=name if isinstance(name, str) else '')
 
     @api.model
     def _get_data_from_url(self, url):

@@ -175,7 +175,11 @@ class TestXMLRPC(common.HttpCase):
         [att] = self.xmlrpc_object.execute(
             common.get_db_name(), self.admin_uid, 'admin',
             'ir.attachment', 'read', ids, [])
-        self.assertEqual(att['raw'], 'AQk=',
+        self.assertNotIn('content', att['raw'], "on read, we don't have binary data by default")
+        [att] = self.xmlrpc_object.execute_kw(
+            common.get_db_name(), self.admin_uid, 'admin',
+            'ir.attachment', 'read', [ids, []], {'context': {'include_binary_content': True}})
+        self.assertEqual(att['raw']['content'], 'AQk=',
             "on read, binary data should be base64 encoded")
 
 # really just for the test cursor

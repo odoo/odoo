@@ -2,7 +2,6 @@ import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SignatureViewer } from "@web/core/signature/signature_viewer";
-import { isBinarySize } from "@web/core/utils/binary";
 import { imageUrl } from "@web/core/utils/urls";
 import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -44,14 +43,14 @@ export class SignatureField extends Component {
             return "";
         }
         const { name, previewImage, record } = this.props;
-        if (isBinarySize(this.value)) {
+        if (!this.signatureValue) {
             return imageUrl(record.resModel, record.resId, previewImage || name, {
                 unique: this.rawCacheKey,
             });
         } else {
             // Use magic-word technique for detecting image type
             const magic = fileTypeMagicWordMap[this.value[0]] || "png";
-            return `data:image/${magic};base64,${this.value}`;
+            return `data:image/${magic};base64,${this.signatureValue}`;
         }
     }
 
@@ -59,13 +58,21 @@ export class SignatureField extends Component {
         return this.props.record.data[this.props.name];
     }
 
+    get signatureValue() {
+        return this.value?.content || null;
+    }
+
     /**
      * Upload the signature image if valid and close the dialog.
      */
     uploadSignature({ signatureImage }) {
-        return this.props.record.update({
-            [this.props.name]: signatureImage.split(",")[1] || false,
-        });
+        const data = signatureImage.split(",")[1];
+        const payload = data ? {
+            filename: "",
+            content: data,
+        } : false;
+        const changes = { [this.props.name]: payload };
+        return this.props.record.update(changes);
     }
 }
 

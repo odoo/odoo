@@ -729,7 +729,7 @@ export class RelationalModel extends Model {
         const fieldSpec = getFieldsSpec(activeFields, fields, evalContext);
         if (Object.keys(fieldSpec).length > 0) {
             const kwargs = {
-                context: { bin_size: true, ...context },
+                context: context,
                 specification: fieldSpec,
             };
             const orm = cache ? this.orm.cache(cache) : this.orm;
@@ -758,7 +758,7 @@ export class RelationalModel extends Model {
             offset: config.offset,
             order: orderByToString(orderBy),
             limit: config.limit,
-            context: { bin_size: true, ...config.context },
+            context: config.context,
             count_limit:
                 config.countLimit !== Number.MAX_SAFE_INTEGER ? config.countLimit + 1 : undefined,
         };

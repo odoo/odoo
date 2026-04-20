@@ -3,7 +3,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
-import { isBinarySize } from "@web/core/utils/binary";
 import { generateImageVariants } from "@web/core/utils/image_library";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
@@ -122,6 +121,8 @@ export class ImageField extends Component {
         if (!this.props.record.data[this.props.name] || !this.state.isValid) {
             return placeholder;
         }
+        const data = this.props.record.data[imageFieldName];
+        const content = data?.content;
         if (this.fieldType === "many2one") {
             this.lastURL = imageUrl(
                 this.props.record.fields[this.props.name].relation,
@@ -129,7 +130,7 @@ export class ImageField extends Component {
                 imageFieldName,
                 { unique: this.rawCacheKey }
             );
-        } else if (isBinarySize(this.props.record.data[this.props.name])) {
+        } else if (!content) {
             this.lastURL = imageUrl(
                 this.props.record.resModel,
                 this.props.record.resId,
@@ -138,8 +139,8 @@ export class ImageField extends Component {
             );
         } else {
             // Use magic-word technique for detecting image type
-            const magic = fileTypeMagicWordMap[this.props.record.data[this.props.name][0]] || "png";
-            this.lastURL = `data:image/${magic};base64,${this.props.record.data[this.props.name]}`;
+            const magic = fileTypeMagicWordMap[content[0]] || "png";
+            this.lastURL = `data:image/${magic};base64,${content}`;
         }
         return this.lastURL;
     }
@@ -183,7 +184,11 @@ export class ImageField extends Component {
             await this.orm.call("ir.attachment", "web_create_image_variants", [variants]);
         }
         const { fileNameField, record } = this.props;
-        const changes = { [this.props.name]: info.data || false };
+        const payload = info ? {
+            filename: info.name || "",
+            content: info.data,
+        } : false;
+        const changes = { [this.props.name]: payload };
         if (
             this.fieldType !== "many2one" &&
             fileNameField in record.fields &&

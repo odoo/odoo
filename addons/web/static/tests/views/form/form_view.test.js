@@ -990,16 +990,13 @@ test(`decoration on widgets works on same widget`, async () => {
     expect(`.o_field_widget[name="int_field"]`).toHaveClass("text-danger");
 });
 
-test(`only necessary fields are fetched with correct context`, async () => {
+test(`only necessary fields are fetched`, async () => {
     onRpc("web_read", ({ kwargs }) => {
         expect.step("web_read");
         expect(kwargs.specification).toEqual(
             { foo: {}, display_name: {} },
             { message: "should only fetch requested fields" }
         );
-        expect(kwargs.context.bin_size).toBe(true, {
-            message: "bin_size should always be in the context",
-        });
     });
     await mountView({
         resModel: "partner",
@@ -8313,22 +8310,6 @@ test(`correct amount of buttons`, async () => {
     await assertFormContainsNButtonsWithSizeClass(SIZES.XXL, 7);
 });
 
-test(`can set bin_size to false in context`, async () => {
-    onRpc("web_read", ({ kwargs }) => {
-        expect.step("web_read");
-        expect(kwargs.context.bin_size).toBe(false);
-    });
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `<form><field name="foo"/></form>`,
-        resId: 1,
-        context: {
-            bin_size: false,
-        },
-    });
-    expect.verifySteps(["web_read"]);
-});
 
 test(`create with false values`, async () => {
     onRpc("web_save", ({ args }) => {
@@ -10242,7 +10223,6 @@ test(`coming to a form view from a grouped and sorted list`, async () => {
 
     onRpc("partner", "web_read", ({ kwargs }) => {
         expect(kwargs.context).toEqual({
-            bin_size: true,
             lang: "en",
             tz: "taht",
             uid: 7,

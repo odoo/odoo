@@ -2003,11 +2003,8 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
         expect(body.get("field")).toBe("file", {
             message: "we should download the field document",
         });
-        expect(body.get("data")).toBe("coucou==\n", {
-            message: "we should download the correct data",
-        });
-
-        return new Blob([body.get("data")], { type: "text/plain" });
+        const data = "coucou==\n";
+        return new Blob([data], { type: "text/plain" });
     });
 
     await mountView({

@@ -549,6 +549,11 @@ class Form:
                 else:
                     value = value.to_commands()
 
+            elif field_info['type'] == 'binary':
+                if isinstance(value, dict) and 'content' not in value:
+                    # field is just read and not modified
+                    continue
+
             result[field_name] = value
 
         return result

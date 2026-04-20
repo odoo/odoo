@@ -71,7 +71,7 @@ class ResCompany(models.CachedModel):
 
     def _get_logo(self):
         with file_open('base/static/img/res_company_logo.png', 'rb') as f:
-            return BinaryBytes(f.read())
+            return BinaryBytes(f.read(), filename='logo.png')
 
     def _default_currency_id(self):
         if not self.env.registry.ready and not (set(self._cached_data_fields) <= table_columns(self.env.cr, self._table).keys()):
@@ -210,7 +210,7 @@ class ResCompany(models.CachedModel):
     def _compute_logo_web(self):
         for company in self:
             img = company.partner_id.image_1920
-            company.logo_web = img and BinaryBytes(image_process(img.content, size=(180, 0)))
+            company.logo_web = img and BinaryBytes(image_process(img.content, size=(180, 0)), filename='logo.png')
 
     @api.depends('partner_id.image_1920')
     def _compute_uses_default_logo(self):
