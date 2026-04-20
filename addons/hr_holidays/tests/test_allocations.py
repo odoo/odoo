@@ -583,3 +583,30 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': '2023-12-25'
         })
         self.assertEqual(1, self.leave_type.allocation_count)
+
+    def test_allocation_title_displays_rounded_hours(self):
+        """
+        Ensure that the allocation title displays a rounded duration when
+        the request unit is set to hours.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Time Off',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+        flex_38h_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 38/week',
+            'hours_per_day': 7.6,
+            'full_time_required_hours': 38.0,
+            'flexible_hours': True,
+        })
+        self.employee.resource_calendar_id = flex_38h_calendar
+
+        with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
+            allocation_form.allocation_type = 'regular'
+            allocation_form.employee_id = self.employee
+            allocation_form.holiday_status_id = leave_type
+            allocation_form.number_of_hours_display = 8
+            self.assertEqual(allocation_form.name, "Test Time Off (8.0 hour(s))")
