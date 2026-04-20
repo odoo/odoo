@@ -207,6 +207,13 @@
                     <field name="x_gm_final_approved_date" string="Date"
                            invisible="not x_gm_final_approved_date"/>
                 </group>
+
+                <!-- Attachments section -->
+                <separator string="Attachments"
+                           invisible="not x_annual_approval_state or x_annual_approval_state == 'pending_dm'"/>
+                <field name="x_attachment_ids" widget="many2many_binary"
+                       string="Supporting Documents"
+                       invisible="not x_annual_approval_state or x_annual_approval_state == 'pending_dm'"/>
             </xpath>
 
         </field>

@@ -169,6 +169,13 @@ class HrLeave(models.Model):
     x_remaining_loans_description = fields.Text(
         string='Remaining Loans Description', copy=False,
     )
+    x_attachment_ids = fields.Many2many(
+        'ir.attachment', 'hr_leave_attachment_rel',
+        'leave_id', 'attachment_id',
+        string='Attachments', copy=False,
+        help='Supporting documents (penalty notices, flight tickets, '
+             'accounting documents, etc.).',
+    )
 
     @api.depends('x_commission_line_ids.amount')
     def _compute_additional_commissions(self):
