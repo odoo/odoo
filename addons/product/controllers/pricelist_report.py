@@ -35,13 +35,23 @@ class ProductPricelistExportController(Controller):
         for product in products:
             variants = product.get('variants', [product])
             for variant in variants:
-                row = [
-                    variant['name'],
-                    variant['default_code'] or '',
-                    variant['barcode'] or '',
-                    variant['uom'],
-                ] + [variant['price'].get(qty, 0.0) for qty in quantities]
-                rows.append(row)
+                uoms = variant.get('uoms', [])
+
+                for uom in uoms:
+                    row = [
+                        variant['name'],
+                        variant.get('default_code') or '',
+                        variant.get('barcode') or '',
+                        uom['name'],
+                    ]
+
+                    # Add prices per quantity for this UoM
+                    for qty in quantities:
+                        price = variant['price'].get(uom['id'], {}).get(qty, 0.0)
+                        row.append(price)
+
+                    rows.append(row)
+
         return rows
 
     def _generate_csv(self, pricelist_name, quantities, products, headers, date):
