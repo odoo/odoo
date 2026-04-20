@@ -1092,3 +1092,15 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
             {'product_id': self.comp3.id, 'product_uom_qty': 1.0},
             {'product_id': self.comp4.id, 'product_uom_qty': 1.0},
         ])
+
+    def test_replenish_with_subcontracting_bom(self):
+        """ Checks that a subcontracting bom cannot trigger a 'Manufacture' replenish.
+        """
+        self.assertEqual(self.finished.bom_ids.type, 'subcontract')
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.finished.product_tmpl_id.id).create({
+            'product_id': self.finished.id,
+        })
+        buy_routes = self.env['stock.rule'].search([('action', '=', 'buy'), ('company_id', '=', self.company.id)]).route_id
+        self.assertIn(replenish_wizard.route_id, buy_routes)
+        manufacture_route = self.env['stock.rule'].search([('action', '=', 'manufacture'), ('company_id', '=', self.company.id)]).route_id
+        self.assertNotIn(manufacture_route, replenish_wizard.allowed_route_ids)
