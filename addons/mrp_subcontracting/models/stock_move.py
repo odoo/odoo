@@ -136,7 +136,7 @@ class StockMove(models.Model):
         subcontract order to the new quantity.
         """
         self._check_access_if_subcontractor(values)
-        if 'product_uom_qty' in values and self.env.context.get('cancel_backorder') is not False and not self._context.get('extra_move_mode'):
+        if 'product_uom_qty' in values and self.env.context.get('cancel_backorder') is not False and not self._context.get('extra_move_mode') and not self.env.context.get('do_not_unreserve'):
             self.filtered(
                 lambda m: m.is_subcontract and m.state not in ['draft', 'cancel', 'done']
                 and float_compare(m.product_uom_qty, values['product_uom_qty'], precision_rounding=m.product_uom.rounding) != 0
@@ -327,12 +327,8 @@ class StockMove(models.Model):
                 'product_qty': wip_production.product_qty + quantity_to_remove
             }).change_prod_qty()
 
-        productions = productions - wip_production
-        if self.env.context.get('failed_quality'):
-            productions = productions.sorted(lambda p: (p.lot_producing_id.id != self.env.context.get('failed_lot_id'), not p.subcontracting_has_been_recorded))
-
         # Cancel productions until reach new_quantity
-        for production in productions:
+        for production in (productions - wip_production):
             if float_compare(quantity_to_remove, production.product_qty, precision_rounding=production.product_uom_id.rounding) >= 0:
                 if len(productions + wip_production) == 1:
                     production.qty_producing = 0
