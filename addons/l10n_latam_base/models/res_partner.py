@@ -29,6 +29,17 @@ class ResPartner(models.Model):
         super(ResPartner, partners_vat)._check_vat(validation=validation)
         (self - partners_vat)._run_check_identification(validation=validation)
 
+    @api.depends('l10n_latam_identification_type_id', 'country_id')
+    def _compute_is_company(self):
+        latam_country_codes = self.env['res.company']._get_l10n_latam_base_country_codes()
+        latam_partners = self.filtered(lambda p: p.country_code in latam_country_codes)
+        for partner in latam_partners:
+            partner.is_company = bool(
+                partner.l10n_latam_identification_type_id.country_id.code == partner.country_code
+                and partner.l10n_latam_identification_type_id.is_vat
+            )
+        super(ResPartner, self - latam_partners)._compute_is_company()
+
     @api.onchange('country_id')
     def _onchange_country_id(self):
         country = self.country_id or self.company_id.account_fiscal_country_id or self.env.company.account_fiscal_country_id
