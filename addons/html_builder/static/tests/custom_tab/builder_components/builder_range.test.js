@@ -420,7 +420,7 @@ describe("unit & saveUnit", () => {
     });
 });
 
-test("should map range from 0 to 100 scale when 'displayNormalizedValue' is true", async () => {
+test("should map range from 0 to 100 scale when empty convertorRatio object is passed", async () => {
     addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
@@ -435,7 +435,7 @@ test("should map range from 0 to 100 scale when 'displayNormalizedValue' is true
     });
     addBuilderOption({
         selector: ".test-ratio-target",
-        template: xml`<BuilderRange action="'customAction'" min="-2" max="2" withNumberInput="true" displayNormalizedValue="true" step="0.1"/>`,
+        template: xml`<BuilderRange action="'customAction'" min="-2" max="2" withNumberInput="true" convertorRatio="{}" step="0.1"/>`,
     });
     await setupHTMLBuilder(`<div class="test-ratio-target">-2</div>`);
     await contains(":iframe .test-ratio-target").click();

@@ -5,6 +5,7 @@ import { deepCopy } from "@web/core/utils/objects";
 import { loadImageInfo } from "@html_editor/utils/image_processing";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
 import { getMimetypeBeforeShape } from "@html_builder/utils/image";
+import { ratioValueConverter } from "@html_builder/utils/utils";
 
 export class ImageShapeOption extends BaseOptionComponent {
     static template = "html_builder.ImageShapeOption";
@@ -20,6 +21,7 @@ export class ImageShapeOption extends BaseOptionComponent {
         super.setup();
         this.customizeTabPlugin = this.dependencies.customizeTab;
         this.imageShapeOption = this.dependencies.imageShapeOption;
+        this.ratioValueConverter = ratioValueConverter();
         this.state = useDomState(async (editingElement) => {
             const { originalSrc } = editingElement.dataset.originalSrc
                 ? editingElement.dataset
