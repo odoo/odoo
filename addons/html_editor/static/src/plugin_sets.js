@@ -84,6 +84,7 @@ import { DomObserverPlugin } from "./core/dom_observer_plugin";
 import { LegacyIconMigrationPlugin } from "./main/legacy_icon_migration_plugin";
 import { TableBorderPlugin } from "./main/table/table_border_plugin";
 import { ContrastPlugin } from "./main/font/contrast_plugin";
+import { DatePlugin } from "./others/embedded_components/plugins/date_plugin/date_plugin";
 
 export const CORE_PLUGINS = [
     LegacyCompatibilityPlugin,
@@ -176,6 +177,7 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedComponentPlugin,
     TableOfContentPlugin,
     ToggleBlockPlugin,
+    DatePlugin,
     EmbeddedVideoPlugin,
     CaptionPlugin,
     SyntaxHighlightingPlugin,
