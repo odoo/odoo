@@ -11,6 +11,7 @@ class PosOrderReceipt(models.AbstractModel):
 
         if self.config_id.module_pos_restaurant:
             data['extra_data']['table_name'] = self.table_id.table_number if self.table_id else False
+            data['extra_data']['floor_name'] = self.table_id.floor_id.name if self.table_id and self.table_id.floor_id else False
 
         if self.config_id.set_tip_after_payment and self.amount_total > 0:
             data['extra_data']['tips_configuration'] = {

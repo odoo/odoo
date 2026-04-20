@@ -8,9 +8,9 @@
                     <t t-call="point_of_sale.pos_order_receipt_style" />
                 </head>
                 <body>
-                    <div class="pos-receipt m-0 p-0 mt-3">
+                    <div class="pos-receipt m-0 p-0" style="padding-top: 80px !important;">
                         <div name="receipt-header" class="text-center">
-                            <div name="preset-info" class="preset-name" t-if="preset">
+                            <div name="preset-info" class="preset-name text-huge text-bold" t-if="preset">
                                 <span t-esc="preset['name']"/>
                                 <span t-if="extra_data.get('preset_time')"> (<t t-esc="extra_data['preset_time']"/>)</span>
                             </div>
@@ -18,11 +18,11 @@
                                 <span><t t-esc="config['name']"/> : <t t-esc="extra_data['time']"/></span><br/>
                                 <span t-if="extra_data.get('employee_name')">By: <t t-esc="extra_data['employee_name']"/></span>
                             </div>
-                            <span class="my-4 text-large">
-                                <span class="text-bold">
+                            <span class="my-4 text-normal">
+                                <span>
                                     Order <t t-esc="order['pos_reference']"/>
                                 </span>
-                                <span t-if="order.get('tracking_number')" class="text-bold my-3">
+                                <span t-if="order.get('tracking_number')" class="my-3">
                                     # <t t-esc="order['tracking_number']"/>
                                 </span>
                             </span>
@@ -77,13 +77,13 @@
                 </div>
                 <div t-if="line.get('attribute_value_names') and len(line['attribute_value_names'])" class="ps-5">
                     <t t-foreach="line['attribute_value_names']" t-as="name">
-                        <div class="text-normal">- <t t-esc="name" /></div>
+                        <div class="text-large">- <t t-esc="name" /></div>
                     </t>
                 </div>
-                <div t-if="line.get('note')" class="text-italic">
+                <div t-if="line.get('note')" class="text-italic text-large">
                     <t t-esc="line['note']"/>
                 </div>
-                <div t-if="line.get('customer_note')" class="text-italic">
+                <div t-if="line.get('customer_note')" class="text-italic text-large">
                     <t t-esc="line['customer_note']"/>
                 </div>
             </div>
