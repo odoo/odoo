@@ -55,6 +55,7 @@ class ProductPublicCategory(models.Model):
         compute='_compute_has_published_products',
         search='_search_has_published_products',
         compute_sudo=True,
+        recursive=True,
     )
 
     website_description = fields.Html(
