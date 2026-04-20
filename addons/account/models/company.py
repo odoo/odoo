@@ -1156,12 +1156,3 @@ class ResCompany(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             company.company_vat_placeholder = placeholder
-
-    # Deprecated, removed in master.
-    def _check_tax_return_configuration(self):
-        """
-        To override in localizations to check if the company is properly configured for tax returns.
-        or related modules are installed.
-        :raises RedirectWarning: if something is wrong configured.
-        """
-        return
