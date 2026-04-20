@@ -78,10 +78,10 @@
                 min="-2"
                 max="2"
                 step="0.1"
-                unit="'%'"
+                unit="'x'"
                 applyWithUnit="false"
                 withNumberInput="true"
-                displayNormalizedValue="true" />
+                convertorRatio="this.ratioValueConverter" />
         </BuilderRow>
 
         <BuilderRow label.translate="Stretch" level="1" t-if="this.state.togglableRatio" preview="false" tooltip.translate="Will remove the crop factor">
