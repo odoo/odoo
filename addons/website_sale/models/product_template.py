@@ -461,6 +461,13 @@ class ProductTemplate(models.Model):
             'website_sale.group_product_price_comparison'
         ) else None
         list_price = product_or_template._price_compute('list_price')[product_or_template.id]
+        pricelist_rule = pricelist._get_applicable_rules(product_or_template, date)
+        if pricelist_rule.base_pricelist_id:
+            list_price = pricelist_rule.base_pricelist_id._get_product_price(
+                product=product_or_template,
+                quantity=quantity,
+                target_currency=currency,
+            )
         price_extra = product_or_template._get_attributes_extra_price()
         if product_or_template.currency_id != currency:
             price_extra = product_or_template.currency_id._convert(

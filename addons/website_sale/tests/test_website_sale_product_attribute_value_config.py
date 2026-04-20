@@ -78,6 +78,44 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         self.assertEqual(combination_info['price_extra'], pricelist.currency_id.round(222 * currency_ratio * tax_ratio), 0)
         self.assertEqual(combination_info['has_discounted_price'], True)
 
+    def test_get_combination_info_with_nested_pricelist(self):
+        # Setup pricelist1: fixed price of $1000
+        pricelist1 = self.env['product.pricelist'].create({
+            'name': 'pricelist1',
+            'discount_policy': 'without_discount',
+            'company_id': self.env.company.id,
+            'item_ids': [Command.create({
+                'compute_price': 'fixed',
+                'fixed_price': 1000,
+            })],
+        })
+        # Setup pricelist2: based on pricelist1 with 50% discount
+        pricelist2 = self.env['product.pricelist'].create({
+            'name': 'pricelist2',
+            'discount_policy': 'without_discount',
+            'company_id': self.env.company.id,
+            'item_ids': [Command.create({
+                'compute_price': 'formula',
+                'base': 'pricelist',
+                'base_pricelist_id': pricelist1.id,
+                'price_discount': 50,
+            })],
+        })
+
+        self.env.user.property_product_pricelist = pricelist2
+        website_pricelist2 = self.env['website'].create({
+            'name': 'Test website',
+            'company_id': self.env.company.id,
+            'user_id': self.env.user.id,
+            'pricelist_ids': [Command.set(pricelist2.ids)],
+        })
+
+        product_template = self.computer.with_context(website_id=website_pricelist2.id)
+        combination_info = product_template._get_combination_info()
+        self.assertEqual(combination_info['price'], 500)
+        self.assertEqual(combination_info['list_price'], 1000)
+        self.assertEqual(combination_info['has_discounted_price'], True)
+
     def test_get_combination_info_with_fpos(self):
         # Setup product.
         current_website = self.env['website'].get_current_website()
