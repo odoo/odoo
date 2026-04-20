@@ -1744,6 +1744,24 @@ def _optimize_properties_date_datetime(condition, model):
     return DomainCondition(condition.field_expr, operator, value)
 
 
+@field_type_optimization(['selection'], level=OptimizationLevel.DYNAMIC_VALUES)
+def _optimize_type_selection(condition, model):
+    """Transform expressions like `(field, 'not in', excl)` into `(field, 'in', incl)`.
+    This may lead to better performance if `field` is indexed.
+    """
+    field = condition._field(model)
+    if (
+        condition.operator != 'not in'
+        or '.' in condition.field_expr
+        or field._selection is None
+        or not any(condition.value)  # not in [False] should remain like that
+    ):
+        return condition
+    excluded = condition.value
+    included = OrderedSet([*field._selection, False]) - excluded
+    return DomainCondition(condition.field_expr, 'in', included)
+
+
 @field_type_optimization(['binary'])
 def _optimize_type_binary_attachment(condition, model):
     field = condition._field(model)

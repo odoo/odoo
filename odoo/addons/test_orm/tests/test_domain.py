@@ -765,6 +765,36 @@ class TestDomainOptimize(TransactionCase):
             Domain('moment', '>=', datetime(2024, 1, 5, 11, 6, 2)),
         )
 
+    def test_condition_optimize_selection(self):
+        model = self.env['test_orm.selection']
+        # no change for 'in'
+        self.assertEqual(
+            Domain('state', 'in', ['foo']).optimize_dynamic(model),
+            Domain('state', 'in', OrderedSet(['foo'])),
+        )
+        self.assertEqual(
+            Domain('state', 'in', ['foo', False]).optimize_dynamic(model),
+            Domain('state', 'in', OrderedSet(['foo', False])),
+        )
+        self.assertEqual(
+            Domain('state', 'in', [False]).optimize_dynamic(model),
+            Domain('state', 'in', OrderedSet([False])),
+        )
+        # 'not in' becomes 'in'
+        self.assertEqual(
+            Domain('state', 'not in', ['foo']).optimize_dynamic(model),
+            Domain('state', 'in', OrderedSet(['bar', False])),
+        )
+        self.assertEqual(
+            Domain('state', 'not in', ['foo', False]).optimize_dynamic(model),
+            Domain('state', 'in', OrderedSet(['bar'])),
+        )
+        # this one remains as is, and is translated to SQL "state IS NOT NULL"
+        self.assertEqual(
+            Domain('state', 'not in', [False]).optimize_dynamic(model),
+            Domain('state', 'not in', OrderedSet([False])),
+        )
+
     def test_condition_optimize_maybe_eq(self):
         model = self.env['test_orm.mixed']
         self.assertEqual(
