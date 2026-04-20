@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, SUPERUSER_ID
 from odoo.fields import Datetime
 from odoo.tests import Form, new_test_user, tagged
 from odoo.exceptions import UserError
@@ -886,6 +886,36 @@ class TestSaleProject(TestSaleProjectCommon):
             sale_order_action = multi_company_project.with_company(company).action_view_sos()
             self.assertEqual(sale_order_action["type"], "ir.actions.act_window")
             self.assertEqual(sale_order_action["res_model"], "sale.order")
+
+    def test_multi_company_so_creation(self):
+        # SO with project template with non-superuser company_id able creates project with proper company
+        company = self.env['res.company'].create({
+            'name': 'Multi-Company Test Company',
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+        company_project_template = self.env['project.project'].with_company(company).create({
+            'name': 'Multi-Company Test Company Project Template',
+            'company_id': company.id,
+        })
+
+        product_with_project_template = self.env['product.product'].with_company(company).create({
+            'name': 'product with template',
+            'list_price': 1,
+            'type': 'service',
+            'service_tracking': 'project_only',
+            'project_template_id': company_project_template.id,
+        })
+
+        # SOs with one created project
+        sale_order = self.env['sale.order'].with_company(company).create({'partner_id': self.partner.id})
+        self.env['sale.order.line'].with_company(company).create({
+            'product_id': product_with_project_template.id,
+            'order_id': sale_order.id,
+        })
+        sale_order_sudo = sale_order.with_user(SUPERUSER_ID)
+        sale_order_sudo.action_confirm()
+        self.assertEqual(company_project_template.company_id, sale_order.project_ids[0].company_id, "The created project should have the same company as the template")
 
     def test_creating_AA_when_adding_service_to_confirmed_so(self):
         sale_order = self.env['sale.order'].create({

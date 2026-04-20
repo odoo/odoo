@@ -148,7 +148,7 @@ class SaleOrder(models.Model):
             if len(order.project_ids) == 1:
                 project = order.project_ids[0]
                 for sol in order.order_line:
-                    if project == sol.project_id and (project_template := sol.product_template_id.project_template_id):
+                    if project == sol.project_id and (project_template := sol.product_template_id.with_company(order.company_id).project_template_id):
                         project.sudo().company_id = project_template.sudo().company_id
                         break
 
