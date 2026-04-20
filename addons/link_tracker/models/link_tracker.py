@@ -10,6 +10,7 @@ from odoo import tools, models, fields, api, _
 from odoo.addons.mail.tools import link_preview
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.tools import OrderedSet
 from odoo.tools.mail import validate_url
 
 LINK_TRACKER_UNIQUE_FIELDS = ('url', 'campaign_id', 'medium_id', 'source_id', 'utm_reference', 'label')
@@ -36,7 +37,7 @@ class LinkTracker(models.Model):
     # URL info
     url = fields.Char(string='Target URL', required=True)
     absolute_url = fields.Char("Absolute URL", compute="_compute_absolute_url")
-    short_url = fields.Char(string='Tracked URL', compute='_compute_short_url')
+    short_url = fields.Char(string='Tracked URL', compute='_compute_short_url', search='_search_short_url')
     redirected_url = fields.Char(string='Redirected URL', compute='_compute_redirected_url')
     short_url_host = fields.Char(string='Host of the short URL', compute='_compute_short_url_host')
     title = fields.Char(string='Page Title', store=True)
@@ -50,6 +51,20 @@ class LinkTracker(models.Model):
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
+
+    def _search_short_url(self, operator, value):
+        """Remove the base url and the `/r/` from the given value, and only search for link trackers
+        that have a code that matches the entered value.
+        """
+        base = self.get_base_url() + '/r/'
+        if isinstance(value, str):
+            link_tracker_code = value.replace(base, '')
+        elif isinstance(value, OrderedSet):
+            link_tracker_code = [v.replace(base, '') if isinstance(v, str) else v for v in value]
+        else:
+            return NotImplemented
+
+        return [('link_code_ids.code', operator, link_tracker_code)]
 
     @api.depends("url")
     def _compute_absolute_url(self):
