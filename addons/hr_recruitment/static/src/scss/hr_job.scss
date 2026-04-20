@@ -48,15 +48,16 @@
             line-height: 1.3rem !important;
             margin-bottom: 4px !important;
             margin-top: 1px !important;
+            column-gap: map-get($spacers, 1);
         }
 
         .o_kanban_card_header {
             margin-bottom: 1px;
 
-            .o_favorite a {
+            .o_favorite button {
                 display: flex;
                 justify-content: center;
-                margin-right: map-get($spacers, 1);
+                margin-right: map-get($spacers, 2);
                 width: var(--Avatar-size);
 
                 i {
@@ -80,9 +81,23 @@
         .o_field_many2one_avatar_user .o_avatar{
             column-gap: map-get($spacers, 1);
         }
-        
         .o_hr_recruitment_kanban_card_mobile_screen {
             min-height: 130px;
+
+            .o_field_boolean_favorite {
+                display: flex;
+                align-items: center;
+                margin-right: map-get($spacers, 1);
+                max-width: 1.5rem;
+            }
+
+            .o_m2o_avatar {
+                margin-right: 0;
+
+                img {
+                    margin-left: map-get($spacers, 1);
+                }
+            }
         }
 
         &.o_kanban_grouped {
@@ -119,7 +134,16 @@
     --Avatar-size: 1.5em;
 
     .o_m2o_avatar {
-        margin-right: 0px !important;
+        margin-right: map-get($spacers, 2);
+
+        a {
+            height: var(--Avatar-size);
+            aspect-ratio: 1;
+
+            i {
+                --oi-font-size: #{$h3-font-size};
+            }
+        }
     }
 
     .number {
