@@ -343,6 +343,7 @@ class AccountMove(models.Model):
             'vat_amount': 0,
             'vat_taxable_amount': 0,
             'vat_exempt_base_amount': 0,
+            'vat_zero_base_amount': 0,
             'vat_untaxed_base_amount': 0,
             'not_vat_taxes_amount': 0,
             'iibb_perc_amount': 0,
@@ -367,6 +368,8 @@ class AccountMove(models.Model):
         for grouping_key, values in vat_afip_code_aggregated_tax_details.items():
             if grouping_key['vat_afip_code'] == '2':
                 res['vat_exempt_base_amount'] = values['base_amount_currency']
+            elif grouping_key['vat_afip_code'] == '3':
+                res['vat_zero_base_amount'] = values['base_amount_currency']
             elif grouping_key['vat_afip_code'] == '1':
                 res['vat_untaxed_base_amount'] = values['base_amount_currency']
 
