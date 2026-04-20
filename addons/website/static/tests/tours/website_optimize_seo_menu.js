@@ -1,6 +1,12 @@
-import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import {
+    registerWebsitePreviewTour,
+    insertSnippet,
+    clickOnSave,
+    switchToLang,
+} from "@website/js/tours/tour_utils";
+import { stepUtils } from "@web_tour/tour_utils";
 
-const openSeoModalSteps = [
+const openSeoModal = () => [
     {
         content: "click on the site menu",
         trigger: "button[data-menu-xmlid='website.menu_site']",
@@ -11,17 +17,30 @@ const openSeoModalSteps = [
         trigger: "a[data-menu-xmlid='website.menu_optimize_seo']",
         run: "click",
     },
+    {
+        content: "check if the Optimize SEO modal is successfully triggered",
+        trigger: ".oe_seo_configuration",
+    },
+];
+
+const saveSeoModal = () => [
+    {
+        content: "Save SEO configuration",
+        trigger: ".oe_seo_configuration .modal-footer .btn-primary",
+        run: "click",
+    },
+    {
+        content: "Wait for SEO modal to close",
+        trigger: "body:not(:has(.modal))",
+    },
+    stepUtils.waitIframeIsReady(),
 ];
 
 registerWebsitePreviewTour(
     "website.test_website_seo_with_duplicate_images_across_html_fields",
     {},
     () => [
-        ...openSeoModalSteps,
-        {
-            content: "check if the Optimize SEO modal is successfully triggered",
-            trigger: ".oe_seo_configuration",
-        },
+        ...openSeoModal(),
         {
             content: "check that the image from s_banner has been loaded in the modal",
             trigger:
@@ -32,29 +51,76 @@ registerWebsitePreviewTour(
             trigger: ".oe_seo_configuration .o_seo_images_check input.form-control.is-invalid",
             run: "edit A very good description",
         },
+        ...saveSeoModal(),
         {
-            content: "Save the changes",
-            trigger: ".modal-footer button:contains('Save')",
-            run: "click",
+            content: "Check that the image's alt was properly edited",
+            trigger: ":iframe #wrapwrap #zone_left img[alt='A very good description']",
         },
-        {
-            content:
-                "Wait for the iframe to load and check that the image's alt was properly edited",
-            trigger:
-                ":iframe [is-ready=true] #wrapwrap:has(#zone_left img[alt='A very good description'])",
-        },
-        ...openSeoModalSteps,
+        ...openSeoModal(),
         {
             content: "Check the modifications are still present in the modal",
             trigger: ".oe_seo_configuration .o_seo_images_check input.form-control.is-valid",
-            run: () => {
-                const input = document.querySelector(
-                    ".oe_seo_configuration .o_seo_images_check input.form-control.is-valid"
-                );
-                if (input.value !== "A very good description") {
+            run() {
+                if (this.anchor.value !== "A very good description") {
                     throw new Error("The input should have the image's alt as a value");
                 }
             },
+        },
+    ]
+);
+
+registerWebsitePreviewTour(
+    "seo_multilang_alt_check",
+    {
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({
+            id: "s_text_image",
+            name: "Text - Image",
+            groupName: "Content",
+        }),
+        ...clickOnSave(),
+        ...openSeoModal(),
+        {
+            content: "Add alt text in default language",
+            trigger: ".o_seo_images_check input.is-invalid",
+            run: "edit alt text in English",
+        },
+        {
+            content: "Alt warning is resolved",
+            trigger: ".o_seo_images_check input:not(.is-invalid)",
+        },
+        ...saveSeoModal(),
+        {
+            content: "Image alt attribute is set in default language",
+            trigger: ":iframe .s_text_image img[alt='alt text in English']",
+        },
+        ...switchToLang("fr"),
+        ...openSeoModal(),
+        {
+            content: "Alt text is prefilled from default language",
+            trigger: ".o_seo_images_check input.is-valid",
+            run() {
+                if (this.anchor.value !== "alt text in English") {
+                    throw new Error("Alt text should be inherited from the default language");
+                }
+            },
+        },
+        {
+            content: "Translate alt text to French",
+            trigger: ".o_seo_images_check input.is-valid",
+            run: "edit alt text in French",
+        },
+        ...saveSeoModal(),
+        {
+            content: "Image alt attribute is updated in French",
+            trigger: ":iframe .s_text_image img[alt='alt text in French']",
+        },
+        ...switchToLang("en"),
+        {
+            content: "Default language alt text is preserved",
+            trigger: ":iframe .s_text_image img[alt='alt text in English']",
         },
     ]
 );
