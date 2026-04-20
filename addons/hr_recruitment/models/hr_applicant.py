@@ -679,7 +679,7 @@ class Applicant(models.Model):
             'lang': address_sudo.lang,
             'department_id': self.department_id.id,
             'address_id': self.company_id.partner_id.id,
-            'work_email': self.department_id.company_id.email or self.email_from, # To have a valid email address by default
+            'work_email': False,
             'work_phone': self.department_id.company_id.phone,
             'applicant_id': self.ids,
             'private_phone': self.partner_phone or self.partner_mobile
