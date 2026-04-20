@@ -25,6 +25,7 @@ registry.category("website.form_editor_actions").add("create_customer", {
         },
         {
             type: "char",
+            custom: true,
             name: "parent_name",
             fillWith: "commercial_company_name",
             string: _t("Company Name"),
