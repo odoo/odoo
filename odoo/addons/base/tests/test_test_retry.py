@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import BaseCase, TransactionCase, tagged, BaseCase
-from odoo.tests.common import _logger as test_logger
+from odoo.tests.suite import _logger as test_logger
 
 import logging
 import inspect
