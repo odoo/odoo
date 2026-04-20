@@ -115,7 +115,7 @@ export class ActivityController extends Component {
     }
 
     sendMailTemplate(templateID, activityTypeID) {
-        const groupedActivities = this.model.activityData.grouped_activities;
+        const groupedActivities = this.model.activityData().grouped_activities;
         const resIds = [];
         for (const resId in groupedActivities) {
             const activityByType = groupedActivities[resId];
@@ -133,14 +133,15 @@ export class ActivityController extends Component {
     }
 
     get rendererProps() {
+        const { activity_types, activity_res_ids, grouped_activities } = this.model.activityData();
         return {
-            activityTypes: this.model.activityData.activity_types,
-            activityResIds: this.model.activityData.activity_res_ids,
+            activityTypes: activity_types,
+            activityResIds: activity_res_ids,
             fields: this.model.root.fields,
             records: this.model.root.records,
             resModel: this.props.resModel,
             archInfo: this.props.archInfo,
-            groupedActivities: this.model.activityData.grouped_activities,
+            groupedActivities: grouped_activities,
             scheduleActivity: this.scheduleActivity.bind(this),
             onReloadData: () => this.model.load(this.getSearchProps()),
             onEmptyCell: this.openActivityFormView.bind(this),
