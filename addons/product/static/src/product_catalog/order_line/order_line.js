@@ -9,7 +9,7 @@ export class ProductCatalogOrderLine extends Component {
         quantity: Number,
         price: Number,
         productType: String,
-        uomId: Number,
+        uomId: { type: Number, optional: true },
         uomDisplayName: { type: String, optional: true },
         productUomFactor: { type: Number, optional: true },
         productUomDisplayName: { type: String, optional: true },
