@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <!-- Auto-complete could be done from either a bill either a purchase order -->
-            <field name="invoice_vendor_bill_id" position="after">
+            <field name="tax_cash_basis_origin_move_id" position="after">
                 <t groups="purchase.group_purchase_user">
                     <field name="purchase_id" invisible="1" readonly="state != 'draft'"/>
                     <field name="purchase_vendor_bill_id"
@@ -19,9 +19,6 @@
                         context="{'show_total_amount': True}"
                         options="{'no_create': True, 'no_open': True}"/>
                 </t>
-            </field>
-            <field name="invoice_vendor_bill_id" position="attributes">
-                <attribute name="groups">!purchase.group_purchase_user</attribute>
             </field>
             <!-- Add link to purchase_line_id to account.move.line -->
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='company_id']" position="after">
