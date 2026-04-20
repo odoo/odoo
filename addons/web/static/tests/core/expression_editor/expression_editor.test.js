@@ -557,7 +557,7 @@ test(`date: "in range" operator`, async () => {
 
     await contains(".o_datetime_input:last").click();
     await contains(getPickerCell("26", true)).click();
-    await press("enter");
+    await press("control+enter");
     await animationFrame();
     expect.verifySteps([formatExpr(`date >= "2023-04-20" and date <= "2023-04-26"`)]);
 
@@ -669,7 +669,7 @@ test(`datetime: "in range" operator`, async () => {
 
     await contains(".o_datetime_input:last").click();
     await contains(getPickerCell("26", true)).click();
-    await press("enter");
+    await press("control+enter");
     await animationFrame();
     expect.verifySteps([
         formatExpr(`datetime >= "2023-04-20 00:00:00" and datetime <= "2023-04-26 23:59:59"`),

@@ -11,6 +11,7 @@ import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 import { formatDate, formatDateTime } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 import { DateTimeOperation } from "@web/model/relational_model/operation";
+import { getNextTabableElement } from "../../../core/utils/ui";
 
 const { DateTime } = luxon;
 
@@ -27,6 +28,7 @@ const { DateTime } = luxon;
  *  startDateField?: string;
  *  warnFuture?: boolean;
  *  showSeconds?: boolean;
+ *  showWeekNumbers?: boolean;
  *  showTime?: boolean;
  *  numeric?: boolean;
  *  minPrecision?: string;
@@ -52,6 +54,7 @@ export class DateTimeField extends Component {
         warnFuture: { type: Boolean, optional: true },
         showSeconds: { type: Boolean, optional: true },
         showTime: { type: Boolean, optional: true },
+        showWeekNumbers: { type: Boolean, optional: true },
         minPrecision: {
             type: String,
             optional: true,
@@ -66,6 +69,7 @@ export class DateTimeField extends Component {
     static defaultProps = {
         showSeconds: false,
         showTime: true,
+        showWeekNumbers: true,
         numeric: false,
     };
 
@@ -126,7 +130,13 @@ export class DateTimeField extends Component {
                 return false;
             },
             onClose: () => {
+                const activeInput = this.picker.activeInput;
                 this.picker.activeInput = "";
+                [this.startDate, this.endDate].forEach((ref) => {
+                    if (ref.el?.getAttribute("data-field") === activeInput) {
+                        ref.el.focus();
+                    }
+                });
             },
             onApply: async () => {
                 const toUpdate = {};
@@ -163,8 +173,11 @@ export class DateTimeField extends Component {
                 [this.startDate, this.endDate].forEach((ref, index) => {
                     if (ref.el?.getAttribute("data-field") === this.picker.activeInput) {
                         ref.el.focus();
+                        if (this.isPickerOpen()) {
+                            this.focusPicker();
+                        }
                         // openPickerOnNextPatch is set in the template on pointerdown on the button
-                        if (this.openPickerOnNextPatch) {
+                        else if (this.openPickerOnNextPatch) {
                             this.openPicker(index);
                             this.openPickerOnNextPatch = false;
                         }
@@ -189,6 +202,14 @@ export class DateTimeField extends Component {
     // Methods
     //-------------------------------------------------------------------------
 
+    focusPicker() {
+        const pickers = document.querySelectorAll(".o_datetime_picker");
+        if (pickers.length) {
+            // We need to focus on the last picker in case there's an inline one present
+            getNextTabableElement(pickers[pickers.length - 1])?.focus();
+        }
+    }
+
     getPickerProps() {
         const value = this.getRecordValue();
         /** @type {DateTimePickerProps} */
@@ -199,6 +220,7 @@ export class DateTimeField extends Component {
             showRangeToggler:
                 this.relatedField && !this.isRequired(this.relatedField) && !this.props.alwaysRange,
             onToggleRange: this.onToggleRange.bind(this),
+            showWeekNumbers: this.props.showWeekNumbers,
         };
         if (this.props.maxDate) {
             pickerProps.maxDate = this.parseLimitDate(this.props.maxDate);
@@ -401,6 +423,26 @@ export class DateTimeField extends Component {
             this.picker.activeInput = "";
         }
     }
+
+    onkeyDown(ev) {
+        if ("ArrowDown" === ev.key) {
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            if (!this.isPickerOpen()) {
+                const index = Math.max(
+                    0,
+                    [this.startDate, this.endDate].findIndex(
+                        (x) => x.el?.getAttribute("data-field") === ev.target.getAttribute("data-field")
+                    )
+                );
+
+                this.openPicker(index);
+            } else {
+                this.focusPicker();
+            }
+        }
+    }
 }
 
 const START_DATE_FIELD_OPTION = "start_date_field";
@@ -475,6 +517,15 @@ export const dateField = {
             type: "field",
             availableTypes: ["date", "char"],
         },
+        {
+            label: _t("Show week numbers"),
+            name: "show_week_numbers",
+            type: "boolean",
+            default: true,
+            help: _t(
+                `Displays or hides the week numbers in the datetime picker`
+            ),
+        },
     ],
     supportedTypes: ["date"],
     extractProps: ({ options, placeholder }, dynamicInfo) => ({
@@ -490,6 +541,7 @@ export const dateField = {
         warnFuture: Boolean(options.warn_future),
         minPrecision: options.min_precision,
         maxPrecision: options.max_precision,
+        showWeekNumbers: options.show_week_numbers,
     }),
     listViewWidth: ({ options }) =>
         options.numeric ? FIELD_WIDTHS.numeric_date : FIELD_WIDTHS.date,

@@ -1,4 +1,4 @@
-import { onWillRender, useState } from "@web/owl2/utils";
+import { onWillRender, useRef, useState } from "@web/owl2/utils";
 import { Component, onWillUpdateProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
@@ -7,6 +7,7 @@ import { ensureArray } from "../utils/arrays";
 import { TimePicker } from "@web/core/time_picker/time_picker";
 import { Time } from "@web/core/l10n/time";
 import { range } from "@web/core/utils/numbers";
+import { useNavigation } from "../navigation/navigation";
 
 const { DateTime, Info } = luxon;
 
@@ -46,6 +47,7 @@ const { DateTime, Info } = luxon;
  * @property {NullableDateTime | NullableDateRange} [value]
  * @property {(date: DateTime) => boolean} [isDateValid]
  * @property {(date: DateTime) => string} [dayCellClass]
+ * @property {boolean} [focusTrap=false]
  *
  * @typedef {DateItem | MonthItem} Item
  *
@@ -284,6 +286,7 @@ const WEEKS_PER_MONTH = 6;
 export class DateTimePicker extends Component {
     static props = {
         focusedDateIndex: { type: Number, optional: true },
+        focusTrap: { type: Boolean, optional: true },
         showWeekNumbers: { type: Boolean, optional: true },
         daysOfWeekFormat: { type: String, optional: true },
         maxDate: { type: [NULLABLE_DATETIME_PROPERTY, { value: "today" }], optional: true },
@@ -322,6 +325,7 @@ export class DateTimePicker extends Component {
 
     static defaultProps = {
         focusedDateIndex: 0,
+        focusTrap: false,
         daysOfWeekFormat: "narrow",
         maxPrecision: "decades",
         minPrecision: "days",
@@ -352,6 +356,16 @@ export class DateTimePicker extends Component {
         return ensureArray(this.title);
     }
 
+    get _precisionItemsParams() {
+        return {
+            maxDate: this.maxDate,
+            minDate: this.minDate,
+            showWeekNumbers: this.props.showWeekNumbers,
+            isDateValid: this.props.isDateValid,
+            dayCellClass: this.props.dayCellClass,
+        };
+    }
+
     //-------------------------------------------------------------------------
     // Lifecycle
     //-------------------------------------------------------------------------
@@ -363,12 +377,22 @@ export class DateTimePicker extends Component {
         this.items = [];
         this.title = "";
         this.shouldAdjustFocusDate = false;
+        this.shouldFocusDateCell = false;
+        // Allow the zoomOrSelect method to detect if the action was triggered
+        // by navigation or by a real user interaction (isTrusted)
+        this.actionTriggeredByNavigation = false;
+        this.rootRef = useRef("root");
+        this.timePickerContainerRef = useRef("timePickerContainer");
 
         this.state = useState({
+            /** @type {DateTime | null} */
+            activeDate: null,
             /** @type {DateTime | null} */
             focusDate: null,
             /** @type {DateTime | null} */
             hoveredDate: null,
+            /** @type {Map<PrecisionLevel, DateTime | null>} */
+            focusedDatesByPrecision: new Map(),
             /** @type {Time[]} */
             timeValues: [],
             /** @type {PrecisionLevel} */
@@ -379,6 +403,8 @@ export class DateTimePicker extends Component {
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
 
         onWillRender(() => this.onWillRender());
+
+        this._setupNavigation();
     }
 
     /**
@@ -408,32 +434,240 @@ export class DateTimePicker extends Component {
         this.state.timeValues = this.getTimeValues(props);
         this.shouldAdjustFocusDate = !props.range;
         this.adjustFocus(this.values, props.focusedDateIndex);
+        this.setFocusedDateByPrecision(
+            this.state.precision,
+            this.values[props.focusedDateIndex] ||
+                this.values[props.focusedDateIndex === 1 ? 0 : 1] ||
+                this.state.focusDate
+        );
     }
 
     onWillRender() {
-        const { dayCellClass, focusedDateIndex, isDateValid, range, showWeekNumbers } = this.props;
-        const { focusDate, hoveredDate } = this.state;
+        const { focusedDateIndex, range } = this.props;
+        const { focusDate, activeDate } = this.state;
         const precision = this.activePrecisionLevel;
-        const getterParams = {
-            maxDate: this.maxDate,
-            minDate: this.minDate,
-            showWeekNumbers: showWeekNumbers ?? !range,
-            isDateValid,
-            dayCellClass,
-        };
 
         this.title = precision.getTitle(focusDate);
-        this.items = precision.getItems(focusDate, getterParams);
+        this.items = precision.getItems(focusDate, this._precisionItemsParams);
 
         this.selectedRange = [...this.values];
-        if (range && focusedDateIndex > 0 && (!this.values[1] || hoveredDate > this.values[0])) {
-            this.selectedRange[1] = hoveredDate;
+        if (range && focusedDateIndex > 0 && (!this.values[1] || activeDate > this.values[0])) {
+            this.selectedRange[1] = activeDate;
         }
     }
 
     //-------------------------------------------------------------------------
     // Methods
     //-------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adjustFocusedDateForPrecision() {
+        let date = this.state.focusedDatesByPrecision.get(this.state.precision) || this.state.focusDate;
+
+        if (this.state.precision === "days") {
+            if (!isInRange(date, [this.state.focusDate, this.state.focusDate.endOf("month")])) {
+                date = this.state.focusDate;
+            }
+            date = this._getNextValidDate(date, this.state.precision, 1);
+        } else {
+            const items = this.activePrecisionLevel.getItems(this.state.focusDate, this._precisionItemsParams);
+
+            date = items.find((item) => isInRange(date, item.range))?.range[0] ?? this.state.focusDate;
+        }
+
+        this.setFocusedDateByPrecision(this.state.precision, date);
+    }
+
+    _getNextValidDate(activeDate, unit, delta) {
+        if (this.state.precision !== "days") {
+            return activeDate;
+        }
+
+        while (
+            isInRange(activeDate, [this.minDate, this.maxDate]) &&
+            this.props.isDateValid &&
+            !this.props.isDateValid(activeDate)
+        ) {
+            activeDate = activeDate.plus({ [unit]: delta });
+        }
+
+        return activeDate;
+    }
+
+    /**
+     * @private
+     */
+    _setupNavigation() {
+        const focusDateCell = (navigator) => {
+            let date = this.state.focusedDatesByPrecision.get(this.state.precision);
+
+            if (date) {
+                // Since the navigator uses the dataset itemId (record.id) of the record,
+                // we have to adapt the date to match the itemId
+                if (this.state.precision === "days") {
+                    date = date.startOf("day");
+                } else {
+                    date = date.startOf("month");
+                }
+                date = date.toISODate();
+                navigator.items.find((item) => item.el.dataset.itemId === date)?.setActive();
+            }
+        };
+
+        const onArrowKeyCallback = (navigator, key) => {
+            let activeDate = this.state.focusedDatesByPrecision.get(this.state.precision);
+            let unit = this.state.precision;
+            let offset, delta, minDate, maxDate;
+
+            if (this.state.precision === "days") {
+                delta = 7;
+                minDate = this.state.focusDate.startOf("month");
+                maxDate = this.state.focusDate.endOf("month");
+            } else {
+                delta = 4;
+                minDate = this.items[0].range[0];
+                maxDate = this.items[this.items.length - 1].range[1];
+            }
+
+            switch (key) {
+                case "arrowright":
+                    offset = 1;
+                    break;
+                case "arrowleft":
+                    offset = -1;
+                    break;
+                case "arrowup":
+                    offset = -delta;
+                    break;
+                case "arrowdown":
+                    offset = delta;
+                    break;
+            }
+
+            if (this.state.precision === "decades") {
+                unit = "year";
+                offset = offset *= 10;
+            }
+
+            activeDate = this._getNextValidDate(
+                this.clamp(activeDate.plus({ [unit]: offset })),
+                unit,
+                offset < 0 ? -1 : 1
+            );
+
+            // If out of range, skip the navigation
+            if (!isInRange(activeDate, [this.minDate, this.maxDate])) {
+                return;
+            }
+
+            this.setFocusedDateByPrecision(this.state.precision, activeDate);
+
+            // Active date moved outside the visible panel, shift the focusDate to follow.
+            if (this.state.activeDate < minDate || this.state.activeDate > maxDate) {
+                this.state.focusDate = this.clamp(this.state.activeDate.startOf("month"));
+                this.shouldFocusDateCell = true;
+            } else {
+                focusDateCell(navigator);
+            }
+        };
+
+        const arrowsNavigationOptions = {};
+
+        for (const key of ["arrowup", "arrowright", "arrowdown", "arrowleft"]) {
+            arrowsNavigationOptions[key] = {
+                isAvailable: ({ navigator }) =>
+                    Boolean(navigator.activeItem) && navigator.activeItem.el.classList.contains("o_date_item_cell"),
+                callback: (navigator) => onArrowKeyCallback(navigator, key),
+                bypassEditableProtection: true,
+            };
+        }
+
+        const getNavigableItems = (navigator) =>
+            navigator.items.filter((item) => item.el.classList.contains("o-navigable"));
+
+        const tabKeyCallback = (navigator, offset) => {
+            const items = getNavigableItems(navigator);
+            const activeItemIndex = items.indexOf(navigator.activeItem);
+
+            let nextIndex = activeItemIndex + offset;
+
+            if (nextIndex < 0) {
+                nextIndex = items.length - 1;
+            } else if (nextIndex >= items.length) {
+                nextIndex = 0;
+            }
+
+            items[nextIndex]?.setActive();
+        };
+
+        const actionKeyCallback = (navigator) => {
+            this.actionTriggeredByNavigation = true;
+            navigator.activeItem.select();
+        };
+
+        useNavigation(this.rootRef, {
+            getItems: () => this.rootRef.el?.querySelectorAll(".o-navigable, .o_date_item_cell") ?? [],
+            isNavigationAvailable: ({ target }) => this.rootRef.el?.contains(target) || this.props.focusTrap,
+            onUpdated: (navigator) => {
+                if (this.shouldFocusDateCell) {
+                    this.shouldFocusDateCell = false;
+                    focusDateCell(navigator);
+                }
+            },
+            hotkeys: {
+                tab: {
+                    isAvailable: ({ navigator }) => {
+                        if (this.props.focusTrap) {
+                            return true;
+                        }
+                        const items = getNavigableItems(navigator);
+                        return items.indexOf(navigator.activeItem) < items.length - 1;
+                    },
+                    callback: (navigator) => tabKeyCallback(navigator, 1),
+                    bypassEditableProtection: true,
+                },
+                "shift+tab": {
+                    isAvailable: ({ navigator }) => {
+                        if (this.props.focusTrap) {
+                            return true;
+                        }
+                        const items = getNavigableItems(navigator);
+                        return items.indexOf(navigator.activeItem) > 0;
+                    },
+                    callback: (navigator) => tabKeyCallback(navigator, -1),
+                    bypassEditableProtection: true,
+                },
+                "control+enter": {
+                    isAvailable: ({ navigator }) => Boolean(navigator.activeItem),
+                    callback: () => {
+                        const date = this.state.focusedDatesByPrecision.get(this.state.precision);
+
+                        if (!date) {
+                            this.props.reset();
+                        } else {
+                            this.validateAndSelect(date, this.props.focusedDateIndex, "date", true);
+                        }
+                    },
+                    bypassEditableProtection: true,
+                },
+                enter: {
+                    isAvailable: ({ navigator, target }) =>
+                        Boolean(navigator.activeItem) && !this.timePickerContainerRef?.el.contains(target),
+                    callback: actionKeyCallback,
+                    bypassEditableProtection: true,
+                },
+                space: {
+                    isAvailable: ({ navigator, target }) =>
+                        Boolean(navigator.activeItem) && !this.timePickerContainerRef?.el.contains(target),
+                    callback: actionKeyCallback,
+                    bypassEditableProtection: true,
+                },
+                ...arrowsNavigationOptions,
+            },
+        });
+    }
 
     /**
      * @param {NullableDateTime[]} values
@@ -472,8 +706,8 @@ export class DateTimePicker extends Component {
      * to. Note that these ranges are computed differently according to the current
      * value mode (range or single date). This is done to simplify CSS selectors.
      * - Selected Range:
-     *      > range: current values with hovered date applied
-     *      > single date: just the hovered date
+     *      > range: current values with active date applied
+     *      > single date: just the active date
      * - Highlighted Range:
      *      > range: union of selection range and current values
      *      > single date: just the current value
@@ -486,7 +720,8 @@ export class DateTimePicker extends Component {
             isSelected: isInRange(this.selectedRange, range),
             isSelectStart: false,
             isSelectEnd: false,
-            isHighlighted: isInRange(this.state.hoveredDate, range),
+            isHighlighted: isInRange(this.state.activeDate, range),
+            isNavigable: isInRange(this.state.focusedDatesByPrecision.get(this.state.precision), range),
         };
 
         if (this.props.range) {
@@ -542,7 +777,8 @@ export class DateTimePicker extends Component {
     next(ev) {
         ev.preventDefault();
         const { step } = this.activePrecisionLevel;
-        this.state.focusDate = this.clamp(this.state.focusDate.plus(step));
+        this.state.focusDate = this.clamp(this.state.focusDate.plus(step).startOf("month"));
+        this._adjustFocusedDateForPrecision();
     }
 
     /**
@@ -553,7 +789,8 @@ export class DateTimePicker extends Component {
     previous(ev) {
         ev.preventDefault();
         const { step } = this.activePrecisionLevel;
-        this.state.focusDate = this.clamp(this.state.focusDate.minus(step));
+        this.state.focusDate = this.clamp(this.state.focusDate.minus(step).startOf("month"));
+        this._adjustFocusedDateForPrecision();
     }
 
     /**
@@ -566,12 +803,29 @@ export class DateTimePicker extends Component {
         this.validateAndSelect(value, valueIndex, "time");
     }
 
+    setHoveredDate(date) {
+        this.state.hoveredDate = date ? this.clamp(date) : null;
+
+        if (date) {
+            this.state.activeDate = this.state.hoveredDate;
+        }
+    }
+
+    setFocusedDateByPrecision(precision, date) {
+        this.state.focusedDatesByPrecision.set(precision, date ? this.clamp(date) : null);
+
+        if (date) {
+            this.state.activeDate = this.state.focusedDatesByPrecision.get(precision);
+        }
+    }
+
     /**
      * @param {DateTime} value
      * @param {number} valueIndex
      * @param {"date" | "time"} unit
+     * @param {boolean} shouldApply
      */
-    validateAndSelect(value, valueIndex, unit) {
+    validateAndSelect(value, valueIndex, unit, shouldApply = false) {
         if (!this.props.onSelect) {
             // No onSelect handler
             return false;
@@ -589,7 +843,7 @@ export class DateTimePicker extends Component {
             // Date is outside range defined by min and max dates
             return false;
         }
-        this.props.onSelect(result.length === 2 ? result : result[0], unit);
+        this.props.onSelect(result.length === 2 ? result : result[0], unit, shouldApply);
         return true;
     }
 
@@ -602,6 +856,8 @@ export class DateTimePicker extends Component {
         if (index in this.allowedPrecisionLevels) {
             this.state.focusDate = this.clamp(date);
             this.state.precision = this.allowedPrecisionLevels[index];
+            this._adjustFocusedDateForPrecision();
+            this.shouldFocusDateCell = true;
             return true;
         }
         return false;
@@ -614,6 +870,11 @@ export class DateTimePicker extends Component {
         const index = this.allowedPrecisionLevels.indexOf(this.state.precision) + 1;
         if (index in this.allowedPrecisionLevels) {
             this.state.precision = this.allowedPrecisionLevels[index];
+            this.setFocusedDateByPrecision(
+                this.state.precision,
+                this.state.focusedDatesByPrecision.get(this.allowedPrecisionLevels[index - 1])
+            );
+            this._adjustFocusedDateForPrecision();
             return true;
         }
         return false;
@@ -623,9 +884,10 @@ export class DateTimePicker extends Component {
      * Happens when a date item is selected:
      * - first tries to zoom in on the item
      * - if could not zoom in: date is considered as final value and triggers a hard select
+     * @param {Event} event
      * @param {DateItem} dateItem
      */
-    zoomOrSelect(dateItem) {
+    zoomOrSelect(event, dateItem) {
         if (!dateItem.isValid) {
             // Invalid item
             return;
@@ -636,7 +898,15 @@ export class DateTimePicker extends Component {
         }
         const [value] = dateItem.range;
         const valueIndex = this.props.focusedDateIndex;
-        const isValid = this.validateAndSelect(value, valueIndex, "date");
+        const shouldApply =
+            (!this.actionTriggeredByNavigation || event.isTrusted) && !this.props.range && this.props.type === "date";
+        const isValid = this.validateAndSelect(value, valueIndex, "date", shouldApply);
         this.shouldAdjustFocusDate = isValid && !this.props.range;
+
+        if (this.actionTriggeredByNavigation || event.isTrusted) {
+            this.actionTriggeredByNavigation = false;
+        }
     }
 }
+
+export default DateTimePicker;

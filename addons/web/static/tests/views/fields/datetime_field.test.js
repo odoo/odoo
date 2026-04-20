@@ -2,6 +2,7 @@ import { after, expect, queryFirst, test } from "@odoo/hoot";
 import {
     click,
     edit,
+    press,
     queryAll,
     queryAllProperties,
     queryAllTexts,
@@ -795,4 +796,95 @@ test("DateField: incoherent state and record value", async () => {
     await edit("10/10", { confirm: "Enter" });
     await animationFrame();
     expect(".o_field_widget[name=datetime] button").toHaveValue("10/10/2019 00:00:00");
+});
+
+test("datetime field keyboard navigation in form view", async () => {
+    mockTimeZone(+2); // UTC+2
+    expect.assertions(17);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `<form>
+            <field name="datetime"/>
+        </form>`,
+    });
+
+    await click(".o_field_datetime button");
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+
+    const scenarioSteps = [
+        // Focus the datepicker
+        { hotkey: "arrowdown", focused: () => getPickerCell("8").at(0) },
+        // Go to previous month by going up
+        { hotkey: "arrowup" },
+        { hotkey: "arrowup", focused: () => getPickerCell("25") },
+        // Go to previous month by previous button
+        { hotkey: "shift+tab" },
+        { hotkey: "shift+tab" },
+        { hotkey: "shift+tab", focused: ".o_previous" },
+        { hotkey: "enter", zoomText: "Dec 2016" },
+        // Go to precision selector
+        { hotkey: "tab" },
+        { hotkey: "tab", focused: ".o_zoom_out" },
+        // Go to month view
+        { hotkey: "enter", itemCount: 12, highlightedText: "Dec" },
+        // Go to year view
+        { hotkey: "enter", itemCount: 12, highlightedText: "2016" },
+        // Go back to days view
+        { hotkey: "tab" },
+        { hotkey: "enter" },
+        { hotkey: "enter", focused: () => getPickerCell("1").at(0) },
+        { hotkey: "arrowright" },
+        // Navigate to the time picker
+        { hotkey: "tab", focused: ".o_time_picker_input" },
+        { hotkey: "control+enter", pickerOpen: false, inputValue: "12/02/2016 12:00:00" },
+        // Open picker without click
+        { hotkey: "arrowdown", pickerOpen: true },
+        { hotkey: "arrowdown" },
+        // Close picker with Escape
+        { hotkey: "escape", inputValue: "12/02/2016 12:00:00" },
+    ];
+
+    for (const [stepIndex, step] of scenarioSteps.entries()) {
+        await press(step.hotkey);
+        await animationFrame();
+
+        if (step.focused !== undefined) {
+            const target = typeof step.focused === "function" ? step.focused() : step.focused;
+            expect(target).toBeFocused({ message: `step ${stepIndex}: correct element is focused` });
+        }
+        if (step.zoomText !== undefined) {
+            expect(".o_zoom_out").toHaveText(step.zoomText, {
+                message: `step ${stepIndex}: zoom out text`,
+            });
+        }
+        if (step.itemCount !== undefined) {
+            expect(".o_date_item_cell").toHaveCount(step.itemCount, {
+                message: `step ${stepIndex}: date item count`,
+            });
+        }
+        if (step.highlightedText !== undefined) {
+            expect(".o_highlighted").toHaveText(step.highlightedText, {
+                message: `step ${stepIndex}: highlighted text`,
+            });
+        }
+        if (step.pickerOpen !== undefined) {
+            expect(".o_datetime_picker").toHaveCount(step.pickerOpen ? 1 : 0, {
+                message: `step ${stepIndex}: picker is ${step.pickerOpen ? "open" : "closed"}`,
+            });
+        }
+        if (step.inputValue !== undefined) {
+            expect(".o_field_widget[name=datetime] input").toHaveValue(step.inputValue, {
+                message: `step ${stepIndex}: input value`,
+            });
+        }
+    }
+
+    // Lose focus to test if the formatted text is displayed
+    await click(document.body);
+    await animationFrame();
+    expect(".o_field_widget[name=datetime] button").toHaveText("Dec 2, 2016, 12:00 PM");
 });

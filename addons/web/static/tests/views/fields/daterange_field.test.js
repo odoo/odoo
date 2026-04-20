@@ -158,6 +158,8 @@ test("Datetime field - interaction with the datepicker", async () => {
     // Select a new range and check that inputs are updated
     await contains(getPickerCell("8").at(0)).click(); // 02/08/2017
     await contains(getPickerCell("9").at(0)).click(); // 02/09/2017
+    await contains(".o_datetime_button_apply").click();
+    await animationFrame();
 
     // Save
     await clickSave();
@@ -184,10 +186,10 @@ test("Datetime field - interaction with the datepicker (same initial dates)", as
     await contains("button[data-field=datetime]").click();
     expect(".o_date_item_cell.o_select_start").toHaveText("8");
     expect(".o_date_item_cell.o_select_end").toHaveText("8");
-    expect("input[data-field=datetime]").toBeFocused();
+    expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:30:00");
     await contains(getPickerCell("8").at(0)).click();
     await animationFrame();
-    expect("input[data-field=datetime_end]").toBeFocused();
+    expect("button[data-field=datetime_end]").toHaveValue("02/08/2017 20:30:00");
     await contains(getPickerCell("10").at(0)).click();
     await animationFrame();
     expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:30:00");
@@ -229,7 +231,7 @@ test("Date field - interaction with the datepicker", async () => {
 
     // Check date after change
     expect(".o_datetime_picker:first").not.toHaveCount();
-    expect("button[data-field=date]").toHaveValue("02/16/2017");
+    expect("input[data-field=date]").toHaveValue("02/16/2017");
     expect("button[data-field=date_end]").toHaveValue("03/12/2017");
 
     // Try to change range with end date
@@ -250,7 +252,7 @@ test("Date field - interaction with the datepicker", async () => {
     // Check date after change
     expect(".o_datetime_picker:first").not.toHaveCount();
     expect("button[data-field=date]").toHaveValue("02/13/2017");
-    expect("button[data-field=date_end]").toHaveValue("03/18/2017");
+    expect("input[data-field=date_end]").toHaveValue("03/18/2017");
 
     // Save
     await clickSave();
@@ -405,16 +407,16 @@ test("Render with initial empty value: date field", async () => {
 
     // Select a value (today)
     await contains(".o_today").click();
-    expect("button[data-field=date]").toHaveValue("08/14/2014");
+    expect("input[data-field=date]").toHaveValue("08/14/2014");
 
     // Reopen the datepicker
-    await contains("button[data-field=date]").click();
+    await contains("input[data-field=date]").click();
 
     // Add an end date
     await contains(".o_toggle_range").click();
-    await press("Enter");
+    await press("Control+Enter");
     await animationFrame();
-    expect("button[data-field=date]").toHaveValue(queryValue("button[data-field=date_end]"));
+    expect("input[data-field=date]").toHaveValue(queryValue("button[data-field=date_end]"));
 });
 
 test("Render with initial empty value: datetime field", async () => {
@@ -589,8 +591,8 @@ test("Datetime field - open datepicker and toggle range with optional start date
     // Range mode: on (add a end date)
     await contains(".o_toggle_range").click();
     await animationFrame();
-    expect("input[data-field=datetime]").toHaveValue("03/12/2017 23:00:00");
-    expect("button[data-field=datetime_end]").toHaveValue("03/13/2017 00:00:00");
+    expect("button[data-field=datetime]").toHaveValue("03/12/2017 23:00:00");
+    expect("input[data-field=datetime_end]").toHaveValue("03/13/2017 00:00:00");
 
     // Range mode: off
     await contains(".o_toggle_range").click();
@@ -693,7 +695,7 @@ test("related end date, both start date and end date empty", async () => {
     expect(".o_field_daterange button").toHaveAttribute("data-field", "datetime_end");
     expect(".o_field_daterange button").toHaveValue("06/06/2023 13:00:00");
 
-    await press("Enter");
+    await press("Control+Enter");
     await animationFrame();
     expect(".o_toggle_range").toHaveCount(0);
 });
@@ -1356,7 +1358,7 @@ test("date values are selected eagerly and do not flicker", async () => {
     await contains(".o_field_datetime button").click();
     await contains(getPickerCell("19")).click();
     await contains(".o_toggle_range").click();
-    await press("enter");
+    await press("control+enter");
 
     expect(".o_field_datetime input").toHaveValue("02/19/2017 15:30:00");
     expect(".o_field_datetime button").toHaveValue("02/19/2017 16:30:00");
@@ -1365,7 +1367,7 @@ test("date values are selected eagerly and do not flicker", async () => {
     def.resolve();
     await animationFrame();
 
-    expect(queryAllValues(".o_field_datetime button")).toEqual([
+    expect(queryAllValues(".o_field_datetime input, .o_field_datetime button")).toEqual([
         "02/19/2017 15:30:00",
         "02/19/2017 16:30:00",
     ]);
@@ -1390,7 +1392,7 @@ test("update the selected input date after removing the existing date", async ()
     await contains(getPickerCell("12")).click();
     await animationFrame();
 
-    expect("button[data-field=date]").toHaveValue("02/12/2017");
+    expect("input[data-field=date]").toHaveValue("02/12/2017");
 });
 
 test("daterange with inverted start date and end date", async () => {
@@ -1464,6 +1466,7 @@ test("updating time keeps selected dates", async () => {
         await runAllTimers();
         await editTime("05:05", 1);
     } else {
+        await contains(".o_time_picker:eq(1) .o_time_picker_input").click();
         await contains(".o_time_picker:eq(1) .o_time_picker_input").edit("5:05", {
             confirm: "Enter",
         });
@@ -1537,4 +1540,55 @@ test("DateRangeField contains a calendar icon on touch devices", async () => {
     expect(".o_field_daterange .o_input").toHaveCount(2);
     expect(".fa-calendar").toHaveCount(1);
     expect(".fa-calendar").toBeVisible();
+});
+
+test("DateRangeField keyboard navigation in form view", async () => {
+    expect.assertions(14);
+
+    Partner._records[0].datetime_end = Partner._records[0].datetime;
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `<form>
+            <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
+        </form>`,
+    });
+
+    await click(".o_field_daterange button[data-field=datetime]");
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+
+    const scenarioSteps = [
+        { hotkey: "arrowdown", focused: () => getPickerCell("8").at(0) },
+        // Navigate backwards through all header buttons
+        { hotkey: "shift+tab", focused: ".o_toggle_range[title='Date range']" },
+        { hotkey: "shift+tab", focused: ".o_toggle_range[title='Single date']" },
+        { hotkey: "shift+tab", focused: ".o_zoom_out" },
+        { hotkey: "shift+tab", focused: ".o_next" },
+        { hotkey: "shift+tab", focused: ".o_previous" },
+        // Verify both time pickers and action buttons are all reachable
+        { hotkey: "shift+tab", focused: ".o_datetime_button_apply" },
+        { hotkey: "shift+tab", focused: "[title='Clear']" },
+        { hotkey: "shift+tab", focused: ".o_time_picker_input:eq(1)" },
+        { hotkey: "enter", focused: ".o_time_picker_input:eq(1)" },
+        { hotkey: "shift+tab", focused: ".o_time_picker_input:eq(0)" },
+        { hotkey: "enter", focused: ".o_time_picker_input:eq(0)" },
+    ];
+
+    for (const [stepIndex, step] of scenarioSteps.entries()) {
+        await press(step.hotkey);
+        await animationFrame();
+
+        if (step.focused !== undefined) {
+            const target = typeof step.focused === "function" ? step.focused() : step.focused;
+            expect(target).toBeFocused({ message: `step ${stepIndex}: correct element is focused` });
+        }
+    }
+
+    // Close the picker without applying
+    await press("escape");
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
 });

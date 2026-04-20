@@ -80,8 +80,17 @@
         aspect-ratio: 1;
         position: relative;
 
-        &:hover, &:focus {
+        &:hover, &:focus, &.o_highlighted {
             --DateTimePicker__date-cell-border-color-hover: #{$o-component-active-border};
+        }
+
+        &.o_highlighted:focus {
+            border-radius: 50%;
+            box-shadow: 0 0 0 1px #{$o-component-active-border};
+        }
+
+        &:focus-visible {
+            outline: none;
         }
 
         &:not([disabled])::before {
@@ -101,5 +110,9 @@
 
     .o_week_number_cell {
         font-variant: tabular-nums;
+    }
+
+    .btn:focus-visible {
+        box-shadow: 0 0 0 1px #{$o-component-active-border};
     }
 }
