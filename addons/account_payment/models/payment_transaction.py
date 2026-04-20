@@ -103,6 +103,7 @@ class PaymentTransaction(models.Model):
         cancelled transactions, we cancel the payment.
         """
         super()._post_process()
+        return
         for tx in self.filtered(lambda t: t.state == 'done'):
             # Validate invoices automatically once the transaction is confirmed.
             self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
