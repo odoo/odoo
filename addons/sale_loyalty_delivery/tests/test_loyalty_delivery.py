@@ -221,3 +221,46 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             status = order._apply_program_reward(rewards, coupons)
             if "error" in status:
                 raise ValidationError(status["error"])
+
+    def test_ewallet_is_excluded_from_delivery_pricing(self):
+        program_ewallet = self.env["loyalty.program"].create({
+            "name": "eWallet",
+            "program_type": "ewallet",
+            "reward_ids": [
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "per_point",
+                    "discount": 1,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
+            ],
+        })
+        self.env["loyalty.generate.wizard"].with_context(active_id=program_ewallet.id).create({
+            "coupon_qty": 1,
+            "points_granted": 200,
+        }).generate_coupons()
+        reward_ewallet = program_ewallet.reward_ids[0]
+        ewallet = program_ewallet.coupon_ids[0]
+
+        self.delivery_carrier.delivery_type = "base_on_rule"
+        self.delivery_carrier.price_rule_ids = [
+            Command.create({
+                "list_base_price": 30,
+                "operator": "<",
+                "variable": "price",
+                "max_value": 99,
+            }),
+            Command.create({
+                "list_base_price": 50,
+                "operator": ">=",
+                "variable": "price",
+                "max_value": 100,
+            }),
+        ]
+
+        order = self.order
+        order.order_line.price_unit = 100
+        order._apply_program_reward(reward_ewallet, ewallet)
+
+        self.assertEqual(self.delivery_carrier._get_price_available(order), 50)
