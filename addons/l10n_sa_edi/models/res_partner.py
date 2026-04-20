@@ -33,3 +33,14 @@ class ResPartner(models.Model):
     def _address_fields(self):
         return super()._address_fields() + ['l10n_sa_edi_building_number',
                                             'l10n_sa_edi_plot_identification']
+
+    def _get_frontend_writable_fields(self):
+        frontend_writable_fields = super()._get_frontend_writable_fields()
+        frontend_writable_fields.update({
+            'l10n_sa_edi_building_number',
+            'l10n_sa_edi_plot_identification',
+            'l10n_sa_edi_additional_identification_scheme',
+            'l10n_sa_edi_additional_identification_number',
+        })
+
+        return frontend_writable_fields
