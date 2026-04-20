@@ -97,23 +97,23 @@ class PaymentTransaction(models.Model):
         for done_tx in self.filtered(lambda tx: tx.state == "done"):
             if done_tx.operation != "validation":
                 confirmed_orders = done_tx._check_amount_and_confirm_order()
-                (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+                # (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
-            auto_invoice = self.env["ir.config_parameter"].sudo().get_bool("sale.automatic_invoice")
-            if auto_invoice:
-                # Invoice the sales orders of confirmed transactions instead of only confirmed
-                # orders to create the invoice even if only a partial payment was made.
-                done_tx._invoice_sale_orders()
+            # auto_invoice = self.env["ir.config_parameter"].sudo().get_bool("sale.automatic_invoice")
+            # if auto_invoice:
+            #     # Invoice the sales orders of confirmed transactions instead of only confirmed
+            #     # orders to create the invoice even if only a partial payment was made.
+            #     done_tx._invoice_sale_orders()
             super(PaymentTransaction, done_tx)._post_process()  # Post the invoices.
-            if auto_invoice and not self.env.context.get("skip_sale_auto_invoice_send"):
-                if self.env["ir.config_parameter"].sudo().get_bool("sale.async_emails") and (
-                    send_invoice_cron := self.env.ref(
-                        "sale.send_invoice_cron", raise_if_not_found=False
-                    )
-                ):
-                    send_invoice_cron._trigger()
-                else:
-                    self._send_invoice()
+            # if auto_invoice and not self.env.context.get("skip_sale_auto_invoice_send"):
+            #     if self.env["ir.config_parameter"].sudo().get_bool("sale.async_emails") and (
+            #         send_invoice_cron := self.env.ref(
+            #             "sale.send_invoice_cron", raise_if_not_found=False
+            #         )
+            #     ):
+            #         send_invoice_cron._trigger()
+            #     else:
+            #         self._send_invoice()
 
     def _check_amount_and_confirm_order(self):
         """Confirm the sales order based on the amount of a transaction.
