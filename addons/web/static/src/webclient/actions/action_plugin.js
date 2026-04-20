@@ -820,13 +820,25 @@ export function useActionManager(router = _router) {
         viewProps.noBreadcrumbs =
             "_noBreadcrumbs" in action ? action._noBreadcrumbs : target === "new";
 
+<<<<<<< cf2cecb5addd53ab7418b933a813b074b83825d0:addons/web/static/src/webclient/actions/action_plugin.js
         // selecting an embedded action replaces the current action, which isn't
         // the action of the dialog, so we don't display them in a dialog either
+||||||| 903be26bfde33087a3a6833249b89314888366a1:addons/web/static/src/webclient/actions/action_service.js
+=======
+        // a form view only displays the embedded actions if it is the view of the action itself,
+        // not a record opened from a multi-record view of the action or in a dialog
+>>>>>>> 8e09702720f50b8cc779663e1553fce79cc3e8b7:addons/web/static/src/webclient/actions/action_service.js
         const embeddedActions =
+<<<<<<< cf2cecb5addd53ab7418b933a813b074b83825d0:addons/web/static/src/webclient/actions/action_plugin.js
             view.type === "form" || target === "new"
+||||||| 903be26bfde33087a3a6833249b89314888366a1:addons/web/static/src/webclient/actions/action_service.js
+            view.type === "form"
+=======
+            view.type === "form" && (target === "new" || views.some((v) => v.multiRecord))
+>>>>>>> 8e09702720f50b8cc779663e1553fce79cc3e8b7:addons/web/static/src/webclient/actions/action_service.js
                 ? []
                 : context.parent_action_embedded_actions || action.embedded_action_ids;
-        const parentActionId = (view.type !== "form" && context.parent_action_id) || false;
+        const parentActionId = (embeddedActions?.length && context.parent_action_id) || false;
         const currentEmbeddedActionId = context.current_embedded_action_id || false;
         return {
             props: viewProps,
