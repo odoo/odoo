@@ -76,6 +76,23 @@ class AccountChartTemplate(models.AbstractModel):
         be_account = self.with_company(company).ref('a6560', raise_if_not_found=False)
         return be_account or super()._get_bank_fees_reco_account(company)
 
+    def _load(self, template_code, company, install_demo, force_create=True):
+        if template_code in ('be_comp', 'be_asso'):
+            self.env['account.cash.rounding'].search([
+                ('company_id', '=', company.id),
+                ('name', '=', 'Round to 0.05'),
+            ]).write({
+                'profit_account_id': False,
+                'loss_account_id': False,
+            })
+
+        return super()._load(
+            template_code,
+            company,
+            install_demo,
+            force_create=force_create,
+        )
+
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)
         if template_code in ('be_comp', 'be_asso') and \
