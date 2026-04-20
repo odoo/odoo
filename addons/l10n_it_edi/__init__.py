@@ -1,6 +1,6 @@
 import logging
 
-from . import controllers, models, tools
+from . import controllers, models, tools, demo
 
 _logger = logging.getLogger(__name__)
 
