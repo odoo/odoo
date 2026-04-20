@@ -25,24 +25,26 @@
                         <i class="fa fa-plus-circle o-discuss-ChannelInvitation-iconPlus position-absolute bg-white rounded-circle"/>
                     </div>
                 </div>
-                <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0 }">
-                    <div t-if="this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0" class="smaller text-muted mx-1 opacity-50">
+                <div class="d-flex flex-column pt-1">
+                    <p t-if="this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0" class="mx-1 my-0 smaller text-muted opacity-50">
                         <t t-if="this.props.channel">No one found to invite.</t>
-                        <t t-else="">No user found.</t>
-                    </div>
+                        <t t-else="">No users found.</t>
+                    </p>
                     <div t-if="this.state.searchResultCount > this.selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.showingResultNarrowText"/>
-                    <t t-foreach="this.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
-                        <t t-call="discuss.ChannelInvitation-selectableItem">
-                            <t t-set="selectableItemIndex" t-value="selectablePartner_index"/>
+                    <ul class="pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0}">
+                        <t t-foreach="this.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
+                            <t t-call="discuss.ChannelInvitation-selectableItem">
+                                <t t-set="selectableItemIndex" t-value="selectablePartner_index"/>
+                            </t>
                         </t>
-                    </t>
-                    <t t-foreach="this.state.selectableEmails" t-as="selectableEmailAddress" t-key="selectableEmailAddress">
-                        <t t-call="discuss.ChannelInvitation-selectableItem">
-                            <t t-set="selectableEmailAddress" t-value="selectableEmailAddress"/>
-                            <t t-set="selectableItemIndex" t-value="this.selectablePartners.length + selectableEmailAddress_index"/>
+                        <t t-foreach="this.state.selectableEmails" t-as="selectableEmailAddress" t-key="selectableEmailAddress">
+                            <t t-call="discuss.ChannelInvitation-selectableItem">
+                                <t t-set="selectableEmailAddress" t-value="selectableEmailAddress"/>
+                                <t t-set="selectableItemIndex" t-value="this.selectablePartners.length + selectableEmailAddress_index"/>
+                            </t>
                         </t>
-                    </t>
-                </ul>
+                    </ul>
+                </div>
             </t>
             <div class="o-discuss-ChannelInvitation-invitationBox pt-0 pb-1 bg-inherit">
                 <t t-if="this.store.self_user" >
