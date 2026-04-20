@@ -500,3 +500,25 @@ class TestSalePurchaseStockFlow(TransactionCase):
         sale_order.action_confirm()
         purchase_order = sale_order._get_purchase_orders()
         self.assertEqual(purchase_order.order_line.analytic_distribution, {str(analytic_account.id): 100})
+
+    def test_mto_buy_po_on_so_reduction_below_seller_min_qty(self):
+        """Ensure the PO line has the correct UoM and price when SO quantity is reduced below seller minimum quantity."""
+        self.mto_product.seller_ids.write({'min_qty': 1, 'price': 10.0})
+        self.mto_product.standard_price = 5.0
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.mto_product.id,
+                'product_uom_qty': 2,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order._get_purchase_orders()
+        self.assertTrue(purchase_order)
+        sale_order.order_line.product_uom_qty = 0.5
+        purchase_order.button_confirm()
+        self.assertRecordValues(purchase_order.order_line, [{
+            'state': 'purchase',
+            'product_uom_id': self.mto_product.uom_id.id,
+            'price_unit': 5.0,
+        }])

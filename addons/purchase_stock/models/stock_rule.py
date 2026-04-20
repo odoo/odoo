@@ -276,17 +276,19 @@ class StockRule(models.Model):
             uom_id=line.product_uom_id,
             params={'force_uom': values.get('force_uom')})
 
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.sudo().tax_ids, company_id) if seller else 0.0
-        if price_unit and seller and line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:
-            price_unit = seller.currency_id._convert(
-                price_unit, line.order_id.currency_id, line.order_id.company_id, fields.Date.today())
+        price_unit = product_id.standard_price
+        if seller:
+            price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.sudo().tax_ids, company_id)
+            if line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:
+                price_unit = seller.currency_id._convert(
+                    price_unit, line.order_id.currency_id, line.order_id.company_id, fields.Date.today())
 
         res = {
             'product_qty': line.product_qty + procurement_uom_po_qty,
             'price_unit': price_unit,
             'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
-        if seller.product_uom_id != line.product_uom_id and not values.get('force_uom'):
+        if seller and seller.product_uom_id != line.product_uom_id and not values.get('force_uom'):
             res['product_qty'] = line.product_uom_id._compute_quantity(res['product_qty'], seller.product_uom_id, rounding_method='HALF-UP')
             res['product_uom_id'] = seller.product_uom_id
         orderpoint_id = values.get('orderpoint_id')
