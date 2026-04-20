@@ -63,7 +63,7 @@ test("PdfViewerField: upload rendering", async () => {
     expect.assertions(4);
 
     onRpc("web_save", ({ args }) => {
-        expect(args[1]).toEqual({ document: btoa("test") });
+        expect(args[1]).toEqual({ document: {content: btoa("test"), filename: "test.pdf"} });
     });
 
     await mountView({
@@ -115,7 +115,10 @@ test("PdfViewerField: upload also sets filename", async () => {
 
     onRpc("web_save", ({ args }) => {
         expect(args[1]).toEqual({
-            document: btoa("test"),
+            document: {
+                content: btoa("test"),
+                filename: "test.pdf",
+            },
             document_name: "test.pdf",
         });
     });

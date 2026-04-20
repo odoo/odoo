@@ -7521,7 +7521,6 @@ test("editable list: contexts are correctly sent", async () => {
             {
                 allowed_company_ids: [1],
                 active_field: 2,
-                bin_size: true,
                 someKey: "some value",
                 uid: 7,
                 lang: "en",
@@ -7595,7 +7594,6 @@ test("contexts of nested x2manys are correctly sent (add line)", async () => {
             {
                 allowed_company_ids: [1],
                 active_field: 2,
-                bin_size: true,
                 someKey: "some value",
                 uid: 7,
                 lang: "en",
@@ -13195,7 +13193,6 @@ test("add record in nested x2many with context depending on parent", async () =>
     onRpc("turtle", "web_read", (args) => {
         expect(args.kwargs.context).toEqual({
             allowed_company_ids: [1],
-            bin_size: true,
             lang: "en",
             tz: "taht",
             uid: 7,

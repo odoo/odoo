@@ -240,10 +240,6 @@ beforeEach(() => {
 });
 
 test("basic ungrouped rendering", async () => {
-    onRpc("web_search_read", ({ kwargs }) => {
-        expect(kwargs.context.bin_size).toBe(true);
-    });
-
     await mountView({
         type: "kanban",
         resModel: "partner",

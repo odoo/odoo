@@ -539,7 +539,6 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
                         tz: "taht",
                         uid: 7,
                         allowed_company_ids: [1],
-                        bin_size: true,
                     },
                     count_limit: 10001,
                     domain: [

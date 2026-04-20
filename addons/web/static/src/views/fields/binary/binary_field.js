@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { isBinarySize } from "@web/core/utils/binary";
 import { download } from "@web/core/network/download";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
@@ -34,6 +33,9 @@ export class BinaryField extends Component {
     get fileName() {
         let fileName = this.props.record.data[this.props.fileNameField] || "";
         const value = this.props.record.data[this.props.name];
+        if (!fileName && value && typeof value === "object" && "filename" in value) {
+            fileName = value.filename || "";
+        }
         if (!fileName && !(value && !this.props.useReplaceButton)) {
             return false;
         }
@@ -42,10 +44,16 @@ export class BinaryField extends Component {
 
     update({ data, name }) {
         const { fileNameField, record } = this.props;
-        const changes = { [this.props.name]: data || false };
+        const payload = data ? {
+            filename: name,
+            content: data,
+        } : false;
+        const changes = { [this.props.name]: payload };
+
         if (fileNameField in record.fields && record.data[fileNameField] !== name) {
             changes[fileNameField] = name || "";
         }
+
         return this.props.record.update(changes);
     }
 
@@ -54,12 +62,9 @@ export class BinaryField extends Component {
             model: this.props.record.resModel,
             id: this.props.record.resId,
             field: this.props.name,
-            filename_field: this.fileName,
+            filename_field: this.props.fileNameField || "",
             filename: this.fileName || "",
             download: true,
-            data: isBinarySize(this.props.record.data[this.props.name])
-                ? null
-                : this.props.record.data[this.props.name],
         };
     }
 

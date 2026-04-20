@@ -70,8 +70,11 @@ test("tip ticket does not render name element when name is empty", async () => {
 
 test("tip ticket renders logo when configured", async () => {
     const store = await setupPosEnv();
-    store.config.logo =
+    const data =
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
+    store.config.logo = {
+        content: data,
+    };
     const order = store.addNewOrder();
     const product = store.models["product.template"].get(5);
 

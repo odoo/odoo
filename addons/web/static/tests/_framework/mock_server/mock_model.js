@@ -537,7 +537,6 @@ function isValidFieldValue(record, fieldDef) {
         return true;
     }
     switch (fieldDef.type) {
-        case "binary":
         case "char":
         case "html":
         case "text": {
@@ -576,6 +575,10 @@ function isValidFieldValue(record, fieldDef) {
         case "many2one_reference": {
             return isValidId(value, fieldDef, record);
         }
+        case "binary":
+            return typeof value === "string" || (
+                typeof value === "object" && value.content !== undefined
+            );
         case "properties": {
             return isObject(value);
         }
@@ -2173,7 +2176,7 @@ export class Model extends Array {
             }
         }
         if (ids[0]) {
-            serverValues = this.read(ids, fieldsFromView, kwargs)[0];
+            serverValues = this.read(ids, fieldsFromView, "web", kwargs)[0];
         } else if (firstOnChange) {
             // It is the new semantics: no field in arguments means we are in
             // a default_get + onchange situation
@@ -2228,7 +2231,7 @@ export class Model extends Array {
         ({ ids: idOrIds, fields, load } = kwargs);
 
         const fieldNames = fields?.length ? fields : Object.keys(this._fields);
-        return this._read_format(idOrIds, fieldNames, load);
+        return this._read_format(idOrIds, fieldNames, load, kwargs);
     }
 
     /**
@@ -2726,8 +2729,8 @@ export class Model extends Array {
         if (!fieldNames.length) {
             fieldNames = ["id"];
         }
-        const records = this.read(ids, fieldNames, kwargs);
-        this._unityReadRecords(records, specification);
+        const records = this.read(ids, fieldNames, "web", kwargs);
+        this._unityReadRecords(records, specification, kwargs);
         return records;
     }
 
@@ -3029,13 +3032,14 @@ export class Model extends Array {
             length,
             records: this.read(
                 records.map((r) => r.id),
-                unique(["id", ...fieldNames])
+                unique(["id", ...fieldNames]),
+                "web",
             ),
         };
         if (countLimit) {
             result.length = Math.min(result.length, countLimit);
         }
-        this._unityReadRecords(result.records, specification);
+        this._unityReadRecords(result.records, specification, kwargs);
         return result;
     }
 
@@ -3357,7 +3361,7 @@ export class Model extends Array {
      * @param {Iterable<string>} [fnames=[]]
      * @param {string | false} [load="_classic_read"]
      */
-    _read_format(idOrIds, fnames = [], load = "_classic_read") {
+    _read_format(idOrIds, fnames = [], load = "_classic_read", kwargs) {
         const ids = ensureArray(idOrIds);
         const fieldNames = unique(["id", ...fnames]);
 
@@ -3430,6 +3434,27 @@ export class Model extends Array {
                     }
                 } else if (isX2MField(field)) {
                     result[field.name] = record[field.name] || [];
+                } else if (field.type === "binary" && record[field.name]) {
+                    let content;
+                    if (typeof record[field.name] === "string") {
+                        content = record[field.name];
+                        result[field.name] = {
+                            size: content.length,
+                        };
+                    } else {
+                        content = record[field.name].content || null;
+                        const filename = record[field.name].filename;
+                        result[field.name] = {
+                            filename: record[field.name].filename || "",
+                            size: record[field.name].size || content?.length || 0,
+                        };
+                        if (filename) {
+                            result[field.name].filename = filename;
+                        }
+                    }
+                    if (load != 'web') {
+                        result[field.name].content = content;
+                    }
                 } else if (field.type === "properties") {
                     const container = this._getPropertyContainer(field, record);
                     if (container) {
@@ -3474,7 +3499,8 @@ export class Model extends Array {
      * @param {Record<string, any>} spec
      * @param {ModelRecord[]} records
      */
-    _unityReadRecords(records, spec) {
+    _unityReadRecords(records, spec, kwargs) {
+        const context = kwargs?.context;
         for (const fieldName in spec) {
             const field = this._fields[fieldName];
             const relatedFields = spec[fieldName].fields;
@@ -3490,7 +3516,7 @@ export class Model extends Array {
                             const result = this.env[modelName].web_read(
                                 id,
                                 relatedFields,
-                                makeKwArgs({ context: spec[fieldName].context })
+                                makeKwArgs({ context: {...context, ...spec[fieldName].context} })
                             );
                             record[fieldName] = result[0];
                         }
@@ -3517,7 +3543,7 @@ export class Model extends Array {
                             const [result] = this.env[model].web_read(
                                 id,
                                 relatedFields,
-                                makeKwArgs({ context: spec[fieldName].context })
+                                makeKwArgs({ context: {...context, ...spec[fieldName].context} })
                             );
                             record[fieldName] = result;
                         }
@@ -3540,7 +3566,7 @@ export class Model extends Array {
                             let result = relModel.web_read(
                                 relResIds,
                                 relatedFields,
-                                makeKwArgs({ context: spec[fieldName].context })
+                                makeKwArgs({ context: {...context, ...spec[fieldName].context} })
                             );
                             if (limit) {
                                 result = result.map((r, i) => (i < limit ? r : { id: r.id }));
@@ -3554,12 +3580,12 @@ export class Model extends Array {
                     for (const record of records) {
                         if (record[fieldName] !== false) {
                             if (!relatedFields) {
-                                record[fieldName] = record[fieldName][0];
+                                record[fieldName] = record[fieldName];
                             } else {
                                 record[fieldName] = getRelation(field).web_read(
-                                    [record[fieldName][0]],
+                                    [record[fieldName]],
                                     relatedFields,
-                                    makeKwArgs({ context: spec[fieldName].context })
+                                    makeKwArgs({ context: {...context, ...spec[fieldName].context} })
                                 )[0];
                             }
                         }

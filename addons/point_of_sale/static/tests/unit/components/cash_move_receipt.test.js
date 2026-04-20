@@ -41,8 +41,11 @@ test("cash move ticket renders cash out with amount and reason", async () => {
 
 test("cash move ticket renders logo when configured", async () => {
     const store = await setupPosEnv();
-    store.config.logo =
+    const data =
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
+    store.config.logo = {
+        content: data,
+    };
 
     const { ticket } = renderCashMoveReceipt(store, {
         reason: "Test",

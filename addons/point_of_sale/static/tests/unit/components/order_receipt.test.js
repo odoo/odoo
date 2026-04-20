@@ -240,13 +240,15 @@ test("point_of_sale.test_receipt_company_logo_tour, point_of_sale.test_receipt_n
         const product = store.models["product.template"].get(5);
 
         setProductPrice(product, 5, []);
-        store.config.logo = receiptCase.logo;
+        store.config.logo = {
+            content: receiptCase.logo,
+        };
         store.config.phone = receiptCase.contact_info;
         await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
 
         const { ticket } = renderReceipt(store, order);
         expectTicketData(ticket, {
-            logo: imageDataUri(receiptCase.logo),
+            logo: imageDataUri(receiptCase.logo.content),
             contact_info: receiptCase.contact_info,
         });
     }
@@ -259,8 +261,11 @@ test("point_of_sale.test_receipt_custom_logo_tour: custom logo and phone display
 
     setProductPrice(product, 5, []);
     store.config.use_custom_receipt_info = true;
-    const customLogo =
+    const data =
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
+    const customLogo = {
+        content: data,
+    };
     store.config.custom_logo = customLogo;
     store.config.logo = customLogo;
     store.config.custom_phone = "555-999";
