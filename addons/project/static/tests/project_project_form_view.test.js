@@ -1,5 +1,5 @@
 import { expect, test, beforeEach } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import {
     mountView,
     contains,
@@ -8,9 +8,14 @@ import {
     toggleActionMenu,
     clickSave,
     mockService,
+    defineActions,
+    getService,
+    mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { user } from "@web/core/user";
+import { WebClient } from "@web/webclient/webclient";
 
-import { defineProjectModels, ProjectProject } from "./project_models";
+import { defineProjectModels, ProjectProject, ProjectTask } from "./project_models";
 
 defineProjectModels();
 
@@ -225,4 +230,64 @@ test("reload the page when allow_recurring_tasks is disabled on all projects", a
         "check_features_enabled",
         "reload_context",
     ]);
+});
+
+test.tags("desktop");
+test("project.project (form) display the top menu when opened from it", async () => {
+    ProjectProject._views.form = formViewParams.arch;
+    ProjectTask._views = {
+        kanban: `<kanban><templates><t t-name="card"><field name="name"/></t></templates></kanban>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Tasks",
+            res_model: "project.task",
+            views: [[false, "kanban"]],
+        },
+        {
+            id: 2,
+            name: "Overview",
+            parent_res_model: "project.project",
+            type: "ir.embedded.actions",
+            parent_action_id: 1,
+            python_method: "action_open_project_form",
+        },
+    ]);
+    onRpc("project.project", "action_open_project_form", ({ args }) => ({
+        type: "ir.actions.client",
+        tag: "project_top_menu_overview",
+        res_model: "project.project",
+        res_id: args[0][0],
+    }));
+    // Overview is the first item of the top menu of the project
+    user.updateUserSettings("id", 1);
+    user.updateUserSettings("embedded_actions_config_ids", {
+        "1+1": {
+            embedded_actions_order: [2, false],
+            embedded_actions_visibility: [2, false],
+            embedded_visibility: true,
+        },
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doActionButton({
+        name: 1,
+        type: "action",
+        resId: 1,
+        resModel: "project.project",
+    });
+    await waitFor(".o_form_view");
+    expect(queryAllTexts(".o_embedded_actions > button > span")).toEqual(["Overview", "Tasks"]);
+    expect(".o_embedded_actions > button.active").toHaveText("Overview");
+
+    await contains(".o_embedded_actions > button:contains(Tasks)").click();
+    expect(".o_kanban_view").toHaveCount(1);
+    await contains(".o_embedded_actions > button:contains(Overview)").click();
+    await waitFor(".o_form_view");
+    expect(".o_embedded_actions > button.active").toHaveText("Overview");
+    expect(".o_breadcrumb .breadcrumb-item").toHaveCount(0, {
+        message: "switching between the top menu entries should not stack breadcrumbs",
+    });
+    expect.verifySteps(["check_features_enabled", "check_features_enabled"]);
 });
