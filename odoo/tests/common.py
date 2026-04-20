@@ -1052,6 +1052,42 @@ class TransactionCase(BaseCase):
         cls._signal_changes_patcher = patch.object(cls.registry, 'signal_changes', signal_changes)
         cls.startClassPatcher(cls._signal_changes_patcher)
 
+<<<<<<< 8bff78853f6ab8dc2cc951c03bb30181c0745834
+||||||| 2e91a7336fd8fedc86e76c345af2625ce99a4e5d
+        cls.attrs_before = {
+            model._name: {
+                *vars(model),
+                # __annotations__ pops up during testing on *some* models
+                '__annotations__',
+                # if model is transient & transient fields are accessed
+                '_transient_max_count',
+                '_transient_max_hours',
+                #
+                '_rec_name',
+            }
+            for model in cls.registry.values()
+        }
+        cls.addClassCleanup(cls.attrs_before.clear)
+
+=======
+        cls.attrs_before = {
+            model._name: {
+                *vars(model),
+                # __annotations__ pops up during testing on *some* models
+                '__annotations__',
+                '__annotate_func__',
+                '__annotations_cache__',
+                # if model is transient & transient fields are accessed
+                '_transient_max_count',
+                '_transient_max_hours',
+                #
+                '_rec_name',
+            }
+            for model in cls.registry.values()
+        }
+        cls.addClassCleanup(cls.attrs_before.clear)
+
+>>>>>>> 3b0033dacfe38659959741687533ce6eaa75a1ed
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cast(Cursor, cls.cr).close)
 
