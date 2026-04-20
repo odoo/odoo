@@ -761,7 +761,9 @@ export class SeoChecks extends Component {
         CheckBox,
         BrokenLink,
     };
-    static props = {};
+    static props = {
+        isDefaultLang: Boolean,
+    };
 
     async setup() {
         this.website = useService("website");
@@ -783,7 +785,9 @@ export class SeoChecks extends Component {
             this.seoContext.updatedAlts = [];
         });
         onMounted(() => {
-            this.getBrokenLinks();
+            if (this.props.isDefaultLang) {
+                this.getBrokenLinks();
+            }
         });
     }
 
@@ -1135,7 +1139,31 @@ export class OptimizeSEODialog extends Component {
                 })
             );
         }
-        if (seoContext.updatedAlts?.length) {
+        if (!this.isDefaultLang) {
+            const translationsByRecord = {};
+            for (const img of seoContext.updatedAlts || []) {
+                const key = `${img.res_model}::${img.res_id}::${img.field}`;
+                translationsByRecord[key] ??= {
+                    model: img.res_model,
+                    id: img.res_id,
+                    fieldName: img.field,
+                    translations: {},
+                };
+                translationsByRecord[key].translations[img.source_sha] = (img.alt || "").trim();
+            }
+            for (const record of Object.values(translationsByRecord)) {
+                rpcCalls.push(
+                    rpc("/website/field/translation/update", {
+                        model: record.model,
+                        record_id: [record.id],
+                        field_name: record.fieldName,
+                        translations: {
+                            [currentLang]: record.translations,
+                        },
+                    })
+                );
+            }
+        } else if (seoContext.updatedAlts?.length) {
             rpcCalls.push(
                 rpc("/website/update_alt_images", {
                     imgs: seoContext.updatedAlts,
