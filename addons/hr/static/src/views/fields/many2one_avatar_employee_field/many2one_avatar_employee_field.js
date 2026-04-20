@@ -37,7 +37,7 @@ export class Many2OneAvatarEmployeeField extends Component {
     }
 
     get uniqueId() {
-        return this.props.record.data[this.props.name].write_date.toMillis();
+        return this.value?.write_date ? this.value.write_date.toMillis() : undefined;
     }
 }
 
