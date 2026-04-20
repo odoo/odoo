@@ -472,9 +472,9 @@ export class PosTicketPrinterService {
             /** Text classes **/
             #pos-receipt .text-small { ${getFontRules(0.8)} }
             #pos-receipt .text-normal { ${getFontRules(1.0)} }
-            #pos-receipt .text-large { ${getFontRules(1.2)} }
-            #pos-receipt .text-huge { ${getFontRules(1.5)} }
-            #pos-receipt .text-insane { ${getFontRules(2.2)} }
+            #pos-receipt .text-large { ${getFontRules(1.4)} }
+            #pos-receipt .text-huge { ${getFontRules(2.0)} }
+            #pos-receipt .text-insane { ${getFontRules(2.3)} }
         `;
 
         style.textContent = cssRules;

@@ -12,8 +12,9 @@ patch(GeneratePrinterData.prototype, {
             const table = this.order.table_id;
             extraData.table_name = table?.table_number || false;
             extraData.order_label = table
-                ? _t("Table %s", table.table_number)
+                ? _t("T %s", table.table_number)
                 : this.order.floating_order_name || false;
+            extraData.floor_name = table?.floor_id?.name || false;
         }
         return extraData;
     },
