@@ -1007,7 +1007,7 @@ class ResPartner(models.Model):
 
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id')
     @api.depends_context(
-        'show_address', 'partner_display_name_hide_company', 'partner_show_db_id',
+        'show_address', 'partner_show_db_id',
         'show_email', 'show_vat', 'lang', 'formatted_display_name'
     )
     def _compute_display_name(self):
