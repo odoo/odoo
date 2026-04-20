@@ -169,6 +169,7 @@
         'views/snippets/s_google_map.xml',
         'views/snippets/s_cta_mockups.xml',
         'views/snippets/s_map.xml',
+        'views/snippets/s_text_block_split.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_banner_product.xml',
