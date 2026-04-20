@@ -1,8 +1,10 @@
+import { signal } from "@odoo/owl";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 
 export class ActivityModel extends RelationalModel {
     static DEFAULT_LIMIT = 100;
     static withCache = false;
+    activityData = signal({});
 
     async load(params = {}) {
         this.originalDomain = params.domain ? [...params.domain] : [];
@@ -16,13 +18,15 @@ export class ActivityModel extends RelationalModel {
     }
 
     async fetchActivityData(params) {
-        this.activityData = await this.orm.call("mail.activity", "get_activity_data", [], {
-            res_model: this.config.resModel,
-            context: params.context,
-            domain: params.domain || this.env.searchModel._domain,
-            limit: params.limit || this.initialLimit,
-            offset: params.offset || 0,
-            fetch_done: false,
-        });
+        this.activityData.set(
+            await this.orm.call("mail.activity", "get_activity_data", [], {
+                res_model: this.config.resModel,
+                context: params.context,
+                domain: params.domain || this.env.searchModel._domain,
+                limit: params.limit || this.initialLimit,
+                offset: params.offset || 0,
+                fetch_done: false,
+            })
+        );
     }
 }
