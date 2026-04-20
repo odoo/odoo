@@ -52,6 +52,9 @@ class StripeController(http.Controller):
         except ValidationError:
             _logger.error("Failed to process the return from Stripe.")
         else:
+            if tx_sudo.reference != response_content["description"]:
+                _logger.warning("Received payment data with incorrect reference")
+                raise Forbidden()
             if tx_sudo.operation != "validation":
                 self._include_payment_intent_in_payment_data(response_content, data)
             else:
