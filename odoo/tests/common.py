@@ -1303,7 +1303,7 @@ class TransactionCase(BaseCase):
         # We need to check the status of the file system outside of the test cursor
         with cls.registry.cursor() as cr:
             gc_env = api.Environment(cr, api.SUPERUSER_ID, {})
-            gc_env['ir.attachment']._gc_file_store_unsafe()
+            gc_env['ir.attachment']._gc_file_store_unsafe(grace_period=0)
 
     @classmethod
     def setUpClass(cls):

@@ -220,8 +220,12 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         store_path = os.path.join(self.filestore, a1.store_fname)
         self.assertTrue(os.path.isfile(store_path), 'file exists')
         a1.unlink()
-        self.Attachment._gc_file_store_unsafe()
-        self.assertFalse(os.path.isfile(store_path), 'file removed')
+        with self.registry_test_mode(), self.registry.cursor() as cr:
+            env = self.Attachment.env(cr=cr)
+            self.Attachment.with_env(env)._gc_file_store_unsafe(grace_period=500)
+            self.assertTrue(os.path.isfile(store_path), 'file still exists')
+            self.Attachment.with_env(env)._gc_file_store_unsafe(grace_period=0)
+            self.assertFalse(os.path.isfile(store_path), 'file removed')
 
     def test_13_rollback(self):
         # the data needs to be unique so that no other attachment link
@@ -231,8 +235,10 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             a1 = self.env['ir.attachment'].create({'name': 'a1', 'raw': unique_blob})
             store_path = os.path.join(self.filestore, a1.store_fname)
             self.assertTrue(os.path.isfile(store_path), 'file exists')
-        self.env['ir.attachment']._gc_file_store_unsafe()
-        self.assertFalse(os.path.isfile(store_path), 'file removed')
+        with self.registry_test_mode(), self.registry.cursor() as cr:
+            env = self.Attachment.env(cr=cr)
+            self.Attachment.with_env(env)._gc_file_store_unsafe(grace_period=0)
+            self.assertFalse(os.path.isfile(store_path), 'file removed')
 
     def test_14_invalid_mimetype_with_correct_file_extension_no_post_processing(self):
         # test with fake svg with png mimetype
