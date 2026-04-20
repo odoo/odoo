@@ -175,6 +175,7 @@
                     <filter string="Expenses" name="expensesacc" domain="[('internal_group','=', 'expense')]"/>
                     <filter string="Fixed Assets" name="type_asset_fixed" domain="[('account_type', '=', 'asset_fixed')]" invisible="True"/>
                     <filter string="Frequent Expenses" name="type_expense" domain="[('account_type', '=', 'expense')]" invisible="True"/>
+                    <filter string="Cost of revenue" name="type_expense_direct_cost" domain="[('account_type', '=', 'expense_direct_cost')]" invisible="True"/>
                     <separator/>
                     <filter string="Account with Entries" name="used" domain="[('used', '=', True)]"/>
                     <filter string="Inactive Accounts" name="inactiveacc" domain="[('active', '=', False)]"/>
