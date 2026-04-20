@@ -2,22 +2,26 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.OrderChangeReceipt">
-        <div class="pos-receipt m-0 p-0 pt-5">
+        <div class="pos-receipt m-0 p-0 pt-5 mt-5">
             <!-- Receipt Header -->
             <div class="receipt-header text-center">
                 <div class="pos-receipt-title preset-name" t-if="data.preset_name">
-                    <t t-esc="data.preset_name"/> <t t-if="data.preset_time">(<t t-esc="data.preset_time"/>)</t>
+                    <t t-esc="data.preset_name"/><br/>
+                    <span t-if="data.preset_time" style="font-size:80%;">(<t t-esc="data.preset_time"/>)</span>
                 </div>
                 <div class="o-employee-name" style="font-size: 78%;">
                     <span><t t-esc="data.config_name"/> : <t t-esc="data.time"/></span><br/>
                     <span t-if="data.employee_name">By: <t t-esc="data.employee_name"/></span>
                 </div>
-                <span class="my-4" style="font-size: 150%;">
-                    <span class='order-ref-prefix'>Order </span><strong><t t-esc="data.pos_reference"/></strong>
+                <span class="my-4" style="font-size: 78%;">
+                    <span class='order-ref-prefix'>Order </span>
                     <strong t-if="data.tracking_number" class="fw-light my-3">
                         # <t t-esc="data.tracking_number"/>
                     </strong>
                 </span>
+                <div class="receipt-order-reference fw-bolder">
+                    <span t-esc="data.pos_reference" style="font-size: 150%;"/>
+                </div>
             </div>
             <hr style="border: none; border-top: 4px dashed black;"/>
 

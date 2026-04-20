@@ -188,6 +188,7 @@ patch(PosOrder.prototype, {
         return {
             ...super.getOrderData(reprint),
             customer_count: this.getCustomerCount(),
+            floor_name: this.table_id?.floor_id?.name || "",
         };
     },
 });
