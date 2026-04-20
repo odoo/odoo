@@ -6788,3 +6788,15 @@ class TestStockMove(TestStockCommon):
                 'packaging_quantity': 5.0,
                 'packaging_qty_ordered': 5.0,
             })
+
+    def test_scrap_unlink_behavior_on_discard_with_and_without_context(self):
+        """Check scrap deletion behavior when insufficient warning is discarded."""
+        scrap = self.env['stock.move'].create({
+            'is_scrap': True,
+            'product_id': self.productA.id,
+            'quantity': 5,
+        })
+        Form.from_action(self.env, scrap.with_context(not_unlink_on_discard=True).action_scrap()).save().action_cancel()
+        self.assertTrue(scrap.exists(), "The scrap move should not be deleted after discarding the warning.")
+        Form.from_action(self.env, scrap.action_scrap()).save().action_cancel()
+        self.assertFalse(scrap.exists(), "The scrap move should have been deleted after discarding the warning.")
