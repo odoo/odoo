@@ -6,47 +6,70 @@
         <BuilderSelect applyTo="'.s_share_title, .s_social_media_title'">
             <t t-set="left">Left</t>
             <t t-set="right">Right</t>
-            <BuilderSelectItem classAction="'d-block'">Top</BuilderSelectItem>
-            <BuilderSelectItem classAction="''" t-out="this.env.langDir.content === 'ltr' ? left : right"/>
+            <BuilderSelectItem id="'title_top_opt'" classAction="'d-block'">Top</BuilderSelectItem>
+            <BuilderSelectItem t-if="!this.isActiveItem('direction_vertical_opt')" classAction="''" t-out="this.env.langDir.content === 'ltr' ? left : right"/>
             <BuilderSelectItem classAction="'d-none'">None</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Layout">
-        <BuilderSelect applyTo="'.fa, .social_media_img'">
-            <BuilderSelectItem classAction="'rounded shadow-sm'">Square</BuilderSelectItem>
-            <BuilderSelectItem classAction="'rounded-empty-circle shadow-sm'">Circle</BuilderSelectItem>
-            <BuilderSelectItem classAction="'rounded-circle shadow-sm'">Disk</BuilderSelectItem>
-            <BuilderSelectItem classAction="'fa-stack'">None</BuilderSelectItem>
+    <BuilderRow label.translate="Direction">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Horizontal</BuilderSelectItem>
+            <BuilderSelectItem id="'direction_vertical_opt'" classAction="'d-flex flex-column'">Vertical</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Size">
+    <BuilderRow label.translate="Layout">
+        <BuilderSelect applyTo="'a > .fa, .social_media_img'">
+            <BuilderSelectItem id="'text_layout_opt'" classAction="'d-none'">Text</BuilderSelectItem>
+            <BuilderSelectItem classAction="''">Icon</BuilderSelectItem>
+            <BuilderSelectItem id="'icon_text_layout_opt'" classAction="'d-none o_sm_with_text'">Icon &amp; Text</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Size" t-if="!this.isActiveItem('text_layout_opt') &amp;&amp; !this.isActiveItem('icon_text_layout_opt')">
     <BuilderRange
         withNumberInput="true"
         action="'resetSocialMediaIconSize'"
         applyTo="'.fa, .social_media_img'"
-        styleAction="{ mainParam: '--fa-icon-size', extraClass: 'o_sm_custom_size' }"
+        styleAction="{ mainParam: '--social-icon-size' }"
         unit="'px'"
         saveUnit="'rem'"
-        min="40"
+        min="32"
         max="100"
         step="1"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Color" tooltip.translate="Keep the original icon color">
+    <BuilderRow label.translate="Text Size" t-if="this.isActiveItem('text_layout_opt') || this.isActiveItem('icon_text_layout_opt')">
+    <BuilderRange
+        withNumberInput="true"
+        applyTo="'a > span'"
+        styleAction="{ mainParam: '--social-text-size'}"
+        unit="'px'"
+        saveUnit="'rem'"
+        min="10"
+        max="80"
+        step="1"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Brand Color" tooltip.translate="Keep the original icon color">
         <BuilderCheckbox classAction="'no_icon_color'" inverseAction="true"/>
     </BuilderRow>
-    <BuilderRow label.translate="Link Style">
+
+    <BuilderContext applyTo="'a > .fa, .social_media_img'" t-if="!this.isActiveItem('text_layout_opt') &amp;&amp; !this.isActiveItem('icon_text_layout_opt')">
+        <BuilderRow label.translate="Background Color">
+            <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'background-color'"/>
+        </BuilderRow>
+        <BorderConfigurator label.translate="Border"/>
+        <ShadowOption/>
+    </BuilderContext>
+
+    <BuilderRow label.translate="Link Style" t-if="this.isActiveItem('text_layout_opt') || this.isActiveItem('icon_text_layout_opt')">
         <BuilderSelect dataAttributeAction="'iconUnderline'">
             <BuilderSelectItem dataAttributeActionValue="''">No Underline</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'hover'">Underline On Hover</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'always'">Always Underline</BuilderSelectItem>
         </BuilderSelect>
-    </BuilderRow>
-
-    <BuilderRow label.translate="Background Color">
-        <BuilderColorPicker applyTo="'.fa'" styleAction="'background-color'"/>
     </BuilderRow>
 </t>
 
