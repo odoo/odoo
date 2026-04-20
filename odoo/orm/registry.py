@@ -55,7 +55,6 @@ _REGISTRY_CACHES = {
     'assets': 512,
     'stable': 1024,
     'templates': 1024,
-    'template_code': 1024,
     'routing': 1024,  # 2 entries per website
     'routing.rewrites': 8192,  # url_rewrite entries
     'templates.cached_values': 2048, # arbitrary
@@ -283,6 +282,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._ordinary_tables: set[str] | None = None  # cached names of regular tables
         self._constraint_queue: dict[typing.Any, Callable[[BaseCursor], None]] = {}  # queue of functions to call on finalization of constraints
         self.__caches: dict[str, LRU] = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
+        self._template_code__ = LRU(_REGISTRY_CACHES['templates'])  # memo for code templates
 
         # update context during loading modules
         self.loaded_xmlids: set[str] = set()           # loaded xmlids for IrModelData._process_end()
