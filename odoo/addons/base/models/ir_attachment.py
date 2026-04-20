@@ -15,8 +15,7 @@ import typing
 import uuid
 import warnings
 from collections import defaultdict
-
-import psycopg2
+from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
@@ -24,6 +23,7 @@ from odoo.fields import Domain
 from odoo.http.stream import Stream
 from odoo.tools import (
     OrderedSet,
+    SQL,
     config,
     consteq,
     image,
@@ -43,6 +43,9 @@ SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
 MAX_COMODELS_FOR_DOMAIN = 5
 MAX_SEARCH_LIMIT = PREFETCH_MAX * 10
 CREATE_FROM_STREAM_FLAG = object()  # sentinel that cannot be given over RPC
+GC_FILE_SUFFIX = '.__gc'
+GC_GRACE_PERIOD = 1800  # 30 minutes
+GC_GRACE_PERIOD_MAX = 604800  # 1 week
 
 
 def condition_values(model, field_name, domain):
@@ -127,6 +130,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def _full_path(self, fname):
+        assert not fname.endswith(GC_FILE_SUFFIX)
         # sanitize path
         fname = re.sub(r'[.:]', '', fname).strip('/\\')
         return os.path.join(self._filestore(), fname)
@@ -191,17 +195,18 @@ class IrAttachment(models.Model):
         """ Add ``fname`` in a checklist for the filestore garbage collection. """
         assert isinstance(self, IrAttachment)
         fname = re.sub(r'[.:]', '', fname).strip('/\\')
+        assert not fname.endswith(GC_FILE_SUFFIX)
         # we use a spooldir: add an empty file in the subdirectory 'checklist'
         full_path = os.path.join(self._full_path('checklist'), fname)
         # touch the full_path
         try:
-            # create the file
-            open(full_path, 'ab').close()
+            # create or update last modification date
+            open(full_path, 'wb').close()
         except FileNotFoundError:
             # raised when directory does not exist, create the dir and the file
             dirname = os.path.dirname(full_path)
             os.makedirs(dirname, exist_ok=True)
-            open(full_path, 'ab').close()
+            open(full_path, 'wb').close()
 
     @api.autovacuum
     def _gc_file_store(self):
@@ -209,63 +214,113 @@ class IrAttachment(models.Model):
         assert isinstance(self, IrAttachment)
         if self._storage() != 'file':
             return
+        # Fetch the timeouts from the database.
+        # GC_GRACE_PERIOD is set to a sensible default, if the DB is configured
+        # with a larger value respect it.
+        [[grace_db]] = self.env.execute_query(SQL("""
+            SELECT MAX(setting::int) / 1000
+            FROM pg_settings
+            WHERE vartype = 'integer' AND unit = 'ms'
+            AND name IN ('idle_in_transaction_session_timeout', 'transaction_timeout')
+            AND setting <> '0'
+        """))
+        self._gc_file_store_unsafe(grace_period=min(GC_GRACE_PERIOD_MAX, max(GC_GRACE_PERIOD, (grace_db or 0) * 2)))
 
-        # Continue in a new transaction. The LOCK statement below must be the
-        # first one in the current transaction, otherwise the database snapshot
-        # used by it may not contain the most recent changes made to the table
-        # ir_attachment! Indeed, if concurrent transactions create attachments,
-        # the LOCK statement will wait until those concurrent transactions end.
-        # But this transaction will not see the new attachements if it has done
-        # other requests before the LOCK (like the method _storage() above).
-        cr = self.env.cr
-        cr.commit()
+    def _gc_file_store_unsafe(self, grace_period):
+        # Generate the file names to check
+        limit_time = datetime.now().timestamp() - grace_period
 
-        # prevent all concurrent updates on ir_attachment while collecting,
-        # but only attempt to grab the lock for a little bit, otherwise it'd
-        # start blocking other transactions. (will be retried later anyway)
-        cr.execute("SET LOCAL lock_timeout TO '10s'")
-        try:
-            cr.execute("LOCK ir_attachment IN SHARE MODE")
-        except psycopg2.errors.LockNotAvailable:
-            cr.rollback()
-            return False
-
-        self._gc_file_store_unsafe()
-
-        # commit to release the lock
-        cr.commit()
-
-    def _gc_file_store_unsafe(self):
-        # retrieve the file names from the checklist
-        checklist = {}
-        for dirpath, _, filenames in os.walk(self._full_path('checklist')):
-            dirname = os.path.basename(dirpath)
-            for filename in filenames:
-                fname = "%s/%s" % (dirname, filename)
-                checklist[fname] = os.path.join(dirpath, filename)
+        def files_to_gc():
+            for dirpath, _subdirs, filenames in os.walk(self._full_path('checklist')):
+                dirname = os.path.basename(dirpath)
+                filenames.sort(reverse=True)  # start with files with suffix
+                for filename in filenames:
+                    check_file = os.path.join(dirpath, filename)
+                    fname = f"{dirname}/{filename}"
+                    if check_file.endswith(GC_FILE_SUFFIX):
+                        # leftover from a previous GC
+                        # move the file back if it exists
+                        try:
+                            os.replace(fname + GC_FILE_SUFFIX, fname)
+                        except OSError:
+                            _logger.info("filestore gc was interrupted, moving back %s", filename, exc_info=True)
+                        else:
+                            _logger.info("filestore gc was interrupted, moved back %s", filename)
+                        # move the check file back, ignore if file already exists
+                        original_check_file = check_file.removesuffix(GC_FILE_SUFFIX)
+                        try:
+                            if not os.path.exists(original_check_file):
+                                os.rename(check_file, original_check_file)
+                        except OSError:
+                            os.unlink(check_file)
+                    elif os.path.getmtime(check_file) < limit_time:
+                        # we can collect the file
+                        yield (fname, check_file)
 
         # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
         # for each chunk.
+        checked = 0
         removed = 0
-        for names in split_every(self.env.cr.IN_MAX, checklist):
+        for name_pairs in split_every(self.env.cr.IN_MAX, files_to_gc()):
+            # start a new transaction (see latest data) and release locks of
+            # previous loop which we don't want modified during processing
+            self.env.cr.commit()
             # determine which files to keep among the checklist
-            self.env.cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
-            whitelist = set(row[0] for row in self.env.cr.fetchall())
+            whitelist = {fname for fname, in self.env.execute_query(
+                SQL("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s FOR UPDATE", tuple(p[0] for p in name_pairs)))
+            }
+            checked += len(name_pairs)
 
-            # remove garbage files, and clean up checklist
-            for fname in names:
-                filepath = checklist[fname]
-                if fname not in whitelist:
-                    try:
-                        os.unlink(self._full_path(fname))
-                        _logger.debug("_file_gc unlinked %s", self._full_path(fname))
-                        removed += 1
+            # remove files, and clean up checklist
+            for fname, check_file in name_pairs:
+                # If a file is written during the clean up process, we must
+                # ensure that it remains on disk. To achieve this on the file
+                # system, we are first moving the files and then deleting them
+                # after checking if a checkfile did not appear in the meantime.
+                full_path = self._full_path(fname)
+                del_check_file = check_file + GC_FILE_SUFFIX
+                del_full_path = full_path + GC_FILE_SUFFIX
+                # 1. Move the check file
+                try:
+                    if fname in whitelist:
+                        os.unlink(check_file)
+                        continue
+                    else:
+                        os.replace(check_file, del_check_file)
+                except OSError:
+                    _logger.debug("_file_gc could not move %s", check_file)
+                    continue
+                # 2. Check the mtime of the moved check file
+                if not (os.path.getmtime(del_check_file) < limit_time):
+                    _logger.debug("_file_gc concurrent write for %s", full_path)
+                    os.replace(del_check_file, check_file)  # restore the check file
+                    continue
+                # 3. Move the file
+                try:
+                    os.replace(full_path, del_full_path)
+                except OSError:
+                    _logger.info("_file_gc could not move %s", full_path, exc_info=True)
+                    continue
+                # 4. Check if a check file was created in the meantime
+                if os.path.exists(check_file):
+                    _logger.debug("_file_gc concurrent write during move for %s", full_path)
+                    try:  # noqa: SIM105
+                        os.replace(del_full_path, full_path)
                     except OSError:
-                        _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
-                with contextlib.suppress(OSError):
-                    os.unlink(filepath)
+                        _logger.warning("_file_gc failed to move files back, ignore for %s", full_path)
+                    os.unlink(del_check_file)
+                    continue
+                # 5. Remove moved files
+                try:
+                    os.unlink(del_full_path)
+                except OSError:
+                    _logger.info("_file_gc could not unlink %s", full_path, exc_info=True)
+                else:
+                    removed += 1
+                    _logger.debug("_file_gc unlinked %s", full_path)
+                os.unlink(del_check_file)
 
-        _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
+        _logger.info("filestore gc %d checked, %d removed", checked, removed)
 
     @api.depends('store_fname', 'db_datas')
     def _compute_raw(self):
@@ -302,9 +357,9 @@ class IrAttachment(models.Model):
                 raw_map[fname] = bin_data
 
         if raw_map or old_fnames:
-            # before touching the filestore, flush to prevent the GC from
+            # before touching the filestore, prevent the GC from
             # running until the end of the transaction
-            self.flush_recordset(['checksum', 'store_fname'])
+            self.lock_for_update(allow_referencing=True)
         for fname in old_fnames:
             if fname not in raw_map:
                 self._file_delete(fname)
