@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<!-- Job Card -->
+<template id="job_card" name="Job Card">
+    <div class="card" t-att-data-publish="job.website_published and 'on' or 'off'">
+        <t t-if="not job.website_published" t-call="website.unpublished_badge" badge_offset="'4'"/>
+        <a t-attf-href="/jobs/#{ slug(job) }"
+                class="text-decoration-none text-reset"
+                draggable="false">
+            <div class="card-body p-4">
+                <div class="mt0 d-flex justify-content-between align-items-center">
+                    <h3 t-field="job.name"/>
+                    <span t-if="job.publish_on" class="badge pagination text-bg-warning mb8">scheduled</span>
+                </div>
+                <h5 t-if="job.no_of_recruitment &gt;= 1" class="text-reset">
+                    <span t-field="job.no_of_recruitment"/>
+                    <t t-if="job.no_of_recruitment == 1">
+                        open position
+                    </t>
+                    <t t-else="">
+                        open positions
+                    </t>
+                </h5>
+                <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
+                <div class="o_job_card_description oe_empty text-muted mb16"
+                        t-field="job.description"
+                        t-att-data-editor-message="job_desc_edition_placeholder"/>
+                <div class="o_job_infos d-flex flex-column">
+                    <span t-field="job.address_id" class="fw-light" t-options='{"widget": "contact", "fields": ["city"], "no_tag_br": True, "null_text": "Remote"}'/>
+                    <div t-if="job.department_id"
+                            class="d-inline-flex align-items-center">
+                        <i class="fa fa-sitemap fa-fw"/><span t-field="job.department_id" class="fw-light" t-options='{"fields": ["name"], "no_tag_br": True}'/>
+                    </div>
+                    <div t-if="job.employee_type_id"
+                            class="d-inline-flex align-items-center">
+                        <i class="fa fa-suitcase fa-fw" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.employee_type_id" class="fw-light"/>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</template>
+
 <template id="index" name="Jobs">
     <t t-call="website.layout">
         <div id="wrap" class="o_website_hr_recruitment_jobs_list">
@@ -47,42 +88,7 @@
                                 </div>
                             </t>
                             <div t-foreach="jobs" t-as="job" class="col-lg mb32">
-                                <div class="card" t-att-data-publish="job.website_published and 'on' or 'off'">
-                                    <t t-if="not job.website_published" t-call="website.unpublished_badge" badge_offset="'4'"/>
-                                    <a t-attf-href="/jobs/#{ slug(job) }"
-                                            class="text-decoration-none text-reset"
-                                            draggable="false">
-                                        <div class="card-body p-4">
-                                            <div class="mt0 d-flex justify-content-between align-items-center">
-                                                <h3 t-field="job.name"/>
-                                                <span t-if="job.publish_on" class="badge pagination text-bg-warning mb8">scheduled</span>
-                                            </div>
-                                            <h5 t-if="job.no_of_recruitment >= 1" class="text-reset">
-                                                <span t-field="job.no_of_recruitment"/>
-                                                <t t-if="job.no_of_recruitment == 1">
-                                                    open position
-                                                </t>
-                                                <t t-else="">
-                                                    open positions
-                                                </t>
-                                            </h5>
-                                            <div class="oe_empty text-muted mb16"
-                                                 data-editor-message.translate="Insert a Job Description..."
-                                                 t-field="job.description"/>
-                                            <div class="o_job_infos d-flex flex-column">
-                                                <span t-field="job.address_id" class="fw-light" t-options='{"widget": "contact", "fields": ["city"], "no_tag_br": True, "null_text": "Remote"}'/>
-                                                <div t-if="job.department_id"
-                                                        class="d-inline-flex align-items-center">
-                                                    <i class="fa fa-sitemap fa-fw"/><span t-field="job.department_id" class="fw-light" t-options='{"fields": ["name"], "no_tag_br": True}'/>
-                                                </div>
-                                                <div t-if="job.employee_type_id"
-                                                        class="d-inline-flex align-items-center">
-                                                    <i class="fa fa-suitcase fa-fw" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.employee_type_id" class="fw-light"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
+                                <t t-call="website_hr_recruitment.job_card"/>
                             </div>
                         </div>
                     </div>
