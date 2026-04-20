@@ -646,6 +646,7 @@ class AccountMove(models.Model):
         check_company=True,
         help="Auto-complete from a previous bill or refund.",
     )
+    show_invoice_vendor_bill = fields.Boolean(compute="_compute_show_invoice_vendor_bill")
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
     invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)
     is_manually_modified = fields.Boolean()
@@ -1928,6 +1929,11 @@ class AccountMove(models.Model):
     def _compute_need_cancel_request(self):
         for move in self:
             move.need_cancel_request = move._need_cancel_request()
+
+    @api.depends('state', 'move_type')
+    def _compute_show_invoice_vendor_bill(self):
+        for move in self:
+            move.show_invoice_vendor_bill = move.state == 'draft' and move.move_type in ('in_invoice', 'in_refund')
 
     @api.depends('partner_id', 'invoice_source_email', 'partner_id.display_name')
     def _compute_invoice_partner_display_info(self):
