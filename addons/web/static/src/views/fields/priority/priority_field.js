@@ -11,7 +11,6 @@ export class PriorityField extends Component {
     static props = {
         ...standardFieldProps,
         withCommand: { type: Boolean, optional: true },
-        autosave: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -30,22 +29,20 @@ export class PriorityField extends Component {
         return [
             [
                 commandName,
-                () => {
-                    return {
-                        placeholder: commandName,
-                        providers: [
-                            {
-                                provide: () =>
-                                    this.options.map((value) => ({
-                                        name: value[1],
-                                        action: () => {
-                                            this.updateRecord(value[0]);
-                                        },
-                                    })),
-                            },
-                        ],
-                    };
-                },
+                () => ({
+                    placeholder: commandName,
+                    providers: [
+                        {
+                            provide: () =>
+                                this.options.map((value) => ({
+                                    name: value[1],
+                                    action: () => {
+                                        this.updateRecord(value[0]);
+                                    },
+                                })),
+                        },
+                    ],
+                }),
                 { category: "smart_action", hotkey: "alt+r" },
             ],
         ];
@@ -81,30 +78,18 @@ export class PriorityField extends Component {
     }
 
     async updateRecord(value) {
-        await this.props.record.update({ [this.props.name]: value }, { save: this.props.autosave });
+        await this.props.record.update({ [this.props.name]: value });
     }
 }
 
 export const priorityField = {
     component: PriorityField,
     displayName: _t("Priority"),
-    supportedOptions: [
-        {
-            label: _t("Autosave"),
-            name: "autosave",
-            type: "boolean",
-            default: true,
-            help: _t(
-                "If checked, the record will be saved immediately when the field is modified."
-            ),
-        },
-    ],
     supportedTypes: ["selection"],
-    extractProps({ options, viewType }, dynamicInfo) {
+    extractProps({ viewType }, dynamicInfo) {
         return {
             withCommand: viewType === "form",
             readonly: dynamicInfo.readonly,
-            autosave: "autosave" in options ? !!options.autosave : true,
         };
     },
 };

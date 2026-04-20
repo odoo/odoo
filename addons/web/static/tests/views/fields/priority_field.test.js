@@ -96,11 +96,8 @@ test("PriorityField tooltip", async () => {
 });
 
 test("PriorityField in form view", async () => {
-    expect.assertions(8);
+    expect.assertions(7);
 
-    onRpc("web_save", ({ args }) => {
-        expect(args).toEqual([[1], { selection: "done" }]);
-    });
     await mountView({
         type: "form",
         resModel: "partner",
@@ -415,45 +412,4 @@ test('PriorityField edited by the smart action "Set priority..."', async () => {
     await click("#o_command_2");
     await animationFrame();
     expect("button.fa-star").toHaveCount(2);
-});
-
-test("PriorityField - auto save record when field toggled", async () => {
-    onRpc("web_save", () => expect.step("web_save"));
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: /* xml */ `
-            <form>
-                <sheet>
-                    <group>
-                        <field name="selection" widget="priority" />
-                    </group>
-                </sheet>
-            </form>`,
-    });
-    await click(".o_field_widget .o_priority button.o_priority_star.fa-star-o:last");
-    await animationFrame();
-    expect.verifySteps(["web_save"]);
-});
-
-test("PriorityField - prevent auto save with autosave option", async () => {
-    onRpc("write", () => expect.step("write"));
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: /* xml */ `
-            <form>
-                <sheet>
-                    <group>
-                        <field name="selection" widget="priority" options="{'autosave': False}"/>
-                    </group>
-                </sheet>
-            </form>`,
-    });
-
-    await click(".o_field_widget .o_priority button.o_priority_star.fa-star-o:last");
-    await animationFrame();
-    expect.verifySteps([]);
 });

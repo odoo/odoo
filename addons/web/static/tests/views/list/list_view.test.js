@@ -3870,8 +3870,7 @@ test(`edit field in editable field without editing the row`, async () => {
     await contains(`.o_data_row .o_data_cell .o_field_boolean_toggle`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(inputRect.clientWidth).not.toEqual(expectedSelectedWidth);
-    await contains(`.o_selected_row .o_field_boolean_toggle div`).click();
-    expect.verifySteps(["web_save: true"]);
+    expect.verifySteps([]);
 });
 
 test(`basic operations for editable list renderer`, async () => {

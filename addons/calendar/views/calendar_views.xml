@@ -135,7 +135,7 @@
                                 <span invisible="allday"> or </span>
                                 <div class="d-flex flex-nowrap gap-2">
                                     <label for="allday" string="All Day" class="text-nowrap"/>
-                                    <field name="allday" class="oe_inline" widget="boolean_toggle" force_save="1" options="{'autosave': False}" readonly="not user_can_edit"/>
+                                    <field name="allday" class="oe_inline" widget="boolean_toggle" force_save="1" readonly="not user_can_edit"/>
                                 </div>
                             </div>
                             <field name="location" placeholder="Online Meeting" readonly="not user_can_edit"/>
@@ -225,7 +225,7 @@
                                     <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True, 'on_tag_click': 'open_form'}" readonly="not user_can_edit"/>
                                     <field name="recurrence_id" invisible="1" />
                                     <field name="rrule_type" invisible="1" />
-                                    <field name="recurrency" widget="boolean_toggle" options="{'autosave': False}" readonly="not user_can_edit"/>
+                                    <field name="recurrency" widget="boolean_toggle" readonly="not user_can_edit"/>
                                     <field name="rrule_type_ui" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
                                     <label for="interval" class="fw-bold text-900" invisible="not recurrency or rrule_type_ui != 'custom'"/>
                                     <div class="d-flex gap-1" invisible="not recurrency or rrule_type_ui != 'custom'">

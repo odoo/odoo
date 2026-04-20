@@ -322,13 +322,14 @@ export class Record extends DataPoint {
         return this.model.mutex.exec(() => this._toggleArchive(false));
     }
 
-    update(changes, { save } = {}) {
+    update(changes) {
         if (this.model._urgentSave) {
             return this._update(changes);
         }
         return this.model.mutex.exec(async () => {
+            const save = !this.isInEdition && this.canSaveOnUpdate;
             await this._update(changes, { withoutOnchange: save });
-            if (save && this.canSaveOnUpdate) {
+            if (save) {
                 return this._save();
             }
         });

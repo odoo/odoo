@@ -633,28 +633,6 @@ test("hotkeys are unavailable if readonly", async () => {
     expect(".modal").toHaveCount(0, { message: "command palette should not open" });
 });
 
-test("auto save record when field toggled", async () => {
-    onRpc("web_save", () => expect.step("web_save"));
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: /* xml */ `
-            <form>
-                <header>
-                    <field name="trululu" widget="statusbar" options="{'clickable': 1}" />
-                </header>
-            </form>
-        `,
-    });
-
-    await click(
-        ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current):eq(-1)"
-    );
-    await animationFrame();
-    expect.verifySteps(["web_save"]);
-});
-
 test("For the same record, a single rpc is done to recover the specialData", async () => {
     Partner._views = {
         "list,3": '<list><field name="display_name"/></list>',

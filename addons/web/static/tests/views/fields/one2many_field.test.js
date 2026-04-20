@@ -12030,7 +12030,7 @@ test("toggle boolean in o2m with the formView in edition", async () => {
     expect.verifySteps(["get_views partner", "web_read partner"]);
 
     await contains(".o_boolean_toggle").click();
-    expect.verifySteps(["onchange partner"]);
+    expect.verifySteps(["onchange turtle", "onchange partner"]);
 });
 
 test("Boolean toggle in x2many must not be editable if form is not editable", async () => {
