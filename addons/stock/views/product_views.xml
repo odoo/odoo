@@ -90,6 +90,7 @@
                 <xpath expr="//field[@name='qty_available']" position='attributes'>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
+                <xpath expr="//field[@name='free_qty']" position="replace"/>
                 <xpath expr="//field[@name='virtual_available']" position='attributes'>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
@@ -122,6 +123,7 @@
                     <attribute name="invisible">not show_on_hand_qty_status_button</attribute>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
+                <xpath expr="//field[@name='free_qty']" position="replace"/>
                 <xpath expr="//field[@name='virtual_available']" position="attributes">
                     <attribute name="invisible">not show_on_hand_qty_status_button</attribute>
                     <attribute name="groups">stock.group_stock_user</attribute>
@@ -200,6 +202,8 @@
                         </span>
                     </div>
                 </xpath>
+                <xpath expr="//label[@id='free_qty_no_stock']" position="replace"/>
+                <xpath expr="//div[@name='free_qty_no_stock']" position="replace"/>
                 <xpath expr="//field[@name='is_storable']" position="attributes">
                     <attribute name="groups">!stock.group_production_lot</attribute>
                     <attribute name="widget">boolean_toggle</attribute>

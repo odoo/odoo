@@ -20,6 +20,7 @@
                 <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id'}" optional="show" decoration-muted="not sale_ok"/>
                 <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}" optional="show" readonly="1"/>
                 <field name="qty_available" string="On Hand" decoration-danger="qty_available &lt; 0" optional="show" sum="Total On Hand" readonly="1"/>
+                <field name="free_qty" invisible="not is_storable" readonly="1" optional="show" sum="Total Free To Use"/>
                 <field name="virtual_available" string="Forecasted" decoration-danger="virtual_available &lt; 0" optional="show" decoration-bf="1" sum="Total Forecasted" readonly="1"/>
                 <field name="categ_id" optional="hide"/>
                 <field name="type" optional="hide" readonly="1"/>

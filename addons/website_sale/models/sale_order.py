@@ -1253,4 +1253,4 @@ class SaleOrder(models.Model):
         )
 
     def _get_free_qty(self, product):
-        return product.virtual_available
+        return product.free_qty

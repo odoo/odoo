@@ -88,6 +88,9 @@ class ProductProduct(models.Model):
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', compute_sudo=False, search='_search_outgoing_qty', digits='Product Unit',
         help="Quantity of planned outgoing quantities from all confirmed sale orders not delivered.")
+    free_qty = fields.Float(
+        'Free To Use', compute='_compute_quantities', compute_sudo=False, digits='Product Unit',
+        help="Quantity on hand minus outgoing quantity.")
     pricelist_rule_ids = fields.One2many(
         string="Pricelist Rules",
         comodel_name='product.pricelist.item',
@@ -396,6 +399,7 @@ class ProductProduct(models.Model):
         self.virtual_available = 0
         self.incoming_qty = 0
         self.outgoing_qty = 0
+        self.free_qty = 0
 
         products = self.filtered(lambda p: p.type != 'service' and p.is_storable)
         forecasted = products._compute_forecasted_without_stock()
@@ -406,6 +410,7 @@ class ProductProduct(models.Model):
             product.virtual_available = vals['virtual_available']
             product.incoming_qty = vals['incoming_qty']
             product.outgoing_qty = vals['outgoing_qty']
+            product.free_qty = max(0, product.qty_available - vals['outgoing_qty'])
 
     def _compute_forecasted_without_stock(self):
         """ Forecast = qty_available + qty purchased not received - qty sold not delivered"""

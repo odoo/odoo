@@ -115,6 +115,11 @@
                                             <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
                                         </div>
                                     </div>
+                                    <label id="free_qty_no_stock" for="free_qty" invisible="type != 'consu'  or not is_storable"/>
+                                    <div name="free_qty_no_stock" class="o_row w-100" invisible="type != 'consu' or not is_storable">
+                                        <field name="free_qty" style="max-width: fit-content;" readonly="True"/>
+                                        <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
+                                    </div>
                                 </group>
                                 <group name="group_standard_price">
                                     <label for="list_price"/>
@@ -512,6 +517,7 @@
                            decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"
                            sum="Total On Hand"
                     />
+                    <field name="free_qty" invisible="not is_storable" readonly="1" optional="show" sum="Total Free To Use"/>
                     <field name="virtual_available" invisible="not is_storable" string="Forecasted" readonly="1" optional="show"
                            decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" sum="Total Forecasted"
                     />
