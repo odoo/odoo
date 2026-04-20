@@ -29,3 +29,8 @@ class ResPartner(models.Model):
             self.l10n_latam_identification_type_id = self.env['l10n_latam.identification.type'].search(
                 [('country_id', '=', country.id), ('is_vat', '=', True)], limit=1) or self.env.ref(
                     'l10n_latam_base.it_vat', raise_if_not_found=False)
+
+    def _get_vat_label(self):
+        """ Return the VAT label to be displayed on the portal and reports."""
+        self.ensure_one()
+        return self.l10n_latam_identification_type_id.name or super()._get_vat_label()
