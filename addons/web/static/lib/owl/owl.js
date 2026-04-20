@@ -6103,7 +6103,11 @@ ${issueStrings}`);
         const validation = defaults ? validateObjectWithDefaults(type, defaults) : types.object(type);
         assertType(node.props, validation, `Invalid component props (${componentName})`);
         node.willUpdateProps.push((np) => {
-          assertType(np, validation, `Invalid component props (${componentName})`);
+          try {
+            assertType(np, validation, `Invalid component props (${componentName})`);
+          } catch (e) {
+            Promise.reject(e);
+          }
         });
       }
     } else {
