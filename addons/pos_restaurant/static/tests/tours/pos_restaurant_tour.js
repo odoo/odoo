@@ -1260,6 +1260,7 @@ registry.category("web_tour.tours").add("test_delete_line_release_table", {
             Chrome.waitRequest(),
             negateStep(...Order.hasLine({ productName: "Coca-Cola" })),
             Chrome.flushPendingOrdersSync(),
+            Chrome.clickPlanButton(),
         ].flat(),
 });
 

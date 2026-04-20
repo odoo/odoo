@@ -142,7 +142,7 @@ export class PosOrderlineAccounting extends Base {
 
     get taxGroupLabels() {
         let taxes_id = this.tax_ids;
-        if (this.order_id.fiscal_position_id) {
+        if (this.order_id?.fiscal_position_id) {
             taxes_id = this.order_id.fiscal_position_id.getTaxesAfterFiscalPosition(this.tax_ids);
         }
         return [
