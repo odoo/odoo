@@ -1,4 +1,4 @@
-from odoo import fields, models, api, _
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 from odoo.addons.payment_mollie import const
 
@@ -17,19 +17,11 @@ class PosPaymentMethod(models.Model):
     mollie_terminal_id = fields.Char("Mollie Terminal ID", copy=False)
     mollie_payment_provider_id = fields.Many2one("payment.provider", domain=[("code", "=", "mollie")])
 
-    @api.constrains('mollie_payment_provider_id')
-    def _check_mollie_payment_provider_id(self):
-        for payment_method in self:
-            if not payment_method.mollie_payment_provider_id:
-                continue
-            if not payment_method.mollie_payment_provider_id.mollie_api_key:
-                raise ValidationError(_(
-                    'Please set the Mollie API Key field on the %s payment provider.',
-                    payment_method.mollie_payment_provider_id.name
-                ))
-
     def mollie_create_payment(self, amount: float, payment_uuid: str, pos_session_id: int):
         self.ensure_one()
+
+        if not self.mollie_payment_provider_id.mollie_api_key:
+            raise ValidationError(self.env._("Please set the API key on the Mollie payment provider before making a payment."))
 
         user_lang = self.env.context.get("lang")
         currency = self.journal_id.currency_id or self.company_id.currency_id
