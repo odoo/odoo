@@ -117,6 +117,8 @@ class AccountMoveSend(models.AbstractModel):
                 attachment_name = move.l10n_it_edi_attachment_name
             elif attachment := move_data.get('l10n_it_edi_values'):
                 attachment_name = attachment['name']
+            else:
+                continue
             attachment_data = results.get(attachment_name, {})
             if attachment_data.get('signed') and (signed_data := attachment_data.get('signed_data')):
                 move.l10n_it_edi_attachment_file = base64.b64encode(signed_data.encode())
