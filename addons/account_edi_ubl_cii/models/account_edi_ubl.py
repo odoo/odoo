@@ -64,6 +64,18 @@ class AccountEdiUBL(models.AbstractModel):
         """
         return base_line['special_type'] == 'cash_rounding'
 
+    def _ubl_is_down_payment_base_line(self, vals, base_line):
+        """ Indicate if the 'base_line' passed as parameter belongs to a down payment in a final invoice.
+
+        :param      base_line: A base line (see '_prepare_base_line_for_taxes_computation').
+        :return:    True if the 'base_line' belongs to a down payment, False otherwise.
+        """
+        def is_down_payment_line(base_line):
+            return base_line['special_type'] == 'down_payment'
+
+        is_down_payment_invoice = all(is_down_payment_line(base_line) for base_line in vals['base_lines'])
+        return not is_down_payment_invoice and is_down_payment_line(base_line)
+
     def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
         """ Give the values about the tax category for a given tax.
 
