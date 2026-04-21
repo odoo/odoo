@@ -40,20 +40,24 @@
         }
 
         %-o-field-label {
-            width: max-content;
+            display: block !important;
+            width: max-content !important;
             transform: translate(calc(var(--field-spacing-unit)), calc(-.5 * var(--field-spacing-unit)));
-            z-index: 1; // TODO finetune for quick create kanban
             padding: 0 calc(var(--field-spacing-unit) / 2) !important;
             border-radius: var(--field-spacing-unit);
-            margin-bottom: 0 !important;
+            margin-bottom: calc(-1 * var(--body-font-size)) !important;
 
             // Hide the border of the adjacent sibling box that is under the label
             background: linear-gradient(0deg, transparent 0%, $o-view-background-color 45%, $o-view-background-color 55%, transparent 100%);
 
-            // Same as ligne +/- 592; TODO merge the rules after maybe
             font-size: $font-size-sm !important;
             font-weight: $font-weight-bold !important;
-            line-height: ROUND(down, 1.5em, 1px);
+
+            // Avoid overflowing outside the viewport
+            max-width: calc(100% - 5%);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
 
             & * {
                 color: inherit !important;
@@ -84,7 +88,7 @@
             }
 
             .o_wrap_label:has(+ .o_cell:not(.o_no_box)) {
-                margin-bottom: calc(-1 * var(--body-font-size));
+                display: contents;
 
                 .o_form_label {
                     @extend %-o-field-label;
@@ -123,8 +127,6 @@
 
                 label {
                     @extend %-o-field-label;
-                    width: max-content !important;
-                    margin-bottom: calc(-1 * var(--body-font-size)) !important;
 
                     &:has(+ *:focus-within) {
                         color: $o-action;
@@ -147,9 +149,6 @@
 
         .o_form_label:has(+ .o_outlined) {
             @extend %-o-field-label;
-            display: block;
-            width: max-content !important;
-            margin-bottom: calc(-1 * var(--body-font-size)) !important;
         }
     }
 }
