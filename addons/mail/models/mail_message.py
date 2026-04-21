@@ -406,6 +406,7 @@ class Message(models.Model):
     def _check_access(self, operation: str) -> tuple | None:
         """ Access rules of mail.message:
             - read: if
+                - uid is an admin OR
                 - author_id == pid, uid is the author OR
                 - create_uid == uid, uid is the creator OR
                 - uid is in the recipients (partner_ids) OR
@@ -413,23 +414,29 @@ class Message(models.Model):
                 - uid have read access to the related document if model, res_id
                 - otherwise: raise
             - create: if
+                - uid is an admin OR
                 - no model, no res_id (private message) OR
                 - pid in message_follower_ids if model, res_id OR
                 - uid can read the parent OR
                 - uid have write or create access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
+                - uid is an admin OR
                 - author_id == pid, uid is the author, OR
                 - uid is in the recipients (partner_ids) OR
                 - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
             - unlink: if
+                - uid is an admin OR
                 - uid has write or create access on the related document
                 - otherwise: raise
 
         Specific case: non employee users cannot see internal messages (aka logs):
         'is_internal' flag on message, 'internal' flag on subtype.
         """
+        if self.env.is_admin():
+            return None
+
         result = super()._check_access(operation)
         if not self:
             return result
