@@ -1,3 +1,4 @@
+import { stepUtils } from "@web_tour/tour_utils";
 import {
     clickOnEditAndWaitEditMode,
     registerWebsitePreviewTour,
@@ -64,8 +65,23 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+<<<<<<< e2674c7aec8119c7187e44388a119daf5601d0d0
             content: "Check that the menus have been saved",
             trigger: ":iframe #top_menu:has(a[role='menuitem']:contains(name):count(5))",
+||||||| d58f4ed332af35f6de26a93f07adf05368731e20
+            content: "Check that modal has disappeared",
+            trigger: "body:not(:has(.modal))",
+        },
+        {
+            trigger: `:iframe .o_homepage_editor_welcome_message:contains(welcome to your homepage)`,
+=======
+            content: "Check that modal has disappeared",
+            trigger: "body:not(:has(.modal))",
+        },
+        stepUtils.waitIframeIsReady(),
+        {
+            trigger: `:iframe .o_homepage_editor_welcome_message:contains(welcome to your homepage)`,
+>>>>>>> 5a3657b12e6b241f4ea1b13c4cdd52f66d60412b
         },
         ...clickOnEditAndWaitEditMode(),
         getTheLayoutChildren,
