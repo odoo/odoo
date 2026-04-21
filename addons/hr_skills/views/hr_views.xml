@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr.view_employee_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
-                <field name="employee_skill_ids"/>
+                <field name="skill_proficiency_ids"/>
             </xpath>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="hr.hr_employee_public_view_search"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
-                <field name="employee_skill_ids"/>
+                <field name="skill_proficiency_ids"/>
             </xpath>
         </field>
     </record>
@@ -488,6 +488,18 @@
                 <field name="color" widget="color_picker" optional="show"/>
                 <field name="skill_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 <field name="skill_level_ids" widget="many2many_tags_skills"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_skill_proficiency_view_tree" model="ir.ui.view">
+        <field name="name">hr.skill.proficiency.list</field>
+        <field name="model">hr.skill.proficiency</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="skill_type_id"/>
+                <field name="skill_id"/>
+                <field name="skill_level_id"/>
             </list>
         </field>
     </record>

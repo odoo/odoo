@@ -49,7 +49,7 @@
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_search_bis"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='email_from']" position="after">
-                <field name="applicant_skill_ids"/>
+                <field name="skill_proficiency_ids"/>
             </xpath>
             <xpath expr="//filter[@name='talent_pool']" position="after">
                 <filter string="Skills" name="skill_ids" context="{'group_by': 'skill_ids'}"/>
@@ -63,7 +63,7 @@
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_search"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='recruiter_id']" position="after">
-                <field name="applicant_skill_ids"/>
+                <field name="skill_proficiency_ids"/>
             </xpath>
             <filter name="stage" position="after">
                 <filter string="Skills" name="groupby_skills" context="{'group_by': 'skill_ids'}"/>

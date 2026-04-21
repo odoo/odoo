@@ -18,6 +18,11 @@ class HrApplicant(models.Model):
         readonly=False,
     )
     skill_ids = fields.Many2many("hr.skill", compute="_compute_skill_ids", store=True)
+    skill_proficiency_ids = fields.Many2many(
+        'hr.skill.proficiency',
+        compute='_compute_skill_proficiency_ids',
+        store=True,
+    )
     matching_skill_ids = fields.Many2many(
         comodel_name="hr.skill",
         string="Matching Skills",
@@ -40,6 +45,11 @@ class HrApplicant(models.Model):
     def _compute_skill_ids(self):
         for applicant in self:
             applicant.skill_ids = applicant.applicant_skill_ids.skill_id
+
+    @api.depends('applicant_skill_ids.skill_id', 'applicant_skill_ids.skill_level_id')
+    def _compute_skill_proficiency_ids(self):
+        for applicant in self:
+            applicant.skill_proficiency_ids = self.env['hr.skill.proficiency']._get_or_create_proficiencies(applicant.applicant_skill_ids)
 
     @api.depends_context("matching_job_id")
     @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree")
@@ -166,6 +176,13 @@ class HrApplicant(models.Model):
             for vals in vals_list:
                 vals["applicant_skill_ids"] = vals.pop("current_applicant_skill_ids", []) + vals.get("applicant_skill_ids", [])
         return super().create(vals_list)
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+        if res.get('applicant_skill_ids'):
+            res['applicant_skill_ids']['searchable'] = False
+        return res
 
     def write(self, vals):
         if "current_applicant_skill_ids" in vals or "applicant_skill_ids" in vals:
