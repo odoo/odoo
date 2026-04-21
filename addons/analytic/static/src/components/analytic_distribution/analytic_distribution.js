@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { getNextTabableElement, getPreviousTabableElement } from "@web/core/utils/ui";
 import { usePosition } from "@web/core/position/position_hook";
@@ -75,6 +75,9 @@ export class AnalyticDistribution extends Component {
 
         useExternalListener(window, "click", this.onWindowClick, true);
         useExternalListener(window, "resize", this.onWindowResized);
+        useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
+            detail.proms.push(this.commitChanges())
+        );
 
         this.openTemplate = useOpenMany2XRecord({
             resModel: "account.analytic.distribution.model",
@@ -495,6 +498,12 @@ export class AnalyticDistribution extends Component {
             this.initialFormattedData = this.state.formattedData;
             this.state.formattedData = [];
             this.state.update_plan = {};
+        }
+    }
+
+    async commitChanges() {
+        if (this.isDropdownOpen) {
+            await this.save();
         }
     }
 
