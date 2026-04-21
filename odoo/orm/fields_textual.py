@@ -69,9 +69,13 @@ class BaseString(Field[str | typing.Literal[False]]):
 
     def get_trans_terms(self, value) -> list[str]:
         """ Return the sequence of terms to translate found in `value`"""
-        if not value:
+        if not isinstance(value, str):
             return []
-        return ParsedTranslation(value, self).terms
+        if not callable(self.translate):
+            # Ensure translation terms are stringified.
+            # Double quotes inside Markup are not escaped when the value is used as a polib.POEntry msgid.
+            return [str(value)]
+        return ParsedTranslation(value, self).terms if value else []
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # domain condition `(name, '=', {'en_US': 'English, 'fr_FR': 'French'})` is not supported
@@ -188,9 +192,6 @@ class BaseString(Field[str | typing.Literal[False]]):
         :return: {from_lang_term: {lang: lang_term}}
         :rtype: dict
         """
-        if self.translate is True:
-            return {from_lang_value: dict(to_lang_values)} if from_lang_value else {}
-
         from_lang_terms = self.get_trans_terms(from_lang_value)
         dictionary = defaultdict(lambda: defaultdict(dict))
         if not from_lang_terms:
@@ -702,10 +703,6 @@ class Html(BaseString):
     def convert_to_record(self, value, record):
         value = super().convert_to_record(value, record)
         return False if value is False else Markup(value)
-
-    def get_trans_terms(self, value):
-        # ensure the translation terms are stringified, otherwise we can break the PO file
-        return list(map(str, super().get_trans_terms(value)))
 
     escape = staticmethod(markup_escape)
     is_empty = staticmethod(is_html_empty)
