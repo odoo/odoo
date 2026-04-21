@@ -88,12 +88,7 @@ class WebsiteSnippetFilter(models.Model):
         self and self.ensure_one()
 
         model_name = options.get('res_model') or self.filter_id.sudo().model_id
-        website_filter_models = list({
-            website_filter.action_server_id.model_id.model if website_filter.action_server_id
-            else website_filter.filter_id.model_id
-            for website_filter in self.env['website.snippet.filter'].search([])
-        })
-        if model_name and model_name not in website_filter_models:
+        if model_name and model_name not in self._get_website_filter_models():
             return []
         res_id = options.get('res_id')
         # The "limit" field is there to prevent loading an arbitrary number of
@@ -139,6 +134,13 @@ class WebsiteSnippetFilter(models.Model):
             except MissingError:
                 _logger.warning("The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'", search_domain, self._name)
                 return []
+
+    def _get_website_filter_models(self):
+        return list({
+            website_filter.action_server_id.model_id.model if website_filter.action_server_id
+            else website_filter.filter_id.model_id
+            for website_filter in self.env['website.snippet.filter'].search([])
+        })
 
     def _get_field_name_and_type(self, model, field_name):
         """
