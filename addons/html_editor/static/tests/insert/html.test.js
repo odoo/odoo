@@ -637,3 +637,43 @@ describe("not collapsed selection", () => {
         });
     });
 });
+
+test("Should create a list element around `li`", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <div id="wrapwrap">
+                <header>
+                    <nav>
+                        <ul>
+                            <li>
+                                <div style="display: flex;">
+                                    <small>[abc]</small>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </header>
+                <main>I will escape wrapwrap</main>
+            </div>
+        `),
+        stepFunction: async (editor) => {
+            editor.shared.dom.insert(parseHTML(editor.document, "<ul><li>abc</li></ul>"));
+        },
+        contentAfter: unformat(`
+            <div id="wrapwrap">
+                <header>
+                    <nav>
+                        <ul>
+                            <li>
+                                <div style="display: flex;">
+                                    <small><ul><li>abc[]</li></ul></small>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </header>
+                <main>I will escape wrapwrap</main>
+            </div>
+        `),
+    });
+});
