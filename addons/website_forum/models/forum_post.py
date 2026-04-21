@@ -49,6 +49,7 @@ class ForumPost(models.Model):
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
     create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
     write_date = fields.Datetime('Updated on', index=True, readonly=True)
+    author_karma = fields.Integer(related='create_uid.karma', readonly=True, compute_sudo=True) # author's karma at creation time
     last_activity_date = fields.Datetime(
         'Last activity on', readonly=True, required=True, default=fields.Datetime.now,
         help="Field to keep track of a post's last activity. Updated whenever it is replied to, "
@@ -277,20 +278,16 @@ class ForumPost(models.Model):
         if self.env.is_admin():
             return [(1, '=', 1)]
 
-        sql = SQL("""(
-            SELECT p.id
-            FROM forum_post p
-                   LEFT JOIN res_users u ON p.create_uid = u.id
-                   LEFT JOIN forum_forum f ON p.forum_id = f.id
-            WHERE
-                (p.create_uid = %(user_id)s and f.karma_close_own <= %(karma)s)
-                or (p.create_uid != %(user_id)s and f.karma_close_all <= %(karma)s)
-                or (
-                    u.karma > 0
-                    and (p.active or p.create_uid = %(user_id)s)
-                )
-        )""", user_id=user.id, karma=user.karma)
-        return [('id', 'in', sql)]
+        if user._is_public():
+            return ["&", ("author_karma", ">", 0), ("active", "=", True)]
+
+        return [
+            "|",
+            "|",
+                "&", ("create_uid", "=", user.id), ("forum_id.karma_close_own", "<=", user.karma),
+                "&", ("create_uid", "!=", user.id), ("forum_id.karma_close_all", "<=", user.karma),
+                "&", ("author_karma", ">", 0), "|", ("active", "=", True), ("create_uid", "=", user.id),
+        ]
 
     # EXTENDS WEBSITE.SEO.METADATA
 
