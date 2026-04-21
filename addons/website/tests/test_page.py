@@ -10,6 +10,7 @@ from odoo.http import root
 from odoo.tests import common, HttpCase, tagged
 from odoo.tests.common import HOST
 from odoo.tools import config, mute_logger
+from odoo.tools.json import scriptsafe as json_safe
 
 
 @tagged('-at_install', 'post_install')
@@ -581,3 +582,35 @@ class TestNewPage(common.TransactionCase):
         pages = self.env['website.page'].search([('url', '=', '/snippets')])
         self.assertEqual(len(pages), 1, "Exactly one page should be at /snippets.")
         self.assertNotEqual(pages.key, "website.snippets", "Page's key cannot be website.snippets.")
+
+    def test_new_page_leading_slash_menu_url(self):
+        website = self.env.ref('website.default_website')
+        Menu = self.env['website.menu']
+        controller = Website()
+
+        # Create test menus
+        menus = [
+            {'name': 'Test Menu 1', 'url': '/foo bar'},
+            {'name': 'Test Menu 2', 'url': 'bar baz'},
+        ]
+        menu_records = Menu.create([{**m, 'website_id': website.id} for m in menus])
+
+        with MockRequest(self.env, website=website):
+            for menu in menu_records:
+                path = menu.url
+                page_raw = controller.pagenew(path=path)
+                page = json_safe.loads(page_raw.data)
+
+                # Expected slugified URL (normalize spaces + ensure leading
+                # slash)
+                expected_url = '/' + path.strip('/').replace(' ', '-')
+
+                self.assertTrue(
+                    menu.page_id,
+                    f"Menu '{menu.name}' should be linked to a page."
+                )
+                self.assertEqual(
+                    page['url'],
+                    expected_url,
+                    f"Expected page URL '{expected_url}' but got '{page['url']}' for menu '{menu.name}'."
+                )

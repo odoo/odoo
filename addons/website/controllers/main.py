@@ -666,7 +666,11 @@ class Website(Home):
         # If that URL is also a menu, we update it accordingly.
         # NB: we don't want to slugify on menu creation as it could redirect
         # towards files (with spaces, apostrophes, etc.).
-        menu = request.env['website.menu'].search([('url', '=', '/' + path), ('page_id', '=', False)])
+        # Here we search for URLs with or without leading slash to prevent
+        # mismatch issue in DB when URL is created without leading slash.
+        menu = request.env['website.menu'].search(
+            [('url', 'in', ['/' + path, path]), ('page_id', '=', False)], limit=1
+        )
         if menu:
             menu.page_id = page['page_id']
 
