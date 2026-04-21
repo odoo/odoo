@@ -13,4 +13,5 @@ class StockReturnPickingLine(models.TransientModel):
     def _prepare_move_default_values(self, new_picking):
         vals = super()._prepare_move_default_values(new_picking)
         vals['to_refund'] = self.to_refund
+        vals['value'] = 0
         return vals

@@ -1659,3 +1659,41 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 10.0},
             {'account_id': self.account_expense.id, 'debit': 10.0, 'credit': 0.0},
         ])
+
+    def test_fifo_multi_steps_return_credit_note_cogs(self):
+        """ Check that when a credit note is confirmed after a return of a fifo product
+        in a multiple step receipt warehouse, the cogs are corret.
+        """
+        self.warehouse.reception_steps = 'two_steps'
+        self.product_fifo_auto.invoice_policy = 'delivery'
+
+        # SO for 2: 1@10 and 1@20
+        self._make_in_move(self.product_fifo_auto, 1, 10)
+        self._make_in_move(self.product_fifo_auto, 1, 20)
+        sale_order = self._so_deliver(self.product_fifo_auto, 2, 1)
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        cogs_aml = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 30.0},
+            {'account_id': self.account_expense.id, 'debit': 30.0, 'credit': 0.0},
+        ])
+
+        # return 1 quantity
+        ctx = {'active_id': sale_order.picking_ids[0].id, 'active_model': 'stock.picking'}
+        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_wizard.product_return_moves.quantity = 1
+        return_picking = return_wizard._create_return()
+        return_picking.move_ids.write({'quantity': 1, 'picked': True})
+        return_picking.button_validate()
+        return_picking_2 = sale_order.picking_ids[2]
+        return_picking_2.button_validate()
+
+        # confirm credit note and check cogs
+        credit_note = sale_order._create_invoices(final=True)
+        credit_note.action_post()
+        credit_note_cogs_aml = credit_note.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(credit_note_cogs_aml, [
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 15.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 15.0, 'credit': 0.0},
+        ])
