@@ -171,10 +171,10 @@
             </field>
         </record>
 
-        <record id="view_task_kanban_inherited_progress" model="ir.ui.view">
-            <field name="name">project.task.timesheet.kanban.inherited.progress</field>
+        <record id="view_task_card_inherited_progress" model="ir.ui.view">
+            <field name="name">project.task.timesheet.card.inherited.progress</field>
             <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_kanban"/>
+            <field name="inherit_id" ref="project.view_task_card"/>
             <field name="arch" type="xml">
                 <templates position="before">
                     <field name="progress" />

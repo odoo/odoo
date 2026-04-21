@@ -136,12 +136,11 @@
         </field>
     </record>
 
-    <record id="hr_equipment_request_view_kanban" model="ir.ui.view">
-        <field name="name">equipment.request.kanban</field>
+    <record id="hr_equipment_request_view_card" model="ir.ui.view">
+        <field name="name">equipment.request.card</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <kanban highlight_color="color" default_group_by="stage_id" sample="1">
-                <progressbar field="state" colors='{"done": "success", "cancelled": "danger"}'/>
+            <card>
                 <templates>
                     <t t-name="menu">
                         <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit...</a></t>
@@ -167,6 +166,16 @@
                         </main>
                     </t>
                 </templates>
+            </card>
+        </field>
+    </record>
+
+    <record id="hr_equipment_request_view_kanban" model="ir.ui.view">
+        <field name="name">equipment.request.kanban</field>
+        <field name="model">maintenance.request</field>
+        <field name="arch" type="xml">
+            <kanban card_id="%(hr_equipment_request_view_card)d" highlight_color="color" default_group_by="stage_id" sample="1">
+                <progressbar field="state" colors='{"done": "success", "cancelled": "danger"}'/>
             </kanban>
         </field>
     </record>
