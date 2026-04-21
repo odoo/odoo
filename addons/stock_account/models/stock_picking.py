@@ -26,9 +26,12 @@ class StockPicking(models.Model):
 
     def _is_date_in_lock_period(self):
         self.ensure_one()
+        tz = self.env.tz
         lock = []
         if self.state == "done":
-            lock += self.company_id._get_lock_date_violations(self.scheduled_date.date(), fiscalyear=True, sale=False, purchase=False, tax=False, hard=True)
+            local_date = self.scheduled_date.astimezone(tz).date()
+            lock += self.company_id._get_lock_date_violations(local_date, fiscalyear=True, sale=False, purchase=False, tax=False, hard=True)
         if self.date_done:
-            lock += self.company_id._get_lock_date_violations(self.date_done.date(), fiscalyear=True, sale=False, purchase=False, tax=False, hard=True)
+            local_done = self.date_done.astimezone(tz).date()
+            lock += self.company_id._get_lock_date_violations(local_done, fiscalyear=True, sale=False, purchase=False, tax=False, hard=True)
         return bool(lock)
