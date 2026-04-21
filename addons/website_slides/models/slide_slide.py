@@ -17,6 +17,7 @@ from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
 from odoo.tools import html2plaintext, sql
 from odoo.tools.pdf import PdfFileReader
+from odoo.addons.portal.controllers.portal_thread import PortalChatter
 
 _logger = logging.getLogger(__name__)
 
@@ -240,10 +241,17 @@ class SlideSlide(models.Model):
         for slide in self:
             slide.questions_count = len(slide.question_ids)
 
-    @api.depends('website_message_ids.res_id', 'website_message_ids.model', 'website_message_ids.message_type')
+    @api.depends("website_message_ids")
     def _compute_comments_count(self):
+        count_by_slide = dict(
+            self.env["mail.message"]._read_group(
+                PortalChatter._get_portal_message_fetch_domain(self),
+                groupby=["res_id"],
+                aggregates=["__count"],
+            )
+        )
         for slide in self:
-            slide.comments_count = len(slide.website_message_ids)
+            slide.comments_count = count_by_slide.get(slide.id, 0)
 
     @api.depends('slide_views', 'public_views')
     def _compute_total(self):
