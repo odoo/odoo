@@ -357,9 +357,10 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         query_count, queries = self._get_queries_shop()
 
         if self._has_demo_data():
-            query_count += 4
+            query_count += 5
             queries['account_tax'] += 1
             queries['account_account_tag'] += 1
+            queries['product_ribbon'] += 1
             queries['product_template_attribute_value'] += 2
 
         self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
@@ -378,7 +379,8 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
         queries['account_account_tag'] += 1
 
         if self._has_demo_data():
-            query_count += 2
+            query_count += 3
+            queries['product_ribbon'] += 1
             queries['product_template_attribute_value'] += 2
 
         self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
