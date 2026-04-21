@@ -275,3 +275,165 @@ class SwedishBlackBoxDriver(SerialDriver):
         message += lrc + "\r"
 
         return message.encode("utf-8")
+
+
+SkattedosanBlackboxProtocol = SerialProtocol(
+    name="Swedish Skattedosan",
+    baudrate=57600,
+    bytesize=serial.EIGHTBITS,
+    stopbits=serial.STOPBITS_ONE,
+    parity=serial.PARITY_NONE,
+    timeout=1,
+    writeTimeout=0.3,
+    measureRegexp=None,
+    statusRegexp=None,
+    commandTerminator=b"",
+    commandDelay=0.2,
+    measureDelay=0.2,
+    newMeasureDelay=0.2,
+    measureCommand=b"",
+    emptyAnswerValid=False,
+)
+
+
+SkattedosanReturnCodes = {
+    "24": "Internal log is full",
+    "23": "Error in an internal counter",
+    "22": "Field is present after field CRC",
+    "21": "Relationship between sales amount and return amount is wrong",
+    "20": "Power fail abort",
+    "19": "Internal error in the control unit",
+    "18": "Internal error in the control unit",
+    "17": "Internal error in the control unit",
+    "16": "Internal error in the control unit",
+    "15": "Internal error in the control unit",
+    "13": "Wrong format of VAT D",
+    "12": "Wrong format of VAT C",
+    "11": "Wrong format of VAT B",
+    "10": "Wrong format of VAT A",
+    "9": "Wrong format of sales amount",
+    "8": "Wrong format of return amount",
+    "7": "Type of receipt not defined",
+    "6": "Type of receipt not defined",
+    "5": "Wrong format of serial number",
+    "4": "Wrong format of cash register ID",
+    "3": "Wrong format of organisation number",
+    "2": "Wrong date/time range",
+    "1": "Wrong number of arguments",
+    "0": "OK",
+    "-1": "Wrong length",
+    "-2": "CRC error",
+    "-3": "Unknown command",
+}
+
+
+class SkattedosanBlackBoxDriver(SerialDriver):
+    _protocol = SkattedosanBlackboxProtocol
+
+    def __init__(self, identifier: str, device: dict[str, str]):
+        super().__init__(identifier, device)
+
+        self.device_type = "fiscal_data_module"
+        self.unit_id = device["unit_id"]
+        self.serial_number = 0
+        self._actions.update({
+            "registerReceipt": self._register_receipt,
+        })
+
+    @classmethod
+    def supported(cls, device: dict[str, str]):
+        try:
+            with serial_connection(device["identifier"], cls._protocol) as connection:
+                response = cls._send_to_blackbox(connection, "ver")
+                if response:
+                    device["unit_id"] = response[4]
+                    return True
+        except serial.SerialTimeoutException:
+            pass
+        except Exception:
+            _logger.exception(
+                "Error while probing %s with protocol %s", device, cls._protocol.name
+            )
+
+    @staticmethod
+    def _crc16(message: str):
+        crc = 0
+        for byte in message.encode():
+            crc = crc ^ (byte << 8)
+            for _ in range(8):
+                if crc & 0x8000:
+                    crc = (crc << 1) ^ 0x1021
+                else:
+                    crc = crc << 1
+        crc &= 0xffff
+
+        return f"0x{crc:04X}"
+
+    def _register_receipt(self, data: dict[str, dict[str, str]]):
+        self.serial_number += 1
+        args = data["high_level_message"]
+        message = [
+            "kd",
+            args["date"],
+            args["organisation_number"],
+            args["pos_id"],
+            str(self.serial_number),
+            args["receipt_type"],
+            args["negative_total"],
+            args["receipt_total"],
+            args["vat1"].strip() or "25,00;0,00",
+            args["vat2"].strip() or "12,00;0,00",
+            args["vat3"].strip() or "6,00;0,00",
+            args["vat4"].strip() or "0,00;0,00",
+        ]
+        response = self._send_to_blackbox(self._connection, *message)
+
+        if response is None:
+            return None
+
+        return {
+            "signature_control": response[0] if response else "",
+            "unit_id": self.unit_id,
+        }
+
+    @classmethod
+    def _send_to_blackbox(cls, connection: serial.Serial, *args: str):
+        connection.reset_input_buffer()
+        connection.reset_output_buffer()
+
+        packet = cls._wrap_message(*args)
+        max_retries = 3
+        for attempt in range(1, max_retries):
+            _logger.info("Sending command (attempt %d): %s", attempt, packet)
+
+            try:
+                connection.write(packet)
+                response = connection.read_until(b"\r").decode().split()
+            except serial.SerialException:
+                _logger.exception("Failed to send command")
+                continue
+
+            _logger.info("Response received: %s", response)
+
+            return_code = response[0]
+            crc = response[-1]
+            data = response[1:-1]
+            expected_crc = cls._crc16(" ".join(response[:-1]) + " ")
+
+            if crc != expected_crc:
+                _logger.warning("Bad checksum: expected %s, received %s", expected_crc, crc)
+                continue
+
+            if return_code != "0":
+                _logger.error("Received error: %s", SkattedosanReturnCodes.get(return_code))
+                continue
+
+            return data
+
+        return None
+
+    @classmethod
+    def _wrap_message(cls, *args: str):
+        message_without_crc = " ".join(args) + " "
+
+        return f"{message_without_crc}{cls._crc16(message_without_crc)}\r\n".encode()
