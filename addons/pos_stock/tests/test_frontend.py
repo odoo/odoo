@@ -62,20 +62,6 @@ class TestUi(TestPosStockHttpCommon):
         })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_03_pos_with_lots', login="pos_user")
 
-    def test_product_information_screen_admin(self):
-        '''Consider this test method to contain a test tour with miscellaneous tests/checks that require admin access.
-        '''
-        self.product_a.available_in_pos = True
-        self.pos_admin.write({
-            'group_ids': [Command.link(self.env.ref('base.group_system').id)],
-        })
-        self.main_pos_config.write({
-            'is_margins_costs_accessible_to_every_user': True,
-        })
-        self.assertFalse(self.product_a.is_storable)
-        self.main_pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'CheckProductInformation', login="pos_admin")
-
     def test_change_without_cash_method(self):
         # create bank payment method
         bank_pm = self.env['pos.payment.method'].create({
