@@ -845,6 +845,7 @@ class TestTrackingInternals(TestTrackingCommon):
                 {'name': 'property_int', 'string': 'Property Int', 'type': 'integer', 'default': 1337},
                 {'name': 'property_m2o', 'string': 'Property M2O', 'type': 'many2one',
                  'default': (cls.properties_linked_records[0].id, cls.properties_linked_records[0].display_name), 'comodel': 'mail.test.ticket'},
+                {'name': 'property_monetary', 'string': 'Property Monetary', 'type': 'monetary', 'default': 99.99, 'currency_field': 'currency_id'},
                 {'name': 'property_signature', 'string': 'Property Signature', 'type': 'signature'},
             ],
             'name': 'Properties Parent 1',
@@ -861,11 +862,13 @@ class TestTrackingInternals(TestTrackingCommon):
             'name': 'Properties Parent 2',
         }])
         cls.properties_record_1, cls.properties_record_2 = cls.env['mail.test.track.all'].create([{
+            'company_id': cls.env.company.id,
             'properties_parent_id': cls.properties_parent_1.id,
             'properties': {
                 'property_signature': 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
             },
         }, {
+            'company_id': cls.env.company.id,
             'properties_parent_id': cls.properties_parent_2.id,
 
         }])
@@ -1134,6 +1137,7 @@ class TestTrackingInternals(TestTrackingCommon):
                 'tracking_values': [
                     ('properties_parent_id', 'many2one', self.properties_parent_1, self.properties_parent_2),
                     ('properties', 'properties', self.properties_linked_records[0], False, {'prop_field_string': 'Properties: Property M2O', 'prop_type': 'many2one'}),
+                    ('properties', 'properties', 99.99, False, {'prop_field_string': 'Properties: Property Monetary', 'prop_type': 'monetary', 'currency': properties_record_1.currency_id, 'currency_field': 'currency_id'}),
                     ('properties', 'properties', 1337, False, {'prop_field_string': 'Properties: Property Int', 'prop_type': 'integer'}),
                     ('properties', 'properties', 'char value', False, {'prop_field_string': 'Properties: Property Char', 'prop_type': 'char'}),
                 ],
@@ -1141,17 +1145,20 @@ class TestTrackingInternals(TestTrackingCommon):
         )
 
         formatted_values = [self._new_msgs._message_tracking_value_format(t)[0] for t in self._new_msgs.sudo().tracking_value_ids]
-        self.assertEqual(len(formatted_values), 4)
+        self.assertEqual(len(formatted_values), 5)
         self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
         self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
         self.assertTrue(all(f['fieldInfo']['isPropertyField'] for f in formatted_values[1:]))
         self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties Parent')
-        self.assertEqual(formatted_values[1]['fieldInfo']['changedField'], 'Properties: Property M2O')
-        self.assertEqual(formatted_values[1]['oldValue'], 'Record 0')
-        self.assertEqual(formatted_values[2]['fieldInfo']['changedField'], 'Properties: Property Int')
-        self.assertEqual(formatted_values[2]['oldValue'], 1337)
-        self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Char')
-        self.assertEqual(formatted_values[3]['oldValue'], 'char value')
+        self.assertEqual(formatted_values[1]['fieldInfo']['changedField'], 'Properties: Property Monetary')
+        self.assertIsNotNone(formatted_values[1]['fieldInfo'].get('currencyId'),
+                             "currencyId must be set for a monetary property tracking")
+        self.assertEqual(formatted_values[2]['fieldInfo']['changedField'], 'Properties: Property M2O')
+        self.assertEqual(formatted_values[2]['oldValue'], 'Record 0')
+        self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Int')
+        self.assertEqual(formatted_values[3]['oldValue'], 1337)
+        self.assertEqual(formatted_values[4]['fieldInfo']['changedField'], 'Properties: Property Char')
+        self.assertEqual(formatted_values[4]['oldValue'], 'char value')
         # Ensure that no tracking value was created for the 'signature' type
         self.assertFalse(
             any((t.get('fieldInfo') or {}).get('fieldType') == 'signature' for t in formatted_values),
@@ -1192,6 +1199,43 @@ class TestTrackingInternals(TestTrackingCommon):
         )
         self.assertEqual(properties_record_1._mail_track_get_field_sequence("properties"), 13,
             "Properties field should have the same sequence as their parent")
+
+    @users('employee')
+    def test_mail_track_properties_monetary(self):
+        """Tracking a monetary-typed property must not crash even though the
+        Properties field col_info from fields_get does not carry 'currency_field'.
+
+        Regression test for the KeyError raised in
+        _create_mail_tracking_values_property when col_info is missing
+        'currency_field' for a monetary property.
+        """
+        properties_record_1 = self.properties_record_1.with_env(self.env)
+        # Set the monetary property to a known value, then switch to parent_2
+        # which does NOT define this property, triggering property-change tracking.
+        properties_record_1.properties = {'property_monetary': 42.5}
+        self.flush_tracking()
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            properties_record_1.properties_parent_id = self.properties_parent_2
+            self.flush_tracking()
+
+        self.assertMessageFields(
+            self._new_msgs, {
+                'author_id': self.partner_employee,
+                'tracking_values': [
+                    ('properties_parent_id', 'many2one', self.properties_parent_1, self.properties_parent_2),
+                    ('properties', 'properties', 42.5, False, {'prop_field_string': 'Properties: Property Monetary', 'prop_type': 'monetary', 'currency': properties_record_1.currency_id}),
+                ],
+            }
+        )
+
+        # Verify formatted output does not crash and carries a currency_id
+        formatted = self._new_msgs._message_tracking_value_format(self._new_msgs.sudo().tracking_value_ids)
+        self.assertEqual(len(formatted), 2)
+        self.assertTrue(formatted[1]['fieldInfo']['isPropertyField'])
+        self.assertEqual(formatted[1]['fieldInfo']['changedField'], 'Properties: Property Monetary')
+        self.assertIsNotNone(formatted[1]['fieldInfo'].get('currencyId'),
+                             "currencyId must be set for a monetary property tracking")
 
     @users('employee')
     def test_mail_track_selection_invalid(self):
