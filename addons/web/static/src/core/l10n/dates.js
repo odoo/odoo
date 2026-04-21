@@ -66,15 +66,27 @@ const normalizeFormatTable = {
 };
 
 const smartDateUnits = {
+    days: "days",
+    months: "months",
+    weeks: "weeks",
+    years: "years",
+    yrs: "years",
+    yr: "years",
+    hours: "hours",
+    hrs: "hours",
+    hr: "hours",
+    minutes: "minutes",
+    mins: "minutes",
+    min: "minutes",
     d: "days",
     m: "months",
     w: "weeks",
     y: "years",
+    h: "hours",
+    x: "minutes",
 };
-const smartDateRegex = new RegExp(
-    ["^", "([+-])", "(\\d+)", `([${Object.keys(smartDateUnits).join("")}]?)`, "$"].join("\\s*"),
-    "i"
-);
+const smartDateAllUnitsRegex = RegExp( "([+-]\\s*\\d+\\s*(?:"+Object.keys(smartDateUnits).join('|')+"))", "gi" );
+const smartDateRegex = RegExp( "^\\s*([+-])\\s*(\\d+)\\s*("+Object.keys(smartDateUnits).join('|')+")\\s*$", "i" );
 
 /** @type {WeakMap<DateTime, string>} */
 const dateCache = new WeakMap();
@@ -129,25 +141,14 @@ export function clampDate(desired, minDate, maxDate) {
 }
 
 /**
- * Get the week number of a given date, in the user's locale settings.
+ * Get the week number of a given date.
+ * Returns the ISO week number of the Monday nearest to the first day of the week.
  *
  * @param {Date | luxon.DateTime} date
  * @returns {number}
- *  the ISO week number (1-53) of the Monday nearest to the locale's first day of the week
+ *  the ISO week number (1-53) of the nearest Monday of the given date's week's start
  */
 export function getLocalWeekNumber(date) {
-    return getLocalYearAndWeek(date).week;
-}
-
-/**
- * Get the week year and week number of a given date, in the user's locale settings.
- *
- * @param {Date | luxon.DateTime} date
- * @returns {{ year: number, week: number }}
- *  the year the week is part of, and
- *  the ISO week number (1-53) of the Monday nearest to the locale's first day of the week
- */
-export function getLocalYearAndWeek(date) {
     if (!date.isLuxonDateTime) {
         date = DateTime.fromJSDate(date);
     }
@@ -164,7 +165,7 @@ export function getLocalYearAndWeek(date) {
     // count from previous year if week falls before Jan 4
     const diffDays =
         date < jan4 ? date.diff(jan4.minus({ years: 1 }), "day").days : date.diff(jan4, "day").days;
-    return { year: date.year, week: Math.trunc(diffDays / 7) + 1 };
+    return Math.trunc(diffDays / 7) + 1;
 }
 
 /**
@@ -260,29 +261,98 @@ function isValidDate(date) {
 }
 
 /**
- * Smart date inputs are shortcuts to write dates quicker.
- * These shortcuts should respect the format ^[+-]\d+[dmwy]?$
+ * Add smart date inputs to given date to change dates quicker.
  *
  * e.g.
- *   "+1d" or "+1" will return now + 1 day
- *   "-2w" will return now - 2 weeks
- *   "+3m" will return now + 3 months
- *   "-4y" will return now + 4 years
+ *   value: "+1day" or "+1 d" or "+1" will return datetime + 1 day
+ *   value: "-2 weeks" or "-2w" will return datetime - 2 weeks
+ *   value: "+3months" or "+3m" will return datetime + 3 months
+ *   value: "-4 years" or "-4yrs or "-4y" will return datetime - 4 years
+ *   value: "+5hours" or "+5 hrs or "+5h" will return datetime + 5 years
+ *   value: "-60minutes" or "-60min or "-60x" will return datetime - 60 minutes
+ *
+ * @param {string} value
+ * @param {NullableDateTime} datetime
+ * @returns {NullableDateTime} Luxon datetime object (in the user's local timezone)
+ */
+function parseSmartDateUnit(value, datetime) {
+    const match = value.match(smartDateRegex);
+    if (match) {
+        const offset = parseInt(match[2], 10);
+        const unit = smartDateUnits[(match[3] || "d").toLowerCase()];
+        if (match[1] === "+") {
+            datetime = datetime.plus({ [unit]: offset });
+        } else {
+            datetime = datetime.minus({ [unit]: offset });
+        }
+        return datetime;
+    }
+    return false;
+}
+
+/**
+ * Accepts smart inputs with or without datetime and extract the datetime and smart inputs
+ * if no datetime in value, then datetime will be considered as now
+ *
+ * @param {string} value
+ * @returns {[NullableDateTime, string]}
+**/
+function extractDateTime(value) {
+    let splitted = value.split(',');
+    let date = DateTime.fromFormat(splitted[0], localization.dateTimeFormat);
+    let smartInput = splitted[0];
+    if (! date.c) {
+        date = DateTime.fromFormat(splitted[0], localization.dateFormat);
+        if (! date.c) {
+            date = DateTime.local();
+        }
+        else {
+            smartInput = splitted[1];
+        }
+    } else {
+        smartInput = splitted[1];
+    }
+    return [date, smartInput];
+}
+
+/**
+ * Smart date input chains are shortcuts to write dates quicker.
+ *
+ * e.g.
+ *   value: "now" or "today" or "current" or "0" will return now
+ *   value: "tmrw" or "nextday" will return now + 1 day
+ *   value: "yesterday" or "prev day" will return now - 1 day
+ *   value: "+1day" or "+1 d" or "+1" will return now + 1 day
+ *   value: "-2 weeks" or "-2w" will return now - 2 weeks
+ *   value: "+1month +20days" or "+1m+20d" will return now + 1 month + 20 days
+ *   value: "-3years -4 weeks" or "-3y-4w" will return now + 3 years + 20 weeks
+ *   value: "+5 hours +20min" or "+5h+20x" will return now + 4 hours + 20 minutes
+ *   value: "+1 year -2months +3 weeks -40hrs" or "+1y-2m+3w-40h" will return now + 1 year - 2 months + 3 weeks - 40 hours
+ *
+ * if value also has datetime formatted string in it,
+ * then it will increase/decrease from the date (instead of now) with chained inputs defined after comma ','
+ *
+ * e.g.
+ *   value: "2025-01-01,+2 years+6 months" or "2025-01-01,+2y+6m" will return "2027-07-01"
+ *   value: "2025-01-01 00:00:00,+2 hrs +30 mins" or "2025-01-01 00:00:00,+2h+30x" will return "2025-01-01 02:30:00"
  *
  * @param {string} value
  * @returns {NullableDateTime} Luxon datetime object (in the user's local timezone)
  */
 function parseSmartDateInput(value) {
-    const match = value.match(smartDateRegex);
-    if (match) {
-        let date = DateTime.local();
-        const offset = parseInt(match[2], 10);
-        const unit = smartDateUnits[(match[3] || "d").toLowerCase()];
-        if (match[1] === "+") {
-            date = date.plus({ [unit]: offset });
-        } else {
-            date = date.minus({ [unit]: offset });
-        }
+    if (['today', 'td', 'current', 'curr', 'crnt', 'now', '0'].includes(value)) {
+        value = '+0d';
+    } else if (['tomorrow', 'tmrw', 'tmr', 'next day', 'nextday', 'nxtday'].includes(value)) {
+        value = '+1d';
+    } else if (['yesterday', 'ystr', 'yester', 'previous day', 'prev day', 'prevday'].includes(value)) {
+        value = '-1d';
+    }
+    let [date, smartInput] = extractDateTime(value);
+    const matches = smartInput.match(smartDateAllUnitsRegex);
+    if (matches) {
+        matches.forEach((match) => {
+            date = parseSmartDateUnit(match, date);
+        })
         return date;
     }
     return false;
