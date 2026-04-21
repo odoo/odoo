@@ -47,3 +47,37 @@ ul.o_checklist {
         }
     }
 }
+
+#wrapwrap, // avoid duplicating in portal
+.o_mass_mailing_value, // avoid duplicating in mass_mailing
+.o_field_html {
+    *:has(> .float-start) {
+        & ~ ul, & ~ ol {
+            display: flow-root;
+        }
+        .o_we_hint::after {
+            display: none;
+        }
+    }
+
+    *:has(> .float-end) {
+        & ~ ul, & ~ ol {
+            &[dir] {
+                display: flow-root;
+            }
+        }
+        .o_we_hint::after {
+            display: none;
+        }
+    }
+
+    li .float-start {
+        float: unset !important;
+    }
+
+    ul, ol {
+        &[dir] li .float-end {
+            float: unset !important;
+        }
+    }
+}
