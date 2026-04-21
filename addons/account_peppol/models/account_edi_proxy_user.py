@@ -384,6 +384,19 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 continue
             try:
                 proxy_user = edi_user._make_request(f"{edi_user._get_server_url()}/api/peppol/2/participant_status")
+
+                if proxy_user.get('main_alias').startswith('9925:') and proxy_user.get('all_aliases'):
+
+                    proxy_user = edi_user._make_request(f"{edi_user._get_server_url()}/api/peppol/2/switch_identifiers")
+                    eas, endpoint = proxy_user.get('main_alias').split(':')
+                    edi_user.company_id.partner_id.write({
+                        "peppol_eas": eas,
+                        "peppol_endpoint": endpoint,
+                    })
+                    edi_user.write({
+                        'edi_identification': proxy_user.get('main_alias'),
+                    })
+
             except AccountEdiProxyError as e:
                 if e.code == 'client_gone':
                     # reset the connection if it was archived/deleted on IAP side
