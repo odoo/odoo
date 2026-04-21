@@ -74,17 +74,15 @@ class TestMailPresence(WebsocketCase, MailCommon):
     def test_manual_im_status(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
         session = self.authenticate(bob.login, bob.login)
-        expected_payload = {}
-        if "has_active_call" in self.env["res.users"]._fields:
-            expected_payload["res.users"] = [
+        expected_payload = {
+            "res.users": self._filter_users_fields(
                 {
                     "should_display_in_call_im_status": False,
                     "id": bob.id,
                     "im_status": "offline",
                 },
-            ]
-        else:
-            expected_payload["res.users"] = [{"id": bob.id, "im_status": "offline"}]
+            ),
+        }
 
         with self.assertBus(
             BusResult((bob, "presence"), "mail.record/insert", expected_payload),

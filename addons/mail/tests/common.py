@@ -2030,6 +2030,7 @@ class MailCommon(MailCase):
         if "has_active_call" not in self.env["res.users"]._fields:
             for data in users_data:
                 data.pop("has_active_call", None)
+                data.pop("should_display_in_call_im_status", None)
         return list(users_data)
 
     def _filter_threads_fields(self, /, *threads_data):
