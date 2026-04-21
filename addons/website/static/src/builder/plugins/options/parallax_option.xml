@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ParallaxOption">
-    <BuilderRow t-if="this.isActiveItem('toggle_bg_image_id') and !this.isActiveItem('toggle_bg_video_id')" label.translate="Scroll Effect" tooltip.translate="Select a motion style for scrolling" level="2" preview="false">
+    <BuilderRow t-if="this.isActiveItem('toggle_bg_image_id') and !this.isActiveItem('toggle_bg_video_id')" label.translate="Scroll Effect" tooltip.translate="This option may limit the position feature on certain parts of the image." level="2" preview="false">
         <BuilderSelect action="'setParallaxType'">
             <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>
             <BuilderSelectItem actionValue="'fixed'">Fixed</BuilderSelectItem>
