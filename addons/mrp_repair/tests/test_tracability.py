@@ -310,6 +310,9 @@ class TestRepairTraceability(TestMrpCommon):
         ro.action_validate()
         ro.action_repair_start()
         ro.action_repair_end()
+        # Skip consumption warning
+        consumption_warning = self.env['repair.consumption.warning'].create({'repair_id': ro.id})
+        consumption_warning.action_confirm()
 
         sm = self.env['stock.move'].create({
             'product_id': component.id,

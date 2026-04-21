@@ -73,13 +73,19 @@
                    <button name="action_repair_end" invisible="state != 'under_repair'" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
                    <button name="action_assign" invisible="not reserve_visible" string="Reserve" type="object"/>
                    <button name="action_create_sale_order" type="object" string="Quote" invisible="not can_create_sale_or_invoice"/>
-                   <button name="action_create_invoice" type="object" string="Invoice" invisible="not can_create_sale_or_invoice"/>
+                   <button name="action_create_invoice" type="object" string="Invoice" invisible="not (can_create_sale_or_invoice or can_create_extra_invoice)"/>
                    <button name="action_repair_cancel_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="z"/>
                    <button name="action_repair_cancel" string="Cancel" type="object" invisible="state in ('done', 'cancel')" data-hotkey="l"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,under_repair,done"/>
                </header>
                <sheet string="Repairs order">
                     <div class="oe_button_box" name="button_box">
+                        <button name="%(action_repair_move_lines)d"
+                            type="action"
+                            string="Product Moves"
+                            class="oe_stat_button"
+                            icon="fa-exchange"
+                            invisible="not(move_ids or move_id) or state != 'done'"/>
                         <!-- No groups attribute on the next button as "stock.group_stock_user" is needed for Repair, and as this group is granted 'sale.order' read/write accesses in sale_stock module (forcefully loaded as transitive dependency) -->
                         <button name="action_view_sale_order" type="object" string="Sale Order" icon="fa-dollar" class="oe_stat_button" invisible="not sale_order_id">
                             <div class="o_field_widget o_stat_info">
@@ -89,7 +95,6 @@
                                 <span class="o_stat_text">Sale Order</span>
                             </div>
                         </button>
-                        <button name="%(action_repair_move_lines)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" invisible="state not in ['done', 'cancel']"/>
                         <button name="action_view_invoice"
                             type="object"
                             icon="fa-pencil-square-o"
@@ -172,7 +177,7 @@
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
                                 <field name="forecast_expected_date" column_invisible="True"/>
                                 <field name="product_qty" readonly="1" column_invisible="True"/>
-                                <field name="quantity" string="Reserved" readonly="not product_id" optional="hide"/>
+                                <field name="quantity" string="Quantity" readonly="not product_id" optional="show"/>
                                 <field name="uom_id" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom"/>
                                 <field name="lot_ids" widget="many2many_tags"
                                     groups="stock.group_production_lot"
@@ -188,6 +193,35 @@
                             </list>
                         </field>
                         <div class="clearfix"/>
+                    </page>
+                     <page string="Services" name="services">
+                        <field name="repair_service_line_ids" readonly="state in ['done', 'cancel']">
+                            <list string="text" editable="bottom">
+                                <control>
+                                    <create string="Add a line"/>
+                                    <button
+                                        name="action_add_service_from_repair_catalog"
+                                        class="px-4 btn-link"
+                                        string="Catalog"
+                                        type="object"
+                                        context="{'order_id': parent.id}"/>
+                                </control>
+                                <field name="sequence" widget="handle"/>
+                                <field
+                                    name="product_id"
+                                    required="1"
+                                    readonly="parent.state in ['done', 'cancel']"
+                                    context="{'default_type': 'service'}"/>
+                                <field name="description" optional="hide"/>
+                                <field name="quantity"/>
+                                <field
+                                    name="uom_id"
+                                    groups="uom.group_uom"
+                                    readonly="0"
+                                    options="{'no_open': True, 'no_create': True}"
+                                    widget="many2one_uom"/>
+                            </list>
+                        </field>
                     </page>
                     <page string="Repair Notes" name="repair_notes">
                         <field name="internal_notes" placeholder="Add internal notes."/>

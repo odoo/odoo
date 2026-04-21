@@ -49,6 +49,7 @@ class StockMove(models.Model):
 
     analytic_account_line_ids = fields.Many2many('account.analytic.line', copy=False)
     account_move_id = fields.Many2one('account.move', 'stock_move_id', copy=False, index="btree_not_null")
+    invoice_line_ids = fields.One2many('account.move.line', 'stock_move_id', 'Invoice Line', index='btree_not_null')
 
     def search_remaining_qty(self, operator, value):
         if operator != '=' or not isinstance(value, bool) or value is not True:

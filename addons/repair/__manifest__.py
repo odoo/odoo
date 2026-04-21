@@ -33,6 +33,7 @@ The following topics are covered by this module:
         'report/repair_templates_repair_order.xml',
         'data/repair_data.xml',
         'security/ir.access.csv',
+        'wizard/repair_consumption_warning_views.xml',
     ],
     'demo': ['data/repair_demo.xml'],
     'post_init_hook': '_create_warehouse_data',
