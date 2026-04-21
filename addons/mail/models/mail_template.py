@@ -152,11 +152,15 @@ class MailTemplate(models.Model):
             deactivated.template_category = 'hidden_template'
         remaining = self - deactivated
         if remaining:
-            template_external_ids = remaining.get_external_id()
+            templates_with_xmlid = {
+                id_
+                for id_, xids in remaining._get_external_ids().items()
+                if any(not xid.startswith('__export__.') for xid in xids)
+            }
             for template in remaining:
-                if bool(template_external_ids[template.id]) and template.description:
+                if template.id in templates_with_xmlid and template.description:
                     template.template_category = 'base_template'
-                elif bool(template_external_ids[template.id]):
+                elif template.id in templates_with_xmlid:
                     template.template_category = 'hidden_template'
                 else:
                     template.template_category = 'custom_template'
@@ -168,7 +172,7 @@ class MailTemplate(models.Model):
 
         templates_with_xmlid = self.env['ir.model.data'].sudo()._search([
             ('model', '=', 'mail.template'),
-            ('module', '!=', '__export__')
+            ('module', '!=', '__export__'),
         ]).subselect('res_id')
 
         domain = Domain.FALSE
@@ -180,7 +184,7 @@ class MailTemplate(models.Model):
             domain |= Domain([('active', '=', True), ('description', '!=', False), ('id', 'in', templates_with_xmlid)])
 
         if 'custom_template' in value:
-            domain |= Domain([('active', '=', True), ('template_category', 'not in', ['base_template', 'hidden_template'])])
+            domain |= Domain([('active', '=', True), ('id', 'not in', templates_with_xmlid)])
 
         return domain
 
