@@ -112,8 +112,8 @@
                 <xpath expr="//header" position="inside">
                     <button name="action_l10n_it_edi_send"
                             type="object"
-                            string="Send Tax Integration"
-                            invisible="state != 'posted' or not l10n_it_edi_is_self_invoice or is_move_sent or country_code != 'IT'"
+                            string="Send to SDI"
+                            invisible="state != 'posted' or not l10n_it_edi_is_self_invoice or is_move_sent or country_code != 'IT' or l10n_it_edi_state in ('rejected', 'rejected_by_pa_partner')"
                             data-hotkey="y"/>
                 </xpath>
                 <xpath expr="//sheet" position="before">
