@@ -23,12 +23,6 @@ export class GoogleMapsApiKeyDialog extends Component {
             apiKey: this.props.originalApiKey,
             apiKeyValidation: { isValid: false },
         });
-        // @TODO mysterious-egg: the `google_map service` is a duplicate of the
-        // `website_map_service`, but without the dependency on public
-        // interactions. These are used only to restart the interactions once
-        // the API is loaded. We do this in the plugin instead. Once
-        // `html_builder` replaces `website`, we should be able to remove
-        // `website_map_service` since only google_map service will be used.
         this.googleMapsService = useService("google_maps");
     }
 

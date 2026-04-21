@@ -279,6 +279,7 @@
             'html_builder/static/src/utils/scrolling.js',
             'website/static/src/interactions/**/*',
             'website/static/src/core/**/*',
+            'website/static/src/services/google_maps_service.js',
             'website/static/src/utils/**/*',
             ('remove', 'website/static/src/interactions/**/*.edit.js'),
             # Multi-range is an opt-in feature.
@@ -436,6 +437,7 @@
             'website/static/lib/multirange/*.js',
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/core/**/*',
+            'website/static/src/services/google_maps_service.js',
             'website/static/src/utils/**/*',
             'website/static/src/interactions/**/*',
             'website/static/src/snippets/**/*.js',
@@ -508,6 +510,7 @@
             ('include', 'html_builder.assets'),
             'website/static/src/scss/website_common.scss',
             'website/static/src/builder/**/*',
+            'website/static/src/services/google_maps_service.js',
             ('remove', 'website/static/src/builder/**/*.edit.*'),
             'website/static/src/js/send_mail_form.js',
         ],
