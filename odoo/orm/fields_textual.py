@@ -189,7 +189,8 @@ class BaseString(Field[str | typing.Literal[False]]):
         :rtype: dict
         """
         if self.translate is True:
-            return {from_lang_value: dict(to_lang_values)} if from_lang_value else {}
+            # ensure the translation terms are stringified, otherwise we can break the PO file
+            return {str(from_lang_value): {k: str(v) for k, v in to_lang_values.items()} if from_lang_value else {}}
 
         from_lang_terms = self.get_trans_terms(from_lang_value)
         dictionary = defaultdict(lambda: defaultdict(dict))
@@ -702,10 +703,6 @@ class Html(BaseString):
     def convert_to_record(self, value, record):
         value = super().convert_to_record(value, record)
         return False if value is False else Markup(value)
-
-    def get_trans_terms(self, value):
-        # ensure the translation terms are stringified, otherwise we can break the PO file
-        return list(map(str, super().get_trans_terms(value)))
 
     escape = staticmethod(markup_escape)
     is_empty = staticmethod(is_html_empty)
