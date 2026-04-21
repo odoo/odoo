@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-14 08:19+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
+"PO-Revision-Date: 2026-04-18 14:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_ubl_cii/pl/>\n"
@@ -52,6 +52,16 @@ msgstr "%s powinna mieć ważny numer KBO/BCE w polu ID firmy"
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
 msgid "(Un)Group lines by tax"
 msgstr "(Od)grupuj pozycje wg. podatku"
+
+#. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "<span class=\"text-muted\">FROM</span>"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "<span class=\"text-muted\">TO</span>"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -182,9 +192,8 @@ msgstr "Sieć rejestrów przedsiębiorstw"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
-msgid "Cannot decode the origin file, try by importing it again"
-msgstr ""
-"Nie można zdekodować pliku źródłowego, spróbuj zaimportować go ponownie"
+msgid "Cannot decode origin file, try by importing it again"
+msgstr "Nie można zdekodować pliku źródłowego, spróbuj zaimportować go ponownie"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -887,6 +896,11 @@ msgid "Tax '%(tax_name)s' is invalid: %(error_message)s"
 msgstr "Podatek '%(tax_name)s' jest błędny: %(error_message)s"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "Tax ID"
+msgstr "NIP"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
@@ -1078,6 +1092,11 @@ msgid "Vatican VAT"
 msgstr "Watykan VAT"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "Vendor Bill"
+msgstr "Rachunek dostawcy"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "View Partner(s)"
@@ -1148,6 +1167,10 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "Cannot decode the origin file, try by importing it again"
+#~ msgstr ""
+#~ "Nie można zdekodować pliku źródłowego, spróbuj zaimportować go ponownie"
 
 #~ msgid "1.0"
 #~ msgstr "1.0"

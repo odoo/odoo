@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-03 18:11+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
+"PO-Revision-Date: 2026-04-18 13:57+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
 "base_vat/ja/>\n"
@@ -70,6 +70,11 @@ msgid "AR200-5536168-2 or 20055361682"
 msgstr "AR200-5536168-2 または 20055361682"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr "基本VAT(付加価値税)：IAP VIESからの更新を同期"
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -91,14 +96,6 @@ msgstr "会社"
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "コンフィグ設定"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr "VIESサーバとの接続に失敗しました。VAT番号%sが検証できませんでした。"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -166,6 +163,12 @@ msgstr "域内無効"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr "無効なIAP VIESエンドポイント"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "MXGODE561231GR8 or GODE561231GR8"
 msgstr "MXGODE561231GR8 または GODE561231GR8"
 
@@ -205,8 +208,20 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "VAT 番号 %s はVIESサーバで解釈することはできませんでした。"
+msgid "The Intra-Community validity has been updated."
+msgstr "EU域内の有効性を更新しました。"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr "VIESチェックに失敗しました。税IDを手動で確認してください。"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr "VIESチェックは保留中です。ステータスはまもなく更新されます。"
 
 #. module: base_vat
 #. odoo-python
@@ -227,16 +242,6 @@ msgid ""
 msgstr ""
 "外国VAT番号の国を検出できませんでした。会計ポジションに国を割当てるか、国グ"
 "ループを設定して下さい。"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
-msgstr ""
-"VAT検証のリクエストは処理されませんでした。VIESサービスは以下のエラーで応答し"
-"ました:%s"
 
 #. module: base_vat
 #. odoo-python
@@ -285,6 +290,21 @@ msgstr "会計ポジション [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "取引先 [%s]"
+
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr "VIESサーバとの接続に失敗しました。VAT番号%sが検証できませんでした。"
+
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr "VAT 番号 %s はVIESサーバで解釈することはできませんでした。"
+
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "VAT検証のリクエストは処理されませんでした。VIESサービスは以下のエラーで応"
+#~ "答しました:%s"
 
 #~ msgid "3101012009"
 #~ msgstr "3101012009"

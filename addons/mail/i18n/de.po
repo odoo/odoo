@@ -8,15 +8,16 @@
 # Wil Odoo, 2025
 # Larissa Manderfeld, 2025
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-11 09:06+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-18/mail/de/"
-">\n"
+"POT-Creation-Date: 2026-04-17 18:36+0000\n"
+"PO-Revision-Date: 2026-04-18 13:58+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-18/mail/de/>"
+"\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4040,6 +4041,13 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"Fehler beim Rendern der QWeb-Vorlage für %(template_label)s\n"
+"Zielmodell: %(model_name)s\n"
+"Sprachkontext: %(lang_context)s\n"
+"Fehler: %(error_details)s\n"
+"\n"
+"Snippet der Vorlagenquelle:\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
@@ -4048,6 +4056,8 @@ msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
+"Fehler beim Rendern der Vorlage inline_template: %(template_txt)s\n"
+"Fehlerdetails: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -5987,7 +5997,7 @@ msgstr "Zurücksetzung einer E-Mail-Vorlage"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "E-Mail-Vorlage: „%(name)s“ (ID: %(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -6143,7 +6153,7 @@ msgstr "Als erledigt markieren"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Vorlage für Massenmails: „%(name)s“ (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -6796,7 +6806,7 @@ msgstr "Kein Nachrichtenverlauf"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "No language detected in context"
-msgstr ""
+msgstr "Keine Sprache im Kontext erkannt"
 
 #. module: mail
 #. odoo-python
@@ -9717,7 +9727,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Template name not identified"
-msgstr ""
+msgstr "Vorlagenname nicht identifiziert"
 
 #. module: mail
 #. odoo-python
@@ -10729,6 +10739,12 @@ msgid "Unmute Conversation"
 msgstr "Stummschaltung der Unterhaltung aufheben"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message.js:0
+msgid "Unnamed"
+msgstr "Unbenannt"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
@@ -10738,13 +10754,13 @@ msgstr "%(record_model_name)s unbenannt (%(record_id)s)"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "Unbenannte E-Mail-Vorlage"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "Unbenanntes Mailing"
 
 #. module: mail
 #. odoo-javascript
@@ -12373,7 +12389,7 @@ msgstr "„%(member_name)s“ in „%(channel_name)s“"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
-msgstr ""
+msgstr "„%s“"
 
 #~ msgid ""
 #~ "Failed to render QWeb template: %(template_src)s\n"

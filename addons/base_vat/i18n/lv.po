@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
@@ -68,6 +68,11 @@ msgid "AR200-5536168-2 or 20055361682"
 msgstr "AR200-5536168-2 vai 20055361682"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -88,14 +93,6 @@ msgstr "Uzņēmumi"
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigurācijas uzstādījumi"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr "Savienojums ar VIES serveri neizdevās. PVN numurs %s nevarēja validēt."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -163,6 +160,12 @@ msgstr "Derīgs starp iekšējiem uzņēmumiem"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "MXGODE561231GR8 or GODE561231GR8"
 msgstr "MXGODE561231GR8 vai GODE561231GR8"
 
@@ -202,8 +205,20 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "VIES serveris nevarēja interpretēt %s PVN numuru."
+msgid "The Intra-Community validity has been updated."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -224,16 +239,6 @@ msgid ""
 msgstr ""
 "Valsts ar ārzemju PVN numuru netika atrasta. Lūdzu, piešķiriet valsti "
 "fiskālajai pozīcijai vai iestatiet valstu grupu"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
-msgstr ""
-"Pieprasījums PVN validācijai nav apstrādāts. VIES pakalpojums atbildēja ar "
-"sekojošu kļūdu: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -281,6 +286,22 @@ msgstr "fiskālā pozīcija [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partneris [%s]"
+
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr ""
+#~ "Savienojums ar VIES serveri neizdevās. PVN numurs %s nevarēja validēt."
+
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr "VIES serveris nevarēja interpretēt %s PVN numuru."
+
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "Pieprasījums PVN validācijai nav apstrādāts. VIES pakalpojums atbildēja "
+#~ "ar sekojošu kļūdu: %s"
 
 #~ msgid "3101012009"
 #~ msgstr "3101012009"

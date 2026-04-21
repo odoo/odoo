@@ -7,13 +7,14 @@
 # Marta Wacławek, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-01-24 09:11+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-04-15 15:03+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/pos_paytm/"
 "pl/>\n"
 "Language: pl\n"
@@ -21,14 +22,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__accept_payment
 msgid "Accept Payment"
-msgstr ""
+msgstr "Akceptuj płatność"
 
 #. module: pos_paytm
 #: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__all
@@ -38,7 +39,7 @@ msgstr "Wszystko"
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__allowed_payment_modes
 msgid "Allowed Payment Modes"
-msgstr ""
+msgstr "Dozwolone metody płatności"
 
 #. module: pos_paytm
 #: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__accept_payment__auto
@@ -56,6 +57,8 @@ msgid ""
 "Choose accept payment mode: \n"
 " Manually or Automatically"
 msgstr ""
+"Wybierz sposób przyjęcia płatności: \n"
+" Ręcznie lub automatycznie"
 
 #. module: pos_paytm
 #: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__allowed_payment_modes
@@ -63,11 +66,13 @@ msgid ""
 "Choose allow payment mode: \n"
 " All/Card or QR"
 msgstr ""
+"Wybierz sposób płatności: \n"
+" Wszystkie/Karta lub QR"
 
 #. module: pos_paytm
 #: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_mid
 msgid "Go to https://business.paytm.com/ and create the merchant account"
-msgstr ""
+msgstr "Przejdź na https://business.paytm.com/ i stwórz konto sprzedawcy"
 
 #. module: pos_paytm
 #: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__accept_payment__manual
@@ -80,11 +85,13 @@ msgid ""
 "Merchant/AES key \n"
 " ex: B1o6Ivjy8L1@abc9"
 msgstr ""
+"Klucz sprzedawcy/AES \n"
+" np.: B1o6Ivjy8L1@abc9"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__channel_id
 msgid "PayTM Channel ID"
-msgstr ""
+msgstr "ID kanału PayTM"
 
 #. module: pos_paytm
 #. odoo-javascript
@@ -95,22 +102,22 @@ msgstr "Błąd PayTM"
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_merchant_key
 msgid "PayTM Merchant API Key"
-msgstr ""
+msgstr "Klucz sprzedawcy PayTM API"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_mid
 msgid "PayTM Merchant ID"
-msgstr ""
+msgstr "ID sprzedawcy PayTM"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_tid
 msgid "PayTM Terminal ID"
-msgstr ""
+msgstr "ID terminalu PayTM"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_test_mode
 msgid "PayTM Test Mode"
-msgstr ""
+msgstr "Tryb testowy PayTM"
 
 #. module: pos_paytm
 #: model:ir.model,name:pos_paytm.model_pos_payment_method
@@ -126,13 +133,13 @@ msgstr "QR"
 #. odoo-javascript
 #: code:addons/pos_paytm/static/src/js/payment_paytm.js:0
 msgid "Reference number mismatched"
-msgstr "Numer referencyjny się nie zgadza"
+msgstr "Niepasujący numer referencyjny"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "Something went wrong with paytm request. Please try later."
-msgstr ""
+msgstr "Coś poszło nie tak z żądaniem paytm. Spróbuj ponownie później."
 
 #. module: pos_paytm
 #: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_tid
@@ -140,12 +147,14 @@ msgid ""
 "Terminal model or Activation code \n"
 " ex: 70000123"
 msgstr ""
+"Model terminala lub kod aktywacyjny \n"
+" np.: 70000123"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "This Payment Terminal is only valid for INR Currency"
-msgstr "Ten terminal płatniczy jest ważny wyłącznie dla waluty INR."
+msgstr "Ten terminal płatniczy obsługuje tylko walutę INR"
 
 #. module: pos_paytm
 #: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_test_mode
@@ -156,22 +165,22 @@ msgstr "Włącz w trybie testowym"
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "makePaymentRequest expected resultCode not found in the response"
-msgstr ""
+msgstr "makePaymentRequest oczekiwany resultCode nie znaleziony w odpowiedzi"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "paymentFetchRequest expected resultCode not found in the response"
-msgstr ""
+msgstr "paymentFetchRequest oczekiwany resultCode nie znaleziony w odpowiedzi"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "paytm transaction failure"
-msgstr ""
+msgstr "błąd transakcji paytm"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "paytm transaction request declined"
-msgstr ""
+msgstr "odrzucono żądanie transakcji paytm"

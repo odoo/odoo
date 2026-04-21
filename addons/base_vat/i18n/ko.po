@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-02-25 12:23+0000\n"
+"POT-Creation-Date: 2026-04-17 18:37+0000\n"
+"PO-Revision-Date: 2026-04-17 11:30+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-18/base_vat/"
 "ko/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: base_vat
 #. odoo-python
@@ -70,6 +70,11 @@ msgid "AR200-5536168-2 or 20055361682"
 msgstr "AR200-5536168-2 또는 20055361682"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -90,14 +95,6 @@ msgstr "회사"
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "환경설정"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr "VIES 서버 연결에 실패했습니다. %s VAT 번호가 확인되지 않습니다."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -132,7 +129,7 @@ msgstr "예: '219999830019' (형식: 12자리, 모든 유효한 숫자)"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr "재정 위치"
+msgstr "재정 포지션"
 
 #. module: base_vat
 #. odoo-python
@@ -152,14 +149,20 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
-"선택란에 표시하면, 재정 위치 기본값은 유럽 VIES 서비스 확인 결과에 따라서 다"
-"르게 적용됩니다."
+"선택란에 표시하면, 재정 포지션 기본값은 유럽 VIES 서비스 확인 결과에 따라서 "
+"다르게 적용됩니다."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
 msgstr "커뮤니티 내 유효"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -202,8 +205,20 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "%s VAT 번호는 VIES 서버에서 확인할 수 없습니다."
+msgid "The Intra-Community validity has been updated."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -212,8 +227,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match any of the "
 "countries composing the country group set on this fiscal position."
 msgstr ""
-"이 해외 VAT 번호로 등록된 국가가 이 재정 위치에 설정된 국가 그룹 중 어느 국가"
-"와도 일치하지 않습니다."
+"이 해외 VAT 번호로 등록된 국가가 이 재정 포지션에 설정된 국가 그룹 중 어느 국"
+"가와도 일치하지 않습니다."
 
 #. module: base_vat
 #. odoo-python
@@ -222,18 +237,8 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a "
 "country to the fiscal position or set a country group"
 msgstr ""
-"해외 VAT 번호의 국가를 확인할 수 없습니다. 재정 위치에 국가를 부여하거나 국"
+"해외 VAT 번호의 국가를 확인할 수 없습니다. 재정 포지션에 국가를 부여하거나 국"
 "가 그룹을 설정하세요."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
-msgstr ""
-"VAT 유효성 검사 요청이 실패했습니다. VIES 서비스가 다음 오류를 확인했습니다 "
-"%s"
 
 #. module: base_vat
 #. odoo-python
@@ -274,13 +279,28 @@ msgstr "CPF의 경우 11자리 또는 CNPJ의 경우 14자리입니다."
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 msgid "fiscal position [%s]"
-msgstr "재정 위치 [%s]"
+msgstr "재정 포지션 [%s]"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "협력사 [%s]"
+
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr "VIES 서버 연결에 실패했습니다. %s VAT 번호가 확인되지 않습니다."
+
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr "%s VAT 번호는 VIES 서버에서 확인할 수 없습니다."
+
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "VAT 유효성 검사 요청이 실패했습니다. VIES 서비스가 다음 오류를 확인했습니"
+#~ "다 %s"
 
 #~ msgid "3101012009"
 #~ msgstr "3101012009"

@@ -3,13 +3,14 @@
 # * cloud_storage_migration
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-03-29 12:21+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-04-17 14:51+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/"
 "cloud_storage_migration/ru/>\n"
 "Language: ru\n"
@@ -23,12 +24,12 @@ msgstr ""
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_model_ids
 msgid "All Attachments"
-msgstr ""
+msgstr "Все вложения"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_to_migrate
 msgid "All Attachments Migration"
-msgstr ""
+msgstr "Миграция всех вложений"
 
 #. module: cloud_storage_migration
 #: model:ir.model,name:cloud_storage_migration.model_ir_attachment
@@ -42,6 +43,8 @@ msgid ""
 "Attachment (%s) does not have a stored filename and cannot be migrated to "
 "cloud storage."
 msgstr ""
+"Вложение (%s) не имеет сохраненного имени файла и не может быть перенесено в "
+"облачное хранилище."
 
 #. module: cloud_storage_migration
 #. odoo-python
@@ -50,11 +53,13 @@ msgid ""
 "Attachment (%s) is not a binary attachment and cannot be migrated to cloud "
 "storage."
 msgstr ""
+"Вложение (%s) не является бинарным файлом и не может быть перенесено в "
+"облачное хранилище."
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Attachments Report"
-msgstr ""
+msgstr "Отчет о вложениях"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
@@ -64,30 +69,30 @@ msgstr "Миграция в облачное хранилище"
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_models
 msgid "Cloud Storage Migration All Models"
-msgstr ""
+msgstr "Миграция всех моделей в облачное хранилище"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.act_window,name:cloud_storage_migration.action_cloud_storage_migration_cron
 msgid "Cloud Storage Migration Cron"
-msgstr ""
+msgstr "Планировщик миграции в облачное хранилище"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_models
 msgid "Cloud Storage Migration Message Models"
-msgstr ""
+msgstr "Модели сообщений о миграции в облачное хранилище"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.act_window,name:cloud_storage_migration.action_cloud_storage_migration_report
 #: model:ir.model,name:cloud_storage_migration.model_cloud_storage_migration_report
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.view_cloud_storage_migration_report_list
 msgid "Cloud Storage Migration Report"
-msgstr ""
+msgstr "Отчет о миграции в облачное хранилище"
 
 #. module: cloud_storage_migration
 #. odoo-python
 #: code:addons/cloud_storage_migration/models/ir_attachment.py:0
 msgid "Cloud storage provider is not configured"
-msgstr ""
+msgstr "Провайдер облачного хранилища не настроен"
 
 #. module: cloud_storage_migration
 #: model:ir.model,name:cloud_storage_migration.model_res_config_settings
@@ -97,7 +102,7 @@ msgstr "Параметры конфигурации"
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Cron Job"
-msgstr ""
+msgstr "Задача планировщика"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__display_name
@@ -107,7 +112,7 @@ msgstr "Отображаемое имя"
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__has_attachment_rel
 msgid "Has Attachment Field"
-msgstr ""
+msgstr "Имеет поле вложения"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__id
@@ -120,6 +125,8 @@ msgid ""
 "Indicates whether all attachments associated with this model are scheduled "
 "for cloud storage migration"
 msgstr ""
+"Указывает, запланирована ли миграция всех вложений, связанных с этой "
+"моделью, в облачное хранилище"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_to_migrate
@@ -127,6 +134,8 @@ msgid ""
 "Indicates whether attachments linked to mail messages for this model are "
 "scheduled for cloud storage migration"
 msgstr ""
+"Указывает, запланирована ли миграция вложений из почтовых сообщений этой "
+"модели в облачное хранилище"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__has_attachment_rel
@@ -134,51 +143,53 @@ msgid ""
 "Indicates whether this model has a relational field linking to ir.attachment"
 " model"
 msgstr ""
+"Указывает, есть ли в этой модели реляционное поле, связанное с моделью "
+"ir.attachment"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_max_size
 msgid "Largest Attachment (MB)"
-msgstr ""
+msgstr "Самое большое вложение (МБ)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_model_ids
 msgid "Message Attachments"
-msgstr ""
+msgstr "Вложения сообщений"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_count
 msgid "Message Attachments Count"
-msgstr ""
+msgstr "Количество вложений сообщения"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_to_migrate
 msgid "Message Attachments Migration"
-msgstr ""
+msgstr "Миграция вложений сообщений"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_sum_size
 msgid "Message Attachments Size (MB)"
-msgstr ""
+msgstr "Размер вложений сообщения (МБ)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_max_size
 msgid "Message Largest Attachment (MB)"
-msgstr ""
+msgstr "Самое большое вложение в сообщениях (МБ)"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.server,name:cloud_storage_migration.ir_cron_manual_migrate_local_to_cloud_storage_ir_actions_server
 msgid "Migrate Local Attachment Binaries to Cloud Storage"
-msgstr ""
+msgstr "Перенести бинарные файлы локальных вложений в облачное хранилище"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_model_ids
 msgid "Migrate Models' All Attachments"
-msgstr ""
+msgstr "Перенести все вложения моделей"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_model_ids
 msgid "Migrate Models' Message Attachments"
-msgstr ""
+msgstr "Перенести вложения из сообщений моделей"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
@@ -188,7 +199,7 @@ msgstr "Миграция локальных вложений в облачное
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_progress
 msgid "Migration Progress"
-msgstr ""
+msgstr "Прогресс миграции"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__res_model
@@ -203,13 +214,13 @@ msgstr "Название модели"
 #. module: cloud_storage_migration
 #: model_terms:ir.actions.act_window,help:cloud_storage_migration.action_cloud_storage_migration_report
 msgid "No attachment data found"
-msgstr ""
+msgstr "Данные вложений не найдены"
 
 #. module: cloud_storage_migration
 #. odoo-python
 #: code:addons/cloud_storage_migration/models/ir_attachment.py:0
 msgid "No model for cloud storage migration"
-msgstr ""
+msgstr "Нет модели для миграции в облачное хранилище"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
@@ -219,7 +230,7 @@ msgstr "Параметры"
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_progress
 msgid "Shows the progress of cloud storage migration (current/total)"
-msgstr ""
+msgstr "Показывает прогресс миграции в облачное хранилище (текущее/всего)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_max_size
@@ -227,6 +238,8 @@ msgid ""
 "Size in megabytes of the largest attachment associated with any record of "
 "this model"
 msgstr ""
+"Размер в мегабайтах самого большого вложения, связанного с любой записью "
+"этой модели"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_max_size
@@ -234,6 +247,8 @@ msgid ""
 "Size in megabytes of the largest attachment linked to mail messages for this"
 " model"
 msgstr ""
+"Размер в мегабайтах самого большого вложения, прикрепленного к сообщениям "
+"этой модели"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.actions.act_window,help:cloud_storage_migration.action_cloud_storage_migration_report
@@ -241,26 +256,28 @@ msgid ""
 "This report shows statistics about attachments that could be migrated to "
 "cloud storage."
 msgstr ""
+"Этот отчет содержит статистику вложений, которые могут быть перенесены в "
+"облачное хранилище."
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_count
 msgid "Total Attachments Count"
-msgstr ""
+msgstr "Общее количество вложений"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_sum_size
 msgid "Total Attachments Size (MB)"
-msgstr ""
+msgstr "Общий размер вложений (МБ)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_count
 msgid "Total number of attachments associated with all records of this model"
-msgstr ""
+msgstr "Общее количество вложений, связанных со всеми записями этой модели"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_count
 msgid "Total number of attachments linked to mail messages for this model"
-msgstr ""
+msgstr "Общее количество вложений, прикрепленных к сообщениям этой модели"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_sum_size
@@ -268,6 +285,7 @@ msgid ""
 "Total size in megabytes of all attachments associated with records of this "
 "model"
 msgstr ""
+"Общий размер в мегабайтах всех вложений, связанных с записями этой модели"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_sum_size
@@ -275,3 +293,5 @@ msgid ""
 "Total size in megabytes of all attachments linked to mail messages for this "
 "model"
 msgstr ""
+"Общий размер в мегабайтах всех вложений, прикрепленных к сообщениям этой "
+"модели"

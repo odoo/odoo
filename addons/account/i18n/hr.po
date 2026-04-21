@@ -48,8 +48,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-14 08:28+0000\n"
+"POT-Creation-Date: 2026-04-17 18:36+0000\n"
+"PO-Revision-Date: 2026-04-18 13:58+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/account/"
 "hr/>\n"
@@ -814,6 +814,15 @@ msgid ""
 "class=\"text-success\">Trusted</span>\n"
 "                        </span>"
 msgstr ""
+"<span class=\"d-flex gap-2 w-100\">\n"
+"\n"
+"<span invisible=\"allow_out_payment\" class=\"text-muted\">Nepouzdano</span>"
+"\n"
+"\n"
+"<span invisible=\"not allow_out_payment\" class=\"text-success\">Pouzdano</"
+"span>\n"
+"\n"
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -1411,8 +1420,9 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"Bankovni račun s brojem računa %(number)s već postoji za partnera %(partner)"
-"s, ali je arhiviran. Umjesto toga, molimo vas da ga poništite iz arhive."
+"Bankovni račun s brojem računa %(number)s već postoji za partnera %"
+"(partner)s, ali je arhiviran. Umjesto toga, molimo vas da ga poništite iz "
+"arhive."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1435,6 +1445,12 @@ msgid ""
 "You\n"
 "                should receive this periodically from your bank."
 msgstr ""
+"Kreditni izvod je sažetak svih financijskih transakcija\n"
+"\n"
+"koje se događaju tijekom određenog vremenskog razdoblja na kreditnom računu. "
+"Trebali biste ga\n"
+"\n"
+"periodično primati od svoje banke."
 
 #. module: account
 #. odoo-python
@@ -1647,6 +1663,8 @@ msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The "
 "unmerge operation only splits an account based on its companies."
 msgstr ""
+"Račun %s ne može se razdvojiti jer već pripada jednoj tvrtki. Operacija "
+"razdvajanja dijeli račun samo na temelju njegovih tvrtki."
 
 #. module: account
 #. odoo-python
@@ -1955,7 +1973,8 @@ msgstr "Grupe konta"
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr "Ime vlasnika računa, u slučaju da je različito od imena vlasnika računa"
+msgstr ""
+"Ime vlasnika računa, u slučaju da je različito od imena vlasnika računa"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
@@ -1999,6 +2018,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
+"Konto koji će biti postavljen na redove kreirane u dnevniku knjiženja na "
+"temelju gotovine i koji će se koristiti za praćenje iznosa porezne osnovice."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -2028,6 +2049,10 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
+"Račun koji se koristi za prijenos iznosa poreza za poreze na temelju "
+"gotovine. Sadržavat će iznos poreza sve dok se izvorni račun ne uskladi; "
+"prilikom usklađivanja, ovaj iznos se poništava na ovom računu i stavlja na "
+"redovni porezni račun."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2170,6 +2195,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Obračunski unos kreiran %(date)s: %(accrual_entry)s. I njegov obrnuti unos: %"
+"(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3905,7 +3932,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. module: account
 #. odoo-python
@@ -4411,6 +4438,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence on payments and "
 "bank transactions posted on this journal"
 msgstr ""
+"Označite ovaj okvir ako ne želite dijeliti isti slijed plaćanja i bankovnih "
+"transakcija knjiženih u ovom dnevniku"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -5683,7 +5712,7 @@ msgstr "Razgraničenje {label} {percent}%"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -7688,6 +7717,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"Formula u obliku kod_linije.oznaka_izraza. Ovo omogućuje postavljanje cilja "
+"prijenosa za ovaj izraz (na izrazu označenom s _carryover_*), u slučaju da "
+"se razlikuje od nadređene linije."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -7932,6 +7964,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"Značajka Groupby nije podržana od strane '%(engine)s' engine-a. Molimo "
+"uklonite vrijednost groupby na '%(report_line)s'."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -8039,6 +8073,10 @@ msgid ""
 "    Your email has been discarded. the e-mail address you have used only "
 "accepts new invoices:"
 msgstr ""
+"Pozdrav,\n"
+"    <br/><br/>\n"
+"    Vaš e-mail je odbačen. E-mail adresa koju ste koristili prima samo nove "
+"račune:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -8073,6 +8111,9 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
+"Najviši datum tako da su svi uneseni dnevnički unosi prije (uključujući) "
+"datuma osigurani. Uzimaju se u obzir samo dnevnički unosi nakon datuma "
+"zaključavanja."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -8257,6 +8298,8 @@ msgid ""
 "If empty, the discount will be discounted directly on the income/expense "
 "account. If set, discount on invoices will be realized in separate accounts."
 msgstr ""
+"Ako je prazno, popust će se izravno uračunati na račun prihoda/rashoda. Ako "
+"je postavljeno, popust na fakture će se ostvariti na odvojenim računima."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
@@ -8317,6 +8360,10 @@ msgid ""
 "excluding this tax group before displaying it. If not set, the tax group "
 "will be displayed after the 'Untaxed amount' subtotal."
 msgstr ""
+"Ako je postavljena, ova će se vrijednost koristiti na dokumentima kao oznaka "
+"međuzbroja koji isključuje ovu poreznu skupinu prije prikaza. Ako nije "
+"postavljena, porezna će se skupina prikazati nakon međuzbroja 'Neoporezovani "
+"iznos'."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -10707,6 +10754,12 @@ msgid "Need Cancel Request"
 msgstr "Potreban zahtjev za otkazivanje"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Need to update"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 msgid "Needed Terms"
@@ -11869,7 +11922,8 @@ msgstr "Partneri bez bankovnog računa"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr "Partneri koji se koriste u hashiranim knjiženjima ne mogu biti spojeni."
+msgstr ""
+"Partneri koji se koriste u hashiranim knjiženjima ne mogu biti spojeni."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -17216,6 +17270,12 @@ msgid "Update Terms & Conditions"
 msgstr "Ažuriraj odredbe i uvjete"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Update app"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Update exchange rates automatically"
 msgstr "Automatski ažuriraj tečaj"
@@ -17459,7 +17519,8 @@ msgstr "Validiraj bankovni račun"
 msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
-msgstr "Automatski potvrdi stavku izvoda (uparivanje na temelju vašeg pravila)."
+msgstr ""
+"Automatski potvrdi stavku izvoda (uparivanje na temelju vašeg pravila)."
 
 #. module: account
 #. odoo-javascript
@@ -17781,7 +17842,8 @@ msgstr "Treba li ovaj dnevnik prikazati na nadzornoj ploči ili ne."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "Will be used to name the Journal related to this bank account"
-msgstr "Koristit će se za nazivanje dnevnika povezanog s ovim bankovnim računom"
+msgstr ""
+"Koristit će se za nazivanje dnevnika povezanog s ovim bankovnim računom"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -18189,7 +18251,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete a tax line as it would impact the tax report"
-msgstr "Ne možete obrisati porezni redak jer bi to utjecalo na porezno izvješće"
+msgstr ""
+"Ne možete obrisati porezni redak jer bi to utjecalo na porezno izvješće"
 
 #. module: account
 #. odoo-python
@@ -18934,6 +18997,9 @@ msgid ""
 "                            Double check if the account can be trusted by "
 "calling the vendor.<br/>"
 msgstr ""
+"je usluga prijenosa novca, a ne banka.\n"
+"                            Provjerite pouzdanost računa pozivom "
+"dobavljača.<br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account

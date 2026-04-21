@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-14 08:22+0000\n"
+"POT-Creation-Date: 2026-04-17 18:36+0000\n"
+"PO-Revision-Date: 2026-04-18 13:57+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "18/mail/pt_BR/>\n"
@@ -3997,6 +3997,13 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"Falha ao renderizar o modelo QWeb para %(template_label)s\n"
+"Modelo de destino: %(model_name)s\n"
+"Contexto de idioma: %(lang_context)s\n"
+"Erro: %(error_details)s\n"
+"\n"
+"Snippet da fonte do modelo:\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
@@ -4005,6 +4012,8 @@ msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
+"Falha ao renderizar o modelo inline_template: %(template_txt)s\n"
+"Detalhes do erro: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -5928,7 +5937,7 @@ msgstr "Redefinição de modelo de e-mail"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Modelo de e-mail: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -6085,7 +6094,7 @@ msgstr "Marcar como concluído"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Modelo de envio em massa: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -6736,7 +6745,7 @@ msgstr "Nenhum histórico de mensagens"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "No language detected in context"
-msgstr ""
+msgstr "Nenhum idioma detectado no contexto"
 
 #. module: mail
 #. odoo-python
@@ -9642,7 +9651,7 @@ msgstr "A criação de modelo pelo compositor requer um modelo válido."
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Template name not identified"
-msgstr ""
+msgstr "Nome do modelo não identificado"
 
 #. module: mail
 #. odoo-python
@@ -10642,6 +10651,12 @@ msgid "Unmute Conversation"
 msgstr "Dessilenciar conversa"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message.js:0
+msgid "Unnamed"
+msgstr "Sem nome"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
@@ -10651,13 +10666,13 @@ msgstr "%(record_model_name)s sem nome (%(record_id)s)"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "Modelo de e-mail sem nome"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "Lista de distribuição sem nome"
 
 #. module: mail
 #. odoo-javascript
@@ -12279,7 +12294,7 @@ msgstr "\"%(member_name)s\" em \"%(channel_name)s\""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
-msgstr ""
+msgstr "“%s”"
 
 #~ msgid ""
 #~ "Failed to render QWeb template: %(template_src)s\n"
