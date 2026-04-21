@@ -147,13 +147,13 @@ class ResUsers(models.Model):
     is_system = fields.Boolean(compute="_compute_is_system")
     is_hr_user = fields.Boolean(compute='_compute_is_hr_user')
 
-    monday_location_id = fields.Many2one("hr.work.location", related="employee_id.monday_location_id", readonly=False, string='Mondays', user_writeable=True)
-    tuesday_location_id = fields.Many2one("hr.work.location", related="employee_id.tuesday_location_id", readonly=False, string='Tuesdays', user_writeable=True)
-    wednesday_location_id = fields.Many2one("hr.work.location", related="employee_id.wednesday_location_id", readonly=False, string='Wednesdays', user_writeable=True)
-    thursday_location_id = fields.Many2one("hr.work.location", related="employee_id.thursday_location_id", readonly=False, string='Thursdays', user_writeable=True)
-    friday_location_id = fields.Many2one("hr.work.location", related="employee_id.friday_location_id", readonly=False, string='Fridays', user_writeable=True)
-    saturday_location_id = fields.Many2one("hr.work.location", related="employee_id.saturday_location_id", readonly=False, string='Saturdays', user_writeable=True)
-    sunday_location_id = fields.Many2one("hr.work.location", related="employee_id.sunday_location_id", readonly=False, string='Sundays', user_writeable=True)
+    monday_location_id = field_employee(fields.Many2one, 'monday_location_id', comodel_name='hr.work.location', string='Mondays', user_writeable=True)
+    tuesday_location_id = field_employee(fields.Many2one, 'tuesday_location_id', comodel_name='hr.work.location', string='Tuesdays', user_writeable=True)
+    wednesday_location_id = field_employee(fields.Many2one, 'wednesday_location_id', comodel_name='hr.work.location', string='Wednesdays', user_writeable=True)
+    thursday_location_id = field_employee(fields.Many2one, 'thursday_location_id', comodel_name='hr.work.location', string='Thursdays', user_writeable=True)
+    friday_location_id = field_employee(fields.Many2one, 'friday_location_id', comodel_name='hr.work.location', string='Fridays', user_writeable=True)
+    saturday_location_id = field_employee(fields.Many2one, 'saturday_location_id', comodel_name='hr.work.location', string='Saturdays', user_writeable=True)
+    sunday_location_id = field_employee(fields.Many2one, 'sunday_location_id', comodel_name='hr.work.location', string='Sundays', user_writeable=True)
 
     @api.depends_context('uid')
     def _compute_is_system(self):
