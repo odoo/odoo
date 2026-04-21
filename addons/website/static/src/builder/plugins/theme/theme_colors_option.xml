@@ -81,7 +81,15 @@
                                                             <t t-esc="group.title"/>
                                                         </h6>
                                                         <div class="grid px-2 gap-0 pb-3">
-                                                            <div class="g-col-6" t-foreach="group.palettes" t-as="palette" t-key="palette.name" t-attf-title="Palette: {{palette.name}}">
+                                                            <div class="g-col-6"
+                                                                 t-foreach="group.palettes"
+                                                                 t-as="palette"
+                                                                 t-key="palette.name"
+                                                                 t-attf-title="Palette: {{palette.name}}"
+                                                                 t-on-pointerenter="(ev) => this.onPaletteHover(ev, palette)"
+                                                                 t-on-pointerleave="() => this.onPaletteLeave()"
+                                                                 t-on-click="() => this.onPaletteLeave()"
+                                                            >
                                                                 <BuilderSelectItem actionValue="`'${palette.name}'`">
                                                                     <div
                                                                         class="o-hb-theme-color-slider-btn rounded overflow-hidden d-flex w-100"
