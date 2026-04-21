@@ -16,6 +16,7 @@ import { PropertyDefinition } from "./property_definition";
 import { PropertyValue } from "./property_value";
 
 import { Component, onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { deepCopy } from "@web/core/utils/objects";
 
 export class PropertiesField extends Component {
     static template = "web.PropertiesField";
@@ -48,6 +49,7 @@ export class PropertiesField extends Component {
             fixedPosition: true,
             arrow: false,
             setActiveElement: false, // make tag navigation work when adding a tag property
+            closeOnEscape: false,
         });
         this.propertiesRef = useRef("properties");
 
@@ -902,12 +904,24 @@ export class PropertiesField extends Component {
             return propertyName;
         };
 
+        const currentPropertyName = currentName(propertyName);
+        const initialPropertiesSnapshot = deepCopy(
+            isNewlyCreated
+                ? propertiesList.filter((property) => property.name !== currentPropertyName)
+                : propertiesList
+        );
+
+        let shouldDiscardChanges = true;
         this.onCloseCurrentPopover = () => {
+            document.activeElement.blur?.();
             this.state.isPopoverOpen = false;
             this.onCloseCurrentPopover = null;
+            this.movePopoverToProperty = null;
             target.classList.remove("disabled");
-            if (isNewlyCreated) {
-                this._setDefaultPropertyValue(currentName(propertyName));
+            if (shouldDiscardChanges) {
+                this.props.record.update({
+                    [this.props.name]: initialPropertiesSnapshot,
+                });
             }
         };
 
@@ -921,7 +935,21 @@ export class PropertiesField extends Component {
             ),
             context: this.props.context,
             onChange: this.onPropertyDefinitionChange.bind(this),
-            onDelete: () => this.onPropertyDelete(currentName(propertyName)),
+            onDelete: () => {
+                document.activeElement.blur?.();
+                shouldDiscardChanges = false;
+                this.onPropertyDelete(currentName(propertyName));
+            },
+            onAdd: () => {
+                shouldDiscardChanges = false;
+                if (isNewlyCreated) {
+                    this._setDefaultPropertyValue(currentName(propertyName));
+                }
+                this.popover.close();
+            },
+            onDiscard: () => {
+                this.popover.close();
+            },
             isNewlyCreated: isNewlyCreated,
             propertiesSize: propertiesList.length,
             record: this.props.record,
@@ -937,7 +965,7 @@ export class PropertiesField extends Component {
     _setDefaultPropertyValue(propertyName) {
         const propertiesValues = this.propertiesList;
         const newProperty = propertiesValues.find((property) => property.name === propertyName);
-        if (newProperty.default) {
+        if (newProperty?.default) {
             newProperty.value = newProperty.default;
         }
         // it won't update the props, it's a trick because the onClose event of the popover
