@@ -366,6 +366,25 @@ class HrVersion(models.Model):
         return []
 
     @api.model
+    def _get_work_entry_merge_key(self, vals):
+        """
+        Returns a tuple key used to identify work entries that should be merged together.
+
+        By default, this includes the date, work_entry_type_id, employee_id, version_id, and company_id.
+        It can be extended to include other fields if necessary.
+
+        :param vals: dictionary of work entry values
+        :return: tuple key for merging
+        """
+        return (
+            vals['date'],
+            vals.get('work_entry_type_id', False),
+            vals['employee_id'],
+            vals['version_id'],
+            vals.get('company_id', False),
+        )
+
+    @api.model
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
         if 'work_entry_type_id' not in vals:
             return False
@@ -481,13 +500,7 @@ class HrVersion(models.Model):
         for vals in vals_list:
             if float_is_zero(vals['duration'], 3):
                 continue
-            key = (
-                vals['date'],
-                vals.get('work_entry_type_id', False),
-                vals['employee_id'],
-                vals['version_id'],
-                vals.get('company_id', False),
-            )
+            key = self._get_work_entry_merge_key(vals)
             if key in merged_vals:
                 merged_vals[key]['duration'] += vals.get('duration', 0.0)
                 source_fields = self._get_work_entry_source_fields()
