@@ -21,7 +21,7 @@ export class AccountProductCatalogSearchModel extends SearchModel {
             config.context.product_catalog_order_model,
             "get_catalog_section_data",
             [config.context.product_catalog_order_id],
-            { child_field: config.context.child_field }
+            this._getSectionInfoParams(config)
         );
         this.catalogOrderDetails.name = name;
         this.catalogOrderDetails.amount_untaxed = amountUntaxed;
@@ -40,5 +40,11 @@ export class AccountProductCatalogSearchModel extends SearchModel {
     setFilterBySection(filtered) {
         this.filterBySection = filtered;
         this._notify();
+    }
+
+    _getSectionInfoParams(config) {
+        return {
+            child_field: config.context.child_field,
+        };
     }
 }
