@@ -1,7 +1,9 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
+import { onMounted, onWillDestroy, proxy, signal, useApp } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { PlacesAutoComplete } from "@website/components/googleplaces_autocomplete/places_autocomplete";
+import { mountAutocompleteComponent } from "@website/js/utils";
 
 /** @import { Coordinates, Place } from './google_maps_option_plugin.js' */
 
@@ -24,6 +26,7 @@ export class GoogleMapsOption extends BaseOptionComponent {
         this.state = proxy({
             formattedAddress: this.env.getEditingElement().dataset.pinAddress || "",
         });
+        this.app = useApp();
         useLayoutEffect(
             () => {
                 this.env.getEditingElement().dataset.pinAddress = this.state.formattedAddress;
@@ -34,14 +37,7 @@ export class GoogleMapsOption extends BaseOptionComponent {
             this.initializeAutocomplete(this.inputRef());
         });
         onWillDestroy(() => {
-            if (this.autocompleteListener) {
-                this.getMapsAPI().event.removeListener(this.autocompleteListener);
-            }
-            // Without this, the Google library injects elements inside the
-            // DOM but does not remove them once the option is closed.
-            for (const container of document.body.querySelectorAll(".pac-container")) {
-                container.remove();
-            }
+            this.unmountAutocomplete?.();
         });
     }
 
@@ -51,26 +47,21 @@ export class GoogleMapsOption extends BaseOptionComponent {
      * @param {Element} inputEl
      */
     initializeAutocomplete(inputEl) {
-        if (!this.googleMapsAutocomplete && this.getMapsAPI()) {
-            const mapsAPI = this.getMapsAPI();
-            this.googleMapsAutocomplete = new mapsAPI.places.Autocomplete(inputEl, {
-                types: ["geocode"],
+        const editingElement = this.env.getEditingElement();
+        this.unmountAutocomplete = mountAutocompleteComponent(this.app, PlacesAutoComplete, {
+            targetDropdown: inputEl,
+            maps: this.getMapsAPI(),
+            onPlaceSelected: this.onPlaceSelected.bind(this),
+            onError: () => this.dependencies.googleMapsOption.notifyGMapsError(editingElement),
+        });
+        if (!this.state.formattedAddress) {
+            /** @type {Coordinates} */
+            const coordinates = editingElement.dataset.mapGps;
+            this.getPlace(editingElement, coordinates).then((place) => {
+                if (place?.formatted_address) {
+                    this.state.formattedAddress = place.formatted_address;
+                }
             });
-            this.autocompleteListener = mapsAPI.event.addListener(
-                this.googleMapsAutocomplete,
-                "place_changed",
-                this.onPlaceChanged.bind(this)
-            );
-            if (!this.state.formattedAddress) {
-                const editingElement = this.env.getEditingElement();
-                /** @type {Coordinates} */
-                const coordinates = editingElement.dataset.mapGps;
-                this.getPlace(editingElement, coordinates).then((place) => {
-                    if (place?.formatted_address) {
-                        this.state.formattedAddress = place.formatted_address;
-                    }
-                });
-            }
         }
     }
 
@@ -78,10 +69,10 @@ export class GoogleMapsOption extends BaseOptionComponent {
      * Retrieve the new place given by Google Places API's autocompletion
      * whenever it sends a signal that the place changed, and send it to the
      * plugin.
+     *
+     * @param {Place} place Place object from Google Maps API
      */
-    onPlaceChanged() {
-        /** @type {Place | undefined} */
-        const place = this.googleMapsAutocomplete.getPlace();
+    onPlaceSelected(place) {
         this.commitPlace(this.env.getEditingElement(), place);
         this.state.formattedAddress = place?.formatted_address || "";
     }
