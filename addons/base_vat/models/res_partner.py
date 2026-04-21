@@ -32,7 +32,7 @@ _ref_vat = {
     'au': '83 914 571 673',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
-    'br': _('either 11 digits for CPF or 14 digits for CNPJ'),
+    'br': _('either 11 digits for CPF or 14 characters for CNPJ'),
     'cr': _('3101012009'),
     'ch': _('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': 'CL76086428-5',
@@ -840,9 +840,26 @@ class ResPartner(models.Model):
         if self.country_id.code == 'JP':
             return self.simple_vat_check('jp', vat)
 
+    # Minimal regex matching similar to stdnum
+    # Derived from https://github.com/arthurdejong/python-stdnum/commit/d3ec3bd7fefe0d0a708b6594a66de28777eb9b8d
+    __check_vat_br_re = re.compile(r'^[\dA-Z]+$')
+
     def check_vat_br(self, vat):
+        def is_cnpj_valid(vat):
+            vat = clean(vat, ' -./').strip().upper()
+            if vat.startswith('000000000000') or len(vat) != 14:
+                return False
+            if self.__check_vat_br_re.match(vat):
+                values = [ord(n) - 48 for n in vat[:12]]
+                weights = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+                d1 = (11 - sum(w * v for w, v in zip(weights, values))) % 11 % 10
+                values.append(d1)
+                weights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+                d2 = (11 - sum(w * v for w, v in zip(weights, values))) % 11 % 10
+                return vat[-2:] == f'{d1}{d2}'
+            return False
+
         is_cpf_valid = stdnum.get_cc_module('br', 'cpf').is_valid
-        is_cnpj_valid = stdnum.get_cc_module('br', 'cnpj').is_valid
         return is_cpf_valid(vat) or is_cnpj_valid(vat)
 
     __check_vat_cr_re = re.compile(r'^(?:[1-9]\d{8}|\d{10}|[1-9]\d{10,11})$')
