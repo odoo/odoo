@@ -10,6 +10,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError
+from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import clean_context, format_list, groupby, SQL
 from odoo.tools.misc import OrderedSet
@@ -1322,3 +1323,9 @@ class MailMessage(models.Model):
             .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
             for message in self.filtered(lambda m: m.model and m.res_id)
         }
+
+    def _get_non_empty_domain(self):
+        return (
+            Domain("body", "not in", [False, '<span class="o-mail-Message-edited"></span>'])
+            | Domain("attachment_ids", "!=", False)
+        )

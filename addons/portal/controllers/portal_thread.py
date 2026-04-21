@@ -93,9 +93,7 @@ class PortalChatter(ThreadController):
         }
 
     def _get_non_empty_message_domain(self):
-        return Domain(
-            "body", "not in", [False, '<span class="o-mail-Message-edited"></span>']
-        ) | Domain("attachment_ids", "!=", False)
+        return request.env["mail.message"]._get_non_empty_domain()
 
     def _setup_portal_message_fetch_extra_domain(self, data):
         return []
