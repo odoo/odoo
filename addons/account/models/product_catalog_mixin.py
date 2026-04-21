@@ -62,7 +62,7 @@ class ProductCatalogMixin(models.AbstractModel):
 
         return vals
 
-    def get_catalog_section_data(self, child_field) -> dict:
+    def get_catalog_section_data(self, child_field, **kwargs) -> dict:
         """Return order information and sections for the product catalog.
 
         :param str child_field: Field name of the order's lines (e.g., 'order_line').
