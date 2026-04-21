@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -435,6 +435,41 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
                         'myinvois_retry_at': '2024-07-15 12:00:00',
                     }],
                 )
+
+    def test_14_file_generation_error_in_bulk(self):
+        """
+        When one invoice fails file generation in a bulk submission,
+        a RedirectWarning is raised listing the failed invoice.
+        """
+        error_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
+            })],
+        })
+        error_invoice.action_post()
+        invoices = self.basic_invoice | error_invoice
+
+        def mock_generate(doc):
+            if error_invoice in doc.invoice_ids:
+                return b'<xml/>', {'Missing TIN number for the customer.'}
+            return b'<xml/>', set()
+
+        # Use try/except instead of assertRaises: assertRaises wraps the body in a
+        # savepoint that gets rolled back on exception, which would also wipe out
+        # the chatter log written via the separate cursor.
+        with patch('odoo.addons.l10n_my_edi.models.myinvois_document.MyInvoisDocument._myinvois_generate_xml_file', mock_generate), \
+             self.enter_registry_test_mode():
+            try:
+                invoices.action_l10n_my_edi_send_invoice()
+            except RedirectWarning:
+                pass
+            else:
+                self.fail("Expected RedirectWarning")
+
+        self.assertIn('Missing TIN number for the customer.', error_invoice.message_ids[0].body)
 
     # -------------------------------------------------------------------------
     # Patched methods

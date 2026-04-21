@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from lxml import etree
 
 from odoo import SUPERUSER_ID, api, fields, models, modules
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import config, date_utils, split_every
 from odoo.tools.image import image_data_uri
@@ -362,6 +362,7 @@ class MyInvoisDocument(models.Model):
         If the document already as a file, the previous file's name is updated to include an (old) tag to avoid confusion in the attachment list.
         """
         new_documents_data = []
+        errored_doc_messages = {}
         for document in self:
             if document.myinvois_file_id:
                 document.myinvois_file_id.write({
@@ -380,7 +381,8 @@ class MyInvoisDocument(models.Model):
                         ),
                     )
                     continue
-                raise UserError(document.env._("Error when generating the documents' files:\n\n- %(errors)s", errors='\n- '.join(errors)))
+                errored_doc_messages[document.id] = list(errors)
+                continue
 
             new_documents_data.append({
                 "name": f'{document.name.replace("/", "_")}_myinvois.xml' if document.name != "/" else "myinvois.xml",
@@ -390,6 +392,41 @@ class MyInvoisDocument(models.Model):
                 "res_id": document.id,
                 "res_field": "myinvois_file",
             })
+
+        errored_docs = self.env['myinvois.document'].browse(errored_doc_messages)
+        if errored_docs and allow_raising:
+            # Log on the invoices in a separate transaction so the messages persist
+            # even though the current transaction is about to be rolled back by the
+            # raised error.
+            invoice_bodies = {
+                invoice.id: self.env['account.move.send']._format_error_html({
+                    'error_title': self.env._("Error when generating the file."),
+                    'errors': errored_doc_messages[doc.id],
+                })
+                for doc in errored_docs
+                for invoice in doc.invoice_ids
+            }
+            if invoice_bodies:
+                with self.env.registry.cursor() as log_cr:
+                    log_env = self.env(cr=log_cr, user=SUPERUSER_ID)
+                    log_env['account.move'].browse(invoice_bodies)._message_log_batch(bodies=invoice_bodies)
+            if len(self) == 1:
+                raise UserError(self.env['account.move.send']._format_error_text({
+                    'error_title': self.env._("Error when generating the file."),
+                    'errors': errored_doc_messages[errored_docs.id],
+                }))
+            errored_invoices = errored_docs.invoice_ids
+            raise RedirectWarning(
+                message=self.env._(
+                    "You selected %(total)s invoices for submission.\n\n"
+                    "%(count)s invoices contain incomplete details or incorrect formatting required for LHDN e-Invoicing.\n\n"
+                    "Please click \"View Invoices\" below to review and update the information for these specific invoices.",
+                    total=len(self),
+                    count=len(errored_docs),
+                ),
+                action=errored_invoices._get_records_action(name=self.env._("Invoices Requiring Attention")),
+                button_text=self.env._("View Invoices"),
+            )
 
         self.env["ir.attachment"].with_user(SUPERUSER_ID).create(new_documents_data)
         self.invalidate_recordset(fnames=['myinvois_file_id', 'myinvois_file'])
