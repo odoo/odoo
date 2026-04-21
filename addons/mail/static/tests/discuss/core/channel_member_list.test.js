@@ -208,7 +208,6 @@ test("should show a button to load more members if they are not all loaded", asy
 });
 
 test("Load more button should load more members", async () => {
-    // Test assumes at most 100 members are loaded at once.
     const pyEnv = await startServer();
     const channel_member_ids = [];
     for (let i = 0; i < 101; i++) {
@@ -219,10 +218,10 @@ test("Load more button should load more members", async () => {
         name: "TestChannel",
         channel_type: "channel",
     });
+    pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMember");
-    pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
+    await contains(".o-discuss-ChannelMember", { count: 101 });
     await click(
         ".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members')) [title='Load more']"
     );
