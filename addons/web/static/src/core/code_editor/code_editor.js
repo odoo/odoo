@@ -1,11 +1,23 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, props, status, types as t } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    onWillStart,
+    props,
+    signal,
+    types as t,
+} from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 export class CodeEditor extends Component {
     static template = "web.CodeEditor";
-    static components = {};
 
+    /** @type {AceAjax.Editor | null} */
+    aceEditor = null;
+
+    activeMode = signal(null, t.or([t.string(), t.literal(null)]));
+    editorRef = signal(null, t.ref(HTMLDivElement));
     props = props(
         {
             "mode?": t.selection(CodeEditor.MODES),
@@ -18,7 +30,10 @@ export class CodeEditor extends Component {
             "theme?": t.selection(CodeEditor.THEMES),
             "maxLines?": t.number(),
             "sessionId?": t.or([t.number(), t.string()]),
-            "initialCursorPosition?": t.object(),
+            "initialCursorPosition?": t.object({
+                "column?": t.number(),
+                "row?": t.number(),
+            }),
             "showLineNumbers?": t.boolean(),
             "lineWrapping?": t.boolean(),
         },
@@ -32,19 +47,14 @@ export class CodeEditor extends Component {
             showLineNumbers: true,
         }
     );
+    sessions = {};
 
     static MODES = ["javascript", "xml", "qweb", "scss", "python"];
     static THEMES = ["", "monokai"];
 
     setup() {
-        this.editorRef = useRef("editorRef");
-        this.state = useState({
-            activeMode: undefined,
-        });
+        onWillStart(() => loadBundle("web.ace_lib"));
 
-        onWillStart(async () => await loadBundle("web.ace_lib"));
-
-        const sessions = {};
         // The ace library triggers the "change" event even if the change is
         // programmatic. Even worse, it triggers 2 "change" events in that case,
         // one with the empty string, and one with the new value. We only want
@@ -57,26 +67,24 @@ export class CodeEditor extends Component {
                     return;
                 }
 
-                // keep in closure
-                const aceEditor = window.ace.edit(el);
-                this.aceEditor = aceEditor;
-
-                this.aceEditor.setOptions({
+                this.aceEditor = window.ace.edit(el, {
                     maxLines: this.props.maxLines,
                     showPrintMargin: false,
                     useWorker: false,
                     wrap: this.props.lineWrapping,
                 });
-                this.aceEditor.$blockScrolling = true;
-
                 this.aceEditor.on("changeMode", () => {
-                    this.state.activeMode = this.aceEditor.getSession().$modeId.split("/").at(-1);
+                    this.activeMode.set(
+                        this.aceEditor.getSession().$modeId.split("/").at(-1) ?? null
+                    );
+                });
+                this.aceEditor.on("blur", () => {
+                    if (this.props.onBlur) {
+                        this.props.onBlur();
+                    }
                 });
 
-                const session = aceEditor.getSession();
-                if (!sessions[this.props.sessionId]) {
-                    sessions[this.props.sessionId] = session;
-                }
+                const session = this.aceEditor.getSession();
                 session.setValue(this.props.value);
                 session.on("change", () => {
                     if (this.props.onChange && !ignoredAceChange) {
@@ -86,17 +94,12 @@ export class CodeEditor extends Component {
                         );
                     }
                 });
-                this.aceEditor.on("blur", () => {
-                    if (this.props.onBlur) {
-                        this.props.onBlur();
-                    }
-                });
 
-                return () => {
-                    aceEditor.destroy();
-                };
+                this.sessions[this.props.sessionId] ||= session;
+
+                return this.aceEditor.destroy.bind(this.aceEditor);
             },
-            () => [this.editorRef.el]
+            () => [this.editorRef()]
         );
 
         useLayoutEffect(
@@ -125,8 +128,8 @@ export class CodeEditor extends Component {
         );
 
         useLayoutEffect(
-            (sessionId, mode, value) => {
-                let session = sessions[sessionId];
+            (sessionId, mode, modeOptions, value) => {
+                let session = this.sessions[sessionId];
                 if (session) {
                     if (session.getValue() !== value) {
                         ignoredAceChange = true;
@@ -134,8 +137,7 @@ export class CodeEditor extends Component {
                         ignoredAceChange = false;
                     }
                 } else {
-                    session = new window.ace.EditSession(value);
-                    session.setUndoManager(new window.ace.UndoManager());
+                    session = window.ace.createEditSession(value);
                     session.setOptions({
                         useWorker: false,
                         tabSize: 2,
@@ -149,42 +151,38 @@ export class CodeEditor extends Component {
                             );
                         }
                     });
-                    sessions[sessionId] = session;
+                    this.sessions[sessionId] = session;
                 }
-                session.setMode(this.aceMode);
+                session.setMode(mode ? { path: `ace/mode/${mode}`, ...modeOptions } : "");
                 this.aceEditor.setSession(session);
             },
-            () => [this.props.sessionId, this.props.mode, this.props.value]
+            () => [this.props.sessionId, this.props.mode, this.props.modeOptions, this.props.value]
         );
 
         const initialCursorPosition = this.props.initialCursorPosition;
         if (initialCursorPosition) {
             onMounted(() => {
                 // Wait for ace to be fully operational
-                window.requestAnimationFrame(() => {
-                    if (status(this) != "destroyed" && this.aceEditor) {
-                        this.aceEditor.focus();
-                        const { row, column } = initialCursorPosition;
-                        const pos = {
-                            row: row || 0,
-                            column: column || 0,
-                        };
-                        this.aceEditor.selection.moveToPosition(pos);
-                        this.aceEditor.renderer.scrollCursorIntoView(pos, 0.5);
+                requestAnimationFrame(() => {
+                    if (!this.aceEditor) {
+                        return;
                     }
+                    this.aceEditor.focus();
+                    const { row, column } = initialCursorPosition;
+                    const pos = {
+                        row: row || 0,
+                        column: column || 0,
+                    };
+                    this.aceEditor.selection.moveToPosition(pos);
+                    this.aceEditor.renderer.scrollCursorIntoView(pos, 0.5);
                 });
             });
         }
-    }
 
-    get aceMode() {
-        const mode = this.props.mode;
-        if (mode) {
-            return {
-                path: `ace/mode/${mode}`,
-                ...(this.props.modeOptions || {}),
-            };
-        }
-        return "";
+        onWillDestroy(() => {
+            this.sessions = {};
+            this.aceEditor?.destroy();
+            this.aceEditor = null;
+        });
     }
 }
