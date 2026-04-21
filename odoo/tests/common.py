@@ -1339,6 +1339,7 @@ class TransactionCase(BaseCase):
         cls.startClassPatcher(cls.close_patcher)
 
         cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
+        cls.env.transaction._wrote__ = True  # isolate tests: avoid propagating cache on rollback
 
         # speedup CryptContext. Many user an password are done during tests, avoid spending time hasing password with many rounds
         def _crypt_context(self):  # noqa: ARG001
