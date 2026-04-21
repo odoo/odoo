@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import calendar
 import datetime
 from zoneinfo import ZoneInfo
 
@@ -138,16 +139,19 @@ class HrEmployee(models.Model):
             now_tz = now_utc.astimezone(tz)
             start_tz = now_tz.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
             start_naive = start_tz.astimezone(datetime.UTC).replace(tzinfo=None)
-            end_tz = now_tz
+            end_tz = now_tz.replace(day=calendar.monthrange(now_tz.year, now_tz.month)[1], hour=23, minute=59, second=59)
             end_naive = end_tz.astimezone(datetime.UTC).replace(tzinfo=None)
+            now_naive = now_tz.astimezone(datetime.UTC).replace(tzinfo=None)
 
             for employee in employees:
                 current_month_attendances = employee.attendance_ids.filtered(
-                    lambda att: att.check_in >= start_naive and att.check_out and att.check_out <= end_naive
+                    lambda att: att.check_in >= start_naive and ((att.check_out or now_naive) <= end_naive)
                 )
                 hours = 0
                 overtime_hours = 0
                 for att in current_month_attendances:
+                    delta = (att.check_out or now_naive) - max(att.check_in, start_naive)
+                    att.worked_hours = delta.total_seconds() / 3600.0
                     hours += att.worked_hours or 0
                     overtime_hours += att.validated_overtime_hours or 0
                 employee.hours_last_month = round(hours, 2)
@@ -446,7 +450,9 @@ class HrEmployee(models.Model):
             domain=[
                 ('employee_id', 'in', self.ids),
                 ('check_in', '<', date_stop),
+                '|',
                 ('check_out', '>', date_start),
+                ('check_out', '=', False),
             ],
             groupby=['employee_id'],
             aggregates=['worked_hours:sum', 'overtime_hours:sum'],
