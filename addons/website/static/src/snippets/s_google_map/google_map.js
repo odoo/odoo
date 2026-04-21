@@ -49,9 +49,12 @@ export class GoogleMap extends Interaction {
             // duplicate the API loading:
             const refetch = window.top.refetchGoogleMaps;
             window.top.refetchGoogleMaps = false;
-            await this.services.website_map.loadGMapAPI(this.canSpecifyKey, refetch);
-            return;
+            const key = await this.services.website_map.loadGMapAPI(this.canSpecifyKey, refetch);
+            if (!key) {
+                return;
+            }
         }
+        await google.maps.importLibrary("maps");
         this.canStart = true;
     }
 
