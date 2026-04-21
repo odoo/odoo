@@ -132,10 +132,8 @@ export class GoogleMapsOptionPlugin extends Plugin {
      * @returns {Promise<Place | undefined>}
      */
     async getPlace(editingElement, coordinates) {
-        const place = await this.nearbySearch(coordinates);
-        if (place?.error && !this.isGoogleMapsErrorBeingHandled) {
-            this.notifyGMapsError(editingElement);
-        } else if (!place && !this.isGoogleMapsErrorBeingHandled) {
+        const place = await this.nearbySearch(coordinates, editingElement);
+        if (!place && !this.isGoogleMapsErrorBeingHandled) {
             // Somehow the search failed but Google didn't trigger an error.
             this.undoInitialize?.();
         } else {
@@ -209,57 +207,49 @@ export class GoogleMapsOptionPlugin extends Plugin {
 
     /**
      * @param {Coordinates} coordinates
-     * @returns {Promise<Place|{ error: string }|undefined>}
+     * @returns {Promise<Place|{ error: string }|null>}
      */
-    async nearbySearch(coordinates) {
+    async nearbySearch(coordinates, editingElement) {
         const place = this.gpsMapCache.get(coordinates);
         if (place) {
             return place;
         }
 
         const p = coordinates.substring(1).slice(0, -1).split(",");
-        const location = new this.mapsAPI.LatLng(p[0] || 0, p[1] || 0);
-        return new Promise((resolve) => {
-            const placesService = new this.placesAPI.PlacesService(document.createElement("div"));
-            placesService.nearbySearch(
-                {
-                    // Do a 'nearbySearch' followed by 'getDetails' to avoid using
-                    // GMaps Geocoder which the user may not have enabled... but
-                    // ideally Geocoder should be used to get the exact location at
-                    // those coordinates and to limit billing query count.
-                    location,
-                    radius: 1,
+        try {
+            const { places } = await this.placesAPI.Place.searchNearby({
+                // Use 'searchNearby' to avoid relying on the GMaps Geocoder,
+                // which the user may not have enabled... but ideally Geocoder
+                // should be used to get the exact location at those coordinates
+                // and to limit billing query count.
+                fields: ["id", "location", "formattedAddress"],
+                locationRestriction: {
+                    center: { lat: Number(p[0]), lng: Number(p[1]) },
+                    radius: 10,
                 },
-                (results, status) => {
-                    const GMAPS_CRITICAL_ERRORS = [
-                        this.placesAPI.PlacesServiceStatus.REQUEST_DENIED,
-                        this.placesAPI.PlacesServiceStatus.UNKNOWN_ERROR,
-                    ];
-                    if (status === this.placesAPI.PlacesServiceStatus.OK) {
-                        placesService.getDetails(
-                            {
-                                placeId: results[0].place_id,
-                                fields: ["geometry", "formatted_address"],
-                            },
-                            (place, status) => {
-                                if (status === this.placesAPI.PlacesServiceStatus.OK) {
-                                    this.gpsMapCache.set(coordinates, place);
-                                    resolve(place);
-                                } else if (GMAPS_CRITICAL_ERRORS.includes(status)) {
-                                    resolve({ error: status });
-                                } else {
-                                    resolve();
-                                }
-                            }
-                        );
-                    } else if (GMAPS_CRITICAL_ERRORS.includes(status)) {
-                        resolve({ error: status });
-                    } else {
-                        resolve();
-                    }
-                }
-            );
-        });
+                maxResultCount: 1,
+            });
+            if (!places.length) {
+                return;
+            }
+            const placeResult = places[0];
+            const place = {
+                place_id: placeResult.id,
+                formatted_address: placeResult.formattedAddress,
+                geometry: {
+                    location: {
+                        lat: placeResult.location.lat(),
+                        lng: placeResult.location.lng(),
+                    },
+                },
+            };
+            this.gpsMapCache.set(coordinates, place);
+            return place;
+        } catch (error) {
+            console.error(error);
+            this.notifyGMapsError(editingElement);
+            return null;
+        }
     }
 
     /**
