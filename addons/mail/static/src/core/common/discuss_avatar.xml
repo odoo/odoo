@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussAvatar">
-        <svg t-att-width="this.props.size" t-att-height="this.props.size" viewBox="0 0 32 32" class="overflow-visible" t-att-class="this.props.className">
+        <svg t-att-width="this.props.size" t-att-height="this.props.size" viewBox="0 0 32 32" class="o-mail-DiscussAvatar overflow-visible" t-attf-class="{{ this.props.className }}" t-att-class="{ 'o-isBrowserSafari': this.isBrowserSafari() }">
             <mask t-att-id="this.uniqueId" width="1000" height="1000">
                 <rect x="0" y="0" height="100%" width="100%" fill="white"/>
                 <rect t-if="this.showIcon" color="black" x="0" y="0" t-att-width="this.isTyping ? 24 : 16" t-att-height="this.isTyping ? 15 : 16" rx="8" ry="8" t-att-transform="'translate(' + (this.isTyping ? 14 : 19) + ', 19) ' + (this.props.iconExtraTransform ?? '')"/>
