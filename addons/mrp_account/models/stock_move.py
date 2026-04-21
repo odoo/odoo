@@ -54,3 +54,44 @@ class StockMove(models.Model):
             m.bom_line_id.bom_id.type == 'phantom' and
             m.bom_line_id.bom_id == moves.bom_line_id.bom_id
         )
+
+    def _create_out_svl(self, forced_quantity=None):
+        svls = super()._create_out_svl(forced_quantity)
+        unbuild_svls = svls.filtered('stock_move_id.unbuild_id')
+        unbuild_cost_correction_move_list = list()
+        for svl in unbuild_svls:
+            build_time_moves = svl.stock_move_id.unbuild_id.mo_id.move_finished_ids.filtered(
+                lambda m: m.product_id == svl.product_id
+            )
+            build_time_unit_cost = build_time_moves.stock_valuation_layer_ids.filtered(
+                lambda svl: not svl.stock_landed_cost_id
+            ).unit_cost
+            unbuild_difference = svl.unit_cost - build_time_unit_cost
+            if svl.product_id.valuation == 'real_time' and not svl.currency_id.is_zero(unbuild_difference):
+                product_accounts = svl.product_id.product_tmpl_id.get_product_accounts()
+                expense_account, production_account = (
+                    # product_accounts['stock_valuation'],
+                    product_accounts['expense'],
+                    product_accounts['production'],
+                )
+                desc = _('%s - Unbuild Cost Difference', svl.stock_move_id.unbuild_id.name)
+                unbuild_cost_correction_move_list.append({
+                    'journal_id': product_accounts['stock_journal'].id,
+                    'date': fields.Date.context_today(self),
+                    'ref': desc,
+                    'move_type': 'entry',
+                    'line_ids': [Command.create({
+                        'name': desc,
+                        'ref': desc,
+                        'account_id': account.id,
+                        'balance': balance,
+                        'product_id': svl.product_id.id,
+                    }) for account, balance in (
+                        (expense_account, unbuild_difference),
+                        (production_account, -unbuild_difference),
+                    )],
+                })
+        if unbuild_cost_correction_move_list:
+            unbuild_cost_correction_moves = self.env['account.move'].sudo().create(unbuild_cost_correction_move_list)
+            unbuild_cost_correction_moves._post()
+        return svls
