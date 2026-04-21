@@ -174,8 +174,8 @@ class SaleOrder(models.Model):
         precompute=True,
     )
     journal_id = fields.Many2one(
-        "account.journal",
-        string="Invoicing Journal",
+        string="Journal",
+        comodel_name="account.journal",
         compute="_compute_journal_id",
         store=True,
         readonly=False,

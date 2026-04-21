@@ -180,6 +180,13 @@ class SaleOrder(models.Model):
                     or order.partner_id.parent_id.user_id.id
                 )
 
+    @api.depends("website_id")
+    def _compute_journal_id(self):
+        website_orders = self.filtered(lambda order: order.website_id and not order.journal_id)
+        for order in website_orders:
+            order.journal_id = order.website_id.journal_id
+        super(SaleOrder, self - website_orders)._compute_journal_id()
+
     def _default_team_id(self):
         return super()._default_team_id() or self.website_id.salesteam_id.id
 
