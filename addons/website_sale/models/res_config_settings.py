@@ -62,6 +62,7 @@ class ResConfigSettings(models.TransientModel):
     restricted_uom_ids = fields.Many2many(
         related="website_id.restricted_uom_ids", readonly=False
     )
+    journal_id = fields.Many2one(related="website_id.journal_id", readonly=False)
 
     # Additional settings
     account_on_checkout = fields.Selection(

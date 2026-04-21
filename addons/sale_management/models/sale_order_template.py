@@ -66,8 +66,8 @@ class SaleOrderTemplate(models.Model):
         copy=True,
     )
     journal_id = fields.Many2one(
-        "account.journal",
-        string="Invoicing Journal",
+        string="Journal",
+        comodel_name="account.journal",
         domain=[("type", "=", "sale")],
         company_dependent=True,
         check_company=True,

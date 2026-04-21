@@ -31,6 +31,7 @@ PRICELIST_SELECTED_SESSION_CACHE_KEY = "website_sale_selected_pl_id"
 
 class Website(models.Model):
     _inherit = "website"
+    _check_company_auto = True
 
     # === DEFAULT METHODS ===#
 
@@ -273,6 +274,12 @@ class Website(models.Model):
         default=_default_confirmation_email_template,
     )
     restricted_uom_ids = fields.Many2many(string="Restrict Packagings", comodel_name="uom.uom")
+    journal_id = fields.Many2one(
+        string="Default Website Journal",
+        comodel_name="account.journal",
+        domain=[("type", "=", "sale")],
+        check_company=True,
+    )
 
     # === COMPUTE METHODS ===#
 
