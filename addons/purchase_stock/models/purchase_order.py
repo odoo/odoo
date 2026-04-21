@@ -274,7 +274,7 @@ class PurchaseOrder(models.Model):
         for po in purchases:
             if po.user_id == self.env.user:
                 my_purchase_count += 1
-            if not po.effective_date or po.effective_date > po.date_promised:
+            if not po.effective_date or po.effective_date.date() > po.date_promised.date():
                 continue
             otd_purchase_count += 1
             if po.user_id == self.env.user:
