@@ -1440,9 +1440,10 @@ class IrQweb(models.AbstractModel):
             f'self._compile_to_str({self._compile_expr(m.group(1) or m.group(2))})'
             for m in FORMAT_REGEX.finditer(expr)
         ]
+        if not values:
+            return repr(expr)
         code = repr(FORMAT_REGEX.sub('%s', expr.replace('%', '%%')))
-        if values:
-            code += f' % ({", ".join(values)},)'
+        code += f' % ({", ".join(values)},)'
         return code
 
     def _compile_expr_tokens(self, tokens, allowed_keys, argument_names=None, raise_on_missing=False):
