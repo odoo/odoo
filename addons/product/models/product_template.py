@@ -903,16 +903,10 @@ class ProductTemplate(models.Model):
                     <br/>
                     %s
                 </p>
-                <p>
-                    <a class="oe_link" href="https://www.odoo.com/documentation/latest/_downloads/eaa2883bd361273b475c9765f64e3e0c/pdfquotebuilderexamples.zip">
-                    %s
-                    </a>
-                </p>
             """ % (
                 _("Upload files to your product"),
                 _("Use this feature to store any files you would like to share with your customers"),
                 _("(e.g: product description, ebook, legal notice, ...)."),
-                _("Download examples")
             )
         }
 
