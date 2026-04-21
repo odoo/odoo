@@ -291,7 +291,6 @@ registry.category("web_tour.tours").add("ProductComboDiscountTour", {
 });
 
 registry.category("web_tour.tours").add("test_convert_orderlines_to_combo", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -327,14 +326,14 @@ registry.category("web_tour.tours").add("test_convert_orderlines_to_combo", {
             // Select attributes
             ProductConfiguratorPopup.pickColor("Blue"),
             ProductConfiguratorPopup.selectedColor("Blue"),
-            Dialog.confirm(),
+            Dialog.proceed({ title: `Second Product 9`, button: "add" }),
 
             // Convert to combo
             ProductScreen.clickApplyCombo(
                 true,
                 ["Second Combo Product", "Office Combo"],
                 "Second Combo Product",
-                true
+                "Office Combo"
             ),
 
             // Check that orderline is now a combo

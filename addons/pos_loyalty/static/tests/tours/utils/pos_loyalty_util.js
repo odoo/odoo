@@ -71,6 +71,7 @@ export function orderTotalIs(total_str) {
 export function isRewardButtonHighlighted(isHighlighted, closeModal = true) {
     const steps = [
         ...ProductScreen.clickControlButtonMore(),
+        Dialog.is({ title: "Actions" }),
         {
             trigger: isHighlighted
                 ? '.control-buttons button.highlight:contains("Reward")'
@@ -78,11 +79,8 @@ export function isRewardButtonHighlighted(isHighlighted, closeModal = true) {
         },
     ];
     if (closeModal) {
-        steps.push({
-            content: "Close modal after checked if reward button is highlighted",
-            trigger: ".modal header .btn-close",
-            run: "click",
-        });
+        steps.push(Dialog.cancel({ title: "actions" }));
+        steps.push(Dialog.isNot());
     }
     return steps;
 }

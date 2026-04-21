@@ -58,7 +58,6 @@ export function payAndInvoice(totalAmount) {
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_in_pos_global_discount_round_per_line_price_excluded", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -110,7 +109,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_in_pos_global_discount_round_globally_price_excluded", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -195,7 +193,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_in_pos_global_discount_round_globally_price_included", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),

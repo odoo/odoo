@@ -373,14 +373,12 @@ registry
     });
 
 registry.category("web_tour.tours").add("test_maximum_closing_difference", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),
             PosHr.clickLoginButton(),
             CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             ProductScreen.enterOpeningAmount("10"),
-            Chrome.clickBtn("Open Register"),
 
             PosHr.clickCashierName(),
             CashierSelectionPopup.clickMore(),
@@ -388,17 +386,32 @@ registry.category("web_tour.tours").add("test_maximum_closing_difference", {
             PosHr.enterPin("5652"),
             Chrome.clickMenuOption("Close Register"),
             ProductScreen.closeWithCashAmount("0"),
+            {
+                trigger: ".modal .close-pos-popup .cash-input input:value(0)",
+                async run() {
+                    await new Promise((r) => setTimeout(r, 500));
+                },
+            },
             Chrome.clickBtn("Close Register"),
             {
                 trigger: negate(`button:contains("Proceed anyway")`),
             },
-            Chrome.clickBtn("Ok"),
-            Chrome.clickBtn("Discard"),
-
+            Dialog.proceed({ title: "Payments difference", button: "ok" }),
+            Dialog.proceed({
+                header: "Closing Register",
+                button: "Discard",
+                buttonClass: ".btn-secondary",
+            }),
             PosHr.clickCashierName(),
             CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             Chrome.clickMenuOption("Close Register"),
             ProductScreen.closeWithCashAmount("0"),
+            {
+                trigger: ".modal .close-pos-popup .cash-input input:value(0)",
+                async run() {
+                    await new Promise((r) => setTimeout(r, 500));
+                },
+            },
             Chrome.clickBtn("Close Register"),
             Chrome.hasBtn("Proceed anyway"),
             Chrome.clickBtn("Proceed anyway", { expectUnloadPage: true }),

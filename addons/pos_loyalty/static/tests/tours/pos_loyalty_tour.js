@@ -357,7 +357,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour11.1", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyTour11.2", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -597,7 +596,6 @@ registry.category("web_tour.tours").add("PosLoyaltyPromocodePricelist", {
 });
 
 registry.category("web_tour.tours").add("RefundRulesProduct", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -635,7 +633,6 @@ registry.category("web_tour.tours").add("test_settle_dont_give_points_again", {
 });
 
 registry.category("web_tour.tours").add("test_refund_does_not_decrease_points", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -680,7 +677,6 @@ registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer"
 });
 
 registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

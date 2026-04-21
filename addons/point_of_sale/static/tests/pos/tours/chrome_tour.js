@@ -230,7 +230,6 @@ registry.category("web_tour.tours").add("test_edit_paid_order", {
 });
 
 registry.category("web_tour.tours").add("test_cash_in_out", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -277,12 +276,10 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
 });
 
 registry.category("web_tour.tours").add("SessionStatisticsDisplay", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
             ProductScreen.enterOpeningAmount("100.00"),
-            Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Desk Pad", "5", "5"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),

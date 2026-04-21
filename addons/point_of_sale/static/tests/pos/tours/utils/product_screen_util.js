@@ -387,9 +387,16 @@ export function enterOpeningAmount(amount) {
     return [
         {
             content: "enter opening amount",
-            trigger: ".cash-input-sub-section input",
-            run: "edit " + amount,
+            trigger: ".modal:contains(Opening Control) .cash-input-sub-section input",
+            run: `edit ${amount}`,
         },
+        {
+            trigger: `.modal input:value(${amount})`,
+            async run() {
+                await new Promise((r) => setTimeout(r, 500));
+            },
+        },
+        Dialog.proceed({ title: "Opening control", body: "Opening note", button: "Open Register" }),
     ];
 }
 /**
@@ -922,6 +929,7 @@ export function clickApplyCombo(
     optionToChoose = "",
     dialogStillPresent = false
 ) {
+    let id;
     const steps = [
         {
             content: "Check apply combo button is there",
@@ -934,14 +942,28 @@ export function clickApplyCombo(
         },
     ];
     if (isOptionShown) {
-        steps.push(ChoseComboPopup.isShown());
+        steps.push({
+            content: "Chose combo popup is shown",
+            trigger: ".chose-combo-popup",
+            run({ queryFirst }) {
+                id = queryFirst(`.o_dialog`).getAttribute("id");
+            },
+        });
         for (const option of optionsShown) {
             steps.push(ChoseComboPopup.isOptionShown(option));
         }
         steps.push(ChoseComboPopup.apply(optionToChoose));
     }
     if (dialogStillPresent) {
-        steps.push(ChoseComboPopup.isShown());
+        steps.push({
+            content: "Check the modal has been rendered before to close it",
+            trigger: "body",
+            async run({ waitFor }) {
+                await waitFor(`.o_dialog:not(#${id}) .chose-combo-popup`, {
+                    timeout: 1000,
+                });
+            },
+        });
         steps.push(Dialog.cancel());
     }
     return inLeftSide(steps.flat());

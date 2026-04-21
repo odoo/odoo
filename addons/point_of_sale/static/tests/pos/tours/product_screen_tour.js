@@ -328,7 +328,6 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
         [
             Chrome.startPoS(),
             ProductScreen.enterOpeningAmount("0"),
-            Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Desk Organizer", "10"), //5.1 per item
             ProductScreen.totalAmountIs("51.00"),
             ProductScreen.clickPayButton(),

@@ -9,7 +9,6 @@ import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_pop
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // Open PoS
@@ -231,6 +230,13 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             PaymentScreen.clickTipButton(),
             NumberPopup.enterValue("⌫"),
             NumberPopup.isShown("%"),
+            {
+                content: "When the tip will be removed, it requires delay",
+                trigger: `.modal .value:contains("%")`,
+                async run() {
+                    await new Promise((r) => setTimeout(r, 500));
+                },
+            },
             Dialog.confirm(),
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),

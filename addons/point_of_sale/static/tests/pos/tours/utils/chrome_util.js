@@ -91,10 +91,21 @@ export function doCashMove(amount, reason) {
         })),
         {
             isActive: ["mobile"],
-            trigger: ".o-overlay-item:nth-child(2) .modal-footer button:contains('Confirm')",
-            run: "click",
+            trigger: `.input-value:contains(${amount})`,
         },
-        Dialog.confirm(),
+        {
+            isActive: ["mobile"],
+            ...Dialog.proceed({ title: "Amount", button: "Confirm" }),
+        },
+        {
+            isActive: ["mobile"],
+            ...Dialog.isNot({ title: "Amount" }),
+        },
+        {
+            isActive: ["mobile"],
+            trigger: `.input-amount input:value(${amount})`,
+        },
+        Dialog.proceed({ button: "Confirm" }),
     ];
 }
 export function endTour() {

@@ -5,10 +5,10 @@ import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_sc
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_pos_global_discount_sell_and_refund", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -26,17 +26,11 @@ registry.category("web_tour.tours").add("test_pos_global_discount_sell_and_refun
             {
                 content: "Manually trigger keyup event",
                 trigger: ".ticket-screen",
-                run: function () {
-                    window.dispatchEvent(new KeyboardEvent("keyup", { key: "9" }));
-                },
+                run: "press 9",
             },
             TicketScreen.loadSelectedOrder(),
             ProductScreen.clickControlButton("Discount"),
-            {
-                content: `click discount numpad button: 5`,
-                trigger: `.o_dialog div.numpad button:contains(5)`,
-                run: "click",
-            },
+            NumberPopup.enterValue("5"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas("discount", 1, "-0.15"),
             ProductScreen.totalAmountIs("2.85"),
