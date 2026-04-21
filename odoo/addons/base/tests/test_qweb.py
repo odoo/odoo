@@ -1480,18 +1480,18 @@ class TestQWebBasic(TransactionCase):
         })
         result = """
                 <div>
-                    
+
                     0
                     <div>1</div>
-                    
+
                     <div>2 (t-if)</div>
-                    
-                    
+
+
                     <div>4</div>
-                    
+
                     <div>6 (t-else)</div>
-                    
-                    
+
+
                     <div>7</div>
                 </div>
             """
@@ -1978,6 +1978,30 @@ class TestQWebBasic(TransactionCase):
         result = self.env['ir.qweb']._render(view1.id)
         self.assertEqual(str(result), "<div><wrap><section><article>test</article></section></wrap></div>")
 
+    def test_call_percent_in_parametric_attr(self):
+        self.env['ir.ui.view'].create({
+            'name': 'child',
+            'type': 'qweb',
+            'key': 'base.child',
+            'arch_db': '<p t-out="msg"/>',
+        })
+        view = self.env['ir.ui.view'].create({
+            'name': "other",
+            'type': 'qweb',
+            'arch': '<div>'
+                    '<t t-call="base.child" msg.f="94% of percentage statistics are completely made up."/>'
+                    '<t t-call="base.child" msg.f="#{n}% of percentage statistics are completely made up."/>'
+                    '</div>',
+        })
+
+        result = self.env['ir.qweb']._render(view.id, {'n': 94})
+        self.assertEqual(
+            str(result),
+            "<div><p>94% of percentage statistics are completely made up.</p><p>94% of percentage statistics are completely made up.</p></div>",
+            "literal '%' in a parametric t-call attribute must not be "
+            "doubled when the value has no #{...} placeholders",
+        )
+
     def test_call_foreach_call(self):
         self.env['ir.ui.view'].create({
             'name': 'child',
@@ -2294,11 +2318,11 @@ class TestQWebBasic(TransactionCase):
                             <t t-if="False">
                                 a
                             </t>
-                    
+
                             b
 
                             <t t-if="True">
-                                c <t t-out="1"/>  
+                                c <t t-out="1"/>
                                 d
                             </t>
                         </article>
@@ -2315,11 +2339,11 @@ class TestQWebBasic(TransactionCase):
                             <u t-if="False">
                                 a
                             </u>
-                    
+
                             b
 
                             <i t-if="True">
-                                c <t t-out="1"/>  
+                                c <t t-out="1"/>
                                 d
                             </i>
                         </article>
@@ -2336,10 +2360,10 @@ class TestQWebBasic(TransactionCase):
                 <span>0</span>
                 <span>1</span>
 
-                    
+
                             b
 
-                                c 1  
+                                c 1
                                 d
                         </article>
 
@@ -2351,11 +2375,11 @@ class TestQWebBasic(TransactionCase):
                 <span>1</span>
                             </div>
 
-                    
+
                             b
 
                             <i>
-                                c 1  
+                                c 1
                                 d
                             </i>
                         </article>
