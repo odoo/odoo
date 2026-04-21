@@ -402,6 +402,7 @@
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
             'website/static/src/scss/website.edit_mode.scss',
+            'website/static/src/components/googleplaces_autocomplete/*',
             'website/static/src/js/send_mail_form.js',
             'website/static/src/xml/website_form.xml',
             'website/static/src/xml/website_form_editor.xml',
@@ -445,6 +446,7 @@
             ('include', 'html_builder.assets'),
             'website/static/src/scss/website_common.scss',
             'website/static/src/builder/**/*',
+            'website/static/src/components/googleplaces_autocomplete/*',
             ('remove', 'website/static/src/builder/**/*.edit.*'),
         ],
         'html_builder.iframe_add_dialog': [
