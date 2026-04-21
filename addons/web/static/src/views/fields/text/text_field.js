@@ -65,8 +65,8 @@ export class TextField extends Component {
         return value;
     }
 
-    async onBlur() {
-        this.selectionStart = this.textareaRef.el.selectionStart;
+    onBlur() {
+        this.selectionStart = this.textareaRef.el?.selectionStart || 0;
     }
 
     async onDynamicPlaceholderOpen() {

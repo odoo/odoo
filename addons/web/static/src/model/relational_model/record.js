@@ -1,10 +1,12 @@
-import { markRaw, markup, signal, toRaw } from "@odoo/owl";
+import { markRaw, markup, signal, types as t, toRaw } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { pick } from "@web/core/utils/objects";
 import { DataPoint } from "./datapoint";
-import { Operation } from "./operation";
 import { FetchRecordError } from "./errors";
+import { Operation } from "./operation";
 import {
     createPropertyActiveField,
     getBasicEvalContext,
@@ -13,8 +15,6 @@ import {
     getScheduleORMExtras,
     parseServerValue,
 } from "./utils";
-import { RPCError, ConnectionLostError } from "@web/core/network/rpc";
-import { pick } from "@web/core/utils/objects";
 
 /**
  * Redefine default 'Record' type
@@ -66,24 +66,23 @@ export class Record extends DataPoint {
             get: _selected,
             set: _selected.set,
         });
-        const _data = signal.Object({});
+        const _data = signal.Object({}, { type: t.record() });
         Object.defineProperty(this, "data", {
             get: _data,
             set: _data.set,
         });
-        const _evalContext = signal.Object({});
+        const _evalContext = signal.Object({}, { type: t.record() });
         Object.defineProperty(this, "evalContext", {
             get: _evalContext,
             set: _evalContext.set,
         });
-        const _evalContextWithVirtualIds = signal.Object({});
+        const _evalContextWithVirtualIds = signal.Object({}, { type: t.record() });
         Object.defineProperty(this, "evalContextWithVirtualIds", {
             get: _evalContextWithVirtualIds,
             set: _evalContextWithVirtualIds.set,
         });
 
-        /** @type {Set<string>} */
-        const _invalidFields = signal.Set(new Set());
+        const _invalidFields = signal.Set(new Set(), { type: t.string() });
         Object.defineProperty(this, "_invalidFields", {
             get: _invalidFields,
             set: _invalidFields.set,
@@ -104,9 +103,6 @@ export class Record extends DataPoint {
                     return parentRecord.evalContextWithVirtualIds;
                 },
             };
-        } else {
-            this.evalContext = {};
-            this.evalContextWithVirtualIds = {};
         }
         const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in data));
         data = { ...this._getDefaultValues(missingFields), ...data };

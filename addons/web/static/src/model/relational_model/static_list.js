@@ -1,15 +1,11 @@
+import { markRaw, signal, types as t } from "@odoo/owl";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
 import { omit, pick } from "@web/core/utils/objects";
 import { completeActiveFields } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
+import { Record as RelationalRecord } from "./record";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
-
-import { markRaw, signal } from "@odoo/owl";
-
-/**
- * @typedef {import("./record").Record} RelationalRecord
- */
 
 function compareFieldValues(v1, v2, fieldType) {
     if (fieldType === "many2one") {
@@ -87,12 +83,6 @@ export class StaticList extends DataPoint {
     setup(_config, data, options = {}) {
         this._parent = options.parent;
         this._onUpdate = options.onUpdate;
-
-        const _records = signal.Array([]);
-        Object.defineProperty(this, "records", {
-            get: _records,
-            set: _records.set,
-        });
         this._cache = markRaw({});
         this._commands = [];
         this._initialCommands = [];
@@ -108,14 +98,21 @@ export class StaticList extends DataPoint {
         // config to add the form view's fields in activeFields.
         this._extendedRecords = new Set();
 
-        /** @type {RelationalRecord[]} */
-        this.records = data
-            .slice(this.offset, this.limit)
-            .map((r) => this._createRecordDatapoint(r));
         this.count = this.resIds.length;
         this.handleField = Object.keys(this.activeFields).find(
             (fieldName) => this.activeFields[fieldName].isHandle
         );
+
+        /** @type {RelationalRecord[]} */
+        const defaultRecords = data
+            .slice(this.offset, this.limit)
+            .map((r) => this._createRecordDatapoint(r));
+
+        const _records = signal.Array(defaultRecords, { type: t.instanceOf(RelationalRecord) });
+        Object.defineProperty(this, "records", {
+            get: _records,
+            set: _records.set,
+        });
     }
 
     // -------------------------------------------------------------------------
