@@ -358,10 +358,11 @@ class PropertiesCase(TestPropertiesMixin):
             ''' SELECT "test_orm_partner"."id",
                        "test_orm_partner"."name",
                        "test_orm_partner"."email",
-                       "test_orm_partner"."phone",
-                       "test_orm_partner"."function",
+                       "test_orm_partner"."active",
                        "test_orm_partner"."website",
                        "test_orm_partner"."parent_id",
+                       "test_orm_partner"."country_id",
+                       "test_orm_partner"."state_id",
                        "test_orm_partner"."create_uid",
                        "test_orm_partner"."create_date",
                        "test_orm_partner"."write_uid",
@@ -1721,7 +1722,7 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(self.env['test_orm.message']['attributes']['many2many'], False)
 
         # Test the prefetch on the returned records
-        partner_3 = self.env['test_orm.partner'].create({})
+        partner_3 = self.env['test_orm.partner'].create({'name': 'bob'})
         self.message_1.attributes = [{
             'name': 'many2many',
             'comodel': 'test_orm.partner',

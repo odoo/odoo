@@ -40,14 +40,14 @@ class TestSubqueries(TransactionCase):
             LEFT JOIN "test_orm_partner" AS "test_orm_multi__partner"
             ON ("test_orm_multi"."partner" = "test_orm_multi__partner"."id")
             WHERE ("test_orm_multi"."partner" IS NOT NULL AND (
-                "test_orm_multi__partner"."name" LIKE %s
-                AND "test_orm_multi__partner"."phone" LIKE %s
+                "test_orm_multi__partner"."email" LIKE %s
+                AND "test_orm_multi__partner"."name" LIKE %s
             ))
             ORDER BY "test_orm_multi"."id"
         """]):
             self.env['test_orm.multi'].search([
                 ('partner.name', 'like', 'jack'),
-                ('partner.phone', 'like', '01234'),
+                ('partner.email', 'like', '@example.com'),
             ])
 
     def test_or_many2one_with_subfield(self):
@@ -57,15 +57,15 @@ class TestSubqueries(TransactionCase):
             LEFT JOIN "test_orm_partner" AS "test_orm_multi__partner"
             ON ("test_orm_multi"."partner" = "test_orm_multi__partner"."id")
             WHERE ("test_orm_multi"."partner" IS NOT NULL AND (
-                "test_orm_multi__partner"."name" LIKE %s
-                OR "test_orm_multi__partner"."phone" LIKE %s
+                "test_orm_multi__partner"."email" LIKE %s
+                OR "test_orm_multi__partner"."name" LIKE %s
             ))
             ORDER BY "test_orm_multi"."id"
         """]):
             self.env['test_orm.multi'].search([
                 '|',
                     ('partner.name', 'like', 'jack'),
-                    ('partner.phone', 'like', '01234'),
+                    ('partner.email', 'like', '@example.com'),
             ])
 
     def test_not_and_many2one_with_subfield(self):
@@ -75,8 +75,8 @@ class TestSubqueries(TransactionCase):
             WHERE ("test_orm_multi"."partner" IS NULL OR "test_orm_multi"."partner" NOT IN (
                 SELECT "test_orm_partner"."id"
                 FROM "test_orm_partner"
-                WHERE ("test_orm_partner"."name" LIKE %s
-                    AND "test_orm_partner"."phone" LIKE %s
+                WHERE ("test_orm_partner"."email" LIKE %s
+                    AND "test_orm_partner"."name" LIKE %s
                 )
             ))
             ORDER BY "test_orm_multi"."id"
@@ -84,7 +84,7 @@ class TestSubqueries(TransactionCase):
             self.env['test_orm.multi'].search([
                 '!', '&',
                     ('partner.name', 'like', 'jack'),
-                    ('partner.phone', 'like', '01234'),
+                    ('partner.email', 'like', '@example.com'),
             ])
 
     def test_not_or_many2one_with_subfield(self):
@@ -94,8 +94,8 @@ class TestSubqueries(TransactionCase):
             WHERE ("test_orm_multi"."partner" IS NULL OR "test_orm_multi"."partner" NOT IN (
                 SELECT "test_orm_partner"."id"
                 FROM "test_orm_partner"
-                WHERE ("test_orm_partner"."name" LIKE %s
-                    OR "test_orm_partner"."phone" LIKE %s
+                WHERE ("test_orm_partner"."email" LIKE %s
+                    OR "test_orm_partner"."name" LIKE %s
                 )
             ))
             ORDER BY "test_orm_multi"."id"
@@ -103,7 +103,7 @@ class TestSubqueries(TransactionCase):
             self.env['test_orm.multi'].search([
                 '!', '|',
                     ('partner.name', 'like', 'jack'),
-                    ('partner.phone', 'like', '01234'),
+                    ('partner.email', 'like', '@example.com'),
             ])
 
     def test_or_bypass_access_many2one_with_subfield(self):
@@ -114,15 +114,15 @@ class TestSubqueries(TransactionCase):
             LEFT JOIN "test_orm_partner" AS "test_orm_multi__partner"
                 ON ("test_orm_multi"."partner" = "test_orm_multi__partner"."id")
             WHERE ("test_orm_multi"."partner" IS NOT NULL AND (
-                "test_orm_multi__partner"."name" LIKE %s
-                OR "test_orm_multi__partner"."phone" LIKE %s
+                "test_orm_multi__partner"."email" LIKE %s
+                OR "test_orm_multi__partner"."name" LIKE %s
             ))
             ORDER BY "test_orm_multi"."id"
         """]):
             self.env['test_orm.multi'].search([
                 '|',
                     ('partner.name', 'like', 'jack'),
-                    ('partner.phone', 'like', '01234'),
+                    ('partner.email', 'like', '@example.com'),
             ])
 
     def test_not_or_bypass_access_many2one_with_subfield(self):
@@ -133,14 +133,14 @@ class TestSubqueries(TransactionCase):
             WHERE ("test_orm_multi"."partner" IS NULL OR "test_orm_multi"."partner" NOT IN (
                 SELECT "test_orm_partner"."id"
                 FROM "test_orm_partner"
-                WHERE ("test_orm_partner"."name" LIKE %s OR "test_orm_partner"."phone" LIKE %s)
+                WHERE ("test_orm_partner"."email" LIKE %s OR "test_orm_partner"."name" LIKE %s)
             ))
             ORDER BY "test_orm_multi"."id"
         """]):
             self.env['test_orm.multi'].search([
                 '!', '|',
                     ('partner.name', 'like', 'jack'),
-                    ('partner.phone', 'like', '01234'),
+                    ('partner.email', 'like', '@example.com'),
             ])
 
     def test_mixed_and_or_many2one_with_subfield(self):
@@ -152,8 +152,8 @@ class TestSubqueries(TransactionCase):
             WHERE ("test_orm_multi"."partner" IS NOT NULL AND (
                 "test_orm_multi__partner"."email" LIKE %s
                 AND (
-                    "test_orm_multi__partner"."name" LIKE %s
-                    OR "test_orm_multi__partner"."phone" LIKE %s
+                    "test_orm_multi__partner"."email" LIKE %s
+                    OR "test_orm_multi__partner"."name" LIKE %s
                 )
             ))
             ORDER BY "test_orm_multi"."id"
@@ -162,7 +162,7 @@ class TestSubqueries(TransactionCase):
                 ('partner.email', 'like', '@sgc.us'),
                 '|',
                     ('partner.name', 'like', 'jack'),
-                    ('partner.phone', 'like', '01234'),
+                    ('partner.email', 'like', '@example.com'),
             ])
 
     def test_mixed_and_or_not_many2one_with_subfield(self):
@@ -172,33 +172,30 @@ class TestSubqueries(TransactionCase):
             LEFT JOIN "test_orm_partner" AS "test_orm_multi__partner"
             ON ("test_orm_multi"."partner" = "test_orm_multi__partner"."id")
             WHERE (
-                ({many2one} IS NOT NULL AND (
+                ("test_orm_multi"."partner" IS NOT NULL AND (
                     "test_orm_multi__partner"."email" LIKE %s
                     OR "test_orm_multi__partner"."name" LIKE %s
                 ))
-                AND ({many2one} IS NULL OR {many2one} NOT IN (
-                    {subselect}
+                AND ("test_orm_multi"."partner" IS NULL OR "test_orm_multi"."partner" NOT IN (
+                    SELECT "test_orm_partner"."id" FROM "test_orm_partner"
                     WHERE "test_orm_partner"."website" LIKE %s
                 ))
                 AND (
-                    ({many2one} IS NOT NULL AND "test_orm_multi__partner"."function" LIKE %s)
-                    OR ({many2one} IS NULL OR {many2one} NOT IN (
-                        {subselect}
-                        WHERE "test_orm_partner"."phone" LIKE %s
+                    ("test_orm_multi"."partner" IS NOT NULL AND "test_orm_multi__partner"."email" LIKE %s)
+                    OR ("test_orm_multi"."partner" IS NULL OR "test_orm_multi"."partner" NOT IN (
+                        SELECT "test_orm_partner"."id" FROM "test_orm_partner"
+                        WHERE "test_orm_partner"."email" LIKE %s
                     ))
                 )
             )
             ORDER BY "test_orm_multi"."id"
-        """.format(
-            many2one='"test_orm_multi"."partner"',
-            subselect='SELECT "test_orm_partner"."id" FROM "test_orm_partner"',
-        )]):
-            # (function or not (phone)) and not website and (name or email)
+        """]):
+            # (email or not (email)) and not website and (name or email)
             self.env['test_orm.multi'].search([
                 '&', '&',
                     '|',
-                        ('partner.function', 'like', 'Colonel'),
-                        '!', ('partner.phone', 'like', '+01'),
+                        ('partner.email', 'like', '@sgc.us'),
+                        '!', ('partner.email', 'like', '@example.com'),
                     '!', ('partner.website', 'like', 'sgc.us'),
                     '|',
                         ('partner.name', 'like', 'jack'),

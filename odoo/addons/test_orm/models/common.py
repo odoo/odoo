@@ -85,3 +85,48 @@ class TestOrmMixedComputes(models.Model):
     def _compute_without_dependency(self):
         for record in self:
             record.compute_without_dependency = fields.Datetime.now()
+
+
+class TestOrmPartner(models.Model):
+    _name = 'test_orm.partner'
+    _description = 'Test ORM Partner'
+
+    name = fields.Char(required=True)
+    email = fields.Char()
+    active = fields.Boolean(default=True)
+    website = fields.Char()
+    parent_id = fields.Many2one('test_orm.partner')
+    child_ids = fields.One2many('test_orm.partner', 'parent_id')
+    country_id = fields.Many2one('test_orm.country')
+    state_id = fields.Many2one('test_orm.country.state')
+
+    @api.depends('email')
+    @api.depends_context('show_email')
+    def _compute_display_name(self):
+        # This is needed for test_onchange on test_web.
+        for partner in self:
+            name = partner.name
+
+            if partner.env.context.get('show_email') and partner.email:
+                name = f"{name} <{partner.email}>"
+
+            partner.display_name = name
+
+
+class TestOrmCountry(models.Model):
+    _name = 'test_orm.country'
+    _description = 'Test ORM Country'
+    _order = 'name, id'
+
+    name = fields.Char(required=True)
+    code = fields.Char()
+    phone_code = fields.Integer()
+    state_ids = fields.One2many('test_orm.country.state', 'country_id')
+
+
+class TestOrmCountryState(models.Model):
+    _name = 'test_orm.country.state'
+    _description = 'Test ORM  Country State'
+
+    name = fields.Char(required=True)
+    country_id = fields.Many2one('test_orm.country')

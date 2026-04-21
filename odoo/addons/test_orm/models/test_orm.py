@@ -253,36 +253,6 @@ class TestOrmEmailmessage(models.Model):
     active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
-class TestOrmPartner(models.Model):
-    """
-    Simplified model for partners. Having a specific model avoids all the
-    overrides from other modules that may change which fields are being read,
-    how many queries it takes to use that model, etc.
-    """
-    _name = 'test_orm.partner'
-    _description = 'Discussion Partner'
-
-    name = fields.Char()
-    email = fields.Char()
-    phone = fields.Char()
-    function = fields.Char()
-    website = fields.Char()
-    parent_id = fields.Many2one('test_orm.partner')
-    child_ids = fields.One2many('test_orm.partner', 'parent_id')
-
-    @api.depends('email')
-    @api.depends_context('show_email')
-    def _compute_display_name(self):
-        # This is needed for test_onchange on test_web.
-        for partner in self:
-            name = partner.name
-
-            if partner.env.context.get('show_email') and partner.email:
-                name = f"{name} <{partner.email}>"
-
-            partner.display_name = name
-
-
 class TestOrmMulti(models.Model):
     """ Model for testing multiple onchange methods in cascade that modify a
         one2many field several times.
@@ -1393,14 +1363,6 @@ class TestOrmModel_Parent_M2o(models.Model):
     def _compute_cost(self):
         for record in self:
             record.cost = sum(child.cost for child in record.child_ids)
-
-
-class TestOrmCountry(models.Model):
-    _name = 'test_orm.country'
-    _description = 'Country, ordered by name'
-    _order = 'name, id'
-
-    name = fields.Char()
 
 
 class TestOrmCity(models.Model):

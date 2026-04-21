@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import tagged, TransactionCase
-from odoo import Command
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -17,7 +16,7 @@ class TestSearch(TransactionCase):
         # are by default excluded from the searches and to provide a second
         # `order` argument.
 
-        Partner = self.env['res.partner']
+        Partner = self.env['test_orm.partner']
         c = Partner.create({'name': 'test_search_order_C'})
         d = Partner.create({'name': 'test_search_order_D', 'active': False})
         a = Partner.create({'name': 'test_search_order_A'})
@@ -61,16 +60,16 @@ class TestSearch(TransactionCase):
         id_desc_active_desc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active desc")
         self.assertEqual([e, ab, b, a, d, c], list(id_desc_active_desc), "Search with 'ID DESC, ACTIVE DESC' order failed.")
 
-        a.ref = "ref1"
-        c.ref = "ref2"
+        a.email = "email1"
+        c.email = "email2"
         ids = (a | b | c).ids
         for order, result in [
-            ('ref', a | c | b),
-            ('ref desc', b | c | a),
-            ('ref asc nulls first', b | a | c),
-            ('ref asc nulls last', a | c | b),
-            ('ref desc nulls first', b | c | a),
-            ('ref desc nulls last', c | a | b)
+            ('email', a | c | b),
+            ('email desc', b | c | a),
+            ('email asc nulls first', b | a | c),
+            ('email asc nulls last', a | c | b),
+            ('email desc nulls first', b | c | a),
+            ('email desc nulls last', c | a | b)
         ]:
             with self.subTest(order):
                 self.assertEqual(
@@ -78,8 +77,8 @@ class TestSearch(TransactionCase):
                     result.mapped('name'))
 
         # sorting by an m2o should alias to the natural order of the m2o
-        self.patch_order('res.country', 'phone_code')
-        a.country_id, c.country_id = self.env['res.country'].create([{
+        self.patch_order('test_orm.country', 'phone_code')
+        a.country_id, c.country_id = self.env['test_orm.country'].create([{
             'name': "Country 1",
             'code': 'C1',
             'phone_code': '01',
@@ -104,7 +103,7 @@ class TestSearch(TransactionCase):
 
         # NULLS applies to the m2o itself, not its sub-fields, so a null `phone_code`
         # will sort normally (larger than non-null codes)
-        b.country_id = self.env['res.country'].create({'name': "Country X", 'code': 'C3'})
+        b.country_id = self.env['test_orm.country'].create({'name': "Country X", 'code': 'C3'})
 
         for order, result in [
             ('country_id', a | c | b),
@@ -121,7 +120,7 @@ class TestSearch(TransactionCase):
 
         # a field DESC should reverse the nested behaviour (and thus the inner
         # NULLS clauses), but the outer NULLS clause still has no effect
-        self.patch_order('res.country', 'phone_code NULLS FIRST')
+        self.patch_order('test_orm.country', 'phone_code NULLS FIRST')
         for order, result in [
             ('country_id', b | a | c),
             ('country_id desc', c | a | b),
@@ -136,19 +135,19 @@ class TestSearch(TransactionCase):
                     result.mapped('name'))
 
     def test_10_inherits_m2order(self):
-        Users = self.env['res.users']
+        Users = self.env['test_orm.search.order.users']
 
-        # Find Employee group
-        group_employee = self.env.ref('base.group_user')
-
-        # Get country/state data
-        country_be = self.env.ref('base.be')
-        country_us = self.env.ref('base.us')
-        states_us = country_us.state_ids[:2]
+        country_be = self.env['test_orm.country'].create({'name': 'Belgium'})
+        country_us = self.env['test_orm.country'].create({'name': 'United States'})
+        states_us = self.env['test_orm.country.state'].create([
+            {'name': 'Armed Forces Americas', 'country_id': country_us.id},
+            {'name': 'Armed Forces Europe', 'country_id': country_us.id},
+        ])
+        states_be = self.env['test_orm.country.state'].create({'name': 'Antwerpen', 'country_id': country_be.id})
 
         # Create test users
-        u = Users.create({'name': '__search', 'login': '__search', 'group_ids': [Command.set([group_employee.id])]})
-        a = Users.create({'name': '__test_A', 'login': '__test_A', 'country_id': country_be.id, 'state_id': country_be.state_ids[0].id})
+        u = Users.create({'name': '__search', 'login': '__search'})
+        a = Users.create({'name': '__test_A', 'login': '__test_A', 'country_id': country_be.id, 'state_id': states_be[0].id})  # Antwerpen
         b = Users.create({'name': '__test_B', 'login': '__a_test_B', 'country_id': country_us.id, 'state_id': states_us[1].id})
         c = Users.create({'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us.id, 'state_id': states_us[0].id})
 
@@ -171,68 +170,63 @@ class TestSearch(TransactionCase):
         self.assertEqual(user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
 
         # Do: order on many2one, but not by specifying in order parameter of search, but by overriding _order of res_users
-        self.patch_order('res.users', 'country_id desc, name asc, login desc')
+        self.patch_order('test_orm.search.order.users', 'country_id desc, name asc, login desc')
         expected_ids = [u.id, c.id, b.id, a.id]
         user_ids = Users.search([('id', 'in', expected_ids)]).ids
         self.assertEqual(user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
 
     def test_11_indirect_inherits_m2o_order(self):
-        Cron = self.env['ir.cron']
-        Users = self.env['res.users']
+        self.patch_order('test_orm.search.order.alpha', 'id')
+        self.patch_order('test_orm.search.order.beta', 'name')
 
-        user_ids = {}
-        cron_ids = {}
-        for u in 'BAC':
-            user_ids[u] = Users.create({'name': u, 'login': u}).id
-            cron_ids[u] = Cron.create({'name': u, 'model_id': self.env.ref('base.model_res_partner').id, 'user_id': user_ids[u]}).id
+        model_ids = {}
 
-        ids = Cron.search([('id', 'in', list(cron_ids.values()))], order='user_id').ids
-        expected_ids = [cron_ids[l] for l in 'ABC']
-        self.assertEqual(ids, expected_ids)
+        for name in 'BAC':
+            model_ids[name] = self.env['test_orm.search.order.alpha'].create({
+                'name': name,
+                'beta_id': self.env['test_orm.search.order.beta'].create({'name': name}).id
+            }).id
+
+        found_ids = self.env['test_orm.search.order.alpha'].search([('id', 'in', list(model_ids.values()))], order='beta_id').ids
+        expected_ids = [model_ids[name] for name in 'ABC']
+
+        self.assertEqual(found_ids, expected_ids)
 
     def test_12_m2o_order_loop_self(self):
-        Cats = self.env['ir.module.category']
-        cat_ids = {}
-        def create(name, **kw):
-            cat_ids[name] = Cats.create(dict(kw, name=name)).id
+        Model = self.env['test_orm.search.order.alpha']
+        model_ids = {}
 
-        self.patch_order('ir.module.category', 'parent_id desc, name')
+        self.patch_order('test_orm.search.order.alpha', 'alpha_loop_id desc, name')
 
-        create('A')
-        create('B', parent_id=cat_ids['A'])
-        create('C', parent_id=cat_ids['A'])
-        create('D')
-        create('E', parent_id=cat_ids['D'])
-        create('F', parent_id=cat_ids['D'])
+        model_ids['A'] = Model.create({'name': 'A'}).id
+        model_ids['B'] = Model.create({'name': 'B', 'alpha_loop_id': model_ids['A']}).id
+        model_ids['C'] = Model.create({'name': 'C', 'alpha_loop_id': model_ids['A']}).id
+        model_ids['D'] = Model.create({'name': 'D'}).id
+        model_ids['E'] = Model.create({'name': 'E', 'alpha_loop_id': model_ids['D']}).id
+        model_ids['F'] = Model.create({'name': 'F', 'alpha_loop_id': model_ids['D']}).id
 
-        expected_ids = [cat_ids[x] for x in 'ADEFBC']
-        found_ids = Cats.search([('id', 'in', list(cat_ids.values()))]).ids
+        found_ids = Model.search([('id', 'in', list(model_ids.values()))]).ids
+        expected_ids = [model_ids[name] for name in 'ADEFBC']
+
         self.assertEqual(found_ids, expected_ids)
 
     def test_13_m2o_order_loop_multi(self):
-        Users = self.env['res.users']
+        Model = self.env['test_orm.search.order.users']
 
         # will sort by login desc of the creator, then by name
-        self.patch_order('res.partner', 'create_uid, name')
-        self.patch_order('res.users', 'partner_id, login desc')
+        self.patch_order('test_orm.search.order.partner', 'user_id, name')
+        self.patch_order('test_orm.search.order.users', 'partner_id, login desc')
 
-        kw = dict(group_ids=[Command.set([self.ref('base.group_system'),
-                                     self.ref('base.group_partner_manager')])])
+        u0 = Model.create(dict(name='A system', login='a')).id
 
-        # When creating with the superuser, the ordering by 'create_uid' will
-        # compare user logins with the superuser's login "__system__", which
-        # may give different results, because "_" may come before or after
-        # letters, depending on the database's locale.  In order to avoid this
-        # issue, use a user with a login that doesn't include "_".
-        u0 = Users.create(dict(name='A system', login='a', **kw)).id
-
-        u1 = Users.with_user(u0).create(dict(name='Q', login='m', **kw)).id
-        u2 = Users.with_user(u1).create(dict(name='B', login='f', **kw)).id
-        u3 = Users.with_user(u0).create(dict(name='C', login='c', **kw)).id
-        u4 = Users.with_user(u2).create(dict(name='D', login='z', **kw)).id
+        u1 = Model.create(dict(name='Q', login='m', user_id=u0)).id
+        u2 = Model.create(dict(name='B', login='f', user_id=u1)).id
+        u3 = Model.create(dict(name='C', login='c', user_id=u0)).id
+        u4 = Model.create(dict(name='D', login='z', user_id=u2)).id
 
         expected_ids = [u2, u4, u3, u1]
-        found_ids = Users.search([('id', 'in', expected_ids)]).ids
+        found_ids = Model.search([('id', 'in', expected_ids)]).ids
+
         self.assertEqual(found_ids, expected_ids)
 
     def test_20_x_active(self):
@@ -242,11 +236,11 @@ class TestSearch(TransactionCase):
         # not have an active field
         self.addCleanup(self.registry.reset_changes) # reset the registry to avoid polluting other tests
 
-        model_country = self.env['res.country']
+        model_country = self.env['test_orm.country']
         self.assertNotIn('active', model_country._fields)  # just in case someone adds the active field in the model
         self.env['ir.model.fields'].create({
             'name': 'x_active',
-            'model_id': self.env.ref('base.model_res_country').id,
+            'model_id': self.env.ref('test_orm.model_test_orm_country').id,
             'ttype': 'boolean',
         })
         self.assertEqual('x_active', model_country._active_name)
@@ -259,7 +253,7 @@ class TestSearch(TransactionCase):
         self.assertIn(country_ussr, ussr_search, "Search with active_test on a custom x_active field failed")
 
     def test_21_search_count(self):
-        Partner = self.env['res.partner']
+        Partner = self.env['test_orm.partner']
         count_partner_before = Partner.search_count([])
         partners = Partner.create([
             {'name': 'abc'},
@@ -271,14 +265,16 @@ class TestSearch(TransactionCase):
         self.assertEqual(3, Partner.search_count([], limit=3))
 
     def test_22_like_folding(self):
-        Model = self.env['res.country']
+        Model = self.env['test_orm.country']
+
+        self.patch_order('test_orm.country', 'name, id')
 
         # there is just one query for the first search as it matches all
         # the second search does not run, because the domain is False
         with self.assertQueries(["""
-            SELECT "res_country"."id"
-            FROM "res_country"
-            ORDER BY "res_country"."name"->>%s, "res_country"."id"
+            SELECT "test_orm_country"."id"
+            FROM "test_orm_country"
+            ORDER BY "test_orm_country"."name", "test_orm_country"."id"
         """]):
             Model.search([('code', 'ilike', '')])
             Model.search([('code', 'not ilike', '')])
