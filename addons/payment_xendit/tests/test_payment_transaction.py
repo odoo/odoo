@@ -53,6 +53,9 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
             "odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction"
             "._get_specific_rendering_values",
             return_value={"api_url": "https://dummy.com", "http_method": "get"},
+        ), patch(
+            "odoo.addons.payment.utils.generate_access_token",
+            new=self._generate_test_access_token
         ):
             processing_values = tx._get_processing_values()
         form_info = self._extract_values_from_html_form(processing_values["redirect_form_html"])
@@ -108,7 +111,11 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         which is the amount rounded down to the nearest 0."""
         currency_idr = self.env.ref("base.IDR")
         tx = self._create_transaction("redirect", amount=1000.50, currency_id=currency_idr.id)
-        processing_values = tx._get_specific_processing_values({})
+        with patch(
+            "odoo.addons.payment.utils.generate_access_token",
+            new=self._generate_test_access_token
+        ):
+            processing_values = tx._get_specific_processing_values({})
         self.assertEqual(processing_values.get("rounded_amount"), 1000)
 
     def test_charge_request_contains_rounded_amount_idr(self):

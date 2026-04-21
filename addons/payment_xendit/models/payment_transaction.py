@@ -30,7 +30,10 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "xendit":
             return super()._get_specific_processing_values(processing_values)
 
-        return {"rounded_amount": self._get_rounded_amount()}
+        return {
+            "rounded_amount": self._get_rounded_amount(),
+            "access_token": payment_utils.generate_access_token(self.reference)
+        }
 
     def _get_specific_rendering_values(self, processing_values):
         """Override of `payment` to return Xendit-specific rendering values.
