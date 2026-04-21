@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from functools import partial
-
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
@@ -27,22 +25,16 @@ class WebsiteSnippetFilter(models.Model):
         if search_domain and 'hide_variants' in search_domain:
             hide_variants = True
             search_domain.remove('hide_variants')
-        update_limit_cache = False
-        product_limit = limit or self.limit
         if hide_variants and self.filter_id.model_id == 'product.product':
-            # When hiding variants, temporarily update cache to increase `self.limit`
-            # so we hopefully end up with the correct amount of product templates
-            update_limit_cache = partial(self._fields['limit']._update_cache, self)
-            limit = product_limit ** 2  # heuristic, may still be inadequate in some cases
-            stored_limit = self.limit
-            update_limit_cache(limit)
+            kwargs['res_model'] = "product.template"
         res = super(
             WebsiteSnippetFilter,
-            self.with_context(hide_variants=hide_variants, product_limit=product_limit),
+            self.with_context(hide_variants=hide_variants),
         )._prepare_values(limit=limit, search_domain=search_domain, **kwargs)
-        if update_limit_cache:
-            update_limit_cache(stored_limit)
         return res
+
+    def _get_website_filter_models(self):
+        return super()._get_website_filter_models() + ['product.template']
 
     @api.model
     def _get_website_currency(self):
@@ -107,9 +99,6 @@ class WebsiteSnippetFilter(models.Model):
 
     def _filter_records_to_values(self, records, **options):
         hide_variants = self.env.context.get('hide_variants') and not isinstance(records, list)
-        if hide_variants:
-            product_limit = self.env.context.get('product_limit') or self.limit
-            records = records.product_tmpl_id[:product_limit]
         res_products = super()._filter_records_to_values(records, **options)
         if (self.model_name or options.get('res_model')) == 'product.product':
             for res_product in res_products:
