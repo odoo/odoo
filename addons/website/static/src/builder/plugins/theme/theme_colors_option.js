@@ -3,6 +3,8 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { ThemeColorsPalettePreviewPopover } from "./theme_colors_palette_preview_popover";
 
 const CATEGORIES = {
     'theme': _t('Theme'),
@@ -23,6 +25,12 @@ export class ThemeColorsOption extends BaseOptionComponent {
         this.palettesByCategory = this.groupPalettesByCategory(this.palettes);
         this.colorPresetToShow = this.env.colorPresetToShow;
         this.grays = this.dependencies.themeTab.getGrays();
+        this.palettePopover = usePopover(ThemeColorsPalettePreviewPopover, {
+            position: "right-middle",
+            animation: false,
+            arrow: false,
+            popoverClass: "o-hb-palette-preview-popover overflow-hidden",
+        });
         this.state = useDomState(() => ({
             presets: this.getPresets(),
         }));
@@ -126,5 +134,14 @@ export class ThemeColorsOption extends BaseOptionComponent {
             );
         }
         return getCSSVariableValue(color, this.iframeStyle);
+    }
+
+    onPaletteHover(ev, palette) {
+        const target = ev.currentTarget;
+        this.palettePopover.open(target, { palette });
+    }
+
+    onPaletteLeave() {
+        this.palettePopover.close();
     }
 }
