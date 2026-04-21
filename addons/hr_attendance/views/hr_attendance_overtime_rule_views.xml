@@ -135,6 +135,13 @@
                             <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
+                    <group>
+                        <field name="max_negative_hours" widget="float_time"/>
+                        <field name="max_positive_hours" widget="float_time"/>
+                        <field name="l10n_be_flexibility_type"/>
+                        <field name="l10n_be_flexibility_reference_month" invisible="l10n_be_flexibility_type != 'small_flexibility'"/>
+                        <field name="l10n_be_flexibility_reference_period" invisible="l10n_be_flexibility_type == 'none'"/>
+                    </group>
                     <group colspan="4">
                         <field 
                             name="description" colspan="4"
@@ -166,6 +173,8 @@
                 <field name="name"/>
                 <field name="country_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="rate_combination_mode" string="Rate Mode"/>
+                <field name="max_positive_hours" widget="float_time"/>
+                <field name="max_negative_hours" widget="float_time"/>
                 <field name="rules_count"/>
             </list>
         </field>
