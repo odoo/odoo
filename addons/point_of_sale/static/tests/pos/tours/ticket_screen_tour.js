@@ -11,6 +11,7 @@ import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
+import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
     steps: () =>
@@ -18,8 +19,10 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
-            Chrome.clickOrders(),
+            // ensure that even after refreshing the page while being offline all data is correctly reloaded
+            refresh(),
             Dialog.confirm("Continue with limited functionality"),
+            Chrome.clickOrders(),
             OfflineUtil.setOnlineMode(),
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Pad", "1", "3"),
