@@ -5,14 +5,15 @@ from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
 
-from odoo import api, fields, models, _, tools
-from odoo.addons.base.models.ir_qweb_fields import nl2br
-from odoo.addons.mail.tools.discuss import Store
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools import email_split, format_list, html2plaintext, is_html_empty
 from odoo.tools.mimetypes import get_extension
 from odoo.tools.sql import SQL
 from odoo.tools.translate import LazyTranslate
+
+from odoo.addons.base.models.ir_qweb_fields import nl2br
+from odoo.addons.mail.tools.discuss import Store
 
 _lt = LazyTranslate(__name__)
 
@@ -128,7 +129,7 @@ class DiscussChannel(models.Model):
         compute="_compute_livechat_looking_for_help_since_dt",
         help="Datetime when the chat entered the 'Looking for help' status.",
         string="Requested At",
-        store=True
+        store=True,
     )
     livechat_outcome = fields.Selection(
         [
@@ -141,7 +142,9 @@ class DiscussChannel(models.Model):
         store=True,
     )
     livechat_start_hour = fields.Float(
-        "Session Start Hour", compute="_compute_livechat_start_hour", store=True
+        "Session Start Hour",
+        compute="_compute_livechat_start_hour",
+        store=True,
     )
     livechat_week_day = fields.Selection(
         [
@@ -158,7 +161,8 @@ class DiscussChannel(models.Model):
         store=True,
     )
     livechat_matches_self_lang = fields.Boolean(
-        compute="_compute_livechat_matches_self_lang", search="_search_livechat_matches_self_lang"
+        compute="_compute_livechat_matches_self_lang",
+        search="_search_livechat_matches_self_lang",
     )
     livechat_matches_self_expertise = fields.Boolean(
         compute="_compute_livechat_matches_self_expertise",
@@ -222,22 +226,23 @@ class DiscussChannel(models.Model):
     )
     _livechat_end_dt_idx = models.Index("(livechat_end_dt) WHERE livechat_end_dt IS NULL")
     _livechat_failure_idx = models.Index(
-        "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')"
+        "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')",
     )
     _livechat_is_escalated_idx = models.Index(
-        "(livechat_is_escalated) WHERE livechat_is_escalated IS TRUE"
+        "(livechat_is_escalated) WHERE livechat_is_escalated IS TRUE",
     )
     _livechat_channel_type_create_date_idx = models.Index(
-        "(channel_type, create_date) WHERE channel_type = 'livechat'"
+        "(channel_type, create_date) WHERE channel_type = 'livechat'",
     )
 
     def write(self, vals):
         if (
             self.filtered(
                 lambda c: (
-                    "livechat_rating" in vals and c.livechat_rating != vals["livechat_rating"]
-                )
-                and c.self_member_id.livechat_member_type != "visitor"
+                    "livechat_rating" in vals
+                    and c.livechat_rating != vals["livechat_rating"]
+                    and c.self_member_id.livechat_member_type != "visitor"
+                ),
             )
         ) and not self.env.user.has_group("base.group_system"):
             raise UserError(self.env._("Only customers can rate a live chat conversation."))
@@ -296,13 +301,13 @@ class DiscussChannel(models.Model):
     def _compute_livechat_rating_percentage(self):
         for channel in self:
             channel.livechat_rating_percentage = self._rating_selection_to_percentage(
-                channel.livechat_rating
+                channel.livechat_rating,
             )
 
     def _compute_sql_livechat_rating_percentage(self, table):
         # This method allows to filter out non-rated sessions of the aggregation
         return self._rating_selection_to_percentage_sql(
-            SQL.identifier(table._alias, "livechat_rating")
+            SQL.identifier(table._alias, "livechat_rating"),
         )
 
     @api.depends("livechat_channel_member_history_ids.livechat_member_type")
@@ -420,7 +425,8 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.livechat_agent_providing_help_history = (
                 channel.livechat_agent_history_ids.sorted(
-                    lambda h: (h.create_date, h.id), reverse=True
+                    lambda h: (h.create_date, h.id),
+                    reverse=True,
                 )[0]
                 if channel.livechat_is_escalated
                 else None
@@ -453,7 +459,7 @@ class DiscussChannel(models.Model):
     def _compute_livechat_matches_self_expertise(self):
         for channel in self:
             channel.livechat_matches_self_expertise = bool(
-                channel.livechat_expertise_ids & self.env.user.livechat_expertise_ids
+                channel.livechat_expertise_ids & self.env.user.livechat_expertise_ids,
             )
 
     def _search_livechat_matches_self_expertise(self, operator, value):
@@ -524,8 +530,10 @@ class DiscussChannel(models.Model):
             step_message = self.env["chatbot.message"]
             if current_step_sudo.step_type != "forward_operator":
                 step_message = channel.sudo().chatbot_message_ids.filtered(
-                    lambda m: m.script_step_id == current_step_sudo
-                    and m.mail_message_id.author_id == chatbot_script.operator_partner_id
+                    lambda m: (
+                        m.script_step_id == current_step_sudo
+                        and m.mail_message_id.author_id == chatbot_script.operator_partner_id
+                    ),
                 )[:1]
             current_step = {
                 "scriptStep": current_step_sudo.id,
@@ -608,10 +616,10 @@ class DiscussChannel(models.Model):
             # Notify that the visitor has left the conversation
             # sudo: mail.message - posting visitor leave message is allowed
             self.sudo().message_post(
-                author_id=self.env.ref('base.partner_root').id,
+                author_id=self.env.ref("base.partner_root").id,
                 body=Markup('<div class="o_mail_notification o_hide_author">%s</div>') % message,
-                message_type='notification',
-                subtype_xmlid='mail.mt_comment'
+                message_type="notification",
+                subtype_xmlid="mail.mt_comment",
             )
 
     def _email_livechat_transcript(self, email):
@@ -627,8 +635,8 @@ class DiscussChannel(models.Model):
         correspondent_names = format_list(
             self.env,
             (self.sudo().livechat_agent_partner_ids or self.sudo().livechat_bot_partner_ids).mapped(
-                lambda p: p.user_livechat_username or p.name
-            )
+                lambda p: p.user_livechat_username or p.name,
+            ),
         )
         render_context = {
             "company": company,
@@ -801,26 +809,8 @@ class DiscussChannel(models.Model):
             subtype_xmlid='mail.mt_comment',
         )
 
-    def _add_members(
-        self,
-        *,
-        guests=None,
-        partners=None,
-        users=None,
-        create_member_params=None,
-        invite_to_rtc_call=False,
-        post_joined_message=True,
-        inviting_partner=None,
-    ):
-        all_new_members = super()._add_members(
-            guests=guests,
-            partners=partners,
-            users=users,
-            create_member_params=create_member_params,
-            invite_to_rtc_call=invite_to_rtc_call,
-            post_joined_message=post_joined_message,
-            inviting_partner=inviting_partner,
-        )
+    def _add_members(self, **kwargs):
+        all_new_members = super()._add_members(**kwargs)
         for channel in all_new_members.channel_id:
             # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
             if channel.sudo().livechat_status == "need_help":
@@ -883,16 +873,18 @@ class DiscussChannel(models.Model):
                     "mail_message_id": message.id,
                     "discuss_channel_id": self.id,
                     "script_step_id": self.chatbot_current_step_id.id,
-                }
+                },
             )
 
         author_history = self.env["im_livechat.channel.member.history"]
         # sudo - discuss.channel: accessing history to update its state is acceptable
         if message.author_id or message.author_guest_id:
             author_history = self.sudo().livechat_channel_member_history_ids.filtered(
-                lambda h: h.partner_id == message.author_id
-                if message.author_id
-                else h.guest_id == message.author_guest_id
+                lambda h: (
+                    h.partner_id == message.author_id
+                    if message.author_id
+                    else h.guest_id == message.author_guest_id
+                ),
             )
         if author_history:
             if message.message_type not in ("notification", "user_notification"):
@@ -1017,15 +1009,14 @@ class DiscussChannel(models.Model):
 
     def _get_human_operator(self, users, chatbot_script_step):
         operator_params = {
-            'lang': self.env.context.get("lang"),
-            'country_id': self.country_id.id,
-            'users': users
+            "lang": self.env.context.get("lang"),
+            "country_id": self.country_id.id,
+            "users": users,
         }
         if chatbot_script_step:
             operator_params['expertises'] = chatbot_script_step.operator_expertise_ids
         # sudo: res.users - visitor can access operator of their channel
-        human_operator = self.livechat_channel_id.sudo()._get_operator(**operator_params)
-        return human_operator
+        return self.livechat_channel_id.sudo()._get_operator(**operator_params)
 
     def _post_current_chatbot_step_message(self, chatbot_script_step):
         posted_message = self.env['mail.message']
@@ -1042,10 +1033,10 @@ class DiscussChannel(models.Model):
                         self.env.user.display_name
                         if not self.env.user._is_public()
                         else self.sudo().self_member_id.guest_id.name,
-                        operator_name
-                    ]
-                )
-            }
+                        operator_name,
+                    ],
+                ),
+            },
         )
 
     def _add_next_step_message_to_store(self, chatbot_script_step):
