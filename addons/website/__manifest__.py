@@ -126,6 +126,7 @@
         'views/snippets/s_faq_horizontal.xml',
         'views/snippets/s_floating_blocks.xml',
         'views/snippets/s_opening_hours.xml',
+        'views/snippets/s_opening_hours_alt.xml',
         'views/snippets/s_timeline.xml',
         'views/snippets/s_timeline_images.xml',
         'views/snippets/s_timeline_list.xml',
