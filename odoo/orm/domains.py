@@ -59,11 +59,13 @@ import operator
 import types
 import typing
 import warnings
+from collections.abc import Mapping
 from datetime import date, datetime, time, timedelta, timezone, UTC
 
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL, OrderedSet, classproperty, partition, str2bool
 from odoo.tools.date_utils import parse_date, parse_iso_date
+from odoo.tools.safe_eval import expr_eval
 from .identifiers import NewId
 from .query import Query, TableSQL
 from .utils import COLLECTION_TYPES, parse_field_expr
@@ -1888,59 +1890,61 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
     return parent_ids
 
 
+class ExprContext(Mapping):
+    def __init__(self, model: BaseModel):
+        self.env = model.env
+
+    def __getitem__(self, key):
+        env = self.env
+        match key:
+            case 'user':
+                value = env.user
+            case 'company':
+                value = env.company
+            case 'companies':
+                value = env.companies
+            case 'partner_id':
+                value = env.user.partner_id
+            case 'groups':
+                value = env.user.all_group_ids
+            case 'context':
+                return env.context
+            case _:
+                raise KeyError(key)
+        return value.with_env(env)
+
+    def __iter__(self):
+        return iter(('user', 'company', 'companies', 'partner_id', 'groups', 'context'))
+
+    def __len__(self):
+        return 6
+
+
 @operator_optimization(['expr'], OptimizationLevel.DYNAMIC_VALUES)
 def _operator_expr_eval(condition, model):
     """Evaluate a dynamic value given by the expression.
 
-    The value can be a `str` of `list[str]`. We search for the first expression
-    that will have a non-falsy value.
-
-    - "{rec}" or "{rec}.{value}" where rec is user, company, companies,
-      partner_id, groups are recordsets on which we can map a value;
-      for example "user.name" is `in user.mapped('name')`
-    - "context.{value}" read a value from env.context
+    The value is evaluated using `expr_eval` with context containing:
+    user, company, companies, partner_id, groups, context.
     """
-    env = model.env
-    expr_value = condition.value
-    # TODO alternative use expr_eval (if it has name access)
-    if isinstance(expr_value, str):
-        expr_value = [expr_value]
-    elif not expr_value:
-        condition._raise(f"Invalid expression: {expr_value!r}")
-    for expr in expr_value:
-        if not isinstance(expr, str):
-            condition._raise(f"Invalid expression: {expr!r}")
-        env_name, is_mapped, path = expr.partition('.')
-        if env_name == 'user':
-            value = env.user
-        elif env_name == 'company':
-            value = env.company
-        elif env_name == 'companies':
-            value = env.companies
-        elif env_name == 'partner_id':
-            value = env.user.partner_id
-        elif env_name == 'groups':
-            value = env.user.all_group_ids
-        elif env_name == 'context':
-            value = env.context.get(path, ())
-            is_mapped = False  # the path is resolved entirely
-            if not isinstance(value, COLLECTION_TYPES):
-                value = (value,) if value else ()
-        else:
-            condition._raise(f"Invalid expression: {expr!r}")
-
-        if is_mapped:
-            # map the values using the environment to avoid reading in sudo
-            value = value.with_env(env).mapped(path)
-        if any(value):
-            break
-
+    expr = condition.value
+    if not expr or not isinstance(expr, str):
+        condition._raise(f"Invalid expression: {expr!r}")
+    try:
+        value = expr_eval(expr, context=ExprContext(model))
+    except Exception:  # noqa: BLE001
+        condition._raise(f"Invalid expression: {expr!r}")
+        assert False, 'unreachable'
+    if not value:
+        return Domain.FALSE
     from .models import BaseModel  # noqa: PLC0415
     if isinstance(value, BaseModel):
         field = condition._field(model)
         if (field.model_name if field.name == 'id' else field.comodel_name) != value._name:
             condition._raise(f"Cannot compare {field} and {value}")
         value = value.ids
+    elif not isinstance(value, COLLECTION_TYPES):
+        value = [value]
     return DomainCondition(condition.field_expr, 'in', value)
 
 
