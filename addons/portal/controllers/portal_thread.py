@@ -71,9 +71,6 @@ class PortalChatter(ThreadController):
 
     @http.route('/mail/chatter_fetch', type='jsonrpc', auth='public', website=True)
     def portal_message_fetch(self, thread_model, thread_id, fetch_params=None, **kw):
-        # Extract the domain from the `website_message_ids` field to restrict the visible messages according to the model.
-        model = request.env[thread_model]
-        field = model._fields['website_message_ids']
         thread = self._get_thread_with_access(thread_model, thread_id, token=kw.get("token"))
         if not thread:
             raise Forbidden()
@@ -81,9 +78,7 @@ class PortalChatter(ThreadController):
         # the portal as portal users do, so they have the same restriction.
         domain = (
             Domain(self._setup_portal_message_fetch_extra_domain(kw))
-            & Domain(field.get_comodel_domain(model))
-            & Domain("res_id", "=", thread_id)
-            & Domain(request.env["mail.message"]._get_search_domain_share())
+            & self._get_portal_message_fetch_domain(thread)
             & self._get_non_empty_message_domain()
         )
         # sudo: mail.message - thread access is validated above, and domain is massively restricted to share-only messages
@@ -102,6 +97,15 @@ class PortalChatter(ThreadController):
         return Domain(
             "body", "not in", [False, '<span class="o-mail-Message-edited"></span>']
         ) | Domain("attachment_ids", "!=", False)
+
+    @classmethod
+    def _get_portal_message_fetch_domain(cls, records):
+        return (
+            # Extract the domain from the `website_message_ids` field to restrict the visible messages according to the model.
+            Domain(records._fields["website_message_ids"].get_comodel_domain(records))
+            & Domain("res_id", "in", records.ids)
+            & Domain(records.env["mail.message"]._get_search_domain_share())
+        )
 
     def _setup_portal_message_fetch_extra_domain(self, data) -> Domain:
         return Domain.TRUE
