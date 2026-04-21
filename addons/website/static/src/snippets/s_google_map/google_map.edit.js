@@ -27,6 +27,10 @@ const GoogleMapEdit = (I) =>
                     "initializeGoogleMaps",
                     [this.el, google.maps]
                 );
+                if (this.canStart) {
+                    await google.maps.importLibrary("maps");
+                    await google.maps.importLibrary("marker");
+                }
             } else {
                 this.websiteEditService.callShared(
                     "googleMapsOption",
