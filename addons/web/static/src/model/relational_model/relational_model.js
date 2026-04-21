@@ -1,6 +1,6 @@
 // @ts-check
 
-import { EventBus, markRaw, signal, toRaw } from "@odoo/owl";
+import { EventBus, markRaw, signal, toRaw, types as t } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
@@ -25,6 +25,7 @@ import {
     makeActiveField,
 } from "./utils";
 import { FetchRecordError } from "./errors";
+import { DataPoint, makeReactive } from "./datapoint";
 
 /**
  * @typedef {import("@web/core/context").Context} Context
@@ -143,11 +144,8 @@ export class RelationalModel extends Model {
         this.keepLast = markRaw(new KeepLast());
         this.mutex = markRaw(new Mutex());
 
-        const _root = signal(undefined);
-        Object.defineProperty(this, "root", {
-            get: _root,
-            set: _root.set,
-        });
+        /** @type {DataPoint | null} */
+        this.root = null;
 
         /** @type {RelationalModelConfig} */
         this.config = {
@@ -174,7 +172,9 @@ export class RelationalModel extends Model {
         this.initialSampleGroups = undefined; // real groups to populate with sample records
 
         this._urgentSave = false;
-        this.couldNotLoadRootOffline = false;
+        this.couldNotLoadRootOffline = signal(false);
+
+        makeReactive(this, "root", signal, t.or([t.instanceOf(DataPoint), t.literal(null)]));
     }
 
     // -------------------------------------------------------------------------
@@ -207,7 +207,7 @@ export class RelationalModel extends Model {
             this.orm.setGroups(this.initialSampleGroups);
         }
         const config = this._getNextConfig(this.config, params);
-        if (!this.isReady) {
+        if (!this.isReady()) {
             // We want the control panel to be displayed directly, without waiting for data to be
             // loaded, for instance to be able to interact with the search view. For that reason, we
             // create an empty root, without data, s.t. controllers can make the assumption that the
@@ -224,12 +224,11 @@ export class RelationalModel extends Model {
             data = await this.keepLast.add(this._loadData(config, cache));
         } catch (e) {
             if (e instanceof ConnectionLostError) {
-                this.couldNotLoadRootOffline = true;
-                this.notify();
+                this.couldNotLoadRootOffline.set(true);
             }
             throw e;
         }
-        this.couldNotLoadRootOffline = false;
+        this.couldNotLoadRootOffline.set(false);
         this.root = this._createRoot(config, data);
         resolve({ root: this.root, loadId: config.loadId });
         this.config = config;
@@ -308,7 +307,7 @@ export class RelationalModel extends Model {
         if (!this.withCache) {
             return;
         }
-        const firstLoad = !this.isReady;
+        const firstLoad = !this.isReady();
         // Do not use a cached result if we're online and this isn't the first load of the model,
         // except if we're loading another record (form view) or creating a new record (onchange).
         const noCache =

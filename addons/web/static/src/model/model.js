@@ -13,6 +13,7 @@ import {
     onWillStart,
     onWillUnmount,
     onWillUpdateProps,
+    signal,
     status,
 } from "@odoo/owl";
 
@@ -34,11 +35,11 @@ export class Model {
         this.env = env;
         this.orm = services.orm;
         this.bus = new EventBus();
-        this.isReady = false;
+        this.isReady = signal(false);
         this.whenReady = Promise.withResolvers();
         this.whenReady.promise.then(() => {
-            this.isReady = true;
-            this.notify();
+            this.isReady.set(true);
+            // this.notify();
         });
         this.setup(params, services);
     }
@@ -187,8 +188,9 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
             useSampleModel = false;
             model.useSampleModel = useSampleModel;
         }
-        model.whenReady.resolve(); // resolve after the first successful load
-        if (status(component) === "mounted") {
+        if (!model.isReady()) {
+            model.whenReady.resolve(); // resolve after the first successful load
+        } else if (status(component) === "mounted") {
             model.notify();
         }
     }

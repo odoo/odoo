@@ -76,7 +76,7 @@
                         <t t-else="" t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
                     </t>
                 </t>
-                <t t-component="this.props.Renderer" t-if="this.model.isReady"
+                <t t-component="this.props.Renderer" t-if="this.model.isReady()"
                     list="this.model.root"
                     archInfo="this.props.archInfo"
                     Compiler="this.props.Compiler"
@@ -90,7 +90,7 @@
                     quickCreateState="this.quickCreateState"
                     progressBarState="this.progressBarState"
                 />
-                <t t-elif="this.model.couldNotLoadRootOffline">
+                <t t-elif="this.model.couldNotLoadRootOffline()">
                     <OfflineActionHelper/>
                 </t>
             </Layout>

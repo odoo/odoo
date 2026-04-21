@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { pick } from "@web/core/utils/objects";
-import { DataPoint } from "./datapoint";
+import { DataPoint, makeReactive } from "./datapoint";
 import { FetchRecordError } from "./errors";
 import { Operation } from "./operation";
 import {
@@ -56,37 +56,12 @@ export class Record extends DataPoint {
 
         // Be careful that pending changes might not have been notified yet, so the "dirty" flag may
         // be false even though there are changes in a field. Consider calling "isDirty()" instead.
-        const _dirty = signal(false);
-        Object.defineProperty(this, "dirty", {
-            get: _dirty,
-            set: _dirty.set,
-        });
-        const _selected = signal(false);
-        Object.defineProperty(this, "selected", {
-            get: _selected,
-            set: _selected.set,
-        });
-        const _data = signal.Object({}, { type: t.record() });
-        Object.defineProperty(this, "data", {
-            get: _data,
-            set: _data.set,
-        });
-        const _evalContext = signal.Object({}, { type: t.record() });
-        Object.defineProperty(this, "evalContext", {
-            get: _evalContext,
-            set: _evalContext.set,
-        });
-        const _evalContextWithVirtualIds = signal.Object({}, { type: t.record() });
-        Object.defineProperty(this, "evalContextWithVirtualIds", {
-            get: _evalContextWithVirtualIds,
-            set: _evalContextWithVirtualIds.set,
-        });
+        this.dirty = false;
+        this.selected = false;
+        this.evalContext = {};
+        this.evalContextWithVirtualIds = {};
+        this._invalidFields = new Set();
 
-        const _invalidFields = signal.Set(new Set(), { type: t.string() });
-        Object.defineProperty(this, "_invalidFields", {
-            get: _invalidFields,
-            set: _invalidFields.set,
-        });
         /** @type {Set<string>} */
         this._unsetRequiredFields = markRaw(new Set());
         this._closeInvalidFieldsNotification = () => {};
@@ -113,6 +88,13 @@ export class Record extends DataPoint {
         // expose string values (false fallbacks on the empty string) in this.data.
         this._textValues = markRaw({});
         this._setData(data);
+
+        makeReactive(this, "data", signal.Object, t.record());
+        makeReactive(this, "dirty", signal, t.boolean());
+        makeReactive(this, "evalContext", signal.Object, t.record());
+        makeReactive(this, "evalContextWithVirtualIds", signal.Object, t.record());
+        makeReactive(this, "selected", signal, t.boolean());
+        makeReactive(this, "_invalidFields", signal.Set, t.string());
     }
 
     /**

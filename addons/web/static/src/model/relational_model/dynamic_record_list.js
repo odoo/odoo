@@ -1,25 +1,22 @@
-import { signal } from "@odoo/owl";
+import { signal, types as t } from "@odoo/owl";
+import { makeReactive } from "./datapoint";
 import { DynamicList } from "./dynamic_list";
-
-/**
- * @typedef {import("./record").Record} RelationalRecord
- */
+import { Record as RelationalRecord } from "./record";
 
 export class DynamicRecordList extends DynamicList {
     static type = "DynamicRecordList";
 
     /**
-     * @param {import("./relational_model").Config} config
+     * @param {import("./relational_model").Config} _config
      * @param {Object} data
      */
-    setup(config, data) {
-        super.setup(config);
-        const _records = signal.Array([]);
-        Object.defineProperty(this, "records", {
-            get: _records,
-            set: _records.set,
-        });
+    setup(_config, data) {
+        super.setup(...arguments);
+
+        this.records = [];
         this._setData(data);
+
+        makeReactive(this, "records", signal.Array, t.instanceOf(RelationalRecord));
     }
 
     _setData(data) {
@@ -44,7 +41,7 @@ export class DynamicRecordList extends DynamicList {
     /**
      * @param {number} resId
      * @param {boolean} [atFirstPosition]
-     * @returns {Promise<Record>} the newly created record
+     * @returns {Promise<RelationalRecord>} the newly created record
      */
     addExistingRecord(resId, atFirstPosition) {
         return this.model.mutex.exec(async () => {
@@ -57,7 +54,7 @@ export class DynamicRecordList extends DynamicList {
 
     /**
      * @param {boolean} [atFirstPosition=false]
-     * @returns {Promise<Record>}
+     * @returns {Promise<RelationalRecord>}
      */
     addNewRecord(atFirstPosition = false) {
         return this.model.mutex.exec(async () => {

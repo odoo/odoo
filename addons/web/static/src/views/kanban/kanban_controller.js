@@ -177,7 +177,7 @@ export class KanbanController extends Component {
                     }
                 }
             },
-            () => [this.model.isReady]
+            () => [this.model.isReady()]
         );
         usePager(() => {
             const root = this.model.root;
@@ -216,8 +216,8 @@ export class KanbanController extends Component {
             "active" in this.props.fields
                 ? !this.props.fields.active.readonly
                 : "x_active" in this.props.fields
-                ? !this.props.fields.x_active.readonly
-                : false;
+                  ? !this.props.fields.x_active.readonly
+                  : false;
         useSubEnv({ model: this.model });
         this.exportRecords = useExportRecords(this.env, this.props.context, () =>
             this.getExportableFields()
@@ -470,7 +470,7 @@ export class KanbanController extends Component {
         const { createGroup } = this.props.archInfo.activeActions;
         const list = this.model.root;
         return (
-            this.model.isReady &&
+            this.model.isReady() &&
             list.isGrouped &&
             list.groupByField.type === "many2one" &&
             list.groups.length === 0 &&
@@ -483,7 +483,7 @@ export class KanbanController extends Component {
         if (!activeActions.quickCreate) {
             return false;
         }
-        if (!this.model.isReady) {
+        if (!this.model.isReady()) {
             return false;
         }
 

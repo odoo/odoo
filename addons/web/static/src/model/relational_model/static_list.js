@@ -3,7 +3,7 @@ import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
 import { omit, pick } from "@web/core/utils/objects";
 import { completeActiveFields } from "@web/model/relational_model/utils";
-import { DataPoint } from "./datapoint";
+import { DataPoint, makeReactive } from "./datapoint";
 import { Record as RelationalRecord } from "./record";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
 
@@ -104,15 +104,11 @@ export class StaticList extends DataPoint {
         );
 
         /** @type {RelationalRecord[]} */
-        const defaultRecords = data
+        this.records = data
             .slice(this.offset, this.limit)
             .map((r) => this._createRecordDatapoint(r));
 
-        const _records = signal.Array(defaultRecords, { type: t.instanceOf(RelationalRecord) });
-        Object.defineProperty(this, "records", {
-            get: _records,
-            set: _records.set,
-        });
+        makeReactive(this, "records", signal.Array, t.instanceOf(RelationalRecord));
     }
 
     // -------------------------------------------------------------------------

@@ -381,7 +381,7 @@ export function useProgressBar(progressAttributes, model, aggregateFields, activ
     const onRootLoaded = model.hooks.onRootLoaded;
     model.hooks.onRootLoaded = async (root) => {
         await onRootLoaded(root);
-        if (model.isReady) {
+        if (model.isReady()) {
             // do not wait for the progressbar on first load, to show the kanban view asap
             return prom;
         }
