@@ -230,6 +230,48 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 });
 
+test("Search setting on multiple apps", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block title="Title of group Foo">
+                        <setting>
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+                <app string="DRM" name="drm">
+                    <block title="Title of group Foo">
+                        <setting>
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+                <app string="ERM" name="erm">
+                    <block title="Title of group Foo">
+                        <setting>
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        `,
+    });
+
+    await editSearch("Fo");
+    expect(".o_searchview input").toHaveValue("Fo", {
+        message: "input value should be updated",
+    });
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual([
+        "Foo",
+        "Foo",
+        "Foo",
+    ]);
+});
+
 test.tags("mobile");
 test("change setting on nav bar click in base settings on mobile", async () => {
     await mountView({
