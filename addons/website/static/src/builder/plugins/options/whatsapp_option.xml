@@ -48,34 +48,34 @@
 		</BuilderRow>
 
 		<BuilderRow label.translate="Show Notification">
-			<BuilderCheckbox applyTo="'.notification-badge'" classAction="'d-none'" inverseAction="true"/>
+			<BuilderCheckbox applyTo="'.s_whatsapp_notification_badge'" classAction="'d-none'" inverseAction="true"/>
 		</BuilderRow>
 
 		<BuilderRow label.translate="Position">
-			<BuilderButtonGroup applyTo="'.wa-fab'">
-				<BuilderButton title.translate="Left" classAction="'o_pos_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-				<BuilderButton title.translate="Right" classAction="'o_pos_right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+			<BuilderButtonGroup applyTo="'.s_whatsapp_fab'">
+				<BuilderButton title.translate="Left" classAction="'s_whatsapp_pos_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+				<BuilderButton title.translate="Right" classAction="''" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
 			</BuilderButtonGroup>
 		</BuilderRow>
 
 		<BuilderRow label.translate="Layout">
-			<BuilderSelect applyTo="'.wa-fab'">
+			<BuilderSelect applyTo="'.s_whatsapp_fab'">
 				<BuilderSelectItem classAction="'rounded-circle'">Disk</BuilderSelectItem>
-				<BuilderSelectItem classAction="'rounded-empty-circle'">Circle</BuilderSelectItem>
+				<BuilderSelectItem classAction="'s_whatsapp_fab_circle'">Circle</BuilderSelectItem>
 				<BuilderSelectItem classAction="'rounded'">Square</BuilderSelectItem>
 			</BuilderSelect>
 		</BuilderRow>
 
 		<BuilderRow label.translate="Size">
-			<BuilderSelect applyTo="'.wa-fab'">
+			<BuilderSelect applyTo="'.s_whatsapp_fab > i'">
 				<BuilderSelectItem classAction="''">Small</BuilderSelectItem>
-				<BuilderSelectItem classAction="'fa-2x'">Medium</BuilderSelectItem>
-				<BuilderSelectItem classAction="'fa-3x'">Big</BuilderSelectItem>
+				<BuilderSelectItem classAction="'s_whatsapp_fab_medium'">Medium</BuilderSelectItem>
+				<BuilderSelectItem classAction="'s_whatsapp_fab_large'">Large</BuilderSelectItem>
 			</BuilderSelect>
 		</BuilderRow>
 
 		<BuilderRow label.translate="Color">
-			<BuilderCheckbox classAction="'no_icon_color'" inverseAction="true"/>
+			<BuilderCheckbox applyTo="'.s_whatsapp_fab'" classAction="'no_icon_color'" inverseAction="true"/>
 		</BuilderRow>
 	</t>
 

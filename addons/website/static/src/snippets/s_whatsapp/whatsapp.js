@@ -5,16 +5,16 @@ import { Interaction } from "@web/public/interaction";
 export class Whatsapp extends Interaction {
     static selector = ".s_whatsapp";
     dynamicContent = {
-        ".wa-fab, .wa-close-btn": { "t-on-click": this.toggleChat },
-        ".wa-send, .wa-cta-btn": { "t-on-click": this.sendMessage },
-        ".wa-user-message": {
+        ".s_whatsapp_fab, .s_whatsapp_close_btn": { "t-on-click": this.toggleChat },
+        ".s_whatsapp_send, .s_whatsapp_cta_btn": { "t-on-click": this.sendMessage },
+        ".s_whatsapp_user_message": {
             "t-on-keydown": this.onKeydownMessage,
             "t-on-input": this.autoGrow,
         },
     };
 
     start() {
-        this.chatbox = this.el.querySelector(".chatbox");
+        this.chatbox = this.el.querySelector(".s_whatsapp_chatbox");
         const rawNumber = this.el.dataset.whatsappNumber || "";
         this.companyNumber = rawNumber.replace(/[^\d]/g, "");
     }
@@ -57,8 +57,8 @@ export class Whatsapp extends Interaction {
             return;
         }
         const hasNumber = !!this.companyNumber;
-        const warningEl = this.chatbox.querySelector(".wa-warning");
-        const userInputEl = this.chatbox.querySelector(".wa-user-input");
+        const warningEl = this.chatbox.querySelector(".s_whatsapp_warning");
+        const userInputEl = this.chatbox.querySelector(".s_whatsapp_user_input");
         // Show warning if no WhatsApp number is configured
         warningEl?.classList.toggle("d-none", hasNumber);
         userInputEl?.classList.toggle("d-none", !hasNumber);
@@ -76,7 +76,7 @@ export class Whatsapp extends Interaction {
     }
 
     sendMessage() {
-        const inputEl = this.chatbox.querySelector(".wa-user-message");
+        const inputEl = this.chatbox.querySelector(".s_whatsapp_user_message");
         const messageText = inputEl.value.trim() || "";
         const whatsappUrl = `https://wa.me/${this.companyNumber}?text=${encodeURIComponent(
             messageText

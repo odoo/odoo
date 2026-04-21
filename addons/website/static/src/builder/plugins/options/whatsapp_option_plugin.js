@@ -95,8 +95,8 @@ export class WhatsappNumberAction extends ShowChatBoxAction {
         if (value) {
             // A WhatsApp number is now configured, so hide warning and enable
             // the chatbox input for user interaction.
-            const warningEl = editingElement.querySelector(".wa-warning");
-            const userInputEl = editingElement.querySelector(".wa-user-input");
+            const warningEl = editingElement.querySelector(".s_whatsapp_warning");
+            const userInputEl = editingElement.querySelector(".s_whatsapp_user_input");
             warningEl?.classList.add("d-none");
             userInputEl?.classList.remove("d-none");
             editingElement.dataset.whatsappNumber = value;
