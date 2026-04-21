@@ -472,7 +472,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
 
         mo = self.create_mo(self.mo_serial_tmpl, 1)
         mo.action_confirm()
-        mo.move_raw_line_ids.quantity = 1
+        mo.move_raw_ids.move_line_ids.quantity = 1
         details_form = Form.from_action(self.env, mo.move_raw_ids.action_show_details())
         with details_form.move_line_ids.new() as move_line:
             move_line.lot_id = quants[1].lot_id
