@@ -15,6 +15,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 import { PropertyDefinitionSelection } from "./property_definition_selection";
 import { PropertyTags } from "./property_tags";
 import { PropertyValue } from "./property_value";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 export const PROPERTIES_INFO = {
     char: {
@@ -109,6 +110,8 @@ export class PropertyDefinition extends Component {
         // events
         onChange: { type: Function, optional: true },
         onDelete: { type: Function, optional: true },
+        onDiscard: { type: Function, optional: true },
+        onAdd: { type: Function, optional: true },
         // prop needed by the popover service
         close: { type: Function, optional: true },
         record: { type: Object, optional: true },
@@ -162,6 +165,18 @@ export class PropertyDefinition extends Component {
                 }
             }
         });
+
+        useHotkey(
+            "control+enter",
+            () => {
+                document.activeElement?.blur();
+                setTimeout(() => {
+                    this.props.onAdd();
+                });
+            },
+            { bypassEditableProtection: true }
+        );
+        useHotkey("escape", () => this.props.onDiscard());
     }
 
     /* --------------------------------------------------------
@@ -211,6 +226,14 @@ export class PropertyDefinition extends Component {
         return (this.state.propertyDefinition.tags || []).map((tag) => tag[0]);
     }
 
+    get currentPropertyDefinitionTitle() {
+        return this.props.isNewlyCreated ? _t("Add Property Field") : _t("Update Property Field");
+    }
+
+    get currentPrimaryActionName() {
+        return this.props.isNewlyCreated ? _t("Add") : _t("Update");
+    }
+
     /**
      * Return an unique ID to be used in the DOM.
      *
@@ -237,18 +260,6 @@ export class PropertyDefinition extends Component {
         };
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
-    }
-
-    /**
-     * Pressed enter on the property label close the definition.
-     *
-     * @param {event} event
-     */
-    onPropertyLabelKeypress(event) {
-        if (event.key !== "Enter") {
-            return;
-        }
-        this.props.close();
     }
 
     /**

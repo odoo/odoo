@@ -1,5 +1,5 @@
 .o_field_property_definition {
-    max-height: 70vh;
+    max-height: 100vh;
     overflow-y: auto;
 
     .o_modal_container {
@@ -27,6 +27,9 @@
         input {
             margin-left: 0 !important;
         }
+    }
+    @include media-breakpoint-up(sm) {
+        max-height: 70vh !important;
     }
 }
 

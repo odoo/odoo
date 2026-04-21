@@ -2,15 +2,14 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertyDefinition">
         <div class="o_field_property_definition o_field_widget o_form_view d-block" t-custom-ref="propertyDefinition">
-            <div t-if="this.env.isSmall" class="d-flex justify-content-between px-3 border-bottom">
-                <button class="btn oi oi-arrow-left my-2" t-on-click="() => this.props.close()"/>
-                <button
-                    t-if="!this.props.readonly and this.props.canChangeDefinition"
-                    class="btn pe-0 text-danger float-end o_field_property_definition_delete"
-                    title="Remove Property"
-                    t-on-click="this.props.onDelete">
-                    <i class="fa fa-trash"/> Delete
-                </button>
+            <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+                <span class="fw-bold" t-out="this.currentPropertyDefinitionTitle"/>
+                <button type="button"
+                    class="btn-close"
+                    t-on-click="this.props.onDiscard"
+                    aria-label="Close"
+                    data-tooltip="Close"
+                />
             </div>
             <div class="o_modal_container p-3 o_inner_group grid">
                 <div class="d-contents mb-3 mb-sm-0">
@@ -25,7 +24,6 @@
                         autocomplete="off"
                         t-custom-model="this.state.propertyDefinition.string"
                         t-on-change="this.onPropertyLabelChange"
-                        t-on-keypress="this.onPropertyLabelKeypress"
                     />
                 </div>
                 <div class="d-contents mb-3 mb-sm-0">
@@ -188,9 +186,16 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex px-3 pb-1 mt-auto" t-if="!this.env.isSmall">
-                <button
-                    t-if="!this.props.readonly and this.props.canChangeDefinition"
+            <div class="d-flex px-3 pb-1 mt-auto">
+                <button class="btn btn-primary o_field_property_definition_add"
+                    t-on-click="this.props.onAdd"
+                    t-out="this.currentPrimaryActionName"
+                />
+                <button class="btn btn-secondary mx-2 o_field_property_definition_discard"
+                    t-on-click="this.props.onDiscard">
+                    Discard
+                </button>
+                <button t-if="!this.props.readonly and this.props.canChangeDefinition and !this.props.isNewlyCreated"
                     class="ms-auto btn btn-danger o_field_property_definition_delete"
                     title="Remove Property"
                     t-on-click="this.props.onDelete">
