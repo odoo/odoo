@@ -559,6 +559,20 @@
         </field>
     </record>
 
+    <record id="hr_leave_employee_view_dashboard_month" model="ir.ui.view">
+        <field name="name">hr.leave.view.dashboard.month</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_employee_view_dashboard"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//calendar" position="attributes">
+                <attribute name="mode">month</attribute>
+                <attribute name="month_overflow">0</attribute>
+            </xpath>
+        </field>
+
+    </record>
+
     <record id="hr_leave_view_form_manager" model="ir.ui.view">
         <field name="name">hr.leave.view.form.manager</field>
         <field name="model">hr.leave</field>

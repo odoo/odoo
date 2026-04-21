@@ -80,7 +80,8 @@ class TestPayrollFieldsAccess(TransactionCase):
             'new_bike_model_id',
             'originated_offer_id',
             'is_non_resident',
-            'structure_id'
+            'structure_id',
+            'attendance_based',
         ]
         missing_group_field_names = [
             f_name
