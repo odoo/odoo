@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="iap_account_view_form_inherit_pajakio" model="ir.ui.view">
+        <field name="name">iap.account.view.form.inherit.pajakio</field>
+        <field name="model">iap.account</field>
+        <field name="inherit_id" ref="iap.iap_account_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_ids']" position="before">
+                <field name="service_name" invisible="1"/>
+                <!-- service_name is kept invisible only to drive the company_ids visibility attribute below -->
+            </xpath>
+            <xpath expr="//field[@name='company_ids']" position="attributes">
+                <attribute name="invisible">service_name == 'l10n_id_pajakio_proxy'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
