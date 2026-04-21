@@ -76,7 +76,10 @@ export class BuilderNumberInput extends Component {
         return this.convertSpaceSplitValues(rawValue, (value) => {
             const unit = this.props.unit;
             const { savedValue, savedUnit } = value.match(
-                /(?<savedValue>[\d.e+-]+)(?<savedUnit>\w*)/
+                // [+-]? - optional sign
+                // \d*\.?\d+ - number (int or decimal)
+                // (?:e[+-]?\d+)? - optional scientific notation
+                /(?<savedValue>[+-]?\d*\.?\d+(?:e[+-]?\d+)?)(?<savedUnit>\w*)/
             ).groups;
             if (savedUnit || this.props.saveUnit) {
                 // Convert value from saveUnit to unit
