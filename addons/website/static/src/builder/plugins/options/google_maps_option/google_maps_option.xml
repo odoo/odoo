@@ -17,46 +17,21 @@
             <BuilderSelectItem dataAttributeActionValue="'flat'">Flat</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
+    <BuilderRow label.translate="Map ID" preview="false">
+        <BuilderTextInput dataAttributeAction="'mapId'"
+            placeholder.translate="e.g. DEMO_MAP_ID"/>
+    </BuilderRow>
+    <div class="alert alert-info mb-0 mt-2">
+        Get a
+        <a href="https://developers.google.com/maps/documentation/javascript/map-ids/get-map-id" target="_blank">Map ID</a>
+        from your Google Cloud console.
+    </div>
     <BuilderRow label.translate="Type" preview="false">
-        <BuilderSelect action="'resetMapColor'" dataAttributeAction="'mapType'">
+        <BuilderSelect dataAttributeAction="'mapType'">
             <BuilderSelectItem dataAttributeActionValue="'ROADMAP'" id="'roadmap_opt'">RoadMap</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'TERRAIN'">Terrain</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'SATELLITE'">Satellite</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'HYBRID'">Hybrid</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
-    <BuilderRow label.translate="⌙ Style" preview="false" t-if="this.isActiveItem('roadmap_opt')">
-        <BuilderSelect dataAttributeAction="'mapColor'">
-            <BuilderSelectItem dataAttributeActionValue="">
-                <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg'"/>
-            </BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'lightMonoMap'">
-                <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-lightMono.jpg'"/>
-            </BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'cupertinoMap'">
-                <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-cupertino.jpg'"/>
-            </BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'retroMap'">
-                <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-retro.jpg'"/>
-            </BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'cobaltMap'">
-                <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-cobalt.jpg'"/>
-            </BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'flatMap'">
-                <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-flat.jpg'"/>
-            </BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'blueMap'">
-                <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-blue.jpg'"/>
-            </BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'lillaMap'">
-                <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-lilla.jpg'"/>
-            </BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'carMap'">
-                <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-caramello.jpg'"/>
-            </BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'bwMap'">
-                <Image src="'/website/static/src/snippets/s_google_map/img/thumbs/map-bw.jpg'"/>
-            </BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Zoom" preview="false">

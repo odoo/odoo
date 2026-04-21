@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import { GoogleMapsApiKeyDialog } from "./google_maps_api_key_dialog";
-import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**
  * A `google.maps.places.PlaceResult` object.
@@ -53,9 +52,6 @@ export class GoogleMapsOptionPlugin extends Plugin {
     resources = {
         so_content_addition_selectors: [".s_google_map"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        builder_actions: {
-            ResetMapColorAction,
-        },
         // TODO remove when the snippet will have a "Height" option.
         should_keep_overlay_options_predicates: (el) => {
             if (el.matches(".s_google_map")) {
@@ -290,13 +286,6 @@ export class GoogleMapsOptionPlugin extends Plugin {
     }
     shouldNotRefetchApiKey() {
         this.wasApiKeyInvalidated = false;
-    }
-}
-
-export class ResetMapColorAction extends BuilderAction {
-    static id = "resetMapColor";
-    apply({ editingElement }) {
-        editingElement.dataset.mapColor = "";
     }
 }
 
