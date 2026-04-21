@@ -1,6 +1,20 @@
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
-let selectedPaletteColor = "";
+const PALETTE_COLOR_KEY = "configurator_flow_palette_color";
+
+function getBgColor(element) {
+    return element.ownerDocument.defaultView.getComputedStyle(element).backgroundColor;
+}
+
+function assertBgColor(element, expectedColor) {
+    const currentColor = getBgColor(element);
+    if (currentColor !== expectedColor) {
+        throw new Error(
+            `Expected the header CTA background to be ${expectedColor}, got ${currentColor}`
+        );
+    }
+}
 
 registry.category("web_tour.tours").add("configurator_flow", {
     steps: () => [
@@ -69,14 +83,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
                 const expectedColor = getComputedStyle(
                     document.querySelector(".o_setup_style_screen_color_palette.active span")
                 ).backgroundColor;
-                const currentColor = this.anchor.ownerDocument.defaultView.getComputedStyle(
-                    this.anchor
-                ).backgroundColor;
-                if (currentColor !== expectedColor) {
-                    throw new Error(
-                        `Expected the header CTA background to be ${expectedColor}, got ${currentColor}`
-                    );
-                }
+                assertBgColor(this.anchor, expectedColor);
             },
         },
         {
@@ -88,7 +95,10 @@ registry.category("web_tour.tours").add("configurator_flow", {
             content: "select the second palette",
             trigger: "#colorPanel.show .offcanvas-body .o_setup_style_screen_color_palette:eq(1) span:first-child",
             async run({ click }) {
-                selectedPaletteColor = getComputedStyle(this.anchor).backgroundColor;
+                browser.localStorage.setItem(
+                    PALETTE_COLOR_KEY,
+                    getComputedStyle(this.anchor).backgroundColor
+                );
                 await click();
             },
         },
@@ -98,16 +108,13 @@ registry.category("web_tour.tours").add("configurator_flow", {
             // desktop mode, so we added "":not(:visible)"".
             trigger: ":iframe header .btn_cta:not(:visible)",
             async run({ anchor, waitUntil }) {
-                let currentColor = "";
+                const selectedPaletteColor = browser.localStorage.getItem(PALETTE_COLOR_KEY);
                 try {
-                    await waitUntil(() => {
-                        currentColor = getComputedStyle(anchor).backgroundColor;
-                        return currentColor === selectedPaletteColor;
-                    }, { timeout: 9000 });
+                    await waitUntil(() => getBgColor(anchor) === selectedPaletteColor, {
+                        timeout: 9000,
+                    });
                 } catch {
-                    throw new Error(
-                        `Expected the header CTA background to be ${selectedPaletteColor}, got ${currentColor}`
-                    );
+                    assertBgColor(anchor, selectedPaletteColor);
                 }
             },
         },
@@ -161,6 +168,14 @@ registry.category("web_tour.tours").add("configurator_flow", {
         })),
         {
             trigger: ":iframe #wrap > section.s_cover",
+        },
+        {
+            content: "the final header CTA should keep the selected palette",
+            trigger: ":iframe header .btn_cta:not(:visible)",
+            run() {
+                assertBgColor(this.anchor, browser.localStorage.getItem(PALETTE_COLOR_KEY));
+                browser.localStorage.removeItem(PALETTE_COLOR_KEY);
+            },
         },
     ],
 });

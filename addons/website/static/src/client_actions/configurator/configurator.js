@@ -791,6 +791,7 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         this.colorPanelBodyRef = useRef("colorPanelBody");
         this.previewIframeRef = useRef("previewIframe");
         this.logoInputRef = useRef("logoSelectionInput");
+        this.isEnterprise = odoo.info && odoo.info.isEnterprise;
         this.toneOptions = TONE_OPTIONS;
         this.state.selectedTone = "inspirational";
         this.images_loaded = false;
@@ -1055,7 +1056,6 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
 
     async setPalette(paletteName) {
         this.state.selectedPalette = paletteName;
-        console.log("Selected palette:", this.state.selectedPalette);
         if (
             paletteName !== "logoPalette" &&
             !this.state.featuredPaletteNames.includes(paletteName)
@@ -1427,11 +1427,9 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         if (iframe) {
             this.closeGeneratorNotification?.();
             this.closeGeneratorNotification = this.notification.add(
-                markup(
-                    `<i class="fa fa-circle-o-notch fa-spin me-2" role="img" aria-label="${_t(
-                        "Loading"
-                    )}"></i>${_t("Generating your website content with AI...")}`
-                ),
+                markup`<i class="fa fa-circle-o-notch fa-spin me-2" role="img" aria-label="${_t(
+                    "Loading"
+                )}"></i>${_t("Generating your website content with AI...")}`,
                 {
                     type: "info",
                     sticky: true,

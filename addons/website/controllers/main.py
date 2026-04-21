@@ -416,7 +416,7 @@ class Website(Home):
         )
         website = request.env['website'].get_current_website()
         response = request.render('website.theme_configurator_preview', {
-            'preview_body': Markup(request.env['website'].theme_configurator_preview_body(
+            'preview_body': request.env['website'].theme_configurator_preview_body(
                 theme_name or website.theme_id.name or 'theme_default',
                 industry,
                 install_theme=str(install_theme).lower() in ('1', 'true'),
@@ -425,16 +425,9 @@ class Website(Home):
                 tone=tone,
                 with_images=str(with_images).lower() in ('1', 'true'),
                 industry_id=int(industry_id),
-            )),
+            ),
         })
         return response
-
-    @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
-    def social(self, social, **kwargs):
-        url = getattr(request.website, 'social_%s' % social, False)
-        if not url:
-            raise werkzeug.exceptions.NotFound()
-        return request.redirect(url, local=False)
 
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):

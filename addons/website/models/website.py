@@ -706,7 +706,7 @@ class Website(models.CachedModel):
         if not snippet_list:
             if request:
                 request.session['configurator_generated_homepage_content'] = {}
-            return '<div class="oe_structure"></div>'
+            return Markup('<div class="oe_structure"></div>')
 
         cta_data = website.get_cta_data(None, None)
         IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
@@ -888,7 +888,7 @@ class Website(models.CachedModel):
             }
         if request:
             request.session['configurator_generated_homepage_content'] = generated_homepage_content
-        return final_html
+        return Markup(final_html)
 
     def configurator_generate_AI_content(
         self,
@@ -1111,7 +1111,6 @@ class Website(models.CachedModel):
         )
         configurator_snippets = website.get_theme_configurator_snippets(theme_name)
         homepage_snippets = configurator_snippets.get('homepage', [])
-        industry = kwargs['industry_name']
 
         IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
         text_generation_target_lang = self.get_current_website().default_lang_id.code
