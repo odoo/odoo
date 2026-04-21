@@ -338,5 +338,42 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
         {
             trigger: ".o_rating_popup_composer span:text(Edit Review)",
         },
+        {
+            trigger: "a[id=home-tab]",
+            run: "click",
+        },
+        {
+            trigger: 'a.o_wslides_js_slides_list_slide_link:contains("Gardening: The Know-How")',
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            trigger: 'a[title="Exit Fullscreen"]',
+            run: "click",
+            expectUnloadPage: true,
+        },
+        { trigger: "a[href='#discuss'].active:text(Comments (4))" },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Composer-input",
+            run: "edit Test comment",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Composer-send:enabled",
+            run: "click",
+        },
+        { trigger: "a[href='#discuss']:text(Comments (5))" },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu [name='delete']",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .modal button:contains(Delete)",
+            run: "click",
+        },
+        { trigger: "a[href='#discuss']:text(Comments (4))" },
     ],
 });
