@@ -165,9 +165,19 @@ test("getProductPriceInfo", async () => {
 
     const models = store.models;
     const product5 = models["product.template"].get(5);
+    const variant5 = models["product.product"].get(5);
     const pricelist = models["product.pricelist"].get(3);
     const inPreset = models["pos.preset"].get(1);
     const outPreset = store.models["pos.preset"].get(2);
+
+    // Template-only call uses first variant lst_price (same default as addToCart).
+    const savedList = product5.list_price;
+    const savedLst = variant5.lst_price;
+    product5.list_price = 1;
+    variant5.lst_price = 222;
+    expect(store.getProductPriceInfo(product5).pricelist_price).toBe(222);
+    product5.list_price = savedList;
+    variant5.lst_price = savedLst;
 
     expect(store.getProductPriceInfo(product5).pricelist_price).toBe(100);
 
@@ -177,10 +187,36 @@ test("getProductPriceInfo", async () => {
     order.setPreset(outPreset);
     expect(store.getProductPriceInfo(product5).pricelist_price).toBe(10);
 
+    const savedPercentPrice = pricelist.item_ids[0].percent_price;
     pricelist.item_ids[0].percent_price = 80;
     inPreset.pricelist_id = pricelist;
     order.setPreset(inPreset);
     expect(store.getProductPriceInfo(product5).pricelist_price).toBe(20);
+    pricelist.item_ids[0].percent_price = savedPercentPrice;
+
+    // Fiscal position on the order (via setPreset) must change display price.
+    store.config.pricelist_id = false;
+    const fpStrip = models["account.fiscal.position"].get(2);
+    const savedOutFp = outPreset.fiscal_position_id;
+    const savedOutPricelist = outPreset.pricelist_id;
+    const savedDefaultFp = store.config.default_fiscal_position_id;
+    outPreset.fiscal_position_id = false;
+    outPreset.pricelist_id = false;
+    store.config.default_fiscal_position_id = false;
+    order.setPreset(outPreset);
+
+    const displayWithTaxes = store.getProductDisplayPrice(product5);
+    expect(displayWithTaxes).toBe(115);
+
+    outPreset.fiscal_position_id = fpStrip;
+    order.setPreset(outPreset);
+    const displayAfterStripFp = store.getProductDisplayPrice(product5);
+    expect(displayAfterStripFp).toBe(100);
+    expect(displayAfterStripFp).not.toBe(displayWithTaxes);
+
+    outPreset.fiscal_position_id = savedOutFp;
+    outPreset.pricelist_id = savedOutPricelist;
+    store.config.default_fiscal_position_id = savedDefaultFp;
 });
 
 describe("addToCart", () => {
