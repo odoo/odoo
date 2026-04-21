@@ -223,6 +223,9 @@ export class SelectFilterColorAction extends StyleAction {
 export class ToggleBgImageAction extends BuilderAction {
     static id = "toggleBgImage";
     static dependencies = ["backgroundImageOption", "media"];
+    setup() {
+        this.canTimeout = false;
+    }
     async apply(context) {
         await this.dependencies.media.openMediaDialog(this.getMediaDialogProps(context));
     }
@@ -257,6 +260,9 @@ export class RemoveBgImageAction extends BuilderAction {
 export class ReplaceBgImageAction extends BuilderAction {
     static id = "replaceBgImage";
     static dependencies = ["backgroundImageOption", "media"];
+    setup() {
+        this.canTimeout = false;
+    }
     async apply(context) {
         await this.dependencies.media.openMediaDialog(this.getMediaDialogProps(context));
     }

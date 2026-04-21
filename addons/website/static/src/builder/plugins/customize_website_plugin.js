@@ -486,6 +486,9 @@ export class AddLanguageAction extends BuilderAction {
 export class ToggleBodyBgImageAction extends BuilderAction {
     static id = "toggleBodyBgImage";
     static dependencies = ["builderActions", "history", "customizeWebsite", "media"];
+    setup() {
+        this.canTimeout = false;
+    }
     isApplied() {
         return !!this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image");
     }
