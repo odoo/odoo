@@ -133,6 +133,7 @@ export class ImportAction extends Component {
                 [false, "form"],
             ],
             domain: [["id", "in", resIds]],
+            context: this.model.context,
             target: "current",
             path: "imported-records",
         });
