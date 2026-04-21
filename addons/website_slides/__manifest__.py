@@ -73,6 +73,7 @@ Featuring
     'assets': {
         'web.assets_backend': [
             'website_slides/static/src/activity/**/*',
+            'website_slides/static/src/core/**/*',
             'website_slides/static/src/slide_category_one2many_field.js',
             'website_slides/static/src/slide_category_list_renderer.js',
             'website_slides/static/src/scss/slide_views.scss',
@@ -189,8 +190,17 @@ Featuring
             'website_slides/static/src/interactions/**/*',
             'website_slides/static/src/js/public/**/*',
         ],
+        "im_livechat.assets_embed_core": [
+            "website_slides/static/src/core/common/**/*",
+        ],
+        "mail.assets_public": [
+            "website_slides/static/src/core/common/**/*",
+        ],
         'portal.assets_chatter': [
             'website_slides/static/src/chatter/frontend/**/*',
+        ],
+        "portal.assets_chatter_helpers": [
+            "website_slides/static/src/core/common/**/*",
         ],
     },
     'license': 'LGPL-3',
