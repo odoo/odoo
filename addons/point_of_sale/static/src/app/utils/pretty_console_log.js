@@ -25,7 +25,7 @@ export function logPosMessage(type, functionName, message, color = "#A1A1A1", ar
         functionName,
         message,
     };
-    if (args.length) {
+    if (args.length && odoo.debug) {
         try {
             log.args = JSON.parse(JSON.stringify(args));
         } catch {
