@@ -612,3 +612,47 @@ class TestSalePurchaseStockFlow(TransactionCase):
         sale_order.action_confirm()
         purchase_order = sale_order._get_purchase_orders()
         self.assertEqual(purchase_order.order_line.analytic_distribution, {str(analytic_account.id): 100})
+
+    def test_po_date_change_does_not_affect_so_delivery_after_allocation(self):
+        """ Test that a purchase order is allocated to a sales order,
+            updating the purchase order expected arrival date does not alter
+            the delivery deadline of the linked sales order picking.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Test Prod Allocation',
+            'is_storable': True,
+            'seller_ids': [Command.create({
+                'partner_id': self.vendor.id,
+            })],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 5.0,
+            })],
+        })
+        so.action_confirm()
+        so_move = so.picking_ids.move_ids
+        po = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 5.0,
+            })],
+        })
+        po.button_confirm()
+        po_move = po.picking_ids.move_ids
+        # Link via reception report allocation (action_assign)
+        self.env['report.stock.report_reception'].action_assign(
+            so_move.ids, [so_move.product_qty], po_move.ids
+        )
+        self.assertIn(so_move.id, po_move.move_dest_ids.ids, 'Moves should be linked after allocation')
+        # Change PO expected arrival and ensure SO move deadline unchanged
+        before_deadline = so.picking_ids.date_deadline
+        po.order_line.date_planned = date.today() + timedelta(days=6)
+        self.env.flush_all()
+        self.assertEqual(
+            before_deadline, so_move.date_deadline,
+            'SO delivery deadline must not change when PO expected arrival changes after allocation'
+        )
