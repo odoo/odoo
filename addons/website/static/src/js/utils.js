@@ -55,30 +55,42 @@ function loadAnchors(url, body) {
 }
 
 /**
- * Allows the given input to propose existing website URLs.
+ * Creates an Owl root for the given component using the provided app, mounts it
+ * into a new container appended to the document body, and returns a cleanup
+ * function that destroys the root and removes the container.
  *
  * @param {import("@odoo/owl").App} app
- * @param {HTMLInputElement} input
- * @param {any} [options]
+ * @param {typeof import("@odoo/owl").Component} ComponentClass the OWL component to mount
+ * @param {Object} props
+ * @returns {Function} cleanup function
  */
-function autocompleteWithPages(app, input, options = {}) {
+export function mountAutocompleteComponent(app, ComponentClass, props) {
     const container = document.createElement("div");
     container.classList.add("ui-widget", "ui-autocomplete", "ui-widget-content", "border-0");
     document.body.appendChild(container);
 
-    const root = app.createRoot(UrlAutoComplete, {
-        props: {
-            options,
-            loadAnchors,
-            targetDropdown: input,
-        },
-    });
+    const root = app.createRoot(ComponentClass, { props });
     root.mount(container);
 
     return () => {
         root.destroy();
         container.remove();
     };
+}
+
+/**
+ * Allows the given input to propose existing website URLs.
+ *
+ * @param {import("@odoo/owl").App} app
+ * @param {HTMLInputElement} input
+ * @param {Object} [options]
+ */
+function autocompleteWithPages(app, input, options = {}) {
+    return mountAutocompleteComponent(app, UrlAutoComplete, {
+        options,
+        loadAnchors,
+        targetDropdown: input,
+    });
 }
 
 /**
