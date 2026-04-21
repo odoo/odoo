@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from freezegun import freeze_time
 
-from odoo.tests import tagged, common
+from odoo.tests import common, tagged, new_test_user
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -81,6 +81,12 @@ class TestHrHomeworkingCommon(common.TransactionCase):
         self.employee_1.wednesday_location_id = self.work_office_1.id
         self.assertEqual(self.employee_1.work_location_name, "Office 1")
         self.assertEqual(self.employee_1.work_location_type, "office")
+
+    def test_user_can_change_own_location(self):
+        """Check user without HR rights and linked to an employee can change its own location."""
+        test_user = new_test_user(self.env, login='test_user', groups='base.group_user', name='testuser')
+        test_user.action_create_employee()
+        test_user.with_user(test_user).monday_location_id = self.work_office_1
 
     def test_im_status_format_with_location(self):
         """Test that im_status uses format 'location_status' without 'presence_' prefix"""
