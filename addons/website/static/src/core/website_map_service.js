@@ -60,6 +60,7 @@ export const websiteMapService = {
         const notification = deps["notification"];
         let gmapAPIKeyProm;
         let gmapAPILoading;
+        let bootstrapLoadedKey;
         return {
             /**
              * @param {boolean} [refetch=false]
@@ -87,7 +88,22 @@ export const websiteMapService = {
                         const key = await this.getGMapAPIKey(refetch);
 
                         if (key) {
-                            initGoogleMapsAPI(key);
+                            if (bootstrapLoadedKey && bootstrapLoadedKey !== key) {
+                                notification.add(
+                                    _t(
+                                        "Google Maps configuration has changed. Please reload the page for changes to take effect."
+                                    ),
+                                    {
+                                        type: "warning",
+                                        sticky: true,
+                                    }
+                                );
+                                return false;
+                            }
+                            if (!bootstrapLoadedKey) {
+                                initGoogleMapsAPI(key);
+                                bootstrapLoadedKey = key;
+                            }
                             return key;
                         } else {
                             if (!editableMode && user.isAdmin) {
