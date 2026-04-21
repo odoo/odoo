@@ -299,6 +299,18 @@ export class ListPlugin extends Plugin {
                 fn.call(this, element);
             }
         }
+        // Help CSS to not use :has(> ...) by setting a class on parent nodes
+        for (const floatClass of ["float-start", "float-end"]) {
+            const parentClass = `o-${floatClass}-parent`;
+            for (const el of selectElements(root, `.${parentClass}`)) {
+                if (![...el.children].some((el) => el.classList.contains(floatClass))) {
+                    el.classList.remove(parentClass);
+                }
+            }
+            for (const el of selectElements(root, `:not(.${parentClass}) > .${floatClass}`)) {
+                el.parentElement.classList.add(parentClass);
+            }
+        }
     }
 
     // --------------------------------------------------------------------------
