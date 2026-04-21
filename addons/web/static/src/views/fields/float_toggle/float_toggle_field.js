@@ -13,11 +13,13 @@ export class FloatToggleField extends Component {
         range: { type: Array, optional: true },
         factor: { type: Number, optional: true },
         disableReadOnly: { type: Boolean, optional: true },
+        trailingZeros: { type: Boolean, optional: true },
     };
     static defaultProps = {
         range: [0.0, 0.5, 1.0],
         factor: 1,
         disableReadOnly: false,
+        trailingZeros: true,
     };
 
     // TODO perf issue (because of update round trip)
@@ -45,6 +47,7 @@ export class FloatToggleField extends Component {
             digits: this.props.digits,
             factor: this.factor,
             field: this.props.record.fields[this.props.name],
+            trailingZeros: this.props.trailingZeros,
         });
     }
 }
@@ -77,6 +80,12 @@ export const floatToggleField = {
             name: "force_button",
             type: "boolean",
         },
+        {
+            label: _t("Hide trailing zeros"),
+            name: "hide_trailing_zeros",
+            type: "boolean",
+            help: _t("Hide zeros to the right of the last non-zero digit, e.g. 1.20 becomes 1.2"),
+        },
     ],
     supportedTypes: ["float"],
     isEmpty: () => false,
@@ -92,6 +101,7 @@ export const floatToggleField = {
 
         return {
             digits,
+            trailingZeros: !options.hide_trailing_zeros,
             range: options.range,
             factor: options.factor,
             disableReadOnly: options.force_button || false,

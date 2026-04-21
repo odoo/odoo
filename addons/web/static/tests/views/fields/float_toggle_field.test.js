@@ -13,7 +13,10 @@ import {
 class Partner extends models.Model {
     float_field = fields.Float({ string: "Float field" });
 
-    _records = [{ id: 1, float_field: 0.44444 }];
+    _records = [
+        { id: 1, float_field: 0.44444 },
+        { id: 2, float_field: 1 },
+    ];
 }
 
 class User extends models.Model {
@@ -93,5 +96,20 @@ test("kanban view (readonly) with option force_button", async () => {
     await contains("button.o_field_float_toggle").click();
     expect("button.o_field_float_toggle").not.toHaveText(value, {
         message: "float_field field value should be changed",
+    });
+});
+
+test("with 'hide_trailing_zeros' option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
+            <form>
+                <field name="float_field" widget="float_toggle" options="{'range': [0, 1, 0.75, 0.5, 0.25], 'hide_trailing_zeros': true}"/>
+            </form>`,
+    });
+    expect(".o_field_widget").toHaveText("1", {
+        message: "The field would show 1.00 without the option",
     });
 });
