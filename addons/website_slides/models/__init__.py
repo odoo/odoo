@@ -4,6 +4,7 @@ from . import base_partner_merge
 from . import digest
 from . import gamification_challenge
 from . import gamification_karma_tracking
+from . import mail_message
 from . import slide_slide_partner  # decorated m2m, import before
 from . import slide_slide
 from . import slide_question
