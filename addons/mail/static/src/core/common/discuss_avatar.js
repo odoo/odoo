@@ -2,6 +2,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 
 import { Component } from "@odoo/owl";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 let nextId = 0;
 
@@ -23,6 +24,7 @@ export class DiscussAvatar extends Component {
 
     setup() {
         super.setup();
+        this.isBrowserSafari = isBrowserSafari;
         this.uniqueId = `mail.DiscussAvatar.${nextId++}`;
     }
 
