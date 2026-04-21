@@ -49,13 +49,28 @@ class CalendarRecurrence(models.Model):
                 event._microsoft_delete(event.user_id, event.microsoft_id)
                 event.ms_universal_event_id = False
         self.env['calendar.event'].with_context(skip_contact_description=True).create(vals)
+
+        # Insert new recurrences to Microsoft. Skipped when syncing from Microsoft (dont_notify)
+        # or when no_calendar_sync is set (e.g. during _rewrite_recurrence), which the
+        # @after_commit decorator in _microsoft_insert already enforces.
+        if not self.env.context.get('dont_notify'):
+            for recurrence in self:
+                if not recurrence.microsoft_id:
+                    base_event = recurrence.base_event_id or recurrence._get_first_event()
+                    if base_event and base_event._check_microsoft_sync_status():
+                        sender_user = recurrence._get_event_user_m()
+                        if not recurrence._is_microsoft_insertion_blocked(sender_user):
+                            ms_values = recurrence._microsoft_values(recurrence._get_microsoft_synced_fields())
+                            if ms_values:
+                                recurrence._microsoft_insert(ms_values)
+
         self.calendar_event_ids.need_sync_m = False
         return detached_events
 
     def _write_events(self, values, dtstart=None):
-        # If only some events are updated, sync those events.
-        # If all events are updated, sync the recurrence instead.
-        values['need_sync_m'] = bool(dtstart) or values.get("need_sync_m", True)
+        # Events within a recurrence are never synced individually.
+        # Series-level changes are handled by a single PATCH to the series master.
+        values['need_sync_m'] = False
         return super()._write_events(values, dtstart=dtstart)
 
     def _get_organizer(self):
