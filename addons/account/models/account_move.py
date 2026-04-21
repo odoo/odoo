@@ -473,6 +473,11 @@ class AccountMove(models.Model):
         tracking=True,
         compute='_compute_payment_reference', inverse='_inverse_payment_reference', store=True, readonly=False,
     )
+    sanitize_payment_reference = fields.Char(
+        string="Label sanitize",
+        compute='_compute_sanitize_payment_reference',
+        compute_sudo=False,
+    )
     display_qr_code = fields.Boolean(
         string="Display QR-code",
         compute='_compute_display_qr_code',
@@ -791,6 +796,7 @@ class AccountMove(models.Model):
     # used in <account.journal>._query_has_sequence_holes
     _made_gaps = models.Index('(journal_id, state, payment_state, move_type, date) WHERE (made_sequence_gap IS TRUE)')
     _duplicate_bills_idx = models.Index("(ref) WHERE (move_type IN ('in_invoice', 'in_refund'))")
+    _account_move_sanitize_payment_ref_idx = models.Index("(regexp_replace(COALESCE(payment_reference, ''), '[^a-zA-Z0-9]', '', 'g'))")
 
     def _auto_init(self):
         super()._auto_init()
@@ -841,6 +847,11 @@ class AccountMove(models.Model):
         )):
             move.payment_reference = move._get_invoice_computed_reference()
         self._inverse_payment_reference()
+
+    @api.depends('payment_reference')
+    def _compute_sanitize_payment_reference(self):
+        for move in self:
+            move.sanitize_payment_reference = re.sub(r'[^a-zA-Z0-9]', '', move.payment_reference or '')
 
     def _get_accounting_date_source(self):
         self.ensure_one()
@@ -1344,6 +1355,8 @@ class AccountMove(models.Model):
                 f"ELSE 'not_sent' "
                 "END"
             )
+        elif fname == 'sanitize_payment_reference':
+            return SQL("regexp_replace(COALESCE(%s, ''), '[^a-zA-Z0-9]', '', 'g')", super()._field_to_sql(alias, "payment_reference", query))
         return super()._field_to_sql(alias, fname, query=query)
 
     @api.depends('reconciled_payment_ids')
