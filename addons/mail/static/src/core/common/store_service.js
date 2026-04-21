@@ -626,15 +626,6 @@ export class Store extends BaseStore {
         chat?.open({ focus: true });
     }
 
-    openDocument({ id, model }) {
-        this.env.services.action.doAction({
-            type: "ir.actions.act_window",
-            res_model: model,
-            views: [[false, "form"]],
-            res_id: id,
-        });
-    }
-
     /**
      * @param {MouseEvent} ev - Click event triggering the popover.
      * @param {number} id - Partner Id of mentioned partner.
