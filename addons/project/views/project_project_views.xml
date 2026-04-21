@@ -432,19 +432,11 @@
             <field name="context">{"default_allow_billable": 0}</field>
         </record>
 
-        <record model="ir.ui.view" id="view_project_kanban">
-            <field name="name">project.project.kanban</field>
+        <record model="ir.ui.view" id="view_project_card">
+            <field name="name">project.project.card</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <kanban highlight_color="color"
-                    class="o_project_kanban"
-                    js_class="project_project_kanban"
-                    on_create="project.open_create_project"
-                    action="action_view_tasks" type="object"
-		    quick_create_view="project.quick_create_project_form"
-                    sample="1"
-                    default_order="is_favorite desc, sequence, name, id"
-                >
+                <card>
                     <field name="allow_milestones"/>
                     <field name="rating_count" />
                     <field name="show_ratings"/>
@@ -453,8 +445,6 @@
                     <field name="is_milestone_deadline_exceeded"/>
                     <field name="can_mark_milestone_as_done"/>
                     <field name="is_template"/>
-                    <progressbar field="last_update_status" colors='{"on_track": "success", "at_risk": "warning", "off_track": "danger", "on_hold": "info", "done": "purple"}'/>
-                    <field name="sequence" widget="handle"/>
                     <templates>
                         <t t-name="menu" groups="base.group_user">
                             <div class="container">
@@ -566,10 +556,43 @@
                             </footer>
                         </t>
                     </templates>
+                </card>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_project_kanban">
+            <field name="name">project.project.kanban</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <kanban highlight_color="color"
+                    class="o_project_kanban"
+                    js_class="project_project_kanban"
+                    on_create="project.open_create_project"
+                    action="action_view_tasks" type="object"
+                    quick_create_view="project.quick_create_project_form"
+                    sample="1"
+                    default_order="is_favorite desc, sequence, name, id"
+                    card_id="%(project.view_project_card)d"
+                >
+                    <progressbar field="last_update_status" colors='{"on_track": "success", "at_risk": "warning", "off_track": "danger", "on_hold": "info", "done": "purple"}'/>
+                    <field name="sequence" widget="handle"/>
                 </kanban>
             </field>
         </record>
 
+        <record id="view_project_card_group_stage" model="ir.ui.view">
+            <field name="name">project.project.card.group.stage</field>
+            <field name="model">project.project</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="view_project_card"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="before">
+                    <field name="is_rotting" invisible="1"/>
+                    <field name="rotting_days" widget="rotting_days" class="d-flex pe-2"/>
+                </xpath>
+            </field>
+        </record>
+    
         <record id="project_kanban_view_group_stage" model="ir.ui.view">
             <field name="name">project.project.kanban.group.stage</field>
             <field name="model">project.project</field>
@@ -579,10 +602,7 @@
                 <xpath expr="//kanban" position="attributes">
                     <attribute name="default_group_by">stage_id</attribute>
                     <attribute name="js_class">project_project_kanban_group_stage</attribute>
-                </xpath>
-                <xpath expr="//field[@name='user_id']" position="before">
-                    <field name="is_rotting" invisible="1"/>
-                    <field name="rotting_days" widget="rotting_days" class="d-flex pe-2"/>
+                    <attribute name="card">%(project.view_project_card_group_stage)d</attribute>
                 </xpath>
             </field>
         </record>
@@ -608,10 +628,7 @@
                 <xpath expr="//kanban" position="attributes">
                     <attribute name="default_group_by">stage_id</attribute>
                     <attribute name="js_class">project_project_kanban_group_stage</attribute>
-                </xpath>
-                <xpath expr="//field[@name='user_id']" position="before">
-                    <field name="is_rotting" invisible="1"/>
-                    <field name="rotting_days" widget="rotting_days" class="d-flex pe-2"/>
+                    <attribute name="card">%(project.view_project_card_group_stage)d</attribute>
                 </xpath>
             </field>
         </record>
@@ -749,13 +766,13 @@
             <field name="view_id" ref="view_project_config_kanban_group_stage"/>
         </record>
 
-        <record id="project_view_kanban_inherit_project" model="ir.ui.view">
+        <record id="project_view_card_inherit_project" model="ir.ui.view">
             <field name="name">project.kanban.inherit.project</field>
             <field name="model">project.project</field>
-            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="inherit_id" ref="project.view_project_card"/>
             <field name="priority">200</field>
             <field name="arch" type="xml">
-                <xpath expr="/kanban" position="inside">
+                <xpath expr="/card" position="inside">
                     <field name="id"/>
                 </xpath>
                 <xpath expr="//div[@name='task_analysis']" position="before">
@@ -798,6 +815,16 @@
             </field>
         </record>
 
+        <record id="project_templates_view_card" model="ir.ui.view">
+            <field name="name">project.project.template.card</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_card"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <span name="partner_name" position="replace"/>
+            </field>
+        </record>
+
         <record id="project_templates_view_kanban" model="ir.ui.view">
             <field name="name">project.project.template.kanban</field>
             <field name="model">project.project</field>
@@ -806,8 +833,8 @@
             <field name="arch" type="xml">
                 <kanban position="attributes">
                     <attribute name="js_class"></attribute>
+                    <attribute name="card">%(project.project_templates_view_card)d</attribute>
                 </kanban>
-                <span name="partner_name" position="replace"/>
             </field>
         </record>
 

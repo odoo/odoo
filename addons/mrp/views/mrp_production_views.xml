@@ -602,15 +602,14 @@
             </field>
         </record>
 
-        <record id="mrp_production_kanban_view" model="ir.ui.view">
-            <field name="name">mrp.production.kanban</field>
+        <record id="mrp_production_card_view" model="ir.ui.view">
+            <field name="name">mrp.production.card</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" sample="1" default_group_by="date_start:week" js_class="mrp_production_kanban">
+                <card>
                     <field name="reservation_state"/>
                     <field name="components_availability_state"/>
                     <field name="workorder_ids"/>
-                    <progressbar field="state" colors='{"draft": "light", "confirmed": "info", "progress": "warning", "to_close": "success", "done": "success", "cancel": "danger"}'/>
                     <templates>
                         <t t-name="card">
                             <div class="d-flex mb-1">
@@ -657,6 +656,16 @@
                             </footer>
                         </t>
                     </templates>
+                </card>
+            </field>
+        </record>
+
+        <record id="mrp_production_kanban_view" model="ir.ui.view">
+            <field name="name">mrp.production.kanban</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" card_id="%(mrp.mrp_production_card_view)d" sample="1" default_group_by="date_start:week" js_class="mrp_production_kanban">
+                    <progressbar field="state" colors='{"draft": "light", "confirmed": "info", "progress": "warning", "to_close": "success", "done": "success", "cancel": "danger"}'/>
                 </kanban>
             </field>
         </record>

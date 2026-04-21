@@ -675,20 +675,11 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_task_kanban">
-            <field name="name">project.task.kanban</field>
+        <record model="ir.ui.view" id="view_task_card">
+            <field name="name">project.task.card</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban
-                    highlight_color="color"
-                    default_group_by="stage_id"
-                    class="o_kanban_small_column o_kanban_project_tasks"
-                    on_create="quick_create"
-                    quick_create_view="project.quick_create_task_form"
-                    examples="project"
-                    js_class="project_task_kanban" sample="1"
-                    default_order="priority desc, sequence, state, date_deadline asc, id desc"
-                >
+                <card>
                     <field name="stage_id"/>
                     <field name="rating_count"/>
                     <field name="rating_avg"/>
@@ -701,7 +692,6 @@
                     <field name="has_project_template"/>
                     <field name="parent_id"/>
                     <field name="project_privacy_visibility"/>
-                    <progressbar field="state" colors='{"1_done": "success-done", "1_canceled": "danger", "03_approved": "success", "02_changes_requested": "warning", "04_waiting_normal": "info", "01_in_progress": "300" }'/>
                     <templates>
                         <t t-name="menu" t-if="!selection_mode" groups="base.group_user">
                             <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
@@ -753,9 +743,42 @@
                             <widget name="subtask_kanban_list"/>
                         </t>
                     </templates>
+                </card>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_task_kanban">
+            <field name="name">project.task.kanban</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <kanban
+                    highlight_color="color"
+                    default_group_by="stage_id"
+                    class="o_kanban_small_column o_kanban_project_tasks"
+                    on_create="quick_create"
+                    quick_create_view="project.quick_create_task_form"
+                    examples="project"
+                    js_class="project_task_kanban" sample="1"
+                    default_order="priority desc, sequence, state, date_deadline asc, id desc"
+                    card_id="%(project.view_task_card)d"
+                >
+                    <progressbar field="state" colors='{"1_done": "success-done", "1_canceled": "danger", "03_approved": "success", "02_changes_requested": "warning", "04_waiting_normal": "info", "01_in_progress": "300" }'/>
                 </kanban>
             </field>
-         </record>
+        </record>
+
+        <record id="view_task_card_subtask_mobile" model="ir.ui.view">
+            <field name="name">project.task.card.subtask.mobile</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_card"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field invisible="project_id == context.get('active_id', False)" class="mt-1" name="project_id" options="{'no_open': True}"/>
+                </xpath>
+                <xpath expr="//a[hasclass('o_kanban_parent')]" position="replace"/>
+            </field>
+        </record>
 
         <!-- View used in the Sub-tasks, Blocked by notebook page in the task form view in mobile -->
         <record id="project_sub_task_view_kanban_mobile" model="ir.ui.view">
@@ -764,10 +787,9 @@
             <field name="inherit_id" ref="project.view_task_kanban"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='parent_id']" position="after">
-                    <field invisible="project_id == context.get('active_id', False)" class="mt-1" name="project_id" options="{'no_open': True}"/>
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="card">%(project.view_task_card_subtask_mobile)d</attribute>
                 </xpath>
-                <xpath expr="//a[hasclass('o_kanban_parent')]" position="replace"/>
             </field>
         </record>
 
