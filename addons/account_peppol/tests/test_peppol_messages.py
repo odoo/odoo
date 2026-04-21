@@ -618,6 +618,15 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             wizard.action_send_and_print()
         self.assertEqual(spoiled_move.peppol_move_state, 'processing')
 
+        # Check that the supplier is the parent company in the xml (and not the branch company)
+        tree = etree.fromstring(spoiled_move.ubl_cii_xml_id.raw.content)
+        namespaces = {
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+        }
+        supplier_name = tree.xpath('//cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name/text()', namespaces=namespaces)
+        self.assertEqual(supplier_name[0], self.env.company.name)
+
         # Branch uses peppol configuration independent of their parent
         independent_move = self.create_move(self.valid_partner, company=branch_independent)
         independent_move.action_post()
@@ -627,6 +636,11 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         with mock_send_document():
             wizard.action_send_and_print()
         self.assertEqual(independent_move.peppol_move_state, 'processing')
+
+        # Check that the supplier is the branch company in the xml (and not the parent)
+        tree_independent = etree.fromstring(independent_move.ubl_cii_xml_id.raw.content)
+        supplier_name_independent = tree_independent.xpath('//cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name/text()', namespaces=namespaces)
+        self.assertEqual(supplier_name_independent[0], branch_independent.name)
 
     def test_compute_available_peppol_eas_multi_partner(self):
         """Check _compute_available_peppol_eas works with multiple partners"""
