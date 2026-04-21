@@ -8,22 +8,26 @@ class HrWorkEntryType(models.Model):
     _name = 'hr.work.entry.type'
     _description = 'Work Entry Type'
     _order = 'sequence'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(required=True, translate=True)
-    display_code = fields.Char(string="Display Code", size=3, translate=True, help="This code can be changed, it is only for a display purpose (3 letters max)")
+    name = fields.Char(required=True, translate=True, tracking=True)
+    display_code = fields.Char(string="Display Code", size=3, translate=True, tracking=True, help="This code can be changed, it is only for a display purpose (3 letters max)")
     code = fields.Char(
         string="Payroll Code",
         required=True,
+        tracking=True,
         help="The code is used as a reference in salary rules. Careful, changing an existing code can lead to unwanted behaviors.")
-    external_code = fields.Char(help="Use this code to export your data to a third party")
+    external_code = fields.Char(tracking=True, help="Use this code to export your data to a third party")
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
     active = fields.Boolean(
         'Active', default=True,
+        tracking=True,
         help="If the active field is set to false, it will allow you to hide the time type without removing it.")
     country_id = fields.Many2one(
         'res.country',
         string="Country",
+        tracking=True,
         domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)]
     )
     country_code = fields.Char(related='country_id.code')
@@ -31,16 +35,19 @@ class HrWorkEntryType(models.Model):
         [("working_time", "Working Time"), ("absence", "Absence")],
         default="working_time",
         required=True,
+        tracking=True,
         help="Determines if the entry counts as working time or absence.",
     )
     amount_rate = fields.Float(
         string="Rate",
         default=1.0,
+        tracking=True,
         help="If you want the hours to be paid double, the rate should be set to 200%.")
     is_extra_hours = fields.Boolean(
         string="Added to Monthly Pay",
+        tracking=True,
         help="Check this setting if you want the hours to be considered as extra time and added as a bonus to the basic salary.")
-    description = fields.Text(translate=True)
+    description = fields.Text(translate=True, tracking=True)
 
     @api.constrains('code', 'country_id')
     def _check_code_unicity(self):

@@ -38,9 +38,9 @@ class HrWorkEntryType(models.Model):
         taken = work_entry_type.leaves_taken > 0
         return -1 * work_entry_type.sequence, not work_entry_type.employee_requests and remaining, work_entry_type.employee_requests and remaining, taken
 
-    create_calendar_meeting = fields.Boolean(string="Display Time Off in Calendar", default=True)
+    create_calendar_meeting = fields.Boolean(string="Display Time Off in Calendar", default=True, tracking=True)
     color = fields.Integer(string='Color', help="The color selected here will be used in every screen with the time type.")
-    hide_on_dashboard = fields.Boolean(default=False, string="Hide On Dashboard", help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.")
+    hide_on_dashboard = fields.Boolean(default=False, string="Hide On Dashboard", tracking=True, help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.")
 
     # employee specific computed data
     max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed', search='_search_max_leaves',
@@ -59,15 +59,17 @@ class HrWorkEntryType(models.Model):
     is_used = fields.Boolean(compute="_compute_is_used")
     country_id = fields.Many2one('res.country', string='Country',
                                  default=lambda self: self.env.company.country_id,
+                                 tracking=True,
                                  domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)])
     country_code = fields.Char(related='country_id.code', depends=['country_id'], readonly=True)
     leave_validation_type = fields.Selection([
         ('no_validation', 'None'),
         ('hr', 'By Time Off Officer'),
         ('manager', "By Employee's Approver"),
-        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Time Off Validation')
-    requires_allocation = fields.Boolean(default=True, required=True, string='Requires Allocation')
+        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Time Off Validation', tracking=True)
+    requires_allocation = fields.Boolean(default=True, required=True, string='Requires Allocation', tracking=True)
     employee_requests = fields.Boolean(default=False, required=True, string="Allow Employee Requests",
+        tracking=True,
         help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
         Not Allowed: User cannot request an allocation.""")
     allocation_validation_type = fields.Selection([
@@ -75,6 +77,7 @@ class HrWorkEntryType(models.Model):
         ('hr', 'By Time Off Officer'),
         ('manager', "By Employee's Approver"),
         ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Approval',
+        tracking=True,
         help="""Select the level of approval needed in case of request by employee
             #     - No validation needed: The employee's request is automatically approved.
             #     - Approved by Time Off Officer: The employee's request need to be manually approved
@@ -85,29 +88,35 @@ class HrWorkEntryType(models.Model):
         ('day', 'Full Day'),
         ('half_day', 'Half-Day'),
         ('hour', 'Custom Hours')], default='day', string='Duration Type', required=True,
+        tracking=True,
         help="""Define the minimum time off duration in which an employee can take when requesting a leave""")
     unit_of_measure = fields.Selection([('hour', 'Hours'), ('day', 'Days')], default="hour", string="Unit of measure", required=True,
+                                       tracking=True,
                                        help="Define if the time type will be allocated/accrued in hours or days")
-    unpaid = fields.Boolean('Is Unpaid', default=False)
-    include_public_holidays_in_duration = fields.Boolean('Ignore Public Holidays', default=False, help="Public holidays should be counted in the leave duration when applying for leaves")
-    leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
-    allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
-    support_document = fields.Boolean(string='Supporting Document')
+    unpaid = fields.Boolean('Is Unpaid', default=False, tracking=True)
+    include_public_holidays_in_duration = fields.Boolean('Ignore Public Holidays', default=False, tracking=True, help="Public holidays should be counted in the leave duration when applying for leaves")
+    leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', tracking=True, default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
+    allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', tracking=True, default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
+    support_document = fields.Boolean(string='Supporting Document', tracking=True)
     allow_request_on_top = fields.Boolean(string='Allow Request on Top', default=False,
+        tracking=True,
         help="If checked, users can request another leave on top of the ones of this type.")
     elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', compute="_compute_eligible_for_accrual_rate", store=True, readonly=False,
+        tracking=True,
         help="If checked, this time type will be taken into account for accruals computation.")
     # negative time off
     allows_negative = fields.Boolean(string='Allow Negative',
+        tracking=True,
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
     max_allowed_negative = fields.Integer(string="Maximum Excess Amount",
+        tracking=True,
         help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
 
     _check_negative = models.Constraint(
         'CHECK(NOT allows_negative OR max_allowed_negative > 0)',
         'The maximum excess amount should be greater than 0. If you want to set 0, disable the negative cap instead.'
     )
-    time_off_selectable = fields.Boolean(string="Selectable in Time Off", default=True)
+    time_off_selectable = fields.Boolean(string="Selectable in Time Off", default=True, tracking=True)
 
     @api.model
     def _search_valid(self, operator, value):
