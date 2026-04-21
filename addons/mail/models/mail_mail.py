@@ -2,9 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import contextlib
 import datetime
 import json
 import logging
+import lxml
+import markupsafe
 import psycopg2
 import pytz
 import re
@@ -393,6 +396,96 @@ class MailMail(models.Model):
             body = re.sub(_UNFOLLOW_REGEX, '', body)
         return body
 
+    @api.model
+    def _render_attachments_links(self, attachments):
+        """ Temporary replacement for the mail.mail_attachment_links template in stable. """
+        rendered_attachments = [markupsafe.Markup("""
+        <div style="display: inline" data-attachment-id="%(attachment_id)s">
+            <div style="padding:0; margin:3px; vertical-align:middle; min-width:425px; width:fit-content; display:inline-block" width="fit-content">
+                <div style="margin:0; padding: 10px; border-style:solid; border-width:0 0 0 3px; border-radius:5px; border-color:#a2dae3; background-color:#d1ecf1; color:#09414a;">
+                    <a href="%(attachment_base_url)s/web/content/%(attachment_id)s?download=1&amp;access_token=%(attachment_access_token)s"
+                        style="margin:0; padding:0; text-decoration:none; border-radius:0; border-style:none; border-color:#008f8c; border-width:0; font-weight:500; width:100%%; color:#008f8c; vertical-align: middle; font-size: 15px;"
+                        width="100%%" target="_blank">
+                         &#11015; %(attachment_name)s
+                    </a>
+                </div>
+            </div>
+        </div>
+        """) % {
+            'attachment_id': a.id,
+            'attachment_access_token': a.access_token,
+            'attachment_name': a.name,
+            'attachment_base_url': a.get_base_url(),
+        }
+                                for a in attachments]
+        return markupsafe.Markup(
+            """<div class="o-attachments-container" style="margin-top: 10px; margin-bottom: 10px; max-width: 900px; width: 100%%;">
+                %(attachments)s
+            </div>""") % {'attachments': markupsafe.Markup('').join(rendered_attachments)}
+
+    @api.model
+    def _render_attachment_links_in_body(self, body, attachments, force=False, append=False):
+        """ Render the attachment container in the email body with download links when required.
+
+        :param str body: the original email body (HTML).
+        :param recordset attachments: attachments to render as links.
+        :param bool force: skip size estimation and always add links.
+        :param bool append: whether to replace existing links container or append just after it (if present).
+        :return: the modified body with the inserted download links
+            or False if the links should not be inserted (force == False and estimate size below limits).
+        :rtype: str | False
+        """
+        try:
+            root = lxml.html.fromstring(body or '')
+            container = root.xpath('//div[hasclass("o-attachments-container")][not(ancestor::*[@data-oe-version])]')
+        except lxml.etree.ParserError:
+            root = None
+            container = []
+
+        # Remove attachments handled outside the "o-attachments-container" (added through the html editor directly)
+        outside_attachments = set()
+        if root is not None:
+            path_all_ids = '//*[@data-attachment-id][not(ancestor::*[@data-oe-version])]/@data-attachment-id'
+            path_container_ids = '//div[hasclass("o-attachments-container")][not(ancestor::*[@data-oe-version])]//*[@data-attachment-id]/@data-attachment-id'
+            with contextlib.suppress(ValueError, TypeError):
+                outside_attachments = (
+                        {int(el) for el in root.xpath(path_all_ids)} -
+                        {int(el) for el in root.xpath(path_container_ids)})
+        attachments -= self.env['ir.attachment'].browse(list(outside_attachments))
+
+        if not force:
+            max_email_size_bytes = (self.env['ir.mail_server']).sudo()._get_max_email_size() * 1024 * 1024
+            default_estimated_header_size = 5000
+            estimated_email_size_bytes = self._estimate_email_size(
+                {}, body, [a.file_size for a in attachments.sudo()]) + default_estimated_header_size
+            if estimated_email_size_bytes <= max_email_size_bytes:
+                if len(container) > 0:
+                    container[0].getparent().remove(container[0])
+                    return lxml.html.tostring(root, pretty_print=True).decode()
+                return False
+
+        attachments.generate_access_token()
+        attachments_node = lxml.html.fragment_fromstring(self._render_attachments_links(attachments))
+        if len(container) == 0:
+            if root is None:
+                # We just add it at the end as the parsing of the body has failed
+                return tools.mail.append_content_to_html(
+                    body or '', lxml.html.tostring(attachments_node).decode(), plaintext=False)
+            elif len(signature_container := root.xpath('//div[hasclass("o-signature-container")][not(ancestor::*[@data-oe-version])]')):
+                signature_container[0].addprevious(attachments_node)
+            elif len(body_node := root.findall('body')):
+                body_node[0].append(attachments_node)
+            elif len(html_node := root.findall('html')):
+                html_node[0].append(attachments_node)
+            else:
+                root.append(attachments_node)
+        elif append:
+            # Add a second container just after the existing one
+            container[0].addnext(attachments_node)
+        else:
+            container[0].getparent().replace(container[0], attachments_node)
+        return lxml.html.tostring(root).decode()
+
     def _prepare_outgoing_list(self, mail_server=False, recipients_follower_status=None):
         """ Return a list of emails to send based on current mail.mail. Each
         is a dictionary for specific email values, depending on a partner, or
@@ -483,13 +576,9 @@ class MailMail(models.Model):
                 attachments = attachments - self.env['ir.attachment'].browse(list(link_ids))
 
         # Convert URL-only attachments (e.g. cloud or plain external links) into email links
-        url_attachments = attachments.sudo().filtered(
+        attachments_to_links = attachments.sudo().filtered(
             lambda a: a.url and not a.file_size and a.url.startswith(('http://', 'https://', 'ftp://')))
-        if url_attachments:
-            url_attachments.sudo().generate_access_token()
-            attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links', {'attachments': url_attachments})
-            body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
-            attachments -= url_attachments
+        attachments -= attachments_to_links
 
         # Turn remaining attachments into links if they are too heavy and
         # their ownership are business models (i.e. something != mail.message,
@@ -501,12 +590,15 @@ class MailMail(models.Model):
             max_email_size_bytes = (mail_server or self.env['ir.mail_server']
                                     ).sudo()._get_max_email_size() * 1024 * 1024
             if estimated_email_size_bytes > max_email_size_bytes:
-                # Remove attachments and prepare downloadable links to be added in the body
-                record_owned_attachments.sudo().generate_access_token()
-                attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links',
-                                                                {'attachments': record_owned_attachments})
-                body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
+                attachments_to_links |= record_owned_attachments
                 attachments -= record_owned_attachments
+
+        if attachments_to_links:
+            # force = True as we already have determined that the attachments must be turned into links
+            # append = True as an attachment link container could already have been added by the client in the body,
+            # and all attachment corresponding to a link in the body are removed above.
+            body = self._render_attachment_links_in_body(body, attachments_to_links, force=True, append=True)
+
         # Prepare the remaining attachment (those not embedded as link)
         # load attachment binary data with a separate read(), as prefetching all
         # `datas` (binary field) could bloat the browse cache, triggering
