@@ -9,7 +9,7 @@ const GoogleMapEdit = (I) =>
             super.setup();
             this.canSpecifyKey = true;
             this.websiteEditService = this.services.website_edit;
-            this.websiteMapService = this.services.website_map;
+            this.googleMapsService = this.services.google_maps;
         }
 
         async willStart() {
@@ -45,8 +45,8 @@ const GoogleMapEdit = (I) =>
          */
         async loadGoogleMaps(forceReconfigure = false) {
             /** @type {string | undefined} */
-            const apiKey = await this.websiteMapService.getGMapAPIKey(true);
-            const apiKeyValidation = await this.websiteMapService.validateGMapApiKey(apiKey);
+            const apiKey = await this.googleMapsService.getGMapsAPIKey(true);
+            const apiKeyValidation = await this.googleMapsService.validateGMapsApiKey(apiKey);
             const shouldReconfigure = forceReconfigure || !apiKeyValidation.isValid;
             let didReconfigure = false;
             if (shouldReconfigure) {
@@ -79,7 +79,7 @@ const GoogleMapEdit = (I) =>
          *                                      key if found.
          */
         async loadGoogleMapsAPIFromService(shouldRefetch) {
-            const apiKey = await this.websiteMapService.loadGMapAPI(true, shouldRefetch);
+            const apiKey = await this.googleMapsService.loadGMapsAPI(true, shouldRefetch);
             this.websiteEditService.callShared("googleMapsOption", "shouldNotRefetchApiKey");
             return !!apiKey;
         }
