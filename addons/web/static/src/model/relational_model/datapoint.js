@@ -1,5 +1,20 @@
-import { markRaw, signal } from "@odoo/owl";
+import { markRaw, signal, types as t } from "@odoo/owl";
 import { getId } from "./utils";
+
+/**
+ * @template T
+ * @param {T} target
+ * @param {keyof T} name
+ * @param {typeof signal} signalFn
+ * @param {any} type
+ */
+export function makeReactive(target, name, signalFn, type) {
+    const _signal = signalFn(target[name], { type });
+    Object.defineProperty(target, name, {
+        get: _signal,
+        set: _signal.set,
+    });
+}
 
 /**
  * @typedef {import("@web/search/search_model").Field} Field
@@ -20,13 +35,13 @@ export class DataPoint {
         this.model = model;
         markRaw(config.activeFields);
         markRaw(config.fields);
+
         /** @type {RelationalModelConfig} */
-        const _config = signal.Object(config);
-        Object.defineProperty(this, "_config", {
-            get: _config,
-            set: _config.set,
-        });
+        this._config = config;
+
         this.setup(config, data, options);
+
+        makeReactive(this, "_config", signal.Object, t.record());
     }
 
     /**
