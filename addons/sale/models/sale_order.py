@@ -1666,6 +1666,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         self._recompute_taxes()
+        self._recompute_prices()
 
         if self.partner_id:
             self.message_post(
