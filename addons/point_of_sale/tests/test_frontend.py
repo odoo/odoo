@@ -1660,6 +1660,56 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_printer_not_linked_to_any_combo_category', login="pos_user")
 
+    def test_printer_with_not_limited_category(self):
+        """  This test ensures that if a printer has a category that is not in the limited categories of the POS,
+             the products of this category are still printed in the preparation ticket """
+
+        setup_product_combo_items(self)
+        initial_cats_ids = self.env['pos.category'].search([]).ids
+        new_category = self.env['pos.category'].create({
+            'name': 'Not visible',
+        })
+        self.printer.write({
+            'product_categories_ids': [Command.set([new_category.id])],
+        })
+        self.combo_product_5.pos_categ_ids = [Command.set([new_category.id])]
+        self.main_pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set(self.printer.ids)],
+            'limit_categories': True,
+            'iface_available_categ_ids': [Command.set(initial_cats_ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_printer_restricts_to_allowed_categories_for_combo', login="pos_user")
+
+    def test_printer_with_not_limited_category_child(self):
+        """  This test ensures that if a printer has a category that is not in the limited categories of the POS,
+             the products with a child category of the printer's category (also not in the limited categories)
+             are still printed in the preparation ticket """
+
+        setup_product_combo_items(self)
+        initial_cats_ids = self.env['pos.category'].search([]).ids
+
+        new_category = self.env['pos.category'].create({
+            'name': 'Not Limited',
+        })
+        self.printer.write({
+            'product_categories_ids': [Command.set([new_category.id])],
+        })
+        new_child_category = self.env['pos.category'].create({
+            'name': 'Not Limited child',
+            'parent_id': new_category.id,
+        })
+        self.combo_product_5.pos_categ_ids = [Command.set([new_child_category.id])]
+        self.main_pos_config.write({
+            'is_order_printer': True,
+            'limit_categories': True,
+            'iface_available_categ_ids': [Command.set(initial_cats_ids)],
+            'printer_ids': [Command.set(self.printer.ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_printer_restricts_to_allowed_categories_for_combo', login="pos_user")
+
     def test_multi_product_options(self):
         self.pos_user.write({
             'group_ids': [

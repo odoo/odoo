@@ -76,6 +76,12 @@ export function checkPreparationTicketData(
         const lines = tickets[0].querySelectorAll(".orderline");
         const lineNames = [];
 
+        if (data.length !== lines.length) {
+            throw new Error(
+                `Ticket data mismatch: expected ${data.length} lines, but printed ${lines.length}.`
+            );
+        }
+
         let idx = 0;
         for (const line of lines) {
             const name = line.firstChild.children[1].innerHTML;

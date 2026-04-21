@@ -40,13 +40,16 @@ class PosCategory(models.Model):
     def _load_pos_data_domain(self, data, config):
         domain = []
         if config.limit_categories:
-            preparation_categories = [printer['product_categories_ids'] for printer in data['pos.printer']]
-            flattened_preparation_categories = [item for sublist in preparation_categories for item in sublist]
-            domain += [('id', 'in', flattened_preparation_categories + config.iface_available_categ_ids.ids)]
+            additional_categories_ids = self._load_pos_data_additional_categories_ids(data, config)
+            domain += [('id', 'in', additional_categories_ids + config.iface_available_categ_ids.ids)]
         return domain
 
     @api.model
-    def _load_pos_data_fields(self, config):
+    def _load_pos_data_additional_categories_ids(self, data, config):
+        return config.printer_ids.product_categories_ids._get_descendants().ids
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
         return ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color', 'sequence', 'hour_until', 'hour_after']
 
     def _get_hierarchy(self) -> List[str]:

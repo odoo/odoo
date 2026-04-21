@@ -271,3 +271,31 @@ registry.category("web_tour.tours").add("test_self_order_parent_category", {
         Utils.clickBtn("Close"),
     ],
 });
+
+registry.category("web_tour.tours").add("test_self_order_limited_cat", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickCategory("Miscellaneous"),
+        Utils.negateStep(ProductPage.checkRootCategoryDisplayed("Hidden root")),
+        ProductPage.checkProductDisplayed("Fanta"),
+        Utils.negateStep(ProductPage.checkProductDisplayed("Coca-Cola")),
+        ProductPage.checkChildCategoryDisplayed("Child2"),
+        Utils.negateStep(ProductPage.checkChildCategoryDisplayed("Hidden child")),
+        ProductPage.clickChildCategory("Child2"),
+        ProductPage.checkProductDisplayed("Fanta"),
+        ProductPage.clickCategory("Visible Root"),
+        ProductPage.checkProductDisplayed("Ketchup"),
+        ProductPage.clickCategory("Category 2"),
+        ProductPage.clickProduct("Office Combo"),
+        ProductPage.clickComboProduct("Combo Product 5"),
+        Utils.clickBtn("Add to cart"),
+
+        Utils.clickBtn("Checkout"),
+        Utils.clickBtn("Order"),
+        Utils.clickBtn("Close"),
+        {
+            content: `Check prep change printed'`,
+            trigger: `.pos-receipt-print:contains('Combo Product 5')`,
+        },
+    ],
+});

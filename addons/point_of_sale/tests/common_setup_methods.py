@@ -113,6 +113,7 @@ def setup_product_combo_items(self):
             "pos_categ_ids": [(6, 0, [pos_category_2.id])],
         }
     )
+    self.combo_product_5 = combo_product_5
 
     self.desks_combo = self.env["product.combo"].create(
         {
