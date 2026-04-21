@@ -1978,6 +1978,35 @@ class TestQWebBasic(TransactionCase):
         result = self.env['ir.qweb']._render(view1.id)
         self.assertEqual(str(result), "<div><wrap><section><article>test</article></section></wrap></div>")
 
+    def test_call_percent_in_parametric_attr(self):
+        self.env['ir.ui.view'].create({
+            'name': 'child',
+            'type': 'qweb',
+            'key': 'base.child',
+            'arch_db': '<p t-out="msg"/>',
+        })
+        view = self.env['ir.ui.view'].create({
+            'name': "other",
+            'type': 'qweb',
+            'arch': '<div>'
+                    '<t t-call="base.child" msg.f="94% of percentage statistics are completely made up."/>'
+                    '<t t-call="base.child" msg.f="#{n}% of percentage statistics are completely made up."/>'
+                    '<t t-call="base.child" msg.f="94% of percentage statistics are #{n}% made up."/>'
+                    '</div>',
+        })
+
+        result = self.env['ir.qweb']._render(view.id, {'n': 100})
+        self.assertEqual(
+            str(result),
+            "<div>"
+            "<p>94% of percentage statistics are completely made up.</p>"
+            "<p>100% of percentage statistics are completely made up.</p>"
+            "<p>94% of percentage statistics are 100% made up.</p>"
+            "</div>",
+            "literal '%' in a parametric t-call attribute must always render "
+            "as a single '%', whether or not the value has #{...} placeholders",
+        )
+
     def test_call_foreach_call(self):
         self.env['ir.ui.view'].create({
             'name': 'child',
