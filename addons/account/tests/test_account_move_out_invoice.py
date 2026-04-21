@@ -5081,3 +5081,40 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'product_id': self.product_a.id,
             'name': 'product_a',
         }])
+
+    def test_tax_line_conversion(self):
+        """ Test that the tax line is correctly converted regardless of when we change the invoice date """
+        self.other_currency.write({
+            'rate_ids': [
+                Command.clear(),
+                Command.create({'name': '2016-01-01', 'inverse_company_rate': 966.35}),
+                Command.create({'name': '2017-01-01', 'inverse_company_rate': 970.00}),
+            ],
+            'decimal_places': 2,
+        })
+        tax = self.company_data['default_tax_sale'].copy({'name': '19%', 'amount': 19.0})
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+
+        move = self._create_invoice_one_line(
+            product_id=self.product_a,
+            price_unit=722.4,
+            tax_ids=tax,
+            currency_id=self.other_currency,
+            invoice_date='2016-01-01',
+        )
+        tax_line = move.line_ids.filtered(lambda l: l.display_type == 'tax')
+        self.assertEqual(tax_line.balance, -132637.34)
+
+        move = self._create_invoice_one_line(
+            product_id=self.product_a,
+            price_unit=722.4,
+            tax_ids=tax,
+            currency_id=self.other_currency,
+            invoice_date=False,
+        )
+        tax_line = move.line_ids.filtered(lambda l: l.display_type == 'tax')
+        self.assertEqual(tax_line.balance, -133138.32)
+        with Form(move) as move_form:
+            move_form.invoice_date = '2016-01-01'
+
+        self.assertEqual(tax_line.balance, -132637.34)
