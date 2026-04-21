@@ -81,7 +81,7 @@ function introduceSetOperators(tree, options = {}) {
         }
         if (fieldType === "boolean" && c.value === true) {
             return updateCondition(c, { operator: c.operator === "=" ? "set" : "not set" });
-        } else if (!["many2one", "date", "datetime"].includes(fieldType) && c.value === false) {
+        } else if (c.value === false) {
             return updateCondition(c, { operator: c.operator === "=" ? "not set" : "set" });
         }
     }
