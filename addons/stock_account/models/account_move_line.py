@@ -9,6 +9,7 @@ class AccountMoveLine(models.Model):
         copy=False,
         index="btree_not_null",
     )
+    stock_move_id = fields.Many2one('stock.move', index='btree_not_null')
 
     def _compute_account_id(self):
         super()._compute_account_id()

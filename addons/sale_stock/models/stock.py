@@ -129,7 +129,7 @@ class StockMove(models.Model):
         res = super().write(vals)
         if 'product_id' in vals:
             for move in self:
-                if move.sale_line_id and move.product_id != move.sale_line_id.product_id:
+                if move.sale_line_id and move.product_id != move.sale_line_id.product_id and move.sale_line_id.order_id.state != 'draft':
                     move.sale_line_id = False
         return res
 

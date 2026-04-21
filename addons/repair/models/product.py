@@ -19,9 +19,11 @@ class ProductProduct(models.Model):
     def _search_product_is_in_repair(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        product_ids = self.env['repair.order'].search([
-            ('id', 'in', [self.env.context.get('order_id', '')]),
-        ]).move_ids.product_id.ids
+        repair_order = self.env['repair.order'].browse(self.env.context.get('order_id', ''))
+        child_field = self.env.context.get('child_field')
+        product_ids = repair_order.move_ids.product_id.ids
+        if child_field == 'repair_service_line_ids':
+            product_ids = repair_order.repair_service_line_ids.product_id.ids
         return [('id', 'in', product_ids)]
 
     def _count_returned_sn_products_domain(self, sn_lot, or_domains):

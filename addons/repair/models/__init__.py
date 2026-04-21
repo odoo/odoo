@@ -13,3 +13,4 @@ from . import sale_order
 from . import stock_warehouse
 from . import account_move
 from . import res_partner
+from . import repair_service_line
