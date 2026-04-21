@@ -148,7 +148,7 @@
                                          invisible="survey_type == 'live_session'">
                                         <field name="is_time_limited" nolabel="1"/>
                                         <div invisible="not is_time_limited">
-                                            <field name="time_limit" widget="float_time" nolabel="1" class="oe_inline"/> minutes
+                                            <field name="time_limit" widget="float_time" options="{'unit': 'minutes'}" nolabel="1" class="oe_inline"/>
                                         </div>
                                     </div>
                                     <!-- Scoring -->
