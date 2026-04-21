@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Top-level app menu                                             -->
+    <!-- ============================================================ -->
+    <!-- Visible to every internal user — each user sees only the
+         submenus they have group access to. The root itself has no
+         `groups` so it never disappears entirely. -->
+    <menuitem id="menu_ksw_deduction_root"
+              name="Deductions"
+              sequence="90"
+              web_icon="KSW_deduction,static/description/icon.png"/>
+
+    <!-- ============================================================ -->
+    <!-- Self-Service (plain users)                                     -->
+    <!-- ============================================================ -->
+    <!--
+        Two menus visible to every internal user:
+          - My Loans        → read-only list of the user's own loans.
+          - Request a Loan  → opens the loan-request wizard (modal).
+        The wizard enforces that a user can only create a loan for
+        themselves; the "My Loans" action relies on the existing user
+        record rule (own + direct subordinates).
+
+        Sequence ordering at the root level:
+          * Operations  (sequence=5)  — first for officers/approvers,
+                                         so clicking the root
+                                         "Deductions" menu lands on
+                                         "All Deductions" (loans are a
+                                         SUBTYPE of deduction, not the
+                                         headline).
+          * Self-Service (sequence=10) — hidden leaves for officers are
+                                         skipped; plain users (who see
+                                         only Self-Service) naturally
+                                         fall through to "My Loans".
+        Inside Self-Service, "My Loans" (sequence=10) comes before
+        "Request a Loan" (sequence=20) so plain users never land on
+        the wizard modal when they click the root menu.
+    -->
+    <menuitem id="menu_ksw_deduction_self_service"
+              name="Self-Service"
+              parent="menu_ksw_deduction_root"
+              sequence="10"/>
+
+    <menuitem id="menu_ksw_my_loans"
+              name="My Loans"
+              parent="menu_ksw_deduction_self_service"
+              action="action_ksw_my_loans"
+              sequence="10"/>
+
+    <menuitem id="menu_ksw_loan_request"
+              name="Request a Loan"
+              parent="menu_ksw_deduction_self_service"
+              action="action_ksw_loan_request"
+              sequence="20"/>
+
+    <!-- ============================================================ -->
+    <!-- Operations (officers / approvers only)                         -->
+    <!-- ============================================================ -->
+    <!--
+        Plain employees (group_deduction_user only) must NOT see the
+        full deduction list or the pending-approval screens. Gated to
+        officers AND every loan-approver role so DM / HR / Accounting /
+        GM approvers still have access even without Officer-level
+        Deduction Management.
+        Sequence 5 (before Self-Service) so that officers/approvers
+        clicking the root menu land on "All Deductions" — loans are a
+        subtype, not the headline.
+    -->
+    <menuitem id="menu_ksw_deduction_operations"
+              name="Operations"
+              parent="menu_ksw_deduction_root"
+              sequence="5"
+              groups="KSW_deduction.group_deduction_officer,KSW_deduction.group_loan_hr,KSW_deduction.group_loan_acc,KSW_deduction.group_loan_gm"/>
+
+    <menuitem id="menu_ksw_deduction_all"
+              name="All Deductions"
+              parent="menu_ksw_deduction_operations"
+              action="action_ksw_deduction_all"
+              sequence="10"
+              groups="KSW_deduction.group_deduction_officer"/>
+
+    <menuitem id="menu_ksw_deduction_loans"
+              name="Loans"
+              parent="menu_ksw_deduction_operations"
+              action="action_ksw_deduction_loans"
+              sequence="20"
+              groups="KSW_deduction.group_deduction_officer,KSW_deduction.group_loan_hr,KSW_deduction.group_loan_acc,KSW_deduction.group_loan_gm"/>
+
+    <menuitem id="menu_ksw_deduction_pending"
+              name="My Pending Approvals"
+              parent="menu_ksw_deduction_operations"
+              action="action_ksw_deduction_pending"
+              sequence="30"
+              groups="KSW_deduction.group_deduction_officer,KSW_deduction.group_loan_hr,KSW_deduction.group_loan_acc,KSW_deduction.group_loan_gm"/>
+
+    <!-- Configuration -->
+    <menuitem id="menu_ksw_deduction_config"
+              name="Configuration"
+              parent="menu_ksw_deduction_root"
+              sequence="90"
+              groups="KSW_deduction.group_deduction_manager"/>
+
+    <menuitem id="menu_ksw_deduction_types"
+              name="Deduction Types"
+              parent="menu_ksw_deduction_config"
+              action="action_ksw_deduction_type"
+              sequence="10"/>
+
+</odoo>
+

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- =============================================================== -->
+    <!-- Loan Request Wizard — form                                        -->
+    <!-- =============================================================== -->
+    <record id="view_ksw_loan_request_wizard_form" model="ir.ui.view">
+        <field name="name">ksw.loan.request.wizard.form</field>
+        <field name="model">ksw.loan.request.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Request a Loan">
+                <sheet>
+                    <div class="alert alert-info" role="status">
+                        <strong>📝 Submit a new loan request</strong><br/>
+                        Fill the details below and click <b>Submit</b>.
+                        Your direct manager will be notified first, then
+                        HR, Accounting and the GM will review in turn.
+                        You can track the status under <b>My Loans</b>.
+                    </div>
+
+                    <group>
+                        <group string="Loan Details">
+                            <field name="employee_id" invisible="1"/>
+                            <field name="type_id"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="amount"/>
+                            <field name="installments"/>
+                            <field name="start_month"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason"
+                               placeholder="Why do you need this loan? (required)"/>
+                        <field name="description"
+                               placeholder="Additional notes, repayment preferences..."/>
+                    </group>
+                    <separator string="Supporting Documents"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                </sheet>
+                <footer>
+                    <button name="action_submit" type="object"
+                            string="Submit" class="btn-primary"/>
+                    <button special="cancel" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- =============================================================== -->
+    <!-- Action: Request a Loan                                            -->
+    <!-- =============================================================== -->
+    <!--
+        Opens the wizard as a modal dialog. Available to every internal
+        user (no `groups` filter) because requesting a loan is a
+        self-service action — the wizard itself enforces that the user
+        can only create a loan for their own employee record.
+    -->
+    <record id="action_ksw_loan_request" model="ir.actions.act_window">
+        <field name="name">Request a Loan</field>
+        <field name="res_model">ksw.loan.request.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ksw_loan_request_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <!-- =============================================================== -->
+    <!-- Action: My Loans (read-only list for the requester)               -->
+    <!-- =============================================================== -->
+    <!--
+        Filters ksw.deduction to loan records linked to the current
+        user's employee. Any internal user can open this menu and see
+        only their own loans (the existing user record rule narrows
+        reads to `employee.user_id = uid OR employee.parent_id.user_id
+        = uid`, so subordinates also show up for line managers — which
+        is actually useful: a line manager sees both their own loans
+        AND pending requests from their direct reports).
+    -->
+    <record id="action_ksw_my_loans" model="ir.actions.act_window">
+        <field name="name">My Loans</field>
+        <field name="res_model">ksw.deduction</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_loan', '=', True), '|', ('employee_id.user_id', '=', uid), ('employee_id.parent_id.user_id', '=', uid)]</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You have no loan requests yet
+            </p>
+            <p>
+                Use <b>Request a Loan</b> in the sidebar to submit a new
+                loan. Once submitted, your request goes through the
+                approval chain (DM → HR → Accounting → GM) and you can
+                track its status here.
+            </p>
+        </field>
+    </record>
+
+</odoo>
+

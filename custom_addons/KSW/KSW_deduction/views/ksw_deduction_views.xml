@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- =============================================================== -->
+    <!-- FORM                                                              -->
+    <!-- =============================================================== -->
+    <record id="ksw_deduction_view_form" model="ir.ui.view">
+        <field name="name">ksw.deduction.form</field>
+        <field name="model">ksw.deduction</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!--
+                        Draft: Submit (only for creator or officers).
+                        Extra guard: hide once the loan approval chain
+                        has started (`approval_state` is set). For loan
+                        records, `state` stays 'draft' throughout the
+                        DM → HR → Acc → GM chain; only `approval_state`
+                        advances. Without the `approval_state` check,
+                        the button would stay visible on pending_hr /
+                        pending_acc / pending_gm records and re-submit
+                        clicks cause AccessError for non-privileged
+                        users (the record is already past draft).
+                    -->
+                    <button name="action_submit" type="object"
+                            string="Submit"
+                            class="oe_highlight"
+                            invisible="state != 'draft' or not x_can_submit or approval_state"/>
+
+                    <!-- Loan workflow buttons -->
+                    <!-- DM step: no dedicated group; shown only to users
+                         who qualify as the employee's direct manager
+                         (or hold a Deduction Officer/Manager role). -->
+                    <button name="action_dm_approve" type="object"
+                            string="✅ Approve (DM)"
+                            class="oe_highlight"
+                            invisible="not is_loan or approval_state != 'pending_dm' or not x_can_dm_approve"/>
+                    <button name="action_refuse_dm" type="object"
+                            string="⛔ Refuse"
+                            class="btn-danger"
+                            invisible="not is_loan or approval_state != 'pending_dm' or not x_can_dm_approve"/>
+                    <button name="action_hr_approve" type="object"
+                            string="✅ Approve (HR)"
+                            class="oe_highlight"
+                            groups="KSW_deduction.group_loan_hr"
+                            invisible="not is_loan or approval_state != 'pending_hr'"/>
+                    <button name="action_refuse_hr" type="object"
+                            string="⛔ Refuse"
+                            class="btn-danger"
+                            groups="KSW_deduction.group_loan_hr"
+                            invisible="not is_loan or approval_state != 'pending_hr'"/>
+                    <button name="action_acc_approve" type="object"
+                            string="✅ Approve (Accounting)"
+                            class="oe_highlight"
+                            groups="KSW_deduction.group_loan_acc"
+                            invisible="not is_loan or approval_state != 'pending_acc'"/>
+                    <button name="action_refuse_acc" type="object"
+                            string="⛔ Refuse"
+                            class="btn-danger"
+                            groups="KSW_deduction.group_loan_acc"
+                            invisible="not is_loan or approval_state != 'pending_acc'"/>
+                    <button name="action_gm_approve" type="object"
+                            string="✅ Final Approve (GM)"
+                            class="btn-success"
+                            groups="KSW_deduction.group_loan_gm"
+                            invisible="not is_loan or approval_state != 'pending_gm'"/>
+                    <button name="action_refuse_gm" type="object"
+                            string="⛔ Refuse"
+                            class="btn-danger"
+                            groups="KSW_deduction.group_loan_gm"
+                            invisible="not is_loan or approval_state != 'pending_gm'"/>
+
+                    <!-- Cancel / Reset
+                         Cancel is gated by x_can_cancel:
+                           - Loans: only the requesting employee may cancel.
+                           - Non-loans: Deduction Officer/Manager only.
+                         Approvers must use "Refuse" (above) to reject a
+                         loan — Refuse records a mandatory reason shown
+                         to the employee; Cancel does not.
+                         Reset to Draft is also available after a refusal
+                         so the employee can modify and resubmit. -->
+                    <button name="action_cancel" type="object"
+                            string="Cancel"
+                            invisible="state in ('cancelled', 'completed') or not x_can_cancel"
+                            confirm="Are you sure you want to cancel this deduction?"/>
+                    <button name="action_reset_to_draft" type="object"
+                            string="Reset to Draft"
+                            invisible="state not in ('active', 'cancelled') and approval_state != 'refused'"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,completed"/>
+                </header>
+
+                <sheet>
+                    <!-- Ribbons -->
+                    <widget name="web_ribbon" title="Loan" bg_color="text-bg-info"
+                            invisible="not is_loan"/>
+                    <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger"
+                            invisible="state != 'cancelled'"/>
+                    <widget name="web_ribbon" title="Completed" bg_color="text-bg-success"
+                            invisible="state != 'completed'"/>
+                    <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger"
+                            invisible="approval_state != 'refused'"/>
+
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+
+                    <!-- Loan approval status bar -->
+                    <div role="status" invisible="not is_loan or not approval_state or approval_state == 'refused'" class="alert alert-info">
+                        <strong>Loan Approval:</strong>
+                        <field name="approval_state" readonly="1" nolabel="1"/>
+                    </div>
+
+                    <!-- Refusal banner — visible to everyone (including
+                         the requesting employee) so they can see why
+                         the loan was refused and decide whether to
+                         reset to draft and resubmit. -->
+                    <div role="alert" invisible="approval_state != 'refused'" class="alert alert-danger">
+                        <strong>⛔ Loan Request Refused</strong>
+                        <div>
+                            <b>At step:</b>
+                            <field name="x_refused_at_step" readonly="1" nolabel="1" class="oe_inline"/>
+                            <span class="mx-2">—</span>
+                            <b>By:</b>
+                            <field name="x_refused_by" readonly="1" nolabel="1" class="oe_inline"/>
+                            <span class="mx-2">on</span>
+                            <field name="x_refused_date" readonly="1" nolabel="1" class="oe_inline"/>
+                        </div>
+                        <div class="mt-2">
+                            <b>Reason:</b>
+                            <field name="x_refusal_reason" readonly="1" nolabel="1"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Employee">
+                            <field name="employee_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="department_id" readonly="1"/>
+                            <field name="manager_id" readonly="1"/>
+                        </group>
+                        <group string="Type">
+                            <field name="type_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="category" readonly="1"/>
+                            <field name="is_loan" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Financials">
+                            <!--
+                                Editability rules:
+                                  Amount       — non-loans: editable in draft.
+                                                 loans:     editable in draft, OR by GM during pending_gm
+                                                            AND the user holds Loan Modification = Edit
+                                                            only / Edit and Delete.
+                                  Installments — non-loans: editable in draft.
+                                                 loans:     editable in draft, OR by Accounting/GM during
+                                                            pending_acc / pending_gm
+                                                            AND the user holds Loan Modification = Edit
+                                                            only / Edit and Delete.
+                                Loan Modification is orthogonal to Deduction Management — a Manager
+                                without Loan Modification cannot edit loan amount/installments.
+                            -->
+                            <field name="amount"
+                                   readonly="(state != 'draft' and not (is_loan and approval_state == 'pending_gm')) or (is_loan and not x_allow_edit_amount)"/>
+                            <field name="installments"
+                                   readonly="(state != 'draft' and not (is_loan and approval_state in ('pending_acc', 'pending_gm'))) or (is_loan and not x_allow_edit_installments)"/>
+                            <field name="installment_amount"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="x_can_submit" invisible="1"/>
+                            <field name="x_can_dm_approve" invisible="1"/>
+                            <field name="x_can_cancel" invisible="1"/>
+                            <!-- Per-user permission mirrors (computed from
+                                 res.users). Loaded invisible because the
+                                 readonly expressions above reference them. -->
+                            <field name="x_allow_edit_amount" invisible="1"/>
+                            <field name="x_allow_edit_installments" invisible="1"/>
+                        </group>
+                        <group string="Schedule">
+                            <field name="start_month"
+                                   readonly="state != 'draft'"/>
+                            <field name="total_paid"/>
+                            <field name="total_pending"/>
+                            <field name="progress_percent" widget="progressbar"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Details" name="details">
+                            <group>
+                                <field name="reason" placeholder="Reason for this deduction..."/>
+                                <field name="description" placeholder="Additional notes..."/>
+                            </group>
+                            <separator string="Attachments"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Installments" name="installments">
+                            <field name="line_ids" readonly="1">
+                                <list>
+                                    <field name="sequence"/>
+                                    <field name="year"/>
+                                    <field name="month"/>
+                                    <field name="period_date"/>
+                                    <field name="amount"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'paid'"
+                                           decoration-warning="state == 'pending'"
+                                           decoration-muted="state == 'skipped'"/>
+                                    <field name="payslip_id"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Loan Approval History" name="approval_history"
+                              invisible="not is_loan">
+                            <group>
+                                <group string="DM">
+                                    <field name="dm_approved_by"/>
+                                    <field name="dm_approved_date"/>
+                                </group>
+                                <group string="HR">
+                                    <field name="hr_approved_by"/>
+                                    <field name="hr_approved_date"/>
+                                </group>
+                                <group string="Accounting">
+                                    <field name="acc_approved_by"/>
+                                    <field name="acc_approved_date"/>
+                                </group>
+                                <group string="GM">
+                                    <field name="gm_approved_by"/>
+                                    <field name="gm_approved_date"/>
+                                    <field name="gm_original_amount"
+                                           invisible="not gm_original_amount"/>
+                                    <field name="gm_original_installments"
+                                           invisible="not gm_original_installments"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Decision Support" name="hr_decisions"
+                              groups="KSW_deduction.group_loan_hr,KSW_deduction.group_loan_acc,KSW_deduction.group_loan_gm,KSW_deduction.group_deduction_officer">
+                            <!-- Approval confirmations (HR / Accounting) -->
+                            <group string="Approval Confirmations">
+                                <group>
+                                    <field name="x_hr_no_penalties_confirmed"
+                                           readonly="approval_state != 'pending_hr'"/>
+                                    <button name="action_create_new_penalty"
+                                            type="object" string="➕ Record New Penalty"
+                                            class="btn-link"
+                                            invisible="approval_state != 'pending_hr'"
+                                            groups="KSW_deduction.group_loan_hr"/>
+                                </group>
+                                <group>
+                                    <field name="x_acc_budget_confirmed"
+                                           readonly="approval_state != 'pending_acc'"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="End-of-Service (Saudi Art. 84–88)">
+                                    <field name="x_eos_service_years" readonly="1"/>
+                                    <field name="x_eos_last_wage" readonly="1"/>
+                                    <field name="x_eos_force_majeure"/>
+                                    <field name="x_eos_termination_amount" readonly="1"/>
+                                    <field name="x_eos_resignation_amount" readonly="1"/>
+                                </group>
+                                <group string="Annual Vacation Balance">
+                                    <field name="x_vac_balance_days" readonly="1"/>
+                                    <field name="x_vac_balance_value" readonly="1"/>
+                                    <field name="x_vac_balance_breakdown" readonly="1"/>
+                                </group>
+                            </group>
+                            <separator string="Other Active Deductions (same employee)"/>
+                            <group>
+                                <group>
+                                    <field name="x_active_deductions_count" readonly="1"/>
+                                    <field name="x_active_deductions_total_outstanding" readonly="1"/>
+                                    <field name="x_active_deductions_monthly_impact" readonly="1"/>
+                                    <field name="x_emp_monthly_total" readonly="1"/>
+                                </group>
+                            </group>
+                            <field name="x_active_deductions_summary" readonly="1" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- =============================================================== -->
+    <!-- LIST                                                              -->
+    <!-- =============================================================== -->
+    <record id="ksw_deduction_view_list" model="ir.ui.view">
+        <field name="name">ksw.deduction.list</field>
+        <field name="model">ksw.deduction</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancelled'"
+                  decoration-success="state == 'completed'"
+                  decoration-info="state == 'active'">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="department_id" optional="show"/>
+                <field name="type_id"/>
+                <field name="category" optional="show"/>
+                <field name="is_loan" optional="show"/>
+                <field name="amount" sum="Total"/>
+                <field name="installments"/>
+                <field name="installment_amount" optional="hide"/>
+                <field name="x_emp_monthly_total" optional="show"
+                       string="Employee's Total This Month"/>
+                <field name="total_paid" sum="Total Paid" optional="show"/>
+                <field name="total_pending" sum="Total Pending" optional="show"/>
+                <field name="progress_percent" widget="progressbar"/>
+                <field name="start_month"/>
+                <field name="state" widget="badge"
+                       decoration-muted="state in ('draft','cancelled')"
+                       decoration-info="state == 'active'"
+                       decoration-success="state == 'completed'"/>
+                <field name="approval_state" widget="badge" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- =============================================================== -->
+    <!-- SEARCH                                                            -->
+    <!-- =============================================================== -->
+    <record id="ksw_deduction_view_search" model="ir.ui.view">
+        <field name="name">ksw.deduction.search</field>
+        <field name="model">ksw.deduction</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="type_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Active" name="active" domain="[('state', '=', 'active')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter string="Loans" name="loans" domain="[('is_loan', '=', True)]"/>
+                <filter string="Non-loans" name="non_loans" domain="[('is_loan', '=', False)]"/>
+                <separator/>
+                <filter string="Borrowed" name="borrowed" domain="[('category', '=', 'borrowed')]"/>
+                <filter string="Company-Paid" name="company_paid" domain="[('category', '=', 'company_paid')]"/>
+                <separator/>
+                <filter string="Pending DM" name="pdm" domain="[('approval_state','=','pending_dm')]"/>
+                <filter string="Pending HR" name="phr" domain="[('approval_state','=','pending_hr')]"/>
+                <filter string="Pending Accounting" name="pacc" domain="[('approval_state','=','pending_acc')]"/>
+                <filter string="Pending GM" name="pgm" domain="[('approval_state','=','pending_gm')]"/>
+                <filter string="Refused" name="refused" domain="[('approval_state','=','refused')]"/>
+                <group>
+                    <filter string="Employee" name="group_emp" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Department" name="group_dept" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string="Type" name="group_type" domain="[]" context="{'group_by': 'type_id'}"/>
+                    <filter string="Category" name="group_cat" domain="[]" context="{'group_by': 'category'}"/>
+                    <filter string="State" name="group_state" domain="[]" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- =============================================================== -->
+    <!-- ACTIONS                                                           -->
+    <!-- =============================================================== -->
+    <record id="action_ksw_deduction_all" model="ir.actions.act_window">
+        <field name="name">Deductions</field>
+        <field name="res_model">ksw.deduction</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="ksw_deduction_view_search"/>
+    </record>
+
+    <record id="action_ksw_deduction_loans" model="ir.actions.act_window">
+        <field name="name">Loans</field>
+        <field name="res_model">ksw.deduction</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_loan', '=', True)]</field>
+        <field name="context">{'default_type_id': False}</field>
+    </record>
+
+    <record id="action_ksw_deduction_pending" model="ir.actions.act_window">
+        <field name="name">My Pending Approvals</field>
+        <field name="res_model">ksw.deduction</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('approval_state', 'in', ['pending_dm','pending_hr','pending_acc','pending_gm'])]</field>
+    </record>
+
+</odoo>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
