@@ -11,27 +11,31 @@
             </p>
             <p><br/></p>
             <div class="row">
-                <div class="col-6 col-lg-2 pt16 pb16">
-                    <img src="/web/image/website.s_reference_demo_image_1" class="img img-fluid mx-auto" alt=""/>
-                </div>
-                <div class="col-6 col-lg-2 pt16 pb16">
-                    <img src="/web/image/website.s_reference_demo_image_2" class="img img-fluid mx-auto" alt=""/>
-                </div>
-                <div class="col-6 col-lg-2 pt16 pb16">
-                    <img src="/web/image/website.s_reference_demo_image_3" class="img img-fluid mx-auto" alt=""/>
-                </div>
-                <div class="col-6 col-lg-2 pt16 pb16">
-                    <img src="/web/image/website.s_reference_demo_image_4" class="img img-fluid mx-auto" alt=""/>
-                </div>
-                <div class="col-6 col-lg-2 pt16 pb16">
-                    <img src="/web/image/website.s_reference_demo_image_5" class="img img-fluid mx-auto" alt=""/>
-                </div>
-                <div class="col-6 col-lg-2 pt16 pb16">
-                    <img src="/web/image/website.s_reference_default_image_6" class="img img-fluid mx-auto" alt=""/>
-                </div>
+                <t t-call="website.s_references_columns"/>
             </div>
         </div>
     </section>
+</template>
+
+<template id="s_references_columns">
+    <div class="col-6 col-lg-2 pt16 pb16">
+        <img src="/web/image/website.s_reference_demo_image_1" class="img img-fluid mx-auto" alt=""/>
+    </div>
+    <div class="col-6 col-lg-2 pt16 pb16">
+        <img src="/web/image/website.s_reference_demo_image_2" class="img img-fluid mx-auto" alt=""/>
+    </div>
+    <div class="col-6 col-lg-2 pt16 pb16">
+        <img src="/web/image/website.s_reference_demo_image_3" class="img img-fluid mx-auto" alt=""/>
+    </div>
+    <div class="col-6 col-lg-2 pt16 pb16">
+        <img src="/web/image/website.s_reference_demo_image_4" class="img img-fluid mx-auto" alt=""/>
+    </div>
+    <div class="col-6 col-lg-2 pt16 pb16">
+        <img src="/web/image/website.s_reference_demo_image_5" class="img img-fluid mx-auto" alt=""/>
+    </div>
+    <div class="col-6 col-lg-2 pt16 pb16">
+        <img src="/web/image/website.s_reference_default_image_6" class="img img-fluid mx-auto" alt=""/>
+    </div>
 </template>
 
 <asset id="website.s_references_000_scss" name="References 000 SCSS">
