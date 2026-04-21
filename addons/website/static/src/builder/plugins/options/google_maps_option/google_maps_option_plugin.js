@@ -111,6 +111,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
     async initializeGoogleMaps(editingElement, mapsAPI) {
         this.recentlyDroppedSnippetDeferredInit.get(editingElement)?.resolve(true);
         if (mapsAPI) {
+            await mapsAPI.importLibrary("places");
             this.mapsAPI = mapsAPI;
             this.placesAPI = mapsAPI.places;
         }
