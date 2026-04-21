@@ -7,6 +7,7 @@ import {
 } from "@html_editor/others/embedded_component_utils";
 import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
+import { canRenderAsHTML } from "@html_editor/utils/sanitize";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
@@ -2918,4 +2919,19 @@ test("html field is forced readonly in list views", async () => {
     expect(".odoo-editor-editable").toHaveCount(0);
     expect(`[name="txt"] .o_readonly`).toHaveCount(2);
     expect(queryAllTexts(`[name="txt"] .o_readonly`)).toEqual(["first", "second"]);
+});
+
+test("should not render xml template as html in specific invalid cases", async () => {
+    var values = [
+        [`<table><tr><td><t></t></td></tr></table>`, true],
+        [`<t><table><tr><td></td></tr></table></t>`, true],
+        [`<table><t><tr><td></td></tr></t></table>`, false],
+        [`<table><tr><t><td></td></t></tr></table>`, false],
+        [`<table><tr><t><td></td></t></tr></table>`, false],
+        [`<table><tr><td><table><t/></table></td></tr></table>`, false]
+    ];
+    for (const [xmlString, expected] of values) {
+        var isValid = canRenderAsHTML(xmlString);
+        expect(isValid).toBe(expected);
+    }
 });
