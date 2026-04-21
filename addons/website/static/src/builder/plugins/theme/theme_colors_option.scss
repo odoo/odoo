@@ -66,6 +66,14 @@
     max-width: 100%;
     background-color: rgba(black, 0.5);
 
+    .o_popover:has(&) {
+        // Enforce the dropdown to act as a panel with dynamic height,
+        // taking the entire available height, while keeping the dropdown
+        // toggler visible.
+        bottom: 0;
+        max-height: none !important;
+    }
+
     .o-hb-select-dropdown-item  {
         padding: map-get($spacers, 2);
         border: $border-width solid transparent;
