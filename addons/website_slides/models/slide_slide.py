@@ -15,6 +15,7 @@ from werkzeug import urls
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools import html2plaintext, sql
 from odoo.tools.pdf import PdfFileReader
 
@@ -307,10 +308,23 @@ class Slide(models.Model):
         for slide in self:
             slide.questions_count = len(slide.question_ids)
 
-    @api.depends('website_message_ids.res_id', 'website_message_ids.model', 'website_message_ids.message_type')
+    @api.depends(
+        "website_message_ids.attachment_ids",
+        "website_message_ids.body",
+        "website_message_ids.message_type",
+        "website_message_ids.model",
+        "website_message_ids.res_id",
+    )
     def _compute_comments_count(self):
+        count_by_slide = dict(
+            self.env["mail.message"]._read_group(
+                self._get_comments_domain(),
+                groupby=["res_id"],
+                aggregates=["__count"],
+            )
+        )
         for slide in self:
-            slide.comments_count = len(slide.website_message_ids)
+            slide.comments_count = count_by_slide.get(slide.id, 0)
 
     @api.depends('slide_views', 'public_views')
     def _compute_total(self):
@@ -1402,3 +1416,17 @@ class Slide(models.Model):
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return []
+
+    def _get_comments_domain(self):
+        return expression.AND(
+            [
+                [
+                    ("res_id", "in", self.ids),
+                    "|",
+                    ("attachment_ids", "!=", False),
+                    ("body", "not in", [False, '<span class="o-mail-Message-edited"></span>']),
+                ],
+                self._fields["website_message_ids"].get_domain_list(self),
+                self.env["mail.message"]._get_search_domain_share(),
+            ]
+        )

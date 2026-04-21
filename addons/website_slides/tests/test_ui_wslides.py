@@ -4,6 +4,7 @@ import base64
 import logging
 
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 
 from odoo import http, tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
@@ -262,6 +263,39 @@ class TestUi(TestUICommon):
             "course_review_modification_by_admin",
             login=self.user_admin.login,
         )
+
+    def test_slide_comments(self):
+        slide = self.channel.slide_ids.filtered(lambda s: s.name == "Gardening: The Know-How")[0]
+        self.env["mail.message"].create(
+            [
+                # Two first messages should not be considered comments.
+                {
+                    "body": "Test note",
+                    "message_type": "comment",
+                    "model": "slide.slide",
+                    "res_id": slide.id,
+                    "subtype_id": self.env.ref("mail.mt_note").id,
+                },
+                {
+                    "body": Markup('<span class="o-mail-Message-edited"></span>'),
+                    "message_type": "comment",
+                    "model": "slide.slide",
+                    "res_id": slide.id,
+                    "subtype_id": self.env.ref("mail.mt_comment").id,
+                },
+                *[
+                    {
+                        "body": f"Comment {i + 1}",
+                        "message_type": "comment",
+                        "model": "slide.slide",
+                        "res_id": slide.id,
+                        "subtype_id": self.env.ref("mail.mt_comment").id,
+                    }
+                    for i in range(31)
+                ],
+            ]
+        )
+        self.start_tour(f"/slides/slide/{slide.id}", "slide_comments", login="admin")
 
     def test_fullscreen_slide_text_highlights(self):
         self.env['slide.slide'].create({
