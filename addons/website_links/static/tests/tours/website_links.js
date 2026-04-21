@@ -61,7 +61,10 @@ registerWebsitePreviewTour("website_links_tour", {}, () => [
         trigger: "div.o_field_widget[name='url'] .o_input",
         run: function () {
             const url = window.location.host + "/contactus";
-            document.querySelector("div.o_field_widget[name='url'] .o_input").value = url;
+            const urlInputEl = document.querySelector("div.o_field_widget[name='url'] .o_input");
+            urlInputEl.value = url;
+            const event = new Event("change", { bubbles: true });
+            urlInputEl.dispatchEvent(event);
         },
     },
     // First try to create a new UTM campaign from the UI
