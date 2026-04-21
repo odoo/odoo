@@ -174,10 +174,10 @@ export class DescriptionScreen extends Component {
         useLayoutEffect(
             (selectedType, selectedIndustry) => {
                 if (selectedType && !selectedIndustry) {
-                    this.industrySelection.el.querySelector("input").focus();
+                    this.industrySelection.el?.querySelector("input").focus();
                 }
                 if (selectedIndustry) {
-                    this.purposeSelectionRef.el.focus();
+                    this.purposeSelectionRef.el?.focus();
                 }
             },
             () => [this.state.selectedType, this.state.selectedIndustry]
