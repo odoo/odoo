@@ -197,6 +197,7 @@
     <record id="action_product_template_print_labels" model="ir.actions.server">
         <field name="name">Print Labels</field>
         <field name="model_id" ref="product.model_product_template"/>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="binding_model_id" ref="product.model_product_template"/>
         <field name="state">code</field>
         <field name="code">
