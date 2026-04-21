@@ -3,7 +3,7 @@
 .o_form_view {
     @include media-breakpoint-down(md) {
         --field-spacing-unit: 8px;
-        --o-field-box-border-color: var(--gray-200);
+        --o-field-box-border-color: var(--o-input-border-color);
 
         %-o-field-box {
             border-radius: calc(.5 * var(--field-spacing-unit));
@@ -34,7 +34,7 @@
                 }
             }
             &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
-                --o-field-box-border-color: var(--gray-200);
+                --o-field-box-border-color: var(--o-input-border-color);
                 background: rgba($body-color, .04);
             }
         }
@@ -117,7 +117,6 @@
                 display: contents;
 
                 .o_property_field_value {
-                    @include print-variable(o-input-border-color, $o-form-lightsecondary);
                     @extend %-o-field-box;
                     margin-bottom: map-get($spacers, 3);
                 }
