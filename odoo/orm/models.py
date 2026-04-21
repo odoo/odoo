@@ -3572,6 +3572,7 @@ class BaseModel(metaclass=MetaModel):
             return True
 
         self.check_access('unlink')
+        self.env.transaction._wrote__ = True
 
         for func in self._ondelete_methods:
             # func._ondelete is True => should be called during uninstallation
@@ -3911,6 +3912,7 @@ class BaseModel(metaclass=MetaModel):
 
         if not self:
             return
+        self.env.transaction._wrote__ = True
 
         # determine records that require updating parent_path
         parent_records = self._parent_store_update_prepare(vals_list)
@@ -4244,6 +4246,7 @@ class BaseModel(metaclass=MetaModel):
         """ Create records from the stored field values in ``data_list``. """
         assert data_list
         cr = self.env.cr
+        self.env.transaction._wrote__ = True
 
         # insert rows in batches of maximum INSERT_BATCH_SIZE
         ids: list[int] = []                     # ids of created records
