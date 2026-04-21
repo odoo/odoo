@@ -1,40 +1,47 @@
-/** @odoo-module **/
-import { useLayoutEffect } from "@web/owl2/utils";
-import { onMounted } from "@odoo/owl";
+import { onMounted, props, types as t } from "@odoo/owl";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { escapeRegExp } from "@web/core/utils/strings";
+import { useLayoutEffect } from "@web/owl2/utils";
+
+const T_INVALID_LOCATORS = t.object({
+    attrib: t.record(t.string()),
+    "broken_hierarchy?": t.boolean(),
+    sourceline: t.number(),
+    tag: t.string(),
+});
 
 export class IrUiViewCodeEditor extends CodeEditor {
-    static props = {
-        ...this.props,
-        invalidLocators: { type: Array, optional: true },
-    };
+    irUiViewProps = props({
+        "invalidLocators?": t.array(T_INVALID_LOCATORS),
+    });
+    markers = [];
 
     setup() {
-        super.setup(...arguments);
-        this.markers = [];
+        super.setup();
 
         onMounted(() => {
-            this.aceEditor.getSession().on("change", () => {
-                // Markers have fixed pixel positions, so they get wonky on change.
-                this.clearMarkers();
-            });
+            // Markers have fixed pixel positions, so they get wonky on change.
+            this.aceEditor.getSession().on("change", this.clearMarkers.bind(this));
         });
 
         useLayoutEffect(
-            (arch, invalid_locators) => {
-                if (arch && invalid_locators) {
-                    this.highlightInvalidLocators(arch, invalid_locators);
-                    return () => this.clearMarkers();
+            (arch, invalidLocators) => {
+                if (arch && invalidLocators) {
+                    this.highlightInvalidLocators(arch, invalidLocators);
+                    return this.clearMarkers.bind(this);
                 }
             },
-            () => [this.props.value, this.props.invalidLocators]
+            () => [this.props.value, this.irUiViewProps.invalidLocators]
         );
     }
 
-    async highlightInvalidLocators(arch, invalid_locators) {
-        const { doc } = this.aceEditor.session;
-        for (const spec of invalid_locators) {
+    /**
+     * @param {string} arch
+     * @param {Iterable<typeof T_INVALID_LOCATORS>} invalidLocators
+     */
+    highlightInvalidLocators(arch, invalidLocators) {
+        const session = this.aceEditor.getSession();
+        for (const spec of invalidLocators) {
             if (spec.broken_hierarchy) {
                 continue;
             }
@@ -52,8 +59,8 @@ export class IrUiViewCodeEditor extends CodeEditor {
             for (const match of arch.matchAll(nodeRegex)) {
                 const startIndex = match.index;
                 const endIndex = startIndex + match[0].length;
-                const startPos = doc.indexToPosition(startIndex);
-                const endPos = doc.indexToPosition(endIndex);
+                const startPos = session.doc.indexToPosition(startIndex);
+                const endPos = session.doc.indexToPosition(endIndex);
                 if (startPos.row + 1 === sourceline) {
                     const range = new window.ace.Range(
                         startPos.row,
@@ -61,16 +68,15 @@ export class IrUiViewCodeEditor extends CodeEditor {
                         endPos.row,
                         endPos.column
                     );
-                    this.markers.push(
-                        this.aceEditor.session.addMarker(range, "invalid_locator", "text")
-                    );
+                    this.markers.push(session.addMarker(range, "invalid_locator", "text"));
                 }
             }
         }
     }
 
     clearMarkers() {
-        this.markers.forEach((marker) => this.aceEditor.session.removeMarker(marker));
+        const session = this.aceEditor.getSession();
+        this.markers.forEach((marker) => session.removeMarker(marker));
         this.markers = [];
     }
 }
