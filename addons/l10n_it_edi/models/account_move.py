@@ -416,7 +416,7 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         self.ensure_one()
         if filetype == 'fatturapa':
-            if fatturapa_attachment := self.l10n_it_edi_attachment_file:
+            if (fatturapa_attachment := self.l10n_it_edi_attachment_file) and self.l10n_it_edi_attachment_name:
                 return [{
                     'filename': self.l10n_it_edi_attachment_name,
                     'filetype': 'xml',
