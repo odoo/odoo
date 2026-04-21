@@ -76,13 +76,13 @@
                                     <label for="allow_request_on_top" class="me-4" invisible="count_as == 'absence'"/>
                                 </div>
                                 <div class="d-flex flex-column gap-1">
-                                    <div class="o_row o_cell o_wrap_label text-break text-900" invisible="not requires_allocation">
+                                    <div class="d-flex align-items-center gap-2 text-900" invisible="not requires_allocation">
                                         <field name="allows_negative" nolabel="1"/>
-                                        <div invisible="not allows_negative">
-                                            <span class="mx-2">up to</span>
-                                            <field name="max_allowed_negative" class="oe_inline"/>
-                                            <span class="mx-2" invisible="unit_of_measure == 'hour'">days</span>
-                                            <span class="mx-2" invisible="unit_of_measure != 'hour'">hours</span>
+                                        <div invisible="not allows_negative" class="gap-2 d-flex align-items-center align-items-sm-start text-nowrap">
+                                            <span>up to</span>
+                                            <field name="max_allowed_negative" class="w-25"/>
+                                            <span invisible="unit_of_measure == 'hour'">days</span>
+                                            <span invisible="unit_of_measure != 'hour'">hours</span>
                                         </div>
                                     </div>
                                     <field name="include_public_holidays_in_duration" class="mb-2" nolabel="1"/>
