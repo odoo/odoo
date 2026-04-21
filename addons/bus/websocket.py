@@ -83,10 +83,12 @@ class UpgradeRequired(HTTPException):
 
     def get_headers(self, environ=None):
         headers = super().get_headers(environ)
-        headers.append((
-            'Sec-WebSocket-Version',
-            '; '.join(WebsocketConnectionHandler.SUPPORTED_VERSIONS)
-        ))
+        headers.append(
+            (
+                'Sec-WebSocket-Version',
+                '; '.join(WebsocketConnectionHandler.SUPPORTED_VERSIONS),
+            ),
+        )
         return headers
 
 
@@ -249,7 +251,7 @@ class Frame:
         fin=True,
         rsv1=False,
         rsv2=False,
-        rsv3=False
+        rsv3=False,
     ):
         self.opcode = opcode
         self.payload = payload
@@ -377,7 +379,7 @@ class Websocket:
                     message = self._process_next_message()
                     if message is not None:
                         yield message
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001
                 self._handle_transport_error(exc)
 
     def close(self, code, reason=None):
@@ -474,16 +476,18 @@ class Websocket:
         payload_length = second_byte & 0b01111111
 
         if rsv1 or rsv2 or rsv3:
-            raise ProtocolError("Reserved bits must be unset")
+            e = "Reserved bits must be unset"
+            raise ProtocolError(e)
         if not is_bit_set(second_byte, 0):
-            raise ProtocolError("Frame must be masked")
+            e = "Frame must be masked"
+            raise ProtocolError(e)
         if opcode in CTRL_OP:
             if not fin:
-                raise ProtocolError("Control frames cannot be fragmented")
+                e = "Control frames cannot be fragmented"
+                raise ProtocolError(e)
             if payload_length > 125:
-                raise ProtocolError(
-                    "Control frames payload must be smaller than 126"
-                )
+                e = "Control frames payload must be smaller than 126"
+                raise ProtocolError(e)
         if payload_length == 126:
             payload_length = struct.unpack('!H', recv_bytes(2))[0]
         elif payload_length == 127:
@@ -507,14 +511,15 @@ class Websocket:
         frame = self._get_next_frame()
         if frame.opcode in CTRL_OP:
             self._handle_control_frame(frame)
-            return
+            return None
         if self.state is not ConnectionState.OPEN:
             # After receiving a control frame indicating the connection
             # should be closed, a peer discards any further data
             # received.
-            return
+            return None
         if frame.opcode is Opcode.CONTINUE:
-            raise ProtocolError("Unexpected continuation frame")
+            e = "Unexpected continuation frame"
+            raise ProtocolError(e)
         message = frame.payload
         if not frame.fin:
             message = self._recover_fragmented_message(frame)
@@ -532,10 +537,11 @@ class Websocket:
                 # fragmented message, process them as soon as possible.
                 self._handle_control_frame(frame)
                 if self.state is not ConnectionState.OPEN:
-                    return
+                    return None
                 continue
             if frame.opcode is not Opcode.CONTINUE:
-                raise ProtocolError("A continuation frame was expected")
+                e = "A continuation frame was expected"
+                raise ProtocolError(e)
             message_fragments.extend(frame.payload)
             if len(message_fragments) > self.MESSAGE_MAX_SIZE:
                 raise PayloadTooLargeException()
@@ -544,9 +550,8 @@ class Websocket:
 
     def _send(self, message):
         if self.state is not ConnectionState.OPEN:
-            raise InvalidStateException(
-                "Trying to send a frame on a closed socket"
-            )
+            e = "Trying to send a frame on a closed socket"
+            raise InvalidStateException(e)
         opcode = Opcode.BINARY
         if not isinstance(message, Buffer):
             opcode = Opcode.TEXT
@@ -554,9 +559,8 @@ class Websocket:
 
     def _send_frame(self, frame):
         if frame.opcode in CTRL_OP and len(frame.payload) > 125:
-            raise ProtocolError(
-                "Control frames should have a payload length smaller than 126"
-            )
+            e = "Control frames should have a payload length smaller than 126"
+            raise ProtocolError(e)
         if isinstance(frame.payload, str):
             frame.payload = frame.payload.encode('utf-8')
         elif isinstance(frame.payload, Buffer):
@@ -574,17 +578,11 @@ class Websocket:
         )
         payload_length = len(frame.payload)
         if payload_length < 126:
-            output.extend(
-                struct.pack('!BB', first_byte, payload_length)
-            )
+            output.extend(struct.pack('!BB', first_byte, payload_length))
         elif payload_length < 65536:
-            output.extend(
-                struct.pack('!BBH', first_byte, 126, payload_length)
-            )
+            output.extend(struct.pack('!BBH', first_byte, 126, payload_length))
         else:
-            output.extend(
-                struct.pack('!BBQ', first_byte, 127, payload_length)
-            )
+            output.extend(struct.pack('!BBQ', first_byte, 127, payload_length))
         output.extend(frame.payload)
         self.__socket.sendall(output)
         self._timeout_manager.acknowledge_frame_sent(frame)
@@ -663,7 +661,8 @@ class Websocket:
                 code = struct.unpack('!H', frame.payload[:2])[0]
                 reason = frame.payload[2:].decode('utf-8')
             elif frame.payload:
-                raise ProtocolError("Malformed closing frame")
+                e = "Malformed closing frame"
+                raise ProtocolError(e)
             if not self._close_sent:
                 self._send_close_frame(code, reason)
             else:
@@ -696,7 +695,7 @@ class Websocket:
             if sequence != registry.registry_sequence:
                 _logger.warning("Bus operation aborted; registry has been reloaded")
             else:
-                _logger.error(exc, exc_info=True)
+                _logger.error(exc, exc_info=True)  # noqa: LOG014
         if self.state is ConnectionState.OPEN:
             self._disconnect(code, reason)
         else:
@@ -732,9 +731,9 @@ class Websocket:
                     retrying(functools.partial(callback, env, self), env)
                 except Exception:
                     _logger.warning(
-                        'Error during Websocket %s callback',
+                        "Error during Websocket %s callback",
                         LifecycleEvent(event_type).name,
-                        exc_info=True
+                        exc_info=True,
                     )
 
     def _assert_session_validity(self):
@@ -902,6 +901,7 @@ class TimeoutManager:
 _wsrequest_stack = LocalStack()
 wsrequest = _wsrequest_stack()
 
+
 class WebsocketRequest:
     def __init__(self, db, httprequest, websocket):
         self.db = db
@@ -921,20 +921,20 @@ class WebsocketRequest:
             jsonrequest = orjson.loads(message)
             event_name = jsonrequest['event_name']  # mandatory
         except KeyError as exc:
-            raise InvalidWebsocketRequest(
-                f'Key {exc.args[0]!r} is missing from request'
-            ) from exc
+            e = "Key {exc.args[0]!r} is missing from request"
+            raise InvalidWebsocketRequest(e) from exc
         except ValueError as exc:
-            raise InvalidWebsocketRequest(
-                f'Invalid JSON data, {exc.args[0]}'
-            ) from exc
+            e = f"Invalid JSON data, {exc.args[0]}"
+            raise InvalidWebsocketRequest(e) from exc
         data = jsonrequest.get('data')
         self.session = self._get_session()
 
         try:
             self.registry = Registry(self.db).check_signaling()
         except (
-            AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError
+            AttributeError,
+            psycopg2.OperationalError,
+            psycopg2.ProgrammingError,
         ) as exc:
             raise InvalidDatabaseException() from exc
 
@@ -1018,35 +1018,36 @@ class WebsocketConnectionHandler:
         :raise: BadRequest if the handshake data is incorrect.
         """
         if not cls.websocket_allowed(request):
-            raise ServiceUnavailable("Websocket is disabled in test mode")
+            e = "Websocket is disabled in test mode"
+            raise ServiceUnavailable(e)
         if _stopping.is_set():
-            raise ServiceUnavailable("Websocket is shutting down")
+            e = "Websocket is shutting down"
+            raise ServiceUnavailable(e)
         public_session = cls._handle_public_configuration(request)
         try:
             response = cls._get_handshake_response(request.httprequest.headers)
             socket = request.httprequest._HTTPRequest__environ['socket']
             session, db, httprequest = (public_session or request.session), request.db, request.httprequest
-            response.call_on_close(lambda: cls._serve_forever(
-                Websocket(socket, session, httprequest.cookies),
-                db,
-                httprequest,
-                version
-            ))
+            response.call_on_close(
+                lambda: cls._serve_forever(
+                    Websocket(socket, session, httprequest.cookies),
+                    db,
+                    httprequest,
+                    version,
+                ),
+            )
             # Force save the session. Session must be persisted to handle
             # WebSocket authentication.
             request.session.is_dirty = True
             return response
         except KeyError as exc:
-            raise RuntimeError(
-                f"Couldn't bind the websocket. Is the connection opened on the evented port ({config['gevent_port']})?"
-            ) from exc
+            e = f"Couldn't bind the websocket. Is the connection opened on the evented port ({config['gevent_port']})?"
+            raise RuntimeError(e) from exc
         except HTTPException as exc:
             # The HTTP stack does not log exceptions derivated from the
             # HTTPException class since they are valid responses.
             _logger.error(exc)
             raise
-
-
 
     @classmethod
     def _get_handshake_response(cls, headers):
@@ -1071,7 +1072,7 @@ class WebsocketConnectionHandler:
     @classmethod
     def _handle_public_configuration(cls, request):
         if not os.getenv('ODOO_BUS_PUBLIC_SAMESITE_WS'):
-            return
+            return None
         headers = request.httprequest.headers
         origin_url = urlparse(headers.get('origin'))
         if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
@@ -1101,14 +1102,14 @@ class WebsocketConnectionHandler:
             if header not in headers
         }
         if missing_or_empty_headers:
-            raise BadRequest(
-                f"""Empty or missing header(s): {', '.join(missing_or_empty_headers)}"""
-            )
-
+            e = f"""Empty or missing header(s): {', '.join(missing_or_empty_headers)}"""
+            raise BadRequest(e)
         if headers['upgrade'].lower() != 'websocket':
-            raise BadRequest('Invalid upgrade header')
+            e = "Invalid upgrade header"
+            raise BadRequest(e)
         if 'upgrade' not in headers['connection'].lower():
-            raise BadRequest('Invalid connection header')
+            e = "Invalid connection header"
+            raise BadRequest(e)
         if headers['sec-websocket-version'] not in cls.SUPPORTED_VERSIONS:
             raise UpgradeRequired()
 
@@ -1116,11 +1117,11 @@ class WebsocketConnectionHandler:
         try:
             decoded_key = base64.b64decode(key, validate=True)
         except ValueError:
-            raise BadRequest("Sec-WebSocket-Key should be b64 encoded")
+            e = "Sec-WebSocket-Key should be b64 encoded"
+            raise BadRequest(e)
         if len(decoded_key) != 16:
-            raise BadRequest(
-                "Sec-WebSocket-Key should be of length 16 once decoded"
-            )
+            e = "Sec-WebSocket-Key should be of length 16 once decoded"
+            raise BadRequest(e)
 
     @classmethod
     def _serve_forever(cls, websocket, db, httprequest, version):
