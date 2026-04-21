@@ -194,36 +194,46 @@
     <t t-name="point_of_sale.ProductConfiguratorPopup">
         <Dialog title="title">
             <ProductInfoBanner t-if="showInfoBanner" productTemplate="props.productTemplate" product="this.product" />
-            <div t-ref="input-area">
-                <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
-                    <span>This option or combination of options is not available</span>
+            <div class="d-flex gap-4">
+                <div class="d-none d-md-flex flex-column align-items-center" style="min-width: 120px; max-width: 160px;">
+                    <img
+                        t-att-src="this.product ? this.product.getImageUrl() : props.productTemplate.getImageUrl()"
+                        alt="Product Image"
+                        class="border rounded w-100"
+                        style="max-height: 240px; object-fit: contain;"
+                    />
                 </div>
-                <div t-foreach="this.validAttributeLineIds" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
-                    <div class="attribute_name mb-2 fw-bolder" t-esc="attribute.attribute_id.name"/>
-                    <RadioProductAttribute t-if="attribute.attribute_id.display_type === 'radio'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
-                    <PillsProductAttribute t-elif="attribute.attribute_id.display_type === 'pills'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
-                    <SelectProductAttribute t-elif="attribute.attribute_id.display_type === 'select'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
-                    <ColorProductAttribute t-elif="attribute.attribute_id.display_type === 'color'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
-                    <MultiProductAttribute t-elif="attribute.attribute_id.display_type === 'multi'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id]?.selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id]?.custom_value" setCustomValue="setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
-                    <ImageProductAttribute t-elif="attribute.attribute_id.display_type === 'image'" attribute="attribute"
-                        selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
-                        customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
+                <div t-ref="input-area" class="flex-grow-1">
+                    <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
+                        <span>This option or combination of options is not available</span>
+                    </div>
+                    <div t-foreach="this.validAttributeLineIds" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
+                        <div class="attribute_name mb-2 fw-bolder" t-esc="attribute.attribute_id.name"/>
+                        <RadioProductAttribute t-if="attribute.attribute_id.display_type === 'radio'" attribute="attribute"
+                            selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
+                            customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                            allSelectedValues="this.selectedValues"/>
+                        <PillsProductAttribute t-elif="attribute.attribute_id.display_type === 'pills'" attribute="attribute"
+                            selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
+                            customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                            allSelectedValues="this.selectedValues"/>
+                        <SelectProductAttribute t-elif="attribute.attribute_id.display_type === 'select'" attribute="attribute"
+                            selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
+                            customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                            allSelectedValues="this.selectedValues"/>
+                        <ColorProductAttribute t-elif="attribute.attribute_id.display_type === 'color'" attribute="attribute"
+                            selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
+                            customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                            allSelectedValues="this.selectedValues"/>
+                        <MultiProductAttribute t-elif="attribute.attribute_id.display_type === 'multi'" attribute="attribute"
+                            selected="this.state.attributes[attribute.attribute_id.id]?.selected" setSelected="this.setSelected(attribute)"
+                            customValue="this.state.attributes[attribute.attribute_id.id]?.custom_value" setCustomValue="setCustomValue(attribute)"
+                            allSelectedValues="this.selectedValues"/>
+                        <ImageProductAttribute t-elif="attribute.attribute_id.display_type === 'image'" attribute="attribute"
+                            selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
+                            customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"
+                            allSelectedValues="this.selectedValues"/>
+                    </div>
                 </div>
             </div>
             <t t-set-slot="footer">

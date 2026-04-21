@@ -17,7 +17,8 @@ class ProductProduct(models.Model):
         product_fields = taxes._eval_taxes_computation_prepare_product_fields()
         return list(product_fields.union({
             'id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids', 'currency_id',
-            'product_template_attribute_value_ids', 'barcode', 'product_tag_ids', 'default_code', 'standard_price'
+            'product_template_attribute_value_ids', 'barcode', 'product_tag_ids', 'default_code', 'standard_price',
+            'write_date'
         }))
 
     @api.ondelete(at_uninstall=False)
