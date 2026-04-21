@@ -149,7 +149,8 @@
         <div class="o_configurator_screen_content h-100 overflow-hidden">
             <div class="container-fluid p-0 h-100">
                 <div class="row g-0 h-100">
-                    <div class="col-5 col-xl-4 col-xxl-3 d-flex flex-column h-100 bg-white overflow-hidden">
+                    <div class="col-5 col-xl-4 col-xxl-3 d-flex flex-column h-100 bg-white overflow-hidden"
+                        t-att-class="{'pe-none': this.state.previewIsLoading}">
                         <div class="flex-grow-1 overflow-auto pb-4 px-3"
                             t-custom-ref="scrollContent"
                             t-on-scroll="() => this.onScrollContent(this.scrollContentRef, 'isStylePanelBottomReached')">
@@ -259,7 +260,7 @@
                             <div class="mb-3">
                                 <h3 class="mb-1 d-flex align-items-center g-1">
                                     <b>Customize your content</b>
-                                    <img src="/ai/static/description/icon.png" alt="AI" class="o_setup_style_screen_ai_logo ms-1"/>
+                                    <img t-if="this.isEnterprise" src="/ai/static/description/icon.png" alt="AI" class="o_setup_style_screen_ai_logo ms-1"/>
                                 </h3>
                                 <p class="text-muted small">Describe your website, our AI handles the rest</p>
                                 <div class="position-relative">
