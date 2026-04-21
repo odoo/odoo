@@ -33,12 +33,22 @@ class TestProduct(ProductCommon):
             'email': 'base.user@test.com',
             'group_ids': self.group_user,
         })
-        print_label_action = self.env.ref('product.action_product_template_print_labels')
-        context = {
+        product_template_print_label_action = self.env.ref('product.action_product_template_print_labels')
+        product_template_context = {
             'active_model': 'product.template',
-            'active_id': self.product.product_tmpl_id,
+            'active_id': self.product.product_tmpl_id.id,
         }
         try:
-            print_label_action.with_user(base_user).with_context(context).run()
+            product_template_print_label_action.with_user(base_user).with_context(product_template_context).run()
+        except AccessError:
+            self.fail("AccessError raised while printing product label with base user.")
+
+        product_product_print_label_action = self.env.ref('product.action_product_print_labels')
+        product_product_context = {
+            'active_model': 'product.product',
+            'active_id': self.product.id,
+        }
+        try:
+            product_product_print_label_action.with_user(base_user).with_context(product_product_context).run()
         except AccessError:
             self.fail("AccessError raised while printing product label with base user.")
