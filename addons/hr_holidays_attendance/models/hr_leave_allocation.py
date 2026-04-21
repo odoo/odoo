@@ -5,6 +5,8 @@ from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.tools.date_utils import sum_intervals
+from odoo.tools.intervals import Intervals
 
 
 class HrLeaveAllocation(models.Model):
@@ -78,8 +80,9 @@ class HrLeaveAllocation(models.Model):
             ('check_out', '>', start_dt),
         ])
 
-        total_worked_hours = 0.0
-        for attendance in attendances:
-            total_worked_hours += attendance._get_worked_hours_in_range(start_dt, end_dt)
+        attendance_intervals = []
+        for att in attendances:
+            attendance_intervals.append((att.check_in, att.check_out, att))
 
-        return total_worked_hours
+        worked_interval = Intervals(attendance_intervals) & Intervals([(start_dt, end_dt, self.env['hr.attendance'])])
+        return sum_intervals(worked_interval)
