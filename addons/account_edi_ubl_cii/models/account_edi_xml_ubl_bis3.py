@@ -570,10 +570,14 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _line_nodes_filter_base_lines(self, vals, filter_function=None):
         # EXTENDS account.edi.xml.ubl
-        # Early payment discount lines should not appear as lines but as allowances/charges.
+        # Early payment discount lines AND global discount lines should not appear as lines but as allowances/charges.
         # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
         def new_filter_function(base_line):
-            if self._ubl_is_early_payment_base_line(base_line) or self._ubl_is_cash_rounding_base_line(base_line):
+            if any([
+                self._ubl_is_early_payment_base_line(base_line),
+                self._ubl_is_global_discount_base_line(base_line),
+                self._ubl_is_cash_rounding_base_line(base_line),
+            ]):
                 return False
             return not filter_function or filter_function(base_line)
 
@@ -886,6 +890,13 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         if document_node['cac:Delivery']:
             document_node['cac:Delivery'] = document_node['cac:Delivery'][0]
 
+    def _is_document_allowance_charge(self, base_line):
+        # EXTENDS 'account_edi_xml_ubl_20'
+        return (
+            super()._is_document_allowance_charge(base_line)
+            or base_line['special_type'] == 'global_discount'
+        )
+
     def _add_invoice_allowance_charge_nodes(self, document_node, vals):
         # OVERRIDE
         sub_vals = {
@@ -899,8 +910,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         if not invoice:
             return
 
-        # Early payment discount lines are treated as allowances/charges.
+        # Early payment discount lines AND Global discount lines are treated as allowances/charges.
         self._ubl_add_allowance_charge_nodes_early_payment_discount(sub_vals)
+        self._ubl_add_allowance_charge_nodes_global_discount(sub_vals)
 
     def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal):
         # EXTENDS account.edi.xml.ubl
