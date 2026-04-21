@@ -65,6 +65,7 @@ class QueryTestCase(BaseCase):
         self.assertEqual(query.get_result_ids(), ())
         self.assertTrue(query.is_empty())
         self.assertIn('SELECT', query.subselect()._sql_tuple[0], "subselect must contain SELECT")
+        self.assertTrue(query.where_clause, "we have a restriction")
 
         query.add_where(SQL("x > 0"))
         self.assertTrue(query.is_empty(), "adding where clauses keeps the result empty")
@@ -74,6 +75,7 @@ class QueryTestCase(BaseCase):
         query.set_result_ids([1, 2, 3])
         self.assertEqual(query.get_result_ids(), (1, 2, 3))
         self.assertFalse(query.is_empty())
+        self.assertTrue(query.where_clause, "we have a restriction")
 
         query.add_where(SQL("x > 0"))
         self.assertIsNone(query._ids, "adding where clause resets the ids")
