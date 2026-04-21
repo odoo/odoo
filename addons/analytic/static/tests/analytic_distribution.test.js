@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { Deferred, expect, test } from "@odoo/hoot";
 import { animationFrame, edit, getActiveElement, press } from "@odoo/hoot-dom";
 import {
     contains,
@@ -7,7 +7,9 @@ import {
     models,
     mountView,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { AnalyticDistribution } from "@analytic/components/analytic_distribution/analytic_distribution";
 import { defineAnalyticModels } from "./analytic_test_helpers";
 
 defineAnalyticModels();
@@ -362,4 +364,54 @@ test("Rounding, value suggestions, keyboard only", async () => {
     await press("Escape"); // close the popup
     await animationFrame();
     expect(".badge:contains('99.99% Time Off | 0.01% Operating Costs')").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("editable list save flushes pending dropdown pick before web_save", async () => {
+    onRpc("account.analytic.plan", "get_relevant_plans", function ({ model }) {
+        return this.env[model].filter((r) => !r.parent_id && r.applicability !== "unavailable");
+    });
+    let savedVals;
+    onRpc("aml", "web_save", ({ args }) => {
+        savedVals = args[1];
+    });
+
+    const def = new Deferred();
+    patchWithCleanup(AnalyticDistribution.prototype, {
+        async commitChanges() {
+            await def;
+            return super.commitChanges();
+        },
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "aml",
+        arch: `
+            <list editable="bottom">
+                <field name="label"/>
+                <field name="analytic_distribution" widget="analytic_distribution"/>
+                <field name="amount"/>
+            </list>`,
+    });
+
+    await contains(".o_data_row:eq(1) .o_list_char").click();
+    await press("Tab");
+    await animationFrame();
+    expect(".analytic_distribution_popup").toHaveCount(1);
+
+    await press("Tab");
+    await animationFrame();
+    await press("ArrowDown");
+    await animationFrame();
+    await press("Enter");
+    await animationFrame();
+
+    await contains(".o_list_renderer").click();
+    await animationFrame();
+    expect(savedVals).toBe(undefined);
+
+    def.resolve();
+    await animationFrame();
+    expect(savedVals.analytic_distribution).toEqual({ 1: 100 });
 });
