@@ -112,10 +112,10 @@
         </field>
     </record>
 
-    <record id="project_project_view_kanban_inherit_sale_timesheet" model="ir.ui.view">
-        <field name="name">project.project.kanban.inherit.sale.timesheet</field>
+    <record id="project_project_view_card_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">project.project.card.inherit.sale.timesheet</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="hr_timesheet.view_project_kanban_inherited"/>
+        <field name="inherit_id" ref="hr_timesheet.view_project_card_inherited"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='allow_timesheets']" position="after">
                 <field name="allow_billable"/>
@@ -127,10 +127,10 @@
     </record>
 
     <!-- We do a separate inheritance from the base view for the SO button to give the buttons a deterministic order using priorities -->
-    <record id="project_project_view_kanban_inherit_sale_timesheet_so_button" model="ir.ui.view">
-        <field name="name">project.project.kanban.inherit.sale.timesheet.so.button</field>
+    <record id="project_project_view_card_inherit_sale_timesheet_so_button" model="ir.ui.view">
+        <field name="name">project.project.card.inherit.sale.timesheet.so.button</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="inherit_id" ref="project.view_project_card"/>
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='card_menu_view']" position="inside">
