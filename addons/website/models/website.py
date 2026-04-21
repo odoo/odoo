@@ -460,6 +460,9 @@ class Website(models.CachedModel):
         if default_website and default_website in self:
             raise UserError(_("You cannot delete default website %s. Try to change its settings instead", default_website.name))
 
+        if not default_website and not self.search_count([('id', 'not in', self.ids)], limit=1):
+            raise UserError(_('You must keep at least one website.'))
+
     def unlink(self):
         self._remove_attachments_on_website_unlink()
 
