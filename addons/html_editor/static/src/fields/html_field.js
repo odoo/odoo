@@ -27,7 +27,7 @@ import { TranslationButton } from "@web/views/fields/translation_button";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
+import { canRenderAsHTML, fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-steps"];
@@ -94,6 +94,7 @@ export class HtmlField extends Component {
             containsComplexHTML: computeContainsComplexHTML(
                 this.props.record.data[this.props.name]
             ),
+            forceCodeView: false,
         });
 
         useRecordObserver((record) => {
@@ -101,7 +102,14 @@ export class HtmlField extends Component {
             // Reset Wysiwyg when we discard or onchange value
             const newValue = fixInvalidHTML(record.data[this.props.name]);
             if (!this.isDirty) {
-                const value = normalizeHTML(newValue, this.clearElementToCompare.bind(this));
+                let value;
+                this.state.forceCodeView = !canRenderAsHTML(newValue);
+                if (this.state.forceCodeView) {
+                    value = newValue;
+                    this.state.showCodeView = true;
+                } else {
+                    value = normalizeHTML(newValue, this.clearElementToCompare.bind(this));
+                }
                 if (this.lastValue !== value) {
                     this.state.key++;
                     this.state.containsComplexHTML = computeContainsComplexHTML(newValue);
@@ -125,7 +133,7 @@ export class HtmlField extends Component {
     get value() {
         const value = this.props.record.data[this.props.name] || "";
         let newVal = fixInvalidHTML(value);
-        if (this.props.migrateHTML) {
+        if (this.props.migrateHTML && !this.state.forceCodeView) {
             newVal = this.htmlUpgradeManager.processForUpgrade(newVal, {
                 containsComplexHTML: this.state.containsComplexHTML,
                 env: this.env,
@@ -162,7 +170,13 @@ export class HtmlField extends Component {
     }
 
     async updateValue(value, { changeId } = { changeId: this.lastChangeId }) {
-        this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
+        this.state.forceCodeView = !canRenderAsHTML(value);
+        if (this.state.forceCodeView) {
+            this.lastValue = value;
+            this.state.showCodeView = true;
+        } else {
+            this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
+        }
         await this.props.record.update({ [this.props.name]: value }).then(
             () => {
                 if (this.lastChangeId === changeId) {
@@ -244,7 +258,7 @@ export class HtmlField extends Component {
 
     async toggleCodeView() {
         await this.commitChanges();
-        this.state.showCodeView = !this.state.showCodeView;
+        this.state.showCodeView = this.state.forceCodeView || !this.state.showCodeView;
         if (!this.state.showCodeView && this.editor) {
             this.editor.editable.innerHTML = this.value;
             this.editor.shared.history.addStep();

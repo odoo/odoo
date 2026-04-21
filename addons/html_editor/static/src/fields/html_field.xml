@@ -1,10 +1,13 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.HtmlField">
-        <t t-if="this.displayReadonly">
+        <t t-if="this.displayReadonly and !this.state.showCodeView">
             <HtmlViewer
                 config="this.getReadonlyConfig()"
                 migrateHTML="false"/>
         </t>
+        <div t-elif="this.displayReadonly and this.state.showCodeView" class="h-100" t-att-class="{'o_show_codeview': this.state.showCodeView}">
+            <textarea t-custom-ref="codeView" class="o_codeview" t-att-value="this.value" t-att-readonly="1"/>
+        </div>
         <div t-else="" class="h-100" t-att-class="{'o_show_codeview': this.state.showCodeView, 'o_field_translate': this.isTranslatable}">
             <t t-if="this.state.showCodeView">
                 <textarea t-custom-ref="codeView" class="o_codeview" t-att-value="this.value" t-on-change="this.onChange"/>
@@ -24,7 +27,7 @@
                 />
             </t>
         </div>
-        <div t-if="this.state.showCodeView || (this.sandboxedPreview and !this.props.readonly)" t-custom-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="this.toggleCodeView">
+        <div t-if="(this.state.showCodeView and !this.state.forceCodeView) || (this.sandboxedPreview and !this.props.readonly)" t-custom-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="this.toggleCodeView">
             <button class="o_codeview_btn btn btn-primary">
                 <i class="fa fa-code" />
             </button>
