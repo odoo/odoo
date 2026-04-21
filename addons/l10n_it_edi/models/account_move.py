@@ -71,6 +71,7 @@ class AccountMove(models.Model):
             ('accepted_by_pa_partner_after_expiry', 'SdI Accepted, PA Partner Expired Terms'),
         ],
         copy=False, tracking=True,
+        inverse="_inverse_l10n_it_edi_state",
         help="This state is updated by default, but you can force the value. ",
     )
     l10n_it_edi_header = fields.Html(
@@ -339,6 +340,11 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         self.with_context(skip_is_manually_modified=True).write({'l10n_it_edi_header': False})
         return super()._post(soft)
+
+    def _inverse_l10n_it_edi_state(self):
+        for move in self:
+            if move.is_move_sent and move.l10n_it_edi_state in ('rejected', 'rejected_by_pa_partner'):
+                move.is_move_sent = False
 
     def _get_fields_to_detach(self):
         # EXTENDS account
