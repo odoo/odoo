@@ -569,6 +569,7 @@ describe("Import view", () => {
                                 [false, "search"],
                             ],
                             domain: [["id", "in", [1]]],
+                            context: {},
                             target: "current",
                         },
                         {
@@ -610,6 +611,40 @@ describe("Import view", () => {
         expect(browser.location.href).toBe(
             "https://www.hoot.test/odoo/action-2/import/imported-records"
         );
+    });
+
+    test("context is forwarded to the imported records view", async () => {
+        mockService("action", {
+            doAction(action) {
+                if (action && action.name === "Imported records") {
+                    expect.step("open_imported_records");
+                    expect(action.context).toEqual({ default_move_type: "out_invoice" });
+                }
+                return super.doAction(...arguments);
+            },
+        });
+
+        await mountWebClient();
+        await getService("action").doAction({
+            name: "Import Data",
+            tag: "import",
+            target: "current",
+            type: "ir.actions.client",
+            params: {
+                active_model: "partner",
+                context: { default_move_type: "out_invoice" },
+            },
+        });
+
+        const file = new File(["fake_file"], "fake_file.csv", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Display name");
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        expect.verifySteps(["open_imported_records"]);
     });
 
     test("import a CSV file with uppercase extension", async () => {
