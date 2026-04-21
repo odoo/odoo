@@ -1,6 +1,7 @@
 import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { clearRegistry, makeMockEnv, allowTranslations } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
@@ -184,18 +185,19 @@ test(`mountComponent creates an env and sets the application as root when no env
     registerService("my_service", [], () => "a");
 
     class Root extends Component {
-        static template = xml`Root`;
+        static template = xml`<t t-out="this.myService"/>`;
         static props = ["*"];
+        setup() {
+            this.myService = useService("my_service");
+        }
     }
     const app = await mountComponent(Root, getFixture());
     after(() => {
         delete odoo.__WOWL_DEBUG__;
     });
-    const { env } = app;
-    expect(env.services).toEqual({ my_service: "a" });
     const [firstRoot] = app.roots;
     expect(odoo.__WOWL_DEBUG__).toEqual({ root: firstRoot.node.component });
-    expect(getFixture()).toHaveText("Root");
+    expect(getFixture()).toHaveText("a");
 });
 
 test(`mountComponent uses the env when provided and doesn't start the services`, async () => {
