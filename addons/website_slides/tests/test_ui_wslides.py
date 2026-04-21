@@ -3,11 +3,13 @@
 import logging
 
 from dateutil.relativedelta import relativedelta
+from unittest.mock import patch
 
 from odoo import tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.base.tests.files import JPG_RAW, PDF_RAW
 from odoo.addons.gamification.tests.common import HttpCaseGamification
+from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.fields import Command, Datetime
 from odoo.tools import BinaryBytes, mute_logger
 
@@ -276,11 +278,37 @@ class TestUi(TestUICommon):
             rating_value="3",
             subtype_xmlid="mail.mt_comment"
         )
-        self.start_tour(
-            "/slides",
-            "course_review_modification_by_admin",
-            login=self.user_admin.login,
+        slide = self.channel.slide_ids.filtered(lambda s: s.name == "Gardening: The Know-How")[0]
+        base_vals = {"message_type": "comment", "model": "slide.slide", "res_id": slide.id}
+        self.env["mail.message"].create(
+            [
+                # First message should not be considered comment.
+                {
+                    **base_vals,
+                    "body": "Test note",
+                    "subtype_id": self.env.ref("mail.mt_note").id,
+                },
+                *[
+                    {
+                        **base_vals,
+                        "body": f"Comment {i + 1}",
+                        "subtype_id": self.env.ref("mail.mt_comment").id,
+                    }
+                    for i in range(4)
+                ],
+            ]
         )
+        original_fetch = MailMessage._message_fetch
+        with patch.object(
+            MailMessage,
+            "_message_fetch",
+            lambda self, domain, **kw: original_fetch(self, domain, **{"limit": 3, **kw}),
+        ):
+            self.start_tour(
+                "/slides",
+                "course_review_modification_by_admin",
+                login=self.user_admin.login,
+            )
 
     def test_fullscreen_slide_text_highlights(self):
         self.env['slide.slide'].create({
