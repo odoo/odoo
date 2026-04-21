@@ -347,14 +347,14 @@
                                     <t t-set="_classes" t-valuef="d-none me-auto d-lg-inline-block"/>
                                 </t>
 
-                                <div t-if="category" class="d-flex align-items-center d-lg-none me-auto o_not_editable">
+                                <div t-if="category" class="d-flex align-items-center d-lg-none me-auto o_not_editable overflow-hidden">
                                     <t t-if="not category.parent_id" t-set="backUrl" t-valuef="/shop"/>
                                     <t t-else="" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
 
                                     <a t-attf-class="btn btn-{{navClass}} me-2" t-att-href="category.parent_id and keep('/shop/category/' + slug(category.parent_id), category=0) or '/shop'">
                                         <i class="fa fa-angle-left"/>
                                     </a>
-                                    <h4 t-out="category.name" class="mb-0 me-auto"/>
+                                    <h4 t-out="category.name" class="mb-0 me-auto text-overflow"/>
                                 </div>
 
                                 <t t-if="is_view_active('website_sale.add_grid_or_list_option')" t-call="website_sale.add_grid_or_list_option">
