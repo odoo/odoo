@@ -895,6 +895,12 @@ class AccountMove(models.Model):
         return ['general']
 
     def _search_default_journal(self):
+        # `active_id` contains the currently active journal ID when the upload is triggered from the journal.
+        if (
+            self.env.context.get('is_statement_line')
+            and self.env.context.get('active_id')
+        ):
+            return self.env['account.journal'].browse(self.env.context['active_id'])
         if self.statement_line_ids.statement_id.journal_id:
             return self.statement_line_ids.statement_id.journal_id[:1]
 
