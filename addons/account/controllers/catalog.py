@@ -25,7 +25,7 @@ class ProductCatalogAccountController(ProductCatalogController):
                 },
             ]
         """
-        order = request.env[res_model].browse(order_id)
+        order = request.env[res_model].browse(order_id).sudo()
         return order.with_company(order.company_id)._get_sections(child_field, **kwargs)
 
     @route('/product/catalog/create_section', auth='user', type='jsonrpc')
