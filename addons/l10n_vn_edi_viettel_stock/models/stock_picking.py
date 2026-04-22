@@ -24,9 +24,10 @@ class StockPicking(models.Model):
         copy=False,
     )
     l10n_vn_edi_symbol_id = fields.Many2one(
-        comodel_name='l10n_vn_edi_viettel.sinvoice.symbol',
+        comodel_name='l10n_vn.symbol',
         string='SInvoice Symbol',
         compute='_compute_l10n_vn_edi_symbol_id',
+        domain=[('usage', '=', 'delivery_document')],
         readonly=False,
         store=True,
     )
