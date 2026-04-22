@@ -245,7 +245,7 @@ class MetaModel(type):
     _module: str | None
     _abstract: bool
     _auto: bool
-    _inherit: list[str] | None
+    _inherit__: list[str] | None
 
     def __new__(meta, name, bases, attrs):
         # this prevents assignment of non-fields on recordsets
@@ -274,6 +274,9 @@ class MetaModel(type):
                 _logger.warning("Class %s has no _name, please make it explicit: _name = %r", name, attrs['_name'])
 
             assert attrs.get('_name')
+
+        if '_inherit' in attrs:
+            attrs['_inherit__'] = attrs.pop('_inherit')
 
         return super().__new__(meta, name, bases, attrs)
 
@@ -311,6 +314,12 @@ class MetaModel(type):
                     'res.users', string='Last Updated by', readonly=True))
                 add_default('write_date', Datetime(
                     string='Last Updated on', readonly=True))
+
+    @property
+    def _inherit(cls):
+        if getattr(cls, 'pool', None) is not None:
+            raise AttributeError("Registry Class shouldn't access attribute '_inherit'. Please use issubclass instead")
+        return cls._inherit__
 
 
 safe_checker.add_hook(MetaModel, None)  # Optimization to serialize model class(es) faster
