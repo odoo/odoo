@@ -899,24 +899,51 @@ class SaleOrder(models.Model):
         :return: Tuple of advantage tax excluded and advantage tax included
         :rtype: tuple(float, float)
         """
+
+        def grouping_function(base_line, tax_data):
+            return base_line["special_type"] not in ("global_discount", "loyalty_discount")
+
         self.ensure_one()
         AccountTax = self.env["account.tax"]
-        total_excluded = total_included = 0
+        order_lines = self._get_priced_lines()
 
-        for line in self.order_line:
-            # Exclude global discounts, down payments and coupons
-            if line._is_line_excluded_from_totals():
-                continue
+        # Original lines
+        base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
+            base_lines, grouping_function
+        )
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(
+            base_lines_aggregated_values
+        )
+        # Lines without discount, except if negative (=surcharge)
+        base_lines_undiscounted = [
+            line._prepare_base_line_for_taxes_computation(discount=min(line.discount, 0))
+            for line in order_lines
+        ]
+        AccountTax._add_tax_details_in_base_lines(base_lines_undiscounted, self.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines_undiscounted, self.company_id)
+        base_lines_undiscounted_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
+            base_lines_undiscounted, grouping_function
+        )
+        values_undiscounted_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(
+            base_lines_undiscounted_aggregated_values
+        )
 
-            # Calculate base_line without discount, except if negative (=surcharge)
-            discount = 0 if line.discount > 0 else line.discount
-            base_line = line._prepare_base_line_for_taxes_computation(discount=discount)
-            AccountTax._add_tax_details_in_base_line(base_line, self.company_id)
-            total_excluded += base_line["tax_details"]["raw_total_excluded_currency"]
-            total_included += base_line["tax_details"]["raw_total_included_currency"]
-
-        advantage_tax_excl = self.amount_untaxed - total_excluded
-        advantage_tax_incl = self.amount_total - total_included
+        # Computation of totals
+        total_excl = total_incl = undiscounted_total_excl = undiscounted_total_incl = 0.0
+        for values in values_per_grouping_key.values():
+            total_excl += values["total_excluded_currency"]
+            total_incl += values["total_excluded_currency"] + values["tax_amount_currency"]
+        for grouping_key, values in values_undiscounted_per_grouping_key.items():
+            if grouping_key:
+                undiscounted_total_excl += values["total_excluded_currency"]
+                undiscounted_total_incl += (
+                    values["total_excluded_currency"] + values["tax_amount_currency"]
+                )
+        advantage_tax_excl = total_excl - undiscounted_total_excl
+        advantage_tax_incl = total_incl - undiscounted_total_incl
 
         if not float_is_zero(advantage_tax_incl, precision_rounding=self.currency_id.rounding):
             return advantage_tax_excl, advantage_tax_incl
