@@ -55,7 +55,7 @@ class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
                     })
 
     def test_queries_batch_mail_tracking_duration(self):
-        self._test_queries_batch_duration_tracking()
+        self._test_queries_batch_duration_tracking(query_count=1)
 
 
 @tagged('mail_thread', 'mail_track', 'mail_duration_mixin')
