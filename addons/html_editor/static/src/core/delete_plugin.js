@@ -238,6 +238,9 @@ export class DeletePlugin extends Plugin {
      */
     delete(direction, granularity) {
         const selection = this.dependencies.selection.getEditableSelection();
+
+        this.dependencies.history.stageSelection();
+
         this.dispatchTo("before_delete_handlers");
 
         if (!selection.isCollapsed) {
