@@ -67,20 +67,28 @@ class TestSnippets(HttpCase):
             'name': "Test Category",
         })
 
-        self.env.company.website_id = False
-        website = self.env.ref('website.default_website')
-        website.update({
-            'domain': "http://www.example.com",
-            'company_id': self.env.company.id,
-        })
+        # Test with multiple websites and custom domains
+        websites_data = [
+            ("http://www.example.com", "Example"),
+            ("http://www.test.com", "Test"),
+            ("http://www.custom.com", "Custom"),
+        ]
 
-        # Simulate a request with correct context
-        with MockRequest(self.env, website=website):
-            original_get_base_url = self.env['product.public.category'].sudo().get_base_url()
-            data = self.env['website.snippet.filter'].sudo()._prepare_category_list_data(
-                parent_id=category.id,
-            )
+        for domain, name in websites_data:
+            self.env.company.website_id = False
+            website = self.env['website'].create({
+                'name': name,
+                'domain': domain,
+                'company_id': self.env.company.id,
+            })
 
-        # Assert that the returned cover_image uses the mocked base URL
-        self.assertTrue(data[0]['cover_image'].startswith(original_get_base_url))
-        self.assertNotIn(website.domain, data[0]['cover_image'])
+            # Simulate a request with correct context
+            with MockRequest(self.env, website=website):
+                original_get_base_url = self.env['product.public.category'].sudo().get_base_url()
+                data = self.env['website.snippet.filter'].sudo()._prepare_category_list_data(
+                    parent_id=category.id,
+                )
+
+            # Assert that the returned cover_image not uses the base URL or the website domain
+            self.assertNotIn(website.domain, data[0]['cover_image'])
+            self.assertNotIn(original_get_base_url, data[0]['cover_image'])
