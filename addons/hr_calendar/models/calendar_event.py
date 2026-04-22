@@ -25,7 +25,7 @@ class CalendarEvent(models.Model):
                 continue
             start = event_interval._items[0][0]
             stop = event_interval._items[-1][1]
-            schedule_by_partner = event.partner_ids._get_schedule(start, stop, merge=False)
+            schedule_by_partner = event.partner_ids.with_context(calendar_period_include_contract_less_versions=True)._get_schedule(start, stop, merge=False)
             event.unavailable_partner_ids |= event._check_employees_availability_for_event(
                 schedule_by_partner, event_interval)
 
