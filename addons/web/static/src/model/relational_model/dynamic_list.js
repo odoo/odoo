@@ -28,9 +28,11 @@ export class DynamicList extends DataPoint {
             this.handleField = DEFAULT_HANDLE_FIELD;
         }
 
+        this.count = 0;
         this.isDomainSelected = false;
         this.evalContext = this.context;
 
+        makeReactive(this, "count", signal);
         makeReactive(this, "isDomainSelected", signal);
     }
 
