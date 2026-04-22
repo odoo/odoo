@@ -99,6 +99,47 @@ test("BinaryField is correctly rendered (readonly)", async () => {
     expect.verifySteps(["/web/content"]);
 });
 
+test("BinaryField is correctly rendered (readonly on fresh record)", async () => {
+    // Readonly on fresh record happens when editing one2many items on a new record (lines out of focus become readonly)
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+        arch: `
+            <form>
+                <!-- field holding the filename of the "document" file (see default value above) -->
+                <field name="foo" invisible="1"/>
+                <field name="document" filename="foo" readonly="1"/>
+            </form>
+        `,
+    });
+
+    const filenameDefaultValue = "My little Foo Value";
+    expect(`.o_field_widget[name="document"]`).toHaveText(filenameDefaultValue, {
+        message:
+            "the binary field should display the name of the file (based on the hidden field foo)",
+    });
+    expect(`.o_field_widget[name="document"] a > .fa-download`).toHaveCount(0, {
+        message:
+            "the binary field should not be rendered as a downloadable link for a fresh record",
+    });
+});
+
+test("BinaryField is correctly rendered (readonly on fresh record without filename)", async () => {
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="document" readonly="1"/>
+            </form>
+        `,
+    });
+
+    expect(`.o_field_widget[name="document"]`).toHaveText("", {
+        message: "the binary field should be empty",
+    });
+});
+
 test("BinaryField is correctly rendered", async () => {
     onRpc("/web/content", async (request) => {
         expect.step("/web/content");
