@@ -176,6 +176,7 @@
         'views/snippets/s_banner_contained.xml',
         'views/snippets/s_duo_images.xml',
         'views/snippets/s_hero_about.xml',
+        'views/snippets/s_website_form_bold.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_banner_product.xml',
