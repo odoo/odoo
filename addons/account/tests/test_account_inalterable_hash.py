@@ -839,3 +839,30 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         self.assertEqual(wizard.max_hash_date, fields.Date.from_string("2024-01-02"))
         self.assertFalse(wizard.not_hashable_unlocked_move_ids)
         self.assertEqual(wizard.move_to_hash_ids, moves_v4)
+
+    def test_hash_chain_year_in_suffix_sequence_reset(self):
+        """
+        With the year in the suffix (e.g. F0001/2026), `sequence_prefix` is the
+        same for every year while the numbering restarts each year. The 2026 chain
+        must not be compared with the (higher) numbers of the 2025 one.
+        """
+        journal = self.company_data['default_journal_sale']
+        journal.restrict_mode_hash_table = True
+        journal.sequence_override_regex = r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)(?P<year>(\d{4})?)$'
+
+        def post(date, name):
+            move = self.init_invoice('out_invoice', self.partner_a, date, amounts=[1000], post=False)
+            move.name = name
+            with self._skip_hash_moves():
+                move.action_post()
+            return move
+
+        moves_2025 = post('2025-12-30', 'F0010/2025') | post('2025-12-31', 'F0011/2025')
+        moves_2025._hash_moves()
+        moves_2026 = post('2026-01-02', 'F0001/2026') | post('2026-01-03', 'F0002/2026')
+
+        self.assertEqual((moves_2025 | moves_2026).mapped('sequence_prefix'), ['F'] * 4)
+
+        moves_2026._hash_moves()  # raised "no_document" before the fix
+        self.assertTrue(all(moves_2026.mapped('inalterable_hash')))
+        self.assertNotEqual(moves_2026[0].inalterable_hash, moves_2025[-1].inalterable_hash)
