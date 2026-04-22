@@ -5,7 +5,7 @@
             <div name="extra-info" position="before">
                 <div t-if="line['lot_names']" class="text-small">
                     <ul t-foreach="line['lot_names']" t-as="lot_name" style="list-style: none; padding: 0; margin: 0;">
-                        <li t-out="lot_name" />
+                        <li class="lot-number" t-out="lot_name" />
                     </ul>
                 </div>
             </div>

@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("l10nFrPosCertSelfInvoicingTour", {
             FeedbackScreen.checkTicketData({
                 cssRules: [
                     {
-                        css: ".pos-receipt #posqrcode",
+                        css: ".invoice-qr-code",
                     },
                 ],
             }),
@@ -44,12 +44,12 @@ registry.category("web_tour.tours").add("test_correct_old_price_upon_price_chang
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
+            FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.checkTicketData({
                 orderlines: [
                     {
                         name: "Desk Pad",
-                        cssRules: [{ css: ".oldPrice", text: "1.98" }],
+                        cssRules: [{ css: "div[name='combo-unit-price']", text: "1.98" }],
                     },
                 ],
             }),

@@ -123,7 +123,7 @@ registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
                         name: "Whiteboard Pen",
                         cssRules: [
                             {
-                                css: ".info-list .customer-note",
+                                css: ".lines .line-note",
                                 text: "Customer note 2--Customer note 3",
                             },
                         ],
