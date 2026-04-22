@@ -645,7 +645,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         # Update the invoice.
         invoice.move_type = move_type
-        with invoice._get_edi_creation() as invoice:
+        with invoice.with_context(disable_onchange_name_predictive=['all'])._get_edi_creation() as invoice:
             fill_invoice_logs = self._import_fill_invoice(invoice, tree, qty_factor)
 
         # For UBL, we should override the computed tax amount if it is less than 0.05 different of the one in the xml.
@@ -876,6 +876,14 @@ class AccountEdiCommon(models.AbstractModel):
                 line_values['vehicle_id'] = vehicle or self._import_vehicle(line_tree, 'line', document_type, record.company_id)
             lines_values.append(line_values)
             lines_values += self._retrieve_line_charges(record, line_values, line_values['tax_ids'])
+            if isinstance(record, self.env.registry['account.move']) and hasattr(self.env['account.move.line'], '_get_predicted_values'):
+                for fname, value in self.env['account.move.line']._get_predicted_values(
+                    line_values['name'],
+                    move=record,
+                    line_domain=[('tax_ids', '=', line_values['tax_ids'][0])] if len(line_values['tax_ids']) == 1 else [],
+                ).items():
+                    if fname not in line_values:
+                        line_values[fname] = self.env['account.move.line']._fields[fname].convert_to_write(value, self.env['account.move.line'])
         return lines_values, logs
 
     def _import_rounding_amount(self, invoice, tree, xpath, document_type=False, qty_factor=1):
@@ -1252,11 +1260,10 @@ class AccountEdiCommon(models.AbstractModel):
                 ('amount_type', '=', 'percent'),
                 ('type_tax_use', '=', tax_type),
                 ('amount', '=', amount),
-                ('country_id', '=', record.tax_country_id.id),
             ]
             tax = self.env['account.tax']
             if hasattr(record, '_get_specific_tax'):
-                tax = record._get_specific_tax(line_values['name'], 'percent', amount, tax_type).filtered_domain(domain)[:1]
+                tax = record._get_specific_tax(line_values['name'], domain).filtered_domain(domain)[:1]
             if tax_exigibility is not None:
                 if not tax:
                     tax = self.env['account.tax'].search(domain + fpos_domain + [('price_include', '=', False), ('tax_exigibility', '=', tax_exigibility)], limit=1)

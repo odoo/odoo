@@ -361,32 +361,6 @@ class ProductProduct(models.Model):
             ]}
 
     @api.model
-    def _import_retrieve_product_from_invoice_predictive(self, product_values):
-        # Check if 'account_accountant' is installed.
-        if 'payment_state_before_switch' not in self.env['account.move']._fields:
-            return
-
-        invoice_predictive = product_values.get('invoice_predictive')
-        if not invoice_predictive:
-            return
-
-        def search_predictive(values):
-            static_domain = values['static_domain']
-            predicted_product_id = self.env['account.move.line']._predict_specific_product(
-                move=invoice_predictive['invoice'],
-                name=invoice_predictive['name'],
-                partner=invoice_predictive['partner'],
-            )
-            return self.env['product.product'].browse(predicted_product_id).filtered_domain(static_domain)[:1]
-
-        return {
-            'criteria': [{
-                'search_method': search_predictive,
-                'cache_key': frozendict(invoice_predictive),
-            }],
-        }
-
-    @api.model
     def _import_retrieve_product(self, search_plan, company, product_values_list):
         cache = {}
 
@@ -395,6 +369,8 @@ class ProductProduct(models.Model):
             [('company_id', '=', False)],
         ])
         for product_values in product_values_list:
+            if product_values.get('product'):
+                continue
             product = None
             for plan in search_plan:
                 plan_values = plan(product_values)

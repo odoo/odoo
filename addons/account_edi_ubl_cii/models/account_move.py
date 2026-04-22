@@ -391,12 +391,13 @@ class AccountMove(models.Model):
             'tax_ids': [Command.set(tax_ids)],
         } for name, quantity, price_unit, tax_ids in lines_vals]
 
-    def _get_specific_tax(self, name, amount_type, amount, tax_type):
+    def _get_specific_tax(self, name, domain):
         AccountMoveLine = self.env['account.move.line']
-        if hasattr(AccountMoveLine, '_predict_specific_tax'):
+        if hasattr(AccountMoveLine, '_get_predicted_values'):
             # company check is already done in the prediction query
-            predicted_tax_id = AccountMoveLine._predict_specific_tax(
-                self, name, self.partner_id, amount_type, amount, tax_type,
-            )
-            return self.env['account.tax'].browse(predicted_tax_id)
+            return AccountMoveLine._get_predicted_values(
+                name,
+                move=self,
+                line_domain=[('tax_ids', 'any', domain)],
+            ).get('tax_ids', self.env['account.tax'])
         return self.env['account.tax']
