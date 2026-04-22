@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { markRaw, signal, types as t, untrack, validateType } from "@odoo/owl";
+import { signal, types as t, untrack, validateType } from "@odoo/owl";
 import {
     formatXml,
     getActiveElement,
@@ -50,7 +50,6 @@ import {
     T_NULL,
     T_REGEX,
     T_UNDEFINED,
-    untracked,
 } from "../hoot_utils";
 import { mockFetch } from "../mock/network";
 import { logger } from "./logger";
@@ -628,7 +627,7 @@ export function makeExpect(params) {
                 test.status.set(Test.FAILED);
             }
 
-            /** @type {typeof import("../hoot_utils").T_REPORTING} */
+            /** @type {Partial<import("../hoot_utils").TestReporting>} */
             const report = {
                 assertions: assertionCount,
                 duration: test.lastResults?.duration || 0,
@@ -676,16 +675,12 @@ export function makeExpect(params) {
     }
 
     /**
-     * @param {Test} test
+     * @param {Test} [test]
      */
     function beforeTest(test) {
+        currentResult = new CaseResult(test || null, params.headless);
         if (test) {
-            test.results().push(new CaseResult(test, params.headless));
-
-            // Must be retrieved from the list to be proxified
-            currentResult = test.lastResults;
-        } else {
-            currentResult = new CaseResult(null, params.headless);
+            test.results().push(currentResult);
         }
         currentResultInErrorState = false;
         const listenedEvents = ["query"];
@@ -1041,13 +1036,13 @@ export function makeExpect(params) {
     }
 
     const enrichedExpect = $assign(expect, {
-        assertions: untracked(assertions),
-        errors: untracked(errors),
-        step: untracked(step),
-        verifyErrors: untracked(verifyErrors),
-        verifySteps: untracked(verifySteps),
-        waitForErrors: untracked(waitForErrors),
-        waitForSteps: untracked(waitForSteps),
+        assertions,
+        errors,
+        step,
+        verifyErrors,
+        verifySteps,
+        waitForErrors,
+        waitForSteps,
     });
     const expectHooks = {
         after: afterTest,
@@ -1067,8 +1062,6 @@ export function makeExpect(params) {
 export class CaseResult {
     duration = 0;
     pass = true;
-    /** @type {Test | null} */
-    test = null;
     ts = $floor($now());
 
     events = signal.Array([], { type: t.instanceOf(CaseEvent) });
@@ -1090,13 +1083,10 @@ export class CaseResult {
      * @param {boolean} [headless]
      */
     constructor(test, headless) {
-        if (test) {
-            this.test = test;
-        }
-
+        /** @type {Test | null} */
+        this.test = test;
+        /** @type {boolean} */
         this.headless = !!headless;
-
-        markRaw(this);
     }
 
     consumeErrors() {
@@ -1184,7 +1174,7 @@ export class CaseResult {
                 }
                 logger.logTestEvent(...logArgs);
             }
-            this.events().push(caseEvent);
+            untrack(() => this.events().push(caseEvent));
         }
     }
 }

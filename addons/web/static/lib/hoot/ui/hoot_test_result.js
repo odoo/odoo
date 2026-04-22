@@ -40,11 +40,11 @@ const {
 //-----------------------------------------------------------------------------
 
 /**
- * @param {[number, CaseEvent][]} indexedResults
+ * @param {[number, CaseResult][]} indexedResults
  * @param {number} events
  */
 function filterEvents(indexedResults, events) {
-    /** @type {Record<number, CaseEvent[]>} */
+    /** @type {Record<number, CaseResult[]>} */
     const filteredEvents = {};
     for (const [i, result] of indexedResults) {
         filteredEvents[i] = result.getEvents(events);
@@ -304,9 +304,7 @@ export class HootTestResult extends Component {
     ui = plugin(UiPlugin);
 
     // Reactive values
-    /** @type {import("@odoo/owl").ReactiveValue<ReturnType<typeof filterEvents>>} */
     filteredEvents = computed(() => filterEvents(this.filteredResults(), this.config.events()));
-    /** @type {import("@odoo/owl").ReactiveValue<[number, CaseEvent][]>} */
     filteredResults = computed(() =>
         filterResults(this.props.test.results(), this.ui.statusFilter())
     );

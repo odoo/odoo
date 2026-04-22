@@ -210,7 +210,7 @@ class Logger {
      * @param {...any} args
      */
     logTestEvent(prefix, ...args) {
-        $log(...styledArguments(args, ...prefix));
+        $trace(...styledArguments(args, ...prefix));
     }
     /**
      * @param {...any} args
