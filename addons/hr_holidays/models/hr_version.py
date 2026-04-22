@@ -75,7 +75,25 @@ class HrVersion(models.Model):
             try:
                 for contract in self:
                     resource_calendar_id = vals.get('resource_calendar_id', contract.resource_calendar_id.id)
-                    extra_domain = [('resource_calendar_id', '!=', resource_calendar_id)] if resource_calendar_id else None
+                    extra_domain = [
+                        ('resource_calendar_id', '!=', resource_calendar_id),
+                    ] if resource_calendar_id else []
+
+                    old_start = contract.contract_date_start
+                    old_end = contract.contract_date_end
+                    new_start = vals.get('contract_date_start', old_start)
+                    new_end = vals.get('contract_date_end', old_end)
+                    old_date_version = contract.date_version
+                    new_date_version = vals.get('date_version', old_date_version)
+
+                    start_candidates = [d for d in [old_start, new_start, old_date_version, new_date_version] if d]
+                    if start_candidates:
+                        extra_domain += [('start_date', '>=', min(start_candidates))]
+
+                    end_candidates = [d for d in [old_end, new_end] if d]
+                    if end_candidates:
+                        extra_domain += [('end_date', '<=', max(end_candidates))]
+
                     leaves = contract._get_leaves(
                         extra_domain=extra_domain
                     )
