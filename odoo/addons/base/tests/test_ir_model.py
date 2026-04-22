@@ -652,6 +652,78 @@ class TestCustomFields(TestCommonCustomFields):
         for partner in partners:
             self.assertEqual(partner.x_oh_boy, partner.country_id.code)
 
+    def test_relation_of_a_custom_field(self):
+        """ change the relation model of a custom field """
+        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_foo',
+            'model_id': model.id,
+            'field_description': 'x_foo',
+            'ttype': 'many2many',
+            'relation': self.COMODEL,
+        })
+
+        # change the relation
+        with self.assertRaises(ValidationError):
+            field.relation = 'foo'
+
+    def test_selection(self):
+        """ custom selection field """
+        Model = self.env[self.MODEL]
+        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
+        field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': 'x_sel',
+            'field_description': "Custom Selection",
+            'ttype': 'selection',
+            'selection_ids': [
+                Command.create({'value': 'foo', 'name': 'Foo', 'sequence': 0}),
+                Command.create({'value': 'bar', 'name': 'Bar', 'sequence': 1}),
+            ],
+        })
+
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar')])
+
+        # add selection value 'baz'
+        field.selection_ids.create({
+            'field_id': field.id, 'value': 'baz', 'name': 'Baz', 'sequence': 2,
+        })
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')])
+
+        # assign values to records
+        rec1 = Model.create({'name': 'Rec1', 'x_sel': 'foo'})
+        rec2 = Model.create({'name': 'Rec2', 'x_sel': 'bar'})
+        rec3 = Model.create({'name': 'Rec3', 'x_sel': 'baz'})
+        self.assertEqual(rec1.x_sel, 'foo')
+        self.assertEqual(rec2.x_sel, 'bar')
+        self.assertEqual(rec3.x_sel, 'baz')
+
+        # remove selection value 'foo'
+        field.selection_ids[0].unlink()
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('bar', 'Bar'), ('baz', 'Baz')])
+
+        self.assertEqual(rec1.x_sel, False)
+        self.assertEqual(rec2.x_sel, 'bar')
+        self.assertEqual(rec3.x_sel, 'baz')
+
+        # update selection value 'bar'
+        field.selection_ids[0].value = 'quux'
+        x_sel = Model._fields['x_sel']
+        self.assertEqual(x_sel.type, 'selection')
+        self.assertEqual(x_sel.selection, [('quux', 'Bar'), ('baz', 'Baz')])
+
+        self.assertEqual(rec1.x_sel, False)
+        self.assertEqual(rec2.x_sel, 'quux')
+        self.assertEqual(rec3.x_sel, 'baz')
+
+
+class TestCustomFieldsPostInstall(TestCommonCustomFields):
     def test_related_field_non_stored_not_allowed(self):
         """ Test related field behavior with stored/non-stored combinations """
 
@@ -748,78 +820,6 @@ class TestCustomFields(TestCommonCustomFields):
         })
         self.assertTrue(field)
 
-    def test_relation_of_a_custom_field(self):
-        """ change the relation model of a custom field """
-        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
-        field = self.env['ir.model.fields'].create({
-            'name': 'x_foo',
-            'model_id': model.id,
-            'field_description': 'x_foo',
-            'ttype': 'many2many',
-            'relation': self.COMODEL,
-        })
-
-        # change the relation
-        with self.assertRaises(ValidationError):
-            field.relation = 'foo'
-
-    def test_selection(self):
-        """ custom selection field """
-        Model = self.env[self.MODEL]
-        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
-        field = self.env['ir.model.fields'].create({
-            'model_id': model.id,
-            'name': 'x_sel',
-            'field_description': "Custom Selection",
-            'ttype': 'selection',
-            'selection_ids': [
-                Command.create({'value': 'foo', 'name': 'Foo', 'sequence': 0}),
-                Command.create({'value': 'bar', 'name': 'Bar', 'sequence': 1}),
-            ],
-        })
-
-        x_sel = Model._fields['x_sel']
-        self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar')])
-
-        # add selection value 'baz'
-        field.selection_ids.create({
-            'field_id': field.id, 'value': 'baz', 'name': 'Baz', 'sequence': 2,
-        })
-        x_sel = Model._fields['x_sel']
-        self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')])
-
-        # assign values to records
-        rec1 = Model.create({'name': 'Rec1', 'x_sel': 'foo'})
-        rec2 = Model.create({'name': 'Rec2', 'x_sel': 'bar'})
-        rec3 = Model.create({'name': 'Rec3', 'x_sel': 'baz'})
-        self.assertEqual(rec1.x_sel, 'foo')
-        self.assertEqual(rec2.x_sel, 'bar')
-        self.assertEqual(rec3.x_sel, 'baz')
-
-        # remove selection value 'foo'
-        field.selection_ids[0].unlink()
-        x_sel = Model._fields['x_sel']
-        self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('bar', 'Bar'), ('baz', 'Baz')])
-
-        self.assertEqual(rec1.x_sel, False)
-        self.assertEqual(rec2.x_sel, 'bar')
-        self.assertEqual(rec3.x_sel, 'baz')
-
-        # update selection value 'bar'
-        field.selection_ids[0].value = 'quux'
-        x_sel = Model._fields['x_sel']
-        self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('quux', 'Bar'), ('baz', 'Baz')])
-
-        self.assertEqual(rec1.x_sel, False)
-        self.assertEqual(rec2.x_sel, 'quux')
-        self.assertEqual(rec3.x_sel, 'baz')
-
-
-class TestCustomFieldsPostInstall(TestCommonCustomFields):
     def test_add_field_valid(self):
         """ custom field names must start with 'x_', even when bypassing the constraints
 
