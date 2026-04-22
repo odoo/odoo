@@ -449,7 +449,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
         for attachment in attachments:
             file_data = {
                 'name': attachment.name,
-                'raw': attachment.raw,
+                'raw': attachment.raw or b'',
                 'mimetype': attachment.mimetype,
                 'origin_attachment': attachment,
                 'attachment': attachment,
