@@ -280,7 +280,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.start_pos_tour('OnlinePaymentErrorsTour', login="pos_op_user")
 
     def test_customer_display_online_payment(self):
-        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}",
+        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}?access_token={self.main_pos_config.access_token}",
                         'CustomerDisplayTourOnlinePayment', login="pos_user")
 
     def test_refuse_online_payment_without_accounting_payment(self):
