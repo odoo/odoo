@@ -6,8 +6,8 @@ import {
     hasAnyNodesColor,
     TEXT_CLASSES_REGEX,
     BG_CLASSES_REGEX,
-    RGBA_REGEX,
     hasTextColorClass,
+    computeBackgroundColorForElement,
 } from "@html_editor/utils/color";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
@@ -28,7 +28,6 @@ import { withSequence } from "@html_editor/utils/resource";
 import { isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
-const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
 
 /**
@@ -118,27 +117,7 @@ export class ColorPlugin extends Plugin {
         if (!el) {
             return;
         }
-        const elStyle = getComputedStyle(el);
-        const backgroundImage = elStyle.backgroundImage;
-        const hasGradient = isColorGradient(backgroundImage);
-        const hasTextGradientClass = el.classList.contains("text-gradient");
-
-        let backgroundColor = elStyle.backgroundColor;
-        const activeTab = document
-            .querySelector(".o_font_color_selector button.active")
-            ?.innerHTML.trim();
-        if (backgroundColor.startsWith("rgba") && activeTab === "Solid") {
-            // Buttons in the solid tab of color selector have no
-            // opacity, hence to match selected color correctly,
-            // we need to remove applied 0.6 opacity.
-            const values = backgroundColor.match(RGBA_REGEX) || [];
-            const alpha = parseFloat(values.pop()); // Extract alpha value
-            if (alpha === RGBA_OPACITY) {
-                backgroundColor = `rgb(${values.slice(0, 3).join(", ")})`; // Remove alpha
-            }
-        }
-
-        return hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor);
+        return computeBackgroundColorForElement(el);
     }
 
     updateSelectedColor() {
