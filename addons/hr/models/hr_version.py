@@ -369,13 +369,13 @@ class HrVersion(models.Model):
 
         return super(HrVersion, multiple_versions).write(new_vals)
 
-    def get_formview_action(self, access_uid=None):
+    def get_record_default_action(self, access_uid=None):
         """
         Override this method in order to redirect many2one towards the right model
             - Contract template -> hr.version
             - Employee record -> hr.employee(.public) with version_id in context
         """
-        res = super().get_formview_action(access_uid=access_uid)
+        res = super().get_record_default_action(access_uid=access_uid)
         context = res.get('context', {})
         if self.employee_id:
             user = self.env.user

@@ -10,7 +10,7 @@ registerThreadAction("hr-view-profile", {
     icon: "fa fa-fw fa-id-card",
     name: _t("View Profile"),
     onSelected: async ({ channel, store }) => {
-        const action = await store.env.services.orm.call("hr.employee", "get_formview_action", [
+        const action = await store.env.services.orm.call("hr.employee", "get_record_default_action", [
             channel.correspondent.partner_id?.employeeId,
         ]);
         store.env.services.action.doAction(action);

@@ -286,9 +286,9 @@ test("reference in form view", async () => {
     `;
 
     onRpc(({ args, method, model }) => {
-        if (method === "get_formview_action") {
+        if (method === "get_record_default_action") {
             expect(args[0]).toEqual([37], {
-                message: "should call get_formview_action with correct id",
+                message: "should call get_record_default_action with correct id",
             });
             return {
                 res_id: 17,

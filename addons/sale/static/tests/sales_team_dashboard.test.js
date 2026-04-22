@@ -31,7 +31,7 @@ test("edit progressbar target", async () => {
                     res_model: "crm.team",
                     target: "current",
                     type: "ir.actions.act_window",
-                    method: "get_formview_action",
+                    method: "get_record_default_action",
                 },
                 { message: "should trigger do_action with the correct args" }
             );
@@ -40,7 +40,7 @@ test("edit progressbar target", async () => {
         },
     });
 
-    onRpc("crm.team", "get_formview_action", ({ method, model }) => ({
+    onRpc("crm.team", "get_record_default_action", ({ method, model }) => ({
         method,
         res_model: model,
         target: "current",
