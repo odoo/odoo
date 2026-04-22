@@ -340,20 +340,16 @@ ${"-".repeat(columnIndex - 1)}^`;
         if (!str) {
           return {};
         }
-        const parts = str.split(";");
-        for (let part of parts) {
-          part = trim.call(part);
-          if (!part) {
+        const el = document.createElement("div");
+        el.style = str;
+        for (let key of el.style) {
+          let value = el.style[key];
+          if (!value) {
             continue;
           }
-          const colonIdx = part.indexOf(":");
-          if (colonIdx === -1) {
-            continue;
-          }
-          const prop = trim.call(part.slice(0, colonIdx));
-          const value = trim.call(part.slice(colonIdx + 1));
-          if (prop && value && value !== "undefined") {
-            result[prop] = value;
+          value = trim.call(value);
+          if (value && value !== "undefined") {
+            result[key] = value;
           }
         }
         return result;
