@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 
 import { Component } from "@odoo/owl";
@@ -24,7 +23,7 @@ export class ActivityController extends Component {
     static template = "mail.ActivityController";
 
     setup() {
-        this.model = useState(useModel(this.props.Model, this.modelParams));
+        this.model = useModel(this.props.Model, this.modelParams);
 
         this.dialog = useService("dialog");
         this.action = useService("action");
