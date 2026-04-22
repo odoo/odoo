@@ -7,6 +7,7 @@ import { isZWS } from "@html_editor/utils/dom_info";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { normalizeCursorPosition } from "@html_editor/utils/selection";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { computeBackgroundColorForElement } from "@html_editor/utils/color";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -133,6 +134,11 @@ export class IconPlugin extends Plugin {
         ],
         /** Handlers */
         selectionchange_handlers: this.normalizeIconSelection.bind(this),
+        /** Providers */
+        selected_background_color_providers: withSequence(
+            5,
+            this.computeBackgroundColorForIcon.bind(this)
+        ),
     };
 
     /**
@@ -246,5 +252,19 @@ export class IconPlugin extends Plugin {
             prevIcon.setAttribute(attribute.nodeName, attribute.nodeValue);
         }
         this.dependencies.history.addStep();
+    }
+
+    computeBackgroundColorForIcon() {
+        const nodes = this.dependencies.selection
+            .getTargetedNodes()
+            .filter((node) => node.classList?.contains("fa"));
+        if (nodes.length === 0) {
+            return;
+        }
+        const el = closestElement(nodes[0], "font");
+        if (!el) {
+            return;
+        }
+        return computeBackgroundColorForElement(el);
     }
 }
