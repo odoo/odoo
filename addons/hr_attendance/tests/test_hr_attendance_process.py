@@ -29,6 +29,14 @@ class TestHrAttendance(TransactionCase):
             'name': "Machiavel",
             'pin': '5678',
         })
+        cls.hr_user = cls.env['res.users'].create({
+            'name': 'HR Officer',
+            'login': 'hr_officer',
+            'group_ids': [(6, 0, [
+                cls.env.ref('hr.group_hr_user').id,
+                # Explicitly NOT adding: hr_attendance.group_hr_attendance_user
+            ])]
+        })
 
     def setUp(self):
         super().setUp()
@@ -154,3 +162,16 @@ class TestHrAttendance(TransactionCase):
     #     self.assertEqual(attendance.in_mode, 'manual')
     #     self.assertEqual(attendance.out_mode, 'manual')
     #     self.assertEqual(attendance.color, 0)
+
+    def test_attendance_checkout_while_employee_archived_without_rights(self):
+        """Test that archiving employee by HR user closes attendance even if lacks of attendance permissions"""
+
+        test_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': '2024-01-15 08:00:00',
+        })
+
+        with freeze_time("2024-01-15 17:00:00"):
+            self.test_employee.with_user(self.hr_user).action_archive()
+            self.assertTrue(not self.test_employee.active, "Employee should be archived successfully with sudo()")
+            self.assertEqual(test_attendance.check_out, fields.Datetime.now(), "Attendance should be checked out at the time of archiving")
