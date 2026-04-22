@@ -449,7 +449,7 @@ export class ToolbarPlugin extends Plugin {
             return false;
         }
         // Only allow the toolbar to open if the selection contains visible selected characters.
-        const selectionText = editableSelection.textContent();
+        const selectionText = editableSelection.toString();
         const textCleaned = selectionText.replace(/(\r\n|\n|\r|\u200B|\uFEFF)/gm, "");
         if (textCleaned.length) {
             return true;

@@ -22,7 +22,7 @@ const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer) => {
             // Create or continue an unordered list.
             parentUl = parentUl || document.createElement("ul");
             const li = document.createElement("li");
-            li.innerText = line.trim().slice(2);
+            li.textContent = line.trim().slice(2);
             parentUl.appendChild(li);
         } else if (
             (parentOl && line.startsWith(`${parentOl.children.length + 1}. `)) ||
@@ -33,7 +33,7 @@ const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer) => {
             // ordered list was in progress and it's followed by a 2).
             parentOl = parentOl || document.createElement("ol");
             const li = document.createElement("li");
-            li.innerText = line.slice(line.indexOf(".") + 2);
+            li.textContent = line.slice(line.indexOf(".") + 2);
             parentOl.appendChild(li);
         } else if (line.trim().length === 0) {
             const emptyLine = document.createElement("DIV");
@@ -45,7 +45,7 @@ const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer) => {
             [parentUl, parentOl].forEach((list) => list && fragment.appendChild(list));
             parentUl = parentOl = undefined;
             const block = document.createElement(line.startsWith("Title: ") ? "h2" : baseContainer);
-            block.innerText = line;
+            block.textContent = line;
             fragment.appendChild(block);
         }
         lineIndex += 1;

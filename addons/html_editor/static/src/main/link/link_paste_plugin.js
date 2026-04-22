@@ -62,8 +62,8 @@ export class LinkPastePlugin extends Plugin {
             return;
         }
         const label =
-            !selection.isCollapsed && cleanZWChars(selection.textContent()).length
-                ? selection.textContent()
+            !selection.isCollapsed && cleanZWChars(selection.toString()).length
+                ? selection.toString()
                 : text;
         this.dependencies.link.insertLink(url, label);
     }
@@ -111,7 +111,7 @@ export class LinkPastePlugin extends Plugin {
         const link = closestElement(selection.anchorNode, "a");
         if (
             link?.parentElement?.isContentEditable &&
-            cleanZWChars(selection.textContent()) === cleanZWChars(link.innerText) &&
+            cleanZWChars(selection.toString()) === cleanZWChars(link.innerText) &&
             !this.dependencies.delete.isUnremovable(link)
         ) {
             this.dependencies.selection.setSelection(

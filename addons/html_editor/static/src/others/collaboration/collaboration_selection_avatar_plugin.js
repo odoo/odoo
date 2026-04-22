@@ -146,7 +146,7 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
                 div.className = "oe-overlapping-counter";
                 div.style.left = left + 10 + "px";
                 div.style.top = top + 10 + "px";
-                div.innerText = size;
+                div.textContent = size;
                 this.avatarsCountersOverlay.append(div);
             }
         }

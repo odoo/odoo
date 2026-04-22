@@ -102,7 +102,7 @@ describe("visibility", () => {
             }
         }
         const tempP = document.createElement("p");
-        tempP.innerText = placeholder;
+        tempP.textContent = placeholder;
         tempP.style.width = "fit-content";
         const Plugins = [...MAIN_PLUGINS.filter((p) => p.id !== "powerbox"), TestPowerboxPlugin];
         const { el } = await setupEditor("<p>[]<br></p>", {
