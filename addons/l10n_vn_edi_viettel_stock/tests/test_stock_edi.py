@@ -28,7 +28,7 @@ class TestVNEDIStock(TransactionCase):
             'l10n_vn_edi_send_transfer_note': True,
         })
 
-        cls.symbol = cls.env['l10n_vn_edi_viettel.sinvoice.symbol'].create({
+        cls.symbol = cls.env['l10n_vn.sinvoice.symbol'].create({
             'name': 'K24NTU',
             'invoice_template_code': '1/001',
             'company_id': cls.company_vn.id,
@@ -157,7 +157,7 @@ class TestVNEDIStock(TransactionCase):
     def test_symbol_resolution_warehouse_then_company(self):
         """Warehouse symbol takes priority over company default; non-VN company gives False."""
         # Create a second symbol and assign it to wh1
-        wh1_symbol = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].create({
+        wh1_symbol = self.env['l10n_vn.sinvoice.symbol'].create({
             'name': 'K24WH1',
             'invoice_template_code': '2/001',
             'company_id': self.company_vn.id,

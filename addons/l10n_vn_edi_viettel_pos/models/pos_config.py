@@ -8,10 +8,11 @@ class PosConfig(models.Model):
 
     l10n_vn_auto_send_to_sinvoice = fields.Boolean("Auto-send to SInvoice", default=True)
     l10n_vn_pos_symbol = fields.Many2one(
-        comodel_name='l10n_vn_edi_viettel.sinvoice.symbol',
+        comodel_name='l10n_vn.sinvoice.symbol',
         string='POS Symbol',
         groups='base.group_system,point_of_sale.group_pos_manager',
         help='This is the symbol that will be used on invoices issued from this POS.',
+        domain=[('usage', '=', 'invoice')],
         compute="_compute_l10n_vn_pos_symbol",
         store=True,
         readonly=False

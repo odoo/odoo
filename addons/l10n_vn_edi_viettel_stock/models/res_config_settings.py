@@ -11,7 +11,8 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_vn_edi_stock_default_sinvoice_symbol_id = fields.Many2one(
-        comodel_name='l10n_vn_edi_viettel.sinvoice.symbol',
+        comodel_name='l10n_vn.sinvoice.symbol',
         related='company_id.l10n_vn_edi_stock_default_sinvoice_symbol_id',
         readonly=False,
+        domain=[('usage', '=', 'invoice')],
     )

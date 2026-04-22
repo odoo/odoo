@@ -23,7 +23,7 @@ class PosOrder(models.Model):
 
         sinvoice_symbol = self.config_id.l10n_vn_pos_symbol or self.config_id.company_id.l10n_vn_pos_default_symbol
         if sinvoice_symbol:
-            vals['l10n_vn_edi_invoice_symbol'] = sinvoice_symbol.id
+            vals['l10n_vn_sinvoice_symbol_id'] = sinvoice_symbol.id
 
             # Refund Invoice (Credit Note)
             if self.amount_total < 0:

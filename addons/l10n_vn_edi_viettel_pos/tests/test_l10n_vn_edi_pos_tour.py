@@ -13,7 +13,7 @@ class TestVNEDIPOSTour(TestVNEDI, TestPointOfSaleHttpCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.template = "2/0024"
-        cls.symbol = cls.env['l10n_vn_edi_viettel.sinvoice.symbol'].create({
+        cls.symbol = cls.env['l10n_vn.sinvoice.symbol'].create({
             'name': 'C25MNK',
             'invoice_template_code': cls.template,
         })

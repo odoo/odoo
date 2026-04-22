@@ -35,39 +35,39 @@ class TestSInvoiceSymbol(TransactionCase):
     def _patch_sinvoice(self, mock_templates):
         """Patch _l10n_vn_edi_lookup_symbols. Pass a callable(company) for per-company control, or a fixed value."""
         kwargs = {'side_effect': mock_templates} if callable(mock_templates) else {'return_value': mock_templates}
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice.L10n_Vn_Edi_ViettelSinvoiceSymbol._l10n_vn_edi_lookup_symbols', **kwargs):
+        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice.L10n_Vn_SinvoiceSymbol._l10n_vn_edi_lookup_symbols', **kwargs):
             yield
 
     def test_fetch_symbols_creates_new_symbols(self):
         """Fetching symbols from the API should create new symbol records."""
         with self._patch_sinvoice(self._mock_api_fetch_symbols([('C23TSA', '1/001'), ('C23TSB', '1/002')])):
-            self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
+            self.env['l10n_vn.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
 
-        symbols = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].search([('company_id', '=', self.company_vn_1.id)])
+        symbols = self.env['l10n_vn.sinvoice.symbol'].search([('company_id', '=', self.company_vn_1.id)])
         self.assertEqual(len(symbols), 2)
         self.assertRecordValues(symbols, [
-            {'name': 'C23TSA', 'invoice_template_code': '1/001', 'company_id': self.company_vn_1.id},
-            {'name': 'C23TSB', 'invoice_template_code': '1/002', 'company_id': self.company_vn_1.id},
+            {'name': 'C23TSA', 'invoice_template_code': '1/001', 'company_id': self.company_vn_1.id, 'usage': 'invoice'},
+            {'name': 'C23TSB', 'invoice_template_code': '1/002', 'company_id': self.company_vn_1.id, 'usage': 'invoice'},
         ])
 
     def test_fetch_symbols_no_duplicates_on_refetch(self):
         """Fetching the same symbols multiple times should not create duplicates."""
         with self._patch_sinvoice(self._mock_api_fetch_symbols([('C23TSA', '1/001')])):
-            self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
-            self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
+            self.env['l10n_vn.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
+            self.env['l10n_vn.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
 
-        symbols = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].search([('company_id', '=', self.company_vn_1.id)])
+        symbols = self.env['l10n_vn.sinvoice.symbol'].search([('company_id', '=', self.company_vn_1.id)])
         self.assertEqual(len(symbols), 1)
 
     def test_fetch_symbols_archives_removed_symbols(self):
         """Symbols no longer returned by the API should be archived."""
         with self._patch_sinvoice(self._mock_api_fetch_symbols([('C23TSA', '1/001'), ('C23TSB', '1/002')])):
-            self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
+            self.env['l10n_vn.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
 
         with self._patch_sinvoice(self._mock_api_fetch_symbols([('C23TSA', '1/001')])):
-            self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
+            self.env['l10n_vn.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
 
-        symbols = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_context(active_test=False).search([
+        symbols = self.env['l10n_vn.sinvoice.symbol'].with_context(active_test=False).search([
             ('company_id', '=', self.company_vn_1.id),
         ])
         self.assertRecordValues(symbols, [
@@ -85,11 +85,11 @@ class TestSInvoiceSymbol(TransactionCase):
         multicompany_env = self.env(context={**self.env.context, 'allowed_company_ids': (self.company_vn_1 | self.company_vn_2 | self.company_us).ids})
 
         with self._patch_sinvoice(mock_lookup):
-            multicompany_env['l10n_vn_edi_viettel.sinvoice.symbol'].action_fetch_symbols()
+            multicompany_env['l10n_vn.sinvoice.symbol'].action_fetch_symbols()
 
-        symbols_1 = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].search([('company_id', '=', self.company_vn_1.id)])
-        symbols_2 = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].search([('company_id', '=', self.company_vn_2.id)])
-        symbols_us = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].search([('company_id', '=', self.company_us.id)])
+        symbols_1 = self.env['l10n_vn.sinvoice.symbol'].search([('company_id', '=', self.company_vn_1.id)])
+        symbols_2 = self.env['l10n_vn.sinvoice.symbol'].search([('company_id', '=', self.company_vn_2.id)])
+        symbols_us = self.env['l10n_vn.sinvoice.symbol'].search([('company_id', '=', self.company_us.id)])
 
         self.assertRecordValues(symbols_1, [{'name': 'C23TSA', 'invoice_template_code': '1/001'}])
         self.assertRecordValues(symbols_2, [{'name': 'C23TSB', 'invoice_template_code': '1/002'}])
@@ -100,7 +100,7 @@ class TestSInvoiceSymbol(TransactionCase):
         multicompany_env = self.env(context={**self.env.context, 'allowed_company_ids': (self.company_vn_1 | self.company_vn_2).ids})
 
         with self._patch_sinvoice(self._mock_api_fetch_symbols([('C23TSA', '1/001')])):
-            multicompany_env['l10n_vn_edi_viettel.sinvoice.symbol'].action_fetch_symbols()
+            multicompany_env['l10n_vn.sinvoice.symbol'].action_fetch_symbols()
 
         def mock_lookup_after(company):
             if company == self.company_vn_1:
@@ -108,9 +108,9 @@ class TestSInvoiceSymbol(TransactionCase):
             return self._mock_api_fetch_symbols([('C23TSA', '1/001')])  # Still present for company 2
 
         with self._patch_sinvoice(mock_lookup_after):
-            multicompany_env['l10n_vn_edi_viettel.sinvoice.symbol'].action_fetch_symbols()
+            multicompany_env['l10n_vn.sinvoice.symbol'].action_fetch_symbols()
 
-        symbols = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_context(active_test=False).search([
+        symbols = self.env['l10n_vn.sinvoice.symbol'].with_context(active_test=False).search([
             ('company_id', 'in', (self.company_vn_1 | self.company_vn_2).ids),
         ])
         self.assertRecordValues(symbols, [
