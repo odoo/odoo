@@ -15,6 +15,7 @@ export class QRPopup extends Component {
         cancelLabel: { type: String, optional: true },
         close: { type: Function, optional: true },
         footer: { type: Boolean, optional: true },
+        provider: { type: [String, Boolean], optional: true },
     };
     static defaultProps = { footer: true, cancelLabel: "Discard", confirmLabel: "Confirm" };
 

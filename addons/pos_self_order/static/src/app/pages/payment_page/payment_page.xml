@@ -27,8 +27,8 @@
                         </t>
                         <t name="external_qr" t-elif="this.showQrCode">
                             <h1 class="text-center">Scan the QR code to pay</h1>
-                            <div class="qr-code border rounded-4 p-4 bg-view">
-                                <img class="w-100" t-att-src="this.state.qrCode" />
+                            <div class="qr-code">
+                                <div class="border rounded-4 p-4 bg-view"><img class="w-100" t-att-src="state.qrCode" /></div>
                             </div>
                         </t>
                         <t name="cash_machine" t-elif="this.state.paymentMethodType === 'cash_machine'">

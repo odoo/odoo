@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_bancontact_pay.QRPopup" t-inherit="point_of_sale.QRPopup" t-inherit-mode="extension">
+        <xpath expr="//Dialog/*" position="replace">
+            <div t-if="props.provider === 'bancontact_pay'" class="o_bancontact_qr_code_container">
+                <div class="o_bancontact_stack_image position-relative">
+                    <img class="o_bancontact_frame w-100"
+                        t-attf-src="/pos_bancontact_pay/static/img/frames/frame_{{ props.frameLanguage }}.svg"
+                        style="max-height: 60vh;"/>
+                    <img class="o_bancontact_qr_code position-absolute top-50 start-50 translate-middle"
+                        style="width: 55%; max-width: 23vh"
+                        t-att-src="props.qrCode"
+                        alt="QR Code"/>
+                </div>
+
+                <div class="qr-code-amount mt-2 text-center fw-bold fs-1">
+                    <t t-out="props.amount" />
+                </div>
+            </div>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>
