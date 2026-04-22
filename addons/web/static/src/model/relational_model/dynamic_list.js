@@ -1,4 +1,4 @@
-import { signal, types as t } from "@odoo/owl";
+import { signal } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -31,7 +31,7 @@ export class DynamicList extends DataPoint {
         this.isDomainSelected = false;
         this.evalContext = this.context;
 
-        makeReactive(this, "isDomainSelected", signal, t.boolean());
+        makeReactive(this, "isDomainSelected", signal);
     }
 
     // -------------------------------------------------------------------------

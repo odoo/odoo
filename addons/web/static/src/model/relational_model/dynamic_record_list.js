@@ -1,7 +1,10 @@
-import { signal, types as t } from "@odoo/owl";
+import { signal } from "@odoo/owl";
 import { makeReactive } from "./datapoint";
 import { DynamicList } from "./dynamic_list";
-import { Record as RelationalRecord } from "./record";
+
+/**
+ * @typedef {import("./record").Record} RelationalRecord
+ */
 
 export class DynamicRecordList extends DynamicList {
     static type = "DynamicRecordList";
@@ -16,7 +19,7 @@ export class DynamicRecordList extends DynamicList {
         this.records = [];
         this._setData(data);
 
-        makeReactive(this, "records", signal.Array, t.instanceOf(RelationalRecord));
+        makeReactive(this, "records", signal.Array);
     }
 
     _setData(data) {

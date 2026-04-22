@@ -1,4 +1,4 @@
-import { markRaw, markup, signal, types as t, toRaw } from "@odoo/owl";
+import { markRaw, markup, signal, toRaw } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
@@ -89,12 +89,12 @@ export class Record extends DataPoint {
         this._textValues = markRaw({});
         this._setData(data);
 
-        makeReactive(this, "data", signal.Object, t.record());
-        makeReactive(this, "dirty", signal, t.boolean());
-        makeReactive(this, "evalContext", signal.Object, t.record());
-        makeReactive(this, "evalContextWithVirtualIds", signal.Object, t.record());
-        makeReactive(this, "selected", signal, t.boolean());
-        makeReactive(this, "_invalidFields", signal.Set, t.string());
+        makeReactive(this, "data", signal.Object);
+        makeReactive(this, "dirty", signal);
+        makeReactive(this, "evalContext", signal.Object);
+        makeReactive(this, "evalContextWithVirtualIds", signal.Object);
+        makeReactive(this, "selected", signal);
+        makeReactive(this, "_invalidFields", signal.Set);
     }
 
     /**

@@ -1,4 +1,4 @@
-import { markRaw, signal, types as t } from "@odoo/owl";
+import { markRaw, signal } from "@odoo/owl";
 import { getId } from "./utils";
 
 /**
@@ -6,10 +6,9 @@ import { getId } from "./utils";
  * @param {T} target
  * @param {keyof T} name
  * @param {typeof signal} signalFn
- * @param {any} type
  */
-export function makeReactive(target, name, signalFn, type) {
-    const _signal = signalFn(target[name], { type });
+export function makeReactive(target, name, signalFn) {
+    const _signal = signalFn(target[name]);
     Object.defineProperty(target, name, {
         get: _signal,
         set: _signal.set,
@@ -41,7 +40,7 @@ export class DataPoint {
 
         this.setup(config, data, options);
 
-        makeReactive(this, "_config", signal.Object, t.record());
+        makeReactive(this, "_config", signal.Object);
     }
 
     /**
