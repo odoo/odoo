@@ -12,7 +12,7 @@
                         <t t-foreach="this.shopPageStyles" t-as="style" t-key="style_index">
                             <div class="col">
                                 <div class="theme_preview o_configurator_show_fast rounded position-relative mt-3 mb-2 text-center">
-                                    <h6 t-esc="style.title" class="badge border rounded-pill fs-6"/>
+                                    <h6 t-out="style.title" class="badge border rounded-pill fs-6"/>
                                     <div class="ratio" style="--aspect-ratio: 66%;">
                                         <img
                                             t-attf-src="{{style.img_src}}"
