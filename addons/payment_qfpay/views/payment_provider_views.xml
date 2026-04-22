@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">QFPay Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="inside">
+                <group invisible="code != 'qfpay'">
+                    <field
+                        name="qfpay_app_code"
+                        string="App Code"
+                        required="code == 'qfpay' and state != 'disabled'"
+                    />
+                    <field
+                        name="qfpay_app_key"
+                        string="App Key"
+                        required="code == 'qfpay' and state != 'disabled'"
+                        widget="password"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>
