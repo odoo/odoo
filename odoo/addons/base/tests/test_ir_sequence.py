@@ -297,7 +297,7 @@ class TestIrSequenceDateRangeStandard(TransactionCase):
         self.assertTrue(seq)
         """ Draw numbers to create a first subsequence then change its date range. Then, try to draw a new number adn check a new subsequence was correctly created. """
         year = date.today().year - 1
-        january = lambda d: date(year, 1, d)
+        january = lambda d: datetime(year, 1, d)  # noqa: E731
 
         seq16 = self.env['ir.sequence'].with_context(ir_sequence_date=january(16))
         n = seq16.next_by_code('test_sequence_date_range')
@@ -315,7 +315,7 @@ class TestIrSequenceDateRangeStandard(TransactionCase):
         # check the newly created sequence stops at the 17th of January
         domain = [('sequence_id.code', '=', 'test_sequence_date_range'), ('date_from', '=', january(1))]
         seq_date_range = self.env['ir.sequence.date_range'].search(domain)
-        self.assertEqual(seq_date_range.date_to, january(17))
+        self.assertEqual(seq_date_range.date_to, january(17).date())
 
         seq = self.env['ir.sequence'].search([('code', '=', 'test_sequence_date_range')])
         seq.unlink()
@@ -337,7 +337,7 @@ class TestIrSequenceDateRangeNoGap(TransactionCase):
 
         """ Draw numbers to create a first subsequence then change its date range. Then, try to draw a new number adn check a new subsequence was correctly created. """
         year = date.today().year - 1
-        january = lambda d: date(year, 1, d)
+        january = lambda d: datetime(year, 1, d)  # noqa: E731
 
         seq16 = self.env['ir.sequence'].with_context({'ir_sequence_date': january(16)})
         n = seq16.next_by_code('test_sequence_date_range_2')
@@ -355,7 +355,7 @@ class TestIrSequenceDateRangeNoGap(TransactionCase):
         # check the newly created sequence stops at the 17th of January
         domain = [('sequence_id.code', '=', 'test_sequence_date_range_2'), ('date_from', '=', january(1))]
         seq_date_range = self.env['ir.sequence.date_range'].search(domain)
-        self.assertEqual(seq_date_range.date_to, january(17))
+        self.assertEqual(seq_date_range.date_to, january(17).date())
 
         seq = self.env['ir.sequence'].search([('code', '=', 'test_sequence_date_range_2')])
         seq.unlink()
@@ -367,8 +367,8 @@ class TestIrSequenceDateRangeChangeImplementation(TransactionCase):
 
     def test_ir_sequence_date_range_1_create(self):
         year = date.today().year - 1
-        january = lambda d: date(year, 1, d)   # noqa: E731
-        february = lambda d: date(year, 2, d)  # noqa: E731
+        january = lambda d, h=0, m=0, s=0: datetime(year, 1, d, h, m, s)   # noqa: E731
+        february = lambda d, h=0, m=0, s=0: datetime(year, 2, d, h, m, s)  # noqa: E731
 
         """ Try to create a sequence object. """
         seq = self.env['ir.sequence'].create({
@@ -390,7 +390,8 @@ class TestIrSequenceDateRangeChangeImplementation(TransactionCase):
             'code': 'test_sequence_date_range_5',
             'name': 'Test sequence',
             'use_date_range': True,
-            'prefix': '%(month)s/',
+            'prefix': '%(month)s/%(day)s/',
+            'suffix': '/%(h24)s/%(min)s/%(sec)s',
             'date_range_ids': [
                 Command.create({
                     'date_from': january(1),
@@ -423,11 +424,11 @@ class TestIrSequenceDateRangeChangeImplementation(TransactionCase):
             n = seq16.next_by_code('test_sequence_date_range_4')
             self.assertEqual(n, str(i))
         for i in range(5):
-            n = seq.next_by_code('test_sequence_date_range_5', sequence_date=january(16))
-            self.assertEqual(n, f'01/{i + 15}')
+            n = seq.next_by_code('test_sequence_date_range_5', sequence_date=january(16, 1, 2, 3))   # January 16, 01:02:03
+            self.assertEqual(n, f'01/16/{i + 15}/01/02/03')
         for i in range(1, 5):
-            n = seq.next_by_code('test_sequence_date_range_5', sequence_date=february(16))
-            self.assertEqual(n, f'02/{i}')
+            n = seq.next_by_code('test_sequence_date_range_5', sequence_date=february(16, 15, 40, 32))   # February 16, 15:40:32
+            self.assertEqual(n, f'02/16/{i}/15/40/32')
 
         """swap the implementation method on both"""
         domain = [('code', 'in', ['test_sequence_date_range_3', 'test_sequence_date_range_4'])]
