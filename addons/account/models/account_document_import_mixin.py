@@ -523,10 +523,26 @@ class AccountDocumentImportMixin(models.AbstractModel):
                 embedded_file_data['import_file_type'] = self._get_import_file_type(embedded_file_data)
                 embedded.append(embedded_file_data)
 
+        if 'xml' in file_data['import_file_type']:
+            embedded = self._extract_additional_documents(file_data)
+            if embedded:
+                to_create = [{
+                    'name': data['name'],
+                    'raw': data['raw'],
+                    'mimetype': data['mimetype'],
+                    'type': 'binary',
+                } for data in embedded]
+                attachments = self.env['ir.attachment'].create(to_create)
+                for data, attachment in zip(embedded, attachments):
+                    data['attachment'] = attachment
+
         if embedded and recurse:
             embedded.extend(self._unwrap_attachments(embedded))
 
         return embedded
+
+    def _extract_additional_documents(self, file_data):
+        return []
 
     @api.model
     def _split_xml_into_new_attachments(self, file_data, tag):
