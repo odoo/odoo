@@ -3,39 +3,34 @@
 .o_form_view {
     @include media-breakpoint-down(md) {
         --field-spacing-unit: 8px;
-        --o-field-box-border-color: var(--o-input-border-color);
+        --o-field-box-border-color: var(--gray-300);
 
         %-o-field-box {
             border-radius: calc(.5 * var(--field-spacing-unit));
             border: 1px solid var(--o-field-box-border-color);
             padding: var(--field-spacing-unit) calc(1.5 * var(--field-spacing-unit));
 
+            &:has(.o_required_modifier):not(:has(.o_readonly_modifier, .o_field_invalid, :focus-within)) {
+                --o-field-box-border-color: var(--gray-600);
+            }
+            &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
+                background-color: rgba($body-color, .04);
+            }
+            &:has(.o_field_invalid):not(:has(:focus-within)) {
+                --o-field-box-border-color: #{o-text-color('danger')};
+                background-color: #{$o-input-invalid-bg};
+            }
+            &:focus-within {
+                --o-field-box-border-color: #{$o-action};
+            }
+
             .o_input {
+                --o-input-background-color: transparent;
                 border-width: 0;
             }
 
             h1, h2, h3, h4, h5, h6 {
                 all: unset;
-            }
-
-            &:focus-within {
-                --o-field-box-border-color: #{$o-action};
-
-            }
-            &:has(.o_required_modifier) {
-                --o-field-box-border-color: var(--gray-400);
-            }
-            &:has(.o_field_invalid) {
-                --o-field-box-border-color: #{o-text-color('danger')};
-                background: #{$o-input-invalid-bg};
-
-                .o_field_invalid {
-                    --o-input-background-color: transparent;
-                }
-            }
-            &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
-                --o-field-box-border-color: var(--o-input-border-color);
-                background: rgba($body-color, .04);
             }
         }
 
@@ -94,16 +89,12 @@
                     @extend %-o-field-label;
                 }
 
-                &:has(+ * .o_required_modifier:not(.o_readonly_modifier)) {
-                    --o-field-box-border-color: var(--gray-400);
-                }
-
-                &:has(+ *:focus-within) .o_form_label {
-                    color: $o-action;
-                }
-
                 &:has(+ * .o_field_invalid) .o_form_label {
-                    color: o-text-color('danger') !important;
+                    color: o-text-color('danger');
+                }
+
+                &:has(+ .o_cell:focus-within) .o_form_label {
+                    color: $o-action;
                 }
 
                 // For o_readonly_modifier input label
