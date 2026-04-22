@@ -24,6 +24,7 @@ class TestUblExportBis3FRChorusPro(TestUblBis3Common, TestUblCiiCommonChorusPro,
 
     def test_invoice_customer_party_identifiers_partner_chorus_pro(self):
         # VAT and siret set.
+        # The siret must not have spaces in the exported document
         # Supplier:
         # EndpointID is filled using the siret.
         # PartyIdentification is filled using the siret.
@@ -34,6 +35,10 @@ class TestUblExportBis3FRChorusPro(TestUblBis3Common, TestUblCiiCommonChorusPro,
         # PartyIdentification is filled using the customer siret.
         # PartyTaxScheme is filled using the VAT.
         # PartyLegalEntity is filled using the customer siret.
+        self.partner_fr_chorus_pro.commercial_partner_id.write({
+            'company_registry': '214 401 0930 0015',
+            'peppol_endpoint': '11000201100044',
+        })
         self._assert_invoice_partner_party_identifiers(
             partner=self.partner_fr_chorus_pro,
             test_file='test_invoice_customer_party_identifiers_partner_chorus_pro',
