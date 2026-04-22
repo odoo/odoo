@@ -95,7 +95,7 @@ class HrEmployee(models.Model):
 
     def action_archive(self):
         res = super().action_archive()
-        open_attendances = self.env['hr.attendance'].search([
+        open_attendances = self.env['hr.attendance'].sudo().search([
             ('employee_id', 'in', self.ids),
             ('check_out', '=', False),
         ])
