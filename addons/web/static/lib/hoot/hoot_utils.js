@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { on, queryAll } from "@odoo/hoot-dom";
-import { App, proxy, types as t, untrack, useEffect, useListener, validateType } from "@odoo/owl";
+import { App, proxy, types as t, useEffect, useListener, validateType } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     isInstanceOf,
@@ -128,15 +128,6 @@ export const T_UNDEFINED = t.literal(undefined);
 export const T_DEEP_EQUAL_OPTIONS = t.object({
     "ignoreOrder?": t.boolean(),
     "partial?": t.boolean(),
-});
-export const T_REPORTING = t.object({
-    assertions: t.number(),
-    failed: t.number(),
-    passed: t.number(),
-    skipped: t.number(),
-    suites: t.number(),
-    tests: t.number(),
-    todo: t.number(),
 });
 
 //-----------------------------------------------------------------------------
@@ -738,33 +729,10 @@ export function copyAndBind(object) {
 }
 
 /**
- * @param {typeof T_REPORTING} [parentReporting]
+ * @param {TestReporting} [parentReporting]
  */
 export function createReporting(parentReporting) {
-    /**
-     * @param {Partial<typeof T_REPORTING>} values
-     */
-    function add(values) {
-        for (const [key, value] of $entries(values)) {
-            reporting[key] += value;
-        }
-
-        parentReporting?.add(values);
-    }
-
-    const reporting = proxy({
-        assertions: 0,
-        duration: 0,
-        failed: 0,
-        passed: 0,
-        skipped: 0,
-        suites: 0,
-        tests: 0,
-        todo: 0,
-        add,
-    });
-
-    return reporting;
+    return proxy(new TestReporting(parentReporting));
 }
 
 /**
@@ -1554,17 +1522,6 @@ export function toExplicitString(value) {
 }
 
 /**
- * @template {() => any} T
- * @param {T} fn
- * @returns {T}
- */
-export function untracked(fn) {
-    return function (...args) {
-        return untrack(fn.bind(this, ...args));
-    };
-}
-
-/**
  * @template {HTMLElement} T
  * @param {typeof types.ref<T>} ref
  */
@@ -2021,6 +1978,34 @@ export class MockEventTarget extends EventTarget {
                 },
             });
         }
+    }
+}
+
+export class TestReporting {
+    assertions = 0;
+    duration = 0;
+    failed = 0;
+    passed = 0;
+    skipped = 0;
+    suites = 0;
+    tests = 0;
+    todo = 0;
+
+    /**
+     * @param {TestReporting} [parent]
+     */
+    constructor(parent) {
+        this.parent = parent || null;
+    }
+
+    /**
+     * @param {Partial<TestReporting>} values
+     */
+    add(values) {
+        for (const [key, value] of $entries(values)) {
+            this[key] += value;
+        }
+        this.parent?.add(values);
     }
 }
 

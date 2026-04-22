@@ -21,6 +21,41 @@ const removeWindowListener = window.removeEventListener.bind(window);
 const { addEventListener, removeEventListener } = HTMLElement.prototype;
 
 /**
+ * @param {CaseResult} [lastResults]
+ * @param {number} [status]
+ */
+function getStatus(lastResults, status) {
+    // Ignore test actual status while running
+    if (lastResults) {
+        switch (status) {
+            case Test.PASSED:
+                return { status: "passed", className: "emerald" };
+            case Test.FAILED:
+                return { status: "failed", className: "rose" };
+            case Test.ABORTED:
+                return { status: "aborted", className: "amber" };
+        }
+    }
+    return { status: "running", className: "cyan" };
+}
+
+/**
+ * @param {Assertion[]} [assertions]
+ */
+function groupAssertions(assertions) {
+    let passed = 0;
+    let failed = 0;
+    for (const assertion of assertions || []) {
+        if (assertion.pass) {
+            passed++;
+        } else {
+            failed++;
+        }
+    }
+    return { passed, failed };
+}
+
+/**
  * @param {ReturnType<typeof t.ref>} containerRef
  * @param {ReturnType<typeof t.ref>} handleRef
  * @param {import("@odoo/owl").ReactiveValue<boolean>} isOpen
@@ -235,16 +270,12 @@ export class HootDebugToolBar extends Component {
     isConfigOpen = signal(false, { type: t.boolean() });
     isOpen = signal(false, { type: t.boolean() });
     info = computed(() => {
-        const [status, className] = this.getStatus();
-        const [assertPassed, assertFailed] = this.groupAssertions(
-            this.props.test.lastResults?.getEvents("assertion")
+        const lastResults = this.props.test.lastResults;
+        const testStatus = this.props.test.status();
+        return $assign(
+            getStatus(lastResults, testStatus),
+            groupAssertions(lastResults?.getEvents("assertion"))
         );
-        return {
-            className,
-            status,
-            passed: assertPassed,
-            failed: assertFailed,
-        };
     });
     rootRef = signal(null, { type: t.ref(HTMLDivElement) });
     handleRef = signal(null, { type: t.ref(HTMLElement) });
@@ -257,37 +288,6 @@ export class HootDebugToolBar extends Component {
     exitDebugMode() {
         this.config.debugTest.set(false);
         this.runner.stop();
-    }
-
-    getStatus() {
-        // Ignore test actual status while running
-        if (this.props.test.results().length) {
-            switch (this.props.test.status()) {
-                case Test.PASSED:
-                    return ["passed", "emerald"];
-                case Test.FAILED:
-                    return ["failed", "rose"];
-                case Test.ABORTED:
-                    return ["aborted", "amber"];
-            }
-        }
-        return ["running", "cyan"];
-    }
-
-    /**
-     * @param {Assertion[]} [assertions]
-     */
-    groupAssertions(assertions) {
-        let passed = 0;
-        let failed = 0;
-        for (const assertion of assertions || []) {
-            if (assertion.pass) {
-                passed++;
-            } else {
-                failed++;
-            }
-        }
-        return [passed, failed];
     }
 
     isTestFinished() {

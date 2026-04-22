@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { on, setFrameRate } from "@odoo/hoot-dom";
-import { markRaw, proxy, signal, types as t } from "@odoo/owl";
+import { proxy, signal, types as t, untrack } from "@odoo/owl";
 import { cleanupDOM, defineRootNode } from "@web/../lib/hoot-dom/helpers/dom";
 import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
@@ -233,8 +233,8 @@ function handleConsoleIssues(test, shouldSuppress) {
         const cleanups = [];
         if (isInstanceOf(globalThis.console, EventTarget)) {
             cleanups.push(
-                on(globalThis.console, "error", () => test.logs.error++),
-                on(globalThis.console, "warn", () => test.logs.warn++)
+                on(globalThis.console, "error", () => untrack(() => test.logs.error++)),
+                on(globalThis.console, "warn", () => untrack(() => test.logs.warn++))
             );
         }
 
@@ -440,7 +440,9 @@ export class Runner {
         if (!this.headless) {
             this.globalErrors = proxy(this.globalErrors);
             this.globalWarnings = proxy(this.globalWarnings);
-            this.includeSpecs = proxy(this.includeSpecs);
+            for (const [key, value] of $entries(this.includeSpecs)) {
+                this.includeSpecs[key] = proxy(value);
+            }
 
             [this._pushTest, this._pushPendingTest] = batch((test) =>
                 this.finishedTests().add(test)
@@ -525,7 +527,7 @@ export class Runner {
                 `cannot add a suite after the test runner started`
             );
         }
-        let suite = markRaw(new Suite(parentSuite, suiteName, config));
+        let suite = new Suite(parentSuite, suiteName, config);
         const originalSuite = this.suites.get(suite.id);
         if (originalSuite) {
             suite = originalSuite;
@@ -597,7 +599,7 @@ export class Runner {
             );
         }
         const runFn = this.dry ? null : fn;
-        let test = markRaw(new Test(parentSuite, name, config));
+        let test = new Test(parentSuite, name, config);
         const originalTest = this.tests.get(test.id);
         if (originalTest && !originalTest.isMinimized) {
             if (this.dry || originalTest.run) {
