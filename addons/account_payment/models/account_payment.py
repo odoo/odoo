@@ -77,7 +77,7 @@ class AccountPayment(models.Model):
                 payment.suitable_payment_token_ids = self.env['payment.token'].sudo().search([
                     *self.env['payment.token']._check_company_domain(payment.company_id),
                     ('provider_id.capture_manually', '=', False),
-                    ('partner_id', '=', payment.partner_id.id),
+                    ('partner_id', '=', payment.commercial_partner_id.id),
                     ('provider_id', '=', payment.payment_method_line_id.payment_provider_id.id),
                 ])
             else:
@@ -116,13 +116,13 @@ class AccountPayment(models.Model):
     @api.onchange('partner_id', 'payment_method_line_id', 'journal_id')
     def _onchange_set_payment_token_id(self):
         codes = [key for key in dict(self.env['payment.provider']._fields['code']._description_selection(self.env))]
-        if not (self.payment_method_code in codes and self.partner_id and self.journal_id):
+        if not (self.payment_method_code in codes and self.commercial_partner_id and self.journal_id):
             self.payment_token_id = False
             return
 
         self.payment_token_id = self.env['payment.token'].sudo().search([
             *self.env['payment.token']._check_company_domain(self.company_id),
-            ('partner_id', '=', self.partner_id.id),
+            ('partner_id', '=', self.commercial_partner_id.id),
             ('provider_id.capture_manually', '=', False),
             ('provider_id', '=', self.payment_method_line_id.payment_provider_id.id),
          ], limit=1)  # In sudo mode to read the provider fields.

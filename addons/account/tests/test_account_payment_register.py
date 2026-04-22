@@ -164,6 +164,25 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
             'company_ids': [Command.set(cls.branch.ids)],
         })
 
+        # Commercial partner with an invoice-typed child contact, used to exercise
+        # how the wizard batches and addresses payments when bills target the child.
+        cls.commercial_partner = cls.env['res.partner'].create({
+            'name': 'Ready Mat',
+            'is_company': True,
+            'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
+            'property_account_payable_id': cls.company_data['default_account_payable'].id,
+        })
+        cls.invoice_contact = cls.env['res.partner'].create({
+            'name': 'Billy Fox',
+            'type': 'invoice',
+            'parent_id': cls.commercial_partner.id,
+        })
+        cls.other_invoice_contact = cls.env['res.partner'].create({
+            'name': 'Jane Fox',
+            'type': 'invoice',
+            'parent_id': cls.commercial_partner.id,
+        })
+
     @classmethod
     def get_wizard_available_journals(cls, wizard):
         return wizard.available_journal_ids.filtered_domain([
@@ -2233,3 +2252,52 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         # Set the parent company as company of the bank account
         bank_account.company_id = parent_company
         assert_payment()
+
+    def test_payment_register_groups_by_commercial(self):
+        """ Two bills for the same commercial partner are batched into a single payment
+        addressed to that commercial.
+        """
+        bills = self._create_invoice(move_type='in_invoice', partner_id=self.commercial_partner) \
+              | self._create_invoice(move_type='in_invoice', partner_id=self.commercial_partner)
+        bills.action_post()
+        payments = self._register_payment(bills)
+        self.assertEqual(len(payments), 1)
+        self.assertEqual(payments.partner_id, self.commercial_partner)
+
+    def test_payment_register_groups_by_invoice_contact(self):
+        """ Two bills whose partner_id is the same invoice contact are
+        batched into a single payment addressed to that child contact.
+        """
+        bills = self._create_invoice(move_type='in_invoice', partner_id=self.invoice_contact) \
+              | self._create_invoice(move_type='in_invoice', partner_id=self.invoice_contact)
+        bills.action_post()
+        payments = self._register_payment(bills)
+        self.assertEqual(len(payments), 1)
+        self.assertEqual(payments.partner_id, self.invoice_contact)
+        self.assertEqual(payments.commercial_partner_id, self.commercial_partner)
+
+    def test_payment_register_ungrouped_keeps_invoice_contact(self):
+        """ Two bills to the same invoice contact, paid one-by-one
+        (group_payment=False), still address each payment to the contact
+        rather than collapsing to the commercial partner.
+        """
+        bills = self._create_invoice(move_type='in_invoice', partner_id=self.invoice_contact) \
+              | self._create_invoice(move_type='in_invoice', partner_id=self.invoice_contact)
+        bills.action_post()
+        payments = self._register_payment(bills, group_payment=False)
+        self.assertEqual(len(payments), 2)
+        self.assertEqual(payments.partner_id, self.invoice_contact)
+        self.assertEqual(payments.commercial_partner_id, self.commercial_partner)
+
+    def test_payment_register_mixed_contacts_collapses_to_commercial(self):
+        """ Two bills under the same commercial but addressed to different
+        invoice contacts are batched into a single payment that falls back
+        to the commercial partner.
+        """
+        bills = self._create_invoice(move_type='in_invoice', partner_id=self.invoice_contact) \
+              | self._create_invoice(move_type='in_invoice', partner_id=self.other_invoice_contact)
+        bills.action_post()
+        payments = self._register_payment(bills)
+        self.assertEqual(len(payments), 1)
+        self.assertEqual(payments.partner_id, self.commercial_partner)
+        self.assertEqual(payments.commercial_partner_id, self.commercial_partner)

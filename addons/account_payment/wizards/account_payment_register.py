@@ -40,7 +40,7 @@ class AccountPaymentRegister(models.TransientModel):
                 and (provider := wizard.payment_method_line_id.payment_provider_id)
                 and not provider.sudo().capture_manually
             ):
-                token_partners = wizard.partner_id
+                token_partners = wizard.partner_id.commercial_partner_id
                 batch = wizard._get_batches()[0]
                 lines_partners = batch['lines'].move_id.partner_id
                 if len(lines_partners) == 1:
