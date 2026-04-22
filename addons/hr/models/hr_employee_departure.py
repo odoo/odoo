@@ -53,12 +53,15 @@ class HrEmployeeDeparture(models.Model):
     @api.depends('departure_date')
     def _compute_action_date(self):
         for departure in self:
-            if departure.action_date and departure.action_date < departure.departure_date:
+            if not (departure.departure_date and departure.action_date):
+                continue
+            if departure.action_date < departure.departure_date:
                 departure.action_date = departure.departure_date + relativedelta(days=1)
 
     @api.onchange("departure_date")
     def _onchange_departure_date(self):
-        self.action_date = self.departure_date + relativedelta(days=1)
+        if self.departure_date:
+            self.action_date = self.departure_date + relativedelta(days=1)
 
     @api.depends('employee_id.user_id')
     def _compute_is_user_employee(self):

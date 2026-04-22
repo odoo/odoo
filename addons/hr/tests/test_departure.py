@@ -8,6 +8,7 @@ from freezegun import freeze_time
 from odoo.exceptions import ValidationError
 
 from odoo.addons.hr.tests.common import TestHrCommon
+from odoo.tests import Form
 
 
 class TestDeparture(TestHrCommon):
@@ -101,3 +102,8 @@ class TestDeparture(TestHrCommon):
                 self.emp_A.contract_date_end,
                 date(2025, 6, 1),
                 "The employee should have a contract date end.")
+
+    def test_employee_departure_empty_dismissal_date(self):
+        departure_form = Form(self.env['hr.employee.departure'])
+        departure_form.dismissal_date = False
+        self.assertEqual(departure_form.departure_date, False)
