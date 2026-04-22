@@ -1841,6 +1841,10 @@ export class PosStore extends WithLazyGetterTrap {
         return { webPrintFallback: true };
     }
 
+    get canSendReceipt() {
+        return true;
+    }
+
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
         let isPrinted = false;
