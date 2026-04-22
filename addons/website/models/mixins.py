@@ -502,7 +502,7 @@ class WebsitePublishedMixin(models.AbstractModel):
             }
 
             # Compute recipients (followers, partners, etc.)
-            recipients = target_sudo._notify_get_recipients(message_sudo, msg_vals=msg_vals)
+            recipients = target_sudo._notify_get_recipients(message_sudo)
             if recipients:
                 # Mirror the UI path so followers receive the same notifications
                 # they would if the message had been posted manually.

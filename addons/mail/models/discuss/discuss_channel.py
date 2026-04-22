@@ -863,22 +863,16 @@ class DiscussChannel(models.Model):
     # MAILING
     # ------------------------------------------------------------
 
-    def _notify_get_recipients(self, message, msg_vals=False, **kwargs):
+    def _notify_get_recipients(self, message, **kwargs):
         # Override recipients computation as channel is not a standard
         # mail.thread document. Indeed there are no followers on a channel.
         # Instead of followers it has members that should be notified.
-        msg_vals = msg_vals or {}
-
         # notify only user input (comment, whatsapp messages or incoming / outgoing emails)
-        message_type = msg_vals['message_type'] if 'message_type' in msg_vals else message.message_type
-        if message_type not in ('comment', 'email', 'email_outgoing', 'whatsapp_message'):
+        if message.message_type not in ("comment", "email", "email_outgoing", "whatsapp_message"):
             return []
-
         recipients_data = []
-        author_id = msg_vals.get("author_id") or message.author_id.id
-        pids = msg_vals['partner_ids'] or [] if 'partner_ids' in msg_vals else message.partner_ids.ids
-        if pids:
-            email_from = tools.email_normalize(msg_vals.get('email_from') or message.email_from)
+        if message.partner_ids:
+            email_from = tools.email_normalize(message.email_from)
             self.env['res.partner'].flush_model(['active', 'email', 'partner_share'])
             self.env['res.users'].flush_model(['notification_type', 'partner_id'])
             sql_query = SQL(
@@ -897,8 +891,8 @@ class DiscussChannel(models.Model):
                        AND partner.id IN %(partner_ids)s AND partner.id != %(author_id)s
                 """,
                 email=email_from or "",
-                partner_ids=tuple(pids),
-                author_id=author_id or 0,
+                partner_ids=tuple(message.partner_ids.ids),
+                author_id=message.author_id.id or 0,
             )
             self.env.cr.execute(sql_query)
             for partner_id, email_normalized, lang, name, partner_share, uid, ushare in self.env.cr.fetchall():
@@ -917,15 +911,14 @@ class DiscussChannel(models.Model):
                     'uid': uid,
                     'ushare': ushare,
                 })
-
         domain = Domain.AND([
             [("channel_id", "=", self.id)],
-            [("partner_id", "!=", author_id)],
+            [("partner_id", "!=", message.author_id.id)],
             [("partner_id.active", "=", True)],
             [("partner_id.user_ids.manual_im_status", "!=", "busy")],
             Domain.OR([
                 [("mute_until_dt", "=", False)],
-                [("partner_id", "in", pids)],
+                [("partner_id", "in", message.partner_ids.ids)],
             ]),
             Domain.OR([
                 [("channel_id.channel_type", "!=", "channel")],
@@ -939,20 +932,19 @@ class DiscussChannel(models.Model):
                         ]),
                         Domain.AND([
                             [("custom_notifications", "=", "mentions")],
-                            [("partner_id", "in", pids)],
+                            [("partner_id", "in", message.partner_ids.ids)],
                         ]),
                         Domain.AND([
                             [("custom_notifications", "=", False)],
                             [("partner_id.user_ids.res_users_settings_ids.channel_notifications", "=", False)],
-                            [("partner_id", "in", pids)],
+                            [("partner_id", "in", message.partner_ids.ids)],
                         ]),
                     ]),
                 ]),
             ]),
         ])
         # sudo: discuss.channel.member - read to get the members of the channel and res.users.settings of the partners
-        members = self.env["discuss.channel.member"].sudo().search(domain)
-        for member in members:
+        for member in self.env["discuss.channel.member"].sudo().search(domain):
             recipients_data.append({
                 "active": True,
                 "id": member.partner_id.id,
