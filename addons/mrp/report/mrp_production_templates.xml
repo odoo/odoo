@@ -137,65 +137,14 @@
 
 <template id="label_production_view_pdf">
     <t t-call="web.basic_layout">
-        <t t-set='nRows' t-value='12'/>
-        <t t-set='nCols' t-value='4'/>
-        <t t-set="uom_unit" t-value="env.ref('uom.product_uom_unit')"/>
         <div class="oe_structure"></div>
-        <t t-set="move_lines" t-value="docs.move_finished_ids.move_line_ids.filtered(lambda ml: ml.move_id.production_id.state == 'done' and ml.state == 'done' and ml.quantity)"/>
-        <t t-set="move_line_qtys" t-value="[]"/>
-        <t t-foreach="move_lines" t-as="move_line">
-            <t t-if="move_line.product_id.uom_id._has_common_reference(uom_unit)">
-                <!-- print 1 label per 1 uom when uom category = units -->
-                <t t-set="move_line_qtys" t-value="move_line_qtys + [int(move_line.quantity)]"/>
-            </t>
-            <t t-else="">
-                <t t-set="move_line_qtys" t-value="move_line_qtys + [1]"/>
-            </t>
-        </t>
-        <t t-set="index_to_qtys" t-value="{i: qty for i, qty in zip(range(0, len(move_line_qtys)), move_line_qtys)}"/>
-        <t t-set="num_pages" t-value="sum(move_line_qtys)// (nRows * nCols) + 1"/>
-        <div class="oe_structure"></div>
-        <div t-foreach="range(num_pages)" t-as="page" class="o_label_sheet" t-att-style="'padding: 20mm 8mm'">
-        <div class="oe_structure"></div>
+        <div t-foreach="label_pages" t-as="page_rows" class="o_label_sheet" t-att-style="'padding: 20mm 8mm'">
+            <div class="oe_structure"></div>
             <table class="my-0 table table-sm table-borderless">
-                <t t-foreach="range(nRows)" t-as="row">
+                <t t-foreach="page_rows" t-as="label_row">
                     <tr>
-                        <t t-foreach="range(nCols)" t-as="column">
-                            <t t-if="index_to_qtys and not current_quantity">
-                                <t t-set="index_to_qty" t-value="index_to_qtys.popitem()"/>
-                                <t t-set="move_line" t-value="move_lines[index_to_qty[0]]"/>
-                                <t t-set="current_quantity" t-value="index_to_qty[1]"/>
-                            </t>
-                            <t t-if="current_quantity">
-                                <t t-set="make_invisible" t-value="False"/>
-                                <t t-set="current_quantity" t-value="current_quantity - 1"/>
-                            </t>
-                            <t t-else="">
-                                <t t-set="make_invisible" t-value="True"/>
-                            </t>
-                            <td t-att-style="make_invisible and 'visibility:hidden'">
-                                <div t-if="move_line" t-translation="off" t-att-style="'position:relative; width:43mm; height:19mm; border: 1px solid %s;' % (move_line.env.user.company_id.primary_color or 'black')">
-                                    <div class="o_label_name o_label_4x12 fw-bold">
-                                        <span t-out="move_line.product_id.display_name">Product</span>
-                                        <div><span>Quantity: </span>
-                                            <span t-if="move_line.product_id.uom_id._has_common_reference(uom_unit)">1.0</span>
-                                            <span t-else="" t-out="move_line.quantity">5</span>
-                                            <span t-field="move_line.uom_id" groups="uom.group_uom">UOM id</span>
-                                        </div>
-                                    </div>
-                                    <t t-if="move_line.product_id.tracking in ['lot', 'serial'] and (move_line.lot_name or move_line.lot_id)">
-                                        <div t-field="move_line.lot_name or move_line.lot_id.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%;height:35%'}"/>
-                                        <div class="o_label_4x12 text-center"><span t-out="move_line.lot_name or move_line.lot_id.name">Demo Barcode</span></div>
-                                    </t>
-                                    <t t-elif="move_line.product_id.tracking == 'none' and move_line.product_id.barcode">
-                                        <div t-field="move_line.product_id.barcode" t-options="{'widget': 'barcode', 'img_style': 'width:100%;height:35%'}"/>
-                                        <div class="o_label_4x12 text-center"><span t-out="move_line.product_id.barcode">12345678901</span></div>
-                                    </t>
-                                    <t t-else="">
-                                        <span class="text-muted">No barcode available</span>
-                                    </t>
-                                </div>
-                            </td>
+                        <t t-foreach="label_row" t-as="label">
+                            <t t-call="mrp.report_simple_label4x12"/>
                         </t>
                     </tr>
                 </t>
@@ -203,5 +152,16 @@
             <div class="oe_structure"></div>
         </div>
     </t>
+</template>
+
+<template id="report_simple_label4x12" inherit_id="product.report_simple_label4x12" primary="True">
+    <xpath expr="//div[hasclass('o_label_centered_content')]/div[hasclass('o_label_table')][1]/div[hasclass('o_label_meta_block')]" position="replace">
+        <div t-if="label.get('uom_name')" class="o_label_meta_block">
+            <div class="o_label_meta_line">
+                <span t-out="label['label_quantity']">1</span>
+                <span t-out="label['uom_name']">Units</span>
+            </div>
+        </div>
+    </xpath>
 </template>
 </odoo>
