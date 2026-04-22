@@ -26,10 +26,10 @@ class AccountMove(models.Model):
         return res
 
     def _is_downpayment(self):
-        # EXTENDS sale
+        # EXTENDS account
         self.ensure_one()
-        if self.line_ids.sale_line_ids:
-            return super()._is_downpayment()
+        if res := super()._is_downpayment():
+            return res
 
         base_lines, _ = self._get_rounded_base_and_tax_lines()
         return base_lines and all('down_payment' in (line['computation_key'] or '').split(',') for line in base_lines)
