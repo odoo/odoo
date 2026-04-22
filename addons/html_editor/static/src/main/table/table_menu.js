@@ -1,6 +1,6 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillUnmount, useEffect } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -56,7 +56,7 @@ export class TableMenu extends Component {
             // Listen outside the iframe.
             useExternalListener(document, "pointerup", this.onPointerUp);
         }
-        useEffect(
+        useLayoutEffect(
             () => {
                 const { type, target } = this.props;
                 this.tableGrid = this.props.buildTableGrid(closestElement(target, "table"));
