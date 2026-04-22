@@ -59,6 +59,8 @@ export class WebsocketWorker {
      * guaarantee at-most-once delivery.
      */
     seenNotificationIds = new BoundedSet(10_000);
+    /** Number of times the worker has opened a websocket connection */
+    connectCount = 0;
 
     constructor(name) {
         this.active = true;
@@ -213,6 +215,19 @@ export class WebsocketWorker {
     }
 
     /**
+     * Handle an internal message, sent by the server to this worker.
+     *
+     * @param {{type: string, internal: true, payload: any}} param0
+     */
+    _onServerMessage({ type }) {
+        switch (type) {
+            case "bus/subscription_outdated":
+                this.broadcast("BUS:OUTDATED", { unregisterMultiTab: false });
+                return;
+        }
+    }
+
+    /**
      * Add a channel for the given client. If this channel is not yet
      * known, update the subscription on the server.
      *
@@ -269,7 +284,7 @@ export class WebsocketWorker {
      *     - undefined: not available (e.g. livechat support page)
      * @param {Number} param0.startTs Timestamp of start of bus service sender.
      */
-    _initializeConnection(client, { db, debug, lastNotificationId, uid, websocketURL, startTs }) {
+    _initializeConnection(client, { db, lastNotificationId, uid, websocketURL, startTs }) {
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
             this.sendToClient(client, "BUS:INITIALIZED");
@@ -277,7 +292,7 @@ export class WebsocketWorker {
         }
         this.newestStartTs = startTs;
         this.websocketURL = websocketURL;
-        this.lastNotificationId = lastNotificationId;
+        this.lastNotificationId = Math.max(this.lastNotificationId, lastNotificationId);
         const isCurrentUserKnown = uid !== undefined;
         if (this.isWaitingForNewUID && isCurrentUserKnown) {
             this.isWaitingForNewUID = false;
@@ -295,7 +310,7 @@ export class WebsocketWorker {
         this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
         this.sendToClient(client, "BUS:INITIALIZED");
         if (!this.active) {
-            this.sendToClient(client, "BUS:OUTDATED");
+            this.sendToClient(client, "BUS:OUTDATED", { unregisterMultiTab: true });
         }
     }
 
@@ -367,15 +382,24 @@ export class WebsocketWorker {
      */
     _onWebsocketMessage(messageEv) {
         this._restartConnectionCheckInterval();
-        const notifications = JSON.parse(messageEv.data);
-        this._logDebug("_onWebsocketMessage", notifications);
-        const newNotifications = notifications.filter((n) => !this.seenNotificationIds.has(n.id));
-        if (!newNotifications.length) {
-            return;
+        const messages = JSON.parse(messageEv.data);
+        this._logDebug("_onWebsocketMessage", messages);
+        const newNotifications = [];
+        for (const message of messages) {
+            if (message.internal) {
+                this._onServerMessage(message);
+                continue;
+            }
+            if (this.seenNotificationIds.has(message.id)) {
+                continue;
+            }
+            this.seenNotificationIds.add(message.id);
+            newNotifications.push(message);
+            this.lastNotificationId = Math.max(this.lastNotificationId, message.id);
         }
-        newNotifications.forEach((n) => this.seenNotificationIds.add(n.id));
-        this.lastNotificationId = Math.max(this.lastNotificationId, newNotifications.at(-1).id);
-        this.broadcast("BUS:NOTIFICATION", newNotifications);
+        if (newNotifications.length) {
+            this.broadcast("BUS:NOTIFICATION", newNotifications);
+        }
     }
 
     async _logDebug(title, ...args) {
@@ -398,6 +422,7 @@ export class WebsocketWorker {
      * the connection to open.
      */
     _onWebsocketOpen() {
+        this.connectCount++;
         this._logDebug("_onWebsocketOpen");
         this._updateState(WORKER_STATE.CONNECTED);
         this.broadcast(this.isReconnecting ? "BUS:RECONNECT" : "BUS:CONNECT");
@@ -545,10 +570,20 @@ export class WebsocketWorker {
         const shouldUpdateChannelSubscription =
             allTabsChannelsString !== this.lastChannelSubscription;
         if (force || shouldUpdateChannelSubscription) {
+            // Do not check for outdated state on the first connection: `last_id` comes from
+            // storage, so GC may have already occurred, but this is safe since the page
+            // was actively loaded. Only check on the first subscribe, as notifications
+            // are streamed in real time and cannot be missed during an active connection
+            // (no `lastChannelSubscription`).
+            const check_outdated = this.connectCount > 1 && !this.lastChannelSubscription;
             this.lastChannelSubscription = allTabsChannelsString;
             this._sendToServer({
                 event_name: "subscribe",
-                data: { channels: allTabsChannels, last: minId },
+                data: {
+                    channels: allTabsChannels,
+                    check_outdated,
+                    last: minId,
+                },
             });
             this.firstSubscribeResolver.resolve();
         }
