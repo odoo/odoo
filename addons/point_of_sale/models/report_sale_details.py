@@ -126,6 +126,18 @@ class ReportSaleDetails(models.AbstractModel):
             for session in sessions:
                 configs.append(session.config_id)
 
+        cash_rounding_total = 0.0
+        for order in orders:
+            order_currency = order.session_id.currency_id
+            rounding_diff = order.amount_paid - order.amount_total
+            if user_currency != order_currency:
+                cash_rounding_total += order_currency._convert(
+                    rounding_diff, user_currency, order.company_id,
+                    order.date_order or fields.Date.today())
+            else:
+                cash_rounding_total += rounding_diff
+        cash_rounding_total = user_currency.round(cash_rounding_total)
+
         for payment in payments:
             payment['count'] = False
 
@@ -331,6 +343,7 @@ class ReportSaleDetails(models.AbstractModel):
             'discount_amount': discount_amount,
             'invoiceList': invoiceList,
             'invoiceTotal': invoiceTotal,
+            'cash_rounding_total': cash_rounding_total,
         }
 
     def _get_product_total_amount(self, line):
