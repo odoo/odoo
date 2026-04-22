@@ -134,7 +134,9 @@ const chatterPatch = {
                     }
                 },
             },
-            () => !this.store.meetingViewOpened || this.env.inMeetingView
+            () =>
+                (!this.store.meetingViewOpened || this.env.inMeetingView) &&
+                (this.state.thread?.isTransient || this.state.thread?.canPostMessage)
         );
         useEffect(
             () => {
