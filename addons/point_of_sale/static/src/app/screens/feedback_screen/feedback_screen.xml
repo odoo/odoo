@@ -11,7 +11,7 @@
             <div t-if="!this.ui.isSmall" class="desktop-format w-75 d-flex gap-3 flex-row align-items-center justify-content-around p-2">
                 <button t-if="this.pos.canEditPayment(this.currentOrder)" t-att-disabled="this.loading()" class="button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3 edit-order-payment" t-on-click.stop="() => this.clickEditPayment()"><i class="fa fa-chevron-left" role="img" aria-label="Back"></i> Back</button>
                 <button t-if="this.canPrintReceipt" t-att-disabled="this.loading() || this.currentOrder.state == 'draft'" class="print-ticket-button button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3" t-on-click.stop="() => this.clickPrint()"><i class="fa fa-print" role="img" aria-label="Print"></i> Print</button>
-                <button t-if="this.canSendReceipt" t-att-disabled="this.loading() || this.currentOrder.state == 'draft'" class="send-receipt button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3" t-on-click.stop="() => this.clickSend()"><i class="fa fa-paper-plane" role="img" aria-label="Send"></i> Send Receipt</button>
+                <button t-if="this.pos.canSendReceipt" t-att-disabled="this.loading() || this.currentOrder.state == 'draft'" class="send-receipt button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3" t-on-click.stop="() => this.clickSend()"><i class="fa fa-paper-plane" role="img" aria-label="Send"></i> Send Receipt</button>
                 <button t-att-disabled="this.loading()" class="validation button btn btn-primary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3" t-on-click.stop="() => this.onClick(true)">
                     Continue
                     <div t-if="this.timeout()" class="wipe-overlay"/>
@@ -20,7 +20,7 @@
             <div t-else="" class="mobile-format position-absolute bottom-0 w-100 d-flex flex-column gap-1 p-1">
                 <div class="d-flex w-100 gap-1">
                     <button t-if="this.pos.canEditPayment(this.currentOrder)" t-att-disabled="this.loading()" class="back-button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-50 edit-order-payment" t-on-click.stop="() => this.clickEditPayment()"><i class="fa fa-chevron-left" role="img" aria-label="Back"></i> Back</button>
-                    <button t-if="this.canSendReceipt" t-att-disabled="this.loading() || this.currentOrder.state == 'draft'" class="send-receipt btn btn-secondary btn-lg lh-lg text-truncate flex-grow-1" t-on-click.stop="() => this.clickSend()"><i class="fa fa-paper-plane" role="img" aria-label="Send"></i> Send Receipt</button>
+                    <button t-if="this.pos.canSendReceipt" t-att-disabled="this.loading() || this.currentOrder.state == 'draft'" class="send-receipt btn btn-secondary btn-lg lh-lg text-truncate flex-grow-1" t-on-click.stop="() => this.clickSend()"><i class="fa fa-paper-plane" role="img" aria-label="Send"></i> Send Receipt</button>
                 </div>
                 <div class="d-flex w-100 gap-1">
                     <button t-att-disabled="this.loading() || this.currentOrder.state == 'draft'" class="print-ticket-button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-50" t-on-click.stop="() => this.clickPrint()"><i class="fa fa-print" role="img" aria-label="Print"></i> Print</button>

@@ -197,7 +197,10 @@
                                         onInvoiceOrder.bind="this.onInvoiceOrder"
                                         order="_selectedSyncedOrder" />
                                     <button class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.doPrint.call(_selectedSyncedOrder)">
-                                        <i t-attf-class="fa {{this.doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
+                                        <i t-attf-class="fa {{this.doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Receipt
+                                    </button>
+                                    <button t-if="this.pos.canSendReceipt" class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="this.onClickSend">
+                                        <i class="fa fa-send me-1" />Send
                                     </button>
                                 </div>
                                 <div class="subpads d-flex flex-column">

@@ -1,6 +1,7 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { isSyncStatusConnected } from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 
 export function nbOrdersIs(nb) {
     return [
@@ -166,7 +167,7 @@ export function checkOrderDetailsDialog(orderRef, totalPayment, payments) {
             trigger: ".modal-content .field-details:contains('Origin')",
         },
         {
-            trigger: `.modal-content h5:contains("Payment Info")`,
+            trigger: `.modal-content h3:contains("Payment Info")`,
         },
         {
             trigger: `.modal-content .text-success:contains(${totalPayment})`,
@@ -295,5 +296,22 @@ export function checkCustomerAddress(addressText) {
             isActive: ["desktop"],
             trigger: `.ticket-screen tbody tr > td:contains("${addressText}")`,
         },
+    ];
+}
+
+export function sendEmail(email, expectSuccess = true) {
+    return [
+        ...clickControlButton("Send"),
+        {
+            trigger: ".send-receipt-email-input",
+            run: `edit ${email}`,
+        },
+        {
+            trigger: `.modal-body .fa-paper-plane`,
+            run: "click",
+        },
+        ...(expectSuccess ? [{ trigger: `.modal-body .text-success` }] : []),
+        Dialog.cancel(),
+        back(),
     ];
 }

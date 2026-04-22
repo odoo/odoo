@@ -119,10 +119,6 @@ export class FeedbackScreen extends Component {
         this.pos.orderDone(this.currentOrder);
     }
 
-    get canSendReceipt() {
-        return true;
-    }
-
     get canPrintReceipt() {
         return true;
     }
@@ -136,7 +132,7 @@ export class FeedbackScreen extends Component {
 
     clickSend() {
         this.stopAutomaticSkip();
-        if (this.canSendReceipt) {
+        if (this.pos.canSendReceipt) {
             this.dialog.add(SendReceiptPopup, {
                 order: this.currentOrder,
             });

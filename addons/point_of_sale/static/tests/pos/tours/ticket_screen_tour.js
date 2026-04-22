@@ -256,6 +256,7 @@ registry.category("web_tour.tours").add("test_order_refund_flow", {
             // First refund order
             ProductScreen.clickRefund(),
             TicketScreen.selectOrder("001"),
+            TicketScreen.sendEmail("test@narendradamodardasmodi.com"),
             ProductScreen.clickNumpad("1"),
             TicketScreen.toRefundTextContains("1"),
             TicketScreen.confirmRefund(),
