@@ -21,6 +21,12 @@ import {
  * @typedef {import("@web/env").OdooEnv} OdooEnv
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
  * @typedef {import("services").ServiceFactories} Services
+ *
+ * @typedef {{
+ *  beforeFirstLoad?: () => any;
+ *  lazy?: boolean;
+ *  onLoad?: (searchParams: SearchParams) => any;
+ * }} UseModelOptions
  */
 
 export class Model {
@@ -98,74 +104,143 @@ function getSearchParams(props) {
 /**
  * @template {typeof Model} T
  * @param {T} ModelClass
- * @param {Object} params
- * @param {Object} [options]
- * @param {Function} [options.beforeFirstLoad]
+ * @param {SearchParams} params
+ * @param {UseModelOptions} [options]
  * @returns {InstanceType<T>}
  */
-export function useModel(ModelClass, params, options = {}) {
+function _useModel(ModelClass, params, options) {
+    if (!(ModelClass.prototype instanceof Model)) {
+        throw new Error(`the model class should extend Model`);
+    }
+
+    /**
+     * @param {Record<any, any>} props
+     */
+    async function load(props) {
+        const searchParams = getSearchParams(props);
+        await model.load(searchParams);
+
+        if (onLoad) {
+            await onLoad(searchParams);
+        }
+
+        if (!model.isReady()) {
+            model.whenReady.resolve(); // resolve after the first successful load
+        } else if (status(component) === "mounted") {
+            model.notify();
+        }
+    }
+
+    function onUpdate() {
+        return render(component, true);
+    }
+
+    /**
+     * @param {Record<any, any>} props
+     */
+    function raceLoad(props) {
+        return race.add(load(props));
+    }
+
+    const race = new Race();
     const component = useComponent();
     const services = {};
     for (const key of ModelClass.services) {
         services[key] = useService(key);
     }
-    services.orm = services.orm || useService("orm");
-    const model = new ModelClass(component.env, params, services);
+    services.orm ||= useService("orm");
 
-    const onUpdate = () => render(component, true);
+    params.isAlive ??= function isAlive() {
+        return status(component) !== "destroyed";
+    };
+
+    const { beforeFirstLoad, onLoad, lazy } = options || {};
+    const env = component.env;
+    const model = new ModelClass(env, params, services);
+
     model.bus.addEventListener("update", onUpdate);
     onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
 
     onWillStart(async () => {
-        await options.beforeFirstLoad?.();
-        await model.load(getSearchParams(component.props));
-        model.whenReady.resolve();
+        if (beforeFirstLoad) {
+            await options.beforeFirstLoad();
+        }
+        const promise = raceLoad(component.props);
+        if (lazy) {
+            // in-house error handling as we're out of willStart
+            promise.catch((e) => {
+                if (e instanceof RPCError) {
+                    env.config.historyBack();
+                }
+                throw e;
+            });
+        } else {
+            await promise;
+        }
     });
-    onWillUpdateProps((nextProps) => model.load(getSearchParams(nextProps)));
+    onWillUpdateProps(raceLoad);
+
     return markRaw(model);
 }
 
 /**
  * @template {typeof Model} T
  * @param {T} ModelClass
- * @param {Object} params
- * @param {Object} [options]
- * @param {Function} [options.lazy=false]
+ * @param {SearchParams} params
+ * @param {UseModelOptions} [options]
  * @returns {InstanceType<T>}
  */
-export function useModelWithSampleData(ModelClass, params, options = {}) {
+export function useModel(ModelClass, params, options) {
+    return _useModel(ModelClass, params, options);
+}
+
+/**
+ * @template {typeof Model} T
+ * @param {T} ModelClass
+ * @param {SearchParams} params
+ * @param {UseModelOptions} [options]
+ * @returns {InstanceType<T>}
+ */
+export function useModelWithSampleData(ModelClass, params, options) {
     const component = useComponent();
-    if (!(ModelClass.prototype instanceof Model)) {
-        throw new Error(`the model class should extend Model`);
-    }
-    const services = {};
-    for (const key of ModelClass.services) {
-        services[key] = useService(key);
-    }
-    services.orm = services.orm || useService("orm");
-
-    if (!("isAlive" in params)) {
-        params.isAlive = () => status(component) !== "destroyed";
-    }
-
-    const model = new ModelClass(component.env, params, services);
-
-    const onUpdate = () => render(component, true);
-    model.bus.addEventListener("update", onUpdate);
-    onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
 
     const globalState = component.props.globalState || {};
     const localState = component.props.state || {};
+
     let useSampleModel =
         component.props.useSampleModel &&
         (!("useSampleModel" in globalState) || globalState.useSampleModel);
-    model.useSampleModel = false;
+
+    onWillUpdateProps(() => {
+        useSampleModel = false;
+    });
+
+    const model = _useModel(ModelClass, params, {
+        ...options,
+        async onLoad(searchParams) {
+            if (useSampleModel && !model.hasData()) {
+                sampleORM =
+                    sampleORM ||
+                    buildSampleORM(component.props.resModel, component.props.fields, user);
+                // Load data with sampleORM then restore real ORM.
+                model.orm = sampleORM;
+                await model.load(searchParams);
+                model.orm = orm;
+                model.useSampleModel = true;
+            } else {
+                useSampleModel = false;
+                model.useSampleModel = useSampleModel;
+            }
+        },
+    });
     const orm = model.orm;
+
+    model.useSampleModel = false;
     let sampleORM = localState.sampleORM;
 
     // Always disable the sample model when `load` is called (can be called by the view itself).
     // Note: the only case where the sample mode should be kept after a load is handled below (see
-    // @_load), and in that case, the flag is directly set to true afterwards.
+    // @load), and in that case, the flag is directly set to true afterwards.
     if (useSampleModel) {
         const originalLoad = model.load;
         model.load = async function () {
@@ -174,51 +249,6 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
             return result;
         };
     }
-
-    /**
-     * @param {Record<string, unknown>} props
-     */
-    async function _load(props) {
-        const searchParams = getSearchParams(props);
-        await model.load(searchParams);
-        if (useSampleModel && !model.hasData()) {
-            sampleORM =
-                sampleORM || buildSampleORM(component.props.resModel, component.props.fields, user);
-            // Load data with sampleORM then restore real ORM.
-            model.orm = sampleORM;
-            await model.load(searchParams);
-            model.orm = orm;
-            model.useSampleModel = true;
-        } else {
-            useSampleModel = false;
-            model.useSampleModel = useSampleModel;
-        }
-        if (!model.isReady()) {
-            model.whenReady.resolve(); // resolve after the first successful load
-        } else if (status(component) === "mounted") {
-            model.notify();
-        }
-    }
-    const race = new Race();
-    const load = (props) => race.add(_load(props));
-    onWillStart(() => {
-        const prom = load(component.props);
-        if (options.lazy) {
-            // in-house error handling as we're out of willStart
-            prom.catch((e) => {
-                if (e instanceof RPCError) {
-                    component.env.config.historyBack();
-                }
-                throw e;
-            });
-        } else {
-            return prom;
-        }
-    });
-    onWillUpdateProps((nextProps) => {
-        useSampleModel = false;
-        load(nextProps);
-    });
 
     useSetupAction({
         getGlobalState() {
@@ -229,7 +259,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
         getLocalState: () => ({ sampleORM }),
     });
 
-    return markRaw(model);
+    return model;
 }
 
 export function _makeFieldFromPropertyDefinition(name, definition, relatedPropertyField) {
