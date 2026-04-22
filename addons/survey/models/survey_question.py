@@ -99,8 +99,6 @@ class SurveyQuestion(models.Model):
         'Scored', compute='_compute_is_scored_question',
         readonly=False, store=True, copy=True,
         help="Include this question as part of quiz scoring. Requires an answer and answer score to be taken into account.")
-    has_image_only_suggested_answer = fields.Boolean(
-        "Has image only suggested answer", compute='_compute_has_image_only_suggested_answer')
     # -- scoreable/answerable simple answer_types: numerical_box / date / datetime
     answer_numerical_box = fields.Float('Correct numerical answer', help="Correct number answer for this question.")
     answer_date = fields.Date('Correct date answer', help="Correct date answer for this question.")
@@ -244,13 +242,6 @@ class SurveyQuestion(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
-
-    @api.depends('suggested_answer_ids', 'suggested_answer_ids.value')
-    def _compute_has_image_only_suggested_answer(self):
-        questions_with_image_only_answer = self.env['survey.question'].search(
-            [('id', 'in', self.ids), ('suggested_answer_ids.value', 'in', [False, ''])])
-        questions_with_image_only_answer.has_image_only_suggested_answer = True
-        (self - questions_with_image_only_answer).has_image_only_suggested_answer = False
 
     @api.depends('question_type')
     def _compute_question_placeholder(self):
