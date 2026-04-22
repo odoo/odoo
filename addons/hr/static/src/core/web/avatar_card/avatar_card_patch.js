@@ -64,7 +64,7 @@ const avatarCardPatch = {
         if (!this.employee) {
             return super.getProfileAction(...arguments);
         }
-        return this.orm.call("hr.employee", "get_formview_action", [this.employee.id]);
+        return this.orm.call("hr.employee", "get_record_default_action", [this.employee.id]);
     },
 };
 export const unpatchAvatarCard = patch(AvatarCard.prototype, avatarCardPatch);

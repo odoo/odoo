@@ -608,7 +608,7 @@ test("Props are updated and kept when switching/restoring views", async () => {
             </group>
         </form>`;
 
-    onRpc("get_formview_action", ({ args, model }) => ({
+    onRpc("get_record_default_action", ({ args, model }) => ({
         res_id: args[0][0],
         res_model: model,
         type: "ir.actions.act_window",
@@ -1464,7 +1464,7 @@ test("can open a many2one external window", async () => {
         </form>`;
 
     stepAllNetworkCalls();
-    onRpc("get_formview_action", () => ({
+    onRpc("get_record_default_action", () => ({
         name: "Partner",
         res_model: "partner",
         type: "ir.actions.act_window",
@@ -1485,7 +1485,7 @@ test("can open a many2one external window", async () => {
         "web_search_read",
         "has_group",
         "web_read",
-        "get_formview_action",
+        "get_record_default_action",
         "get_views",
         "web_read",
     ]);
@@ -1979,7 +1979,7 @@ test("execute action from dirty, new record, and come back", async () => {
             <field name="bar" readonly="1"/>
         </form>`;
 
-    onRpc("get_formview_action", () => ({
+    onRpc("get_record_default_action", () => ({
         res_id: 1,
         res_model: "partner",
         type: "ir.actions.act_window",
@@ -2017,7 +2017,7 @@ test("execute action from dirty, new record, and come back", async () => {
         "web_search_read",
         "has_group",
         "onchange",
-        "get_formview_action",
+        "get_record_default_action",
         "web_save",
         "get_views",
         "web_read",
@@ -2079,7 +2079,7 @@ test("go back to action with form view as main view, and res_id", async () => {
     ]);
     Partner._views["form,44"] = '<form><field name="m2o"/></form>';
 
-    onRpc("get_formview_action", () => ({
+    onRpc("get_record_default_action", () => ({
         res_id: 3,
         res_model: "partner",
         type: "ir.actions.act_window",
@@ -2117,7 +2117,7 @@ test("action with res_id, load another res_id, do new action, restore previous",
     defineActions([action]);
 
     Partner._views["form,44"] = '<form><field name="m2o"/></form>';
-    onRpc("get_formview_action", () => ({ ...action, res_id: 3 }));
+    onRpc("get_record_default_action", () => ({ ...action, res_id: 3 }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(999, { props: { resIds: [1, 2] } });

@@ -407,7 +407,7 @@ export class PropertyValue extends Component {
      * @param {integer} recordId
      */
     async _openRecord(recordModel, recordId) {
-        const action = await this.orm.call(recordModel, "get_formview_action", [[recordId]], {
+        const action = await this.orm.call(recordModel, "get_record_default_action", [[recordId]], {
             context: this.props.context,
         });
 

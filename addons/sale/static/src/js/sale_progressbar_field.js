@@ -30,7 +30,7 @@ export class SaleProgressBarField extends ProgressBarField {
      */
     async defineInvoicingTarget() {
         const { resId, resModel } = this.props.record;
-        const action = await this.orm.call(resModel, "get_formview_action", [[resId]]);
+        const action = await this.orm.call(resModel, "get_record_default_action", [[resId]]);
         this.actionService.doAction(action);
     }
 }
