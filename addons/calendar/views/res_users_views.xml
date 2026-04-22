@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
-        <!-- Update Preferences form !-->
-        <record id="res_users_form_view_calendar_default_privacy" model="ir.ui.view">
+        <record id="res_users_form_view_calendars" model="ir.ui.view">
             <field name="name">res.users.preferences.form.inherit</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='tz']" position="after">
-                    <field name="calendar_default_privacy" readonly="0" string="Privacy" invisible="share"/>
+                <xpath expr="//group[@name='calendar_preferences']" position="inside">
+                    <field name="calendar_ids" options='{"no_open": True, "no_create": True}'
+                           invisible="share" nolabel="1" colspan="2"/>
                 </xpath>
             </field>
         </record>
@@ -18,8 +18,9 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='tz']" position="after">
-                    <field name="calendar_default_privacy" readonly="0" string="Privacy" invisible="share"/>
+                <xpath expr="//group[@name='calendar_preferences']" position="inside">
+                    <field name="calendar_ids" options='{"no_open": True, "no_create": True}'
+                           invisible="share" nolabel="1" colspan="2"/>
                 </xpath>
             </field>
         </record>

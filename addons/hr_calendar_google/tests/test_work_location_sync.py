@@ -94,7 +94,8 @@ class TestSyncWorkLocationsGoogle(TestSyncGoogle):
             previous_work_locations_count = self.env['hr.work.location'].search_count([])
 
             self.env['calendar.event'].with_user(self.work_location_user)._sync_google2odoo(
-                GoogleEvent([office_location_values, home_location_values, custom_location_values, custom_location_same_values])
+                GoogleEvent([office_location_values, home_location_values, custom_location_values, custom_location_same_values]),
+                self.work_location_user.primary_calendar
             )
 
             current_work_locations_count = self.env['hr.work.location'].search_count([])

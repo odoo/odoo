@@ -345,7 +345,7 @@ export class CalendarModel extends Model {
                 await this.orm.write(info.writeResModel, filterIds, data, { context });
             }
         }
-        await this.debouncedLoad();
+        await this.debouncedLoad({ loadReason: "filters_update" });
     }
     async updateRecord(record, options = {}) {
         const rawRecord = this.buildRawRecord(record, options);
@@ -919,8 +919,8 @@ export class CalendarModel extends Model {
      * @protected
      */
     async loadFilterSection(fieldName, filterInfo, previousSection) {
-        const { filterFieldName, writeFieldName, writeResModel } = filterInfo;
-        const fields = [writeFieldName, filterFieldName].filter(Boolean);
+        const { filterFieldName, writeFieldName, writeResModel, colorFieldName } = filterInfo;
+        const fields = [writeFieldName, filterFieldName, colorFieldName].filter(Boolean);
         const rawFilters = await this.fetchFilters(writeResModel, fields);
         const previousFilters = previousSection ? previousSection.filters : [];
 

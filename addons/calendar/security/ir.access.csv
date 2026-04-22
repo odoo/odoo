@@ -2,9 +2,16 @@ id,name,model_id,group_id/id,operation,domain
 access_calendar_attendee_employee,calendar.attendee_employee,calendar.attendee,base.group_user,crud,
 access_calendar_attendee_employee_delete_wizard,calendar.attendee_employee_delete_wizard,calendar.popover.delete.wizard,base.group_user,crud,
 access_calendar_alarm,calendar.alarm,calendar.alarm,base.group_user,crud,
+access_calendar_calendar,calendar.calendar,calendar.calendar,base.group_user,crud,
+access_calendar_calendar_user,calendar.calendar.user,calendar.calendar,base.group_user,crud,
 calendar_event_rule_my,Own events,calendar.event,base.group_portal,r,"[('partner_ids', 'in', user.partner_id.id)]"
 calendar_event_rule_employee,All Calendar Event for employees,calendar.event,base.group_user,crud,
 calendar_event_rule_private,Private events,calendar.event,,cud,"['|', ('privacy', '!=', 'private'), '&', ('privacy', '=', 'private'), '|', ('user_id', '=', user.id), ('partner_ids', 'in', user.partner_id.id)]"
+calendar_calendar_rule_users,Calendar: create and read,calendar.calendar,base.group_user,cr,
+calendar_calendar_rule_users_write,Calendar: write based on access role,calendar.calendar,base.group_user,u,"[('user_has_write_access', '=', True)]"
+calendar_calendar_rule_users_unlink,Calendar: unlink owner only,calendar.calendar,base.group_user,d,"[('calendar_users', 'any', [('user_id', '=', user.id), ('access_role', '=', 'owner')])]"
+calendar_calendar_user_rule_create,Calendar Users: create and view,calendar.calendar.user,base.group_user,cr,
+calendar_calendar_user_rule_own_or_owner,Calendar Users: see/manage own membership,calendar.calendar.user,base.group_user,ud,"['|', ('user_id', '=', user.id), ('calendar_id.calendar_users', 'any', [('user_id', '=', user.id), ('access_role', '=', 'owner')])]"
 access_calendar_event_type_all,calendar.event.type.all,calendar.event.type,base.group_user,r,
 access_calendar_event_type_manager,calendar.event.type.manager,calendar.event.type,base.group_system,crud,
 access_calendar_alarm_manager,access_calendar_alarm_manager,calendar.alarm_manager,base.group_user,crud,
