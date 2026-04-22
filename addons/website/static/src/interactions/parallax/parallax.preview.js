@@ -101,7 +101,7 @@ const ParallaxPreview = (I) =>
             let translateY = `calc(50% - ${parallaxShift}px)`;
             if (this.isZoom) {
                 const minScrollPos = -rect.height;
-                const maxScrollPos = viewportHeight;
+                const maxScrollPos = viewportHeight * 3.33;
                 const scrollRange = maxScrollPos - minScrollPos;
                 const progress = scrollRange ? clamp((rect.top - minScrollPos) / scrollRange) : 0;
                 const zoomProgress = this.isZoomIn ? Math.min(1, progress * 2.5) : progress;
