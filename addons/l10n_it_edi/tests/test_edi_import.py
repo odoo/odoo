@@ -614,3 +614,14 @@ class TestItEdiImport(TestItEdi):
                 },
             ],
         }], applied_xml)
+
+    def test_import_invoice_without_body(self):
+        """Test that importing an XML without FatturaElettronicaBody."""
+        invoice = self._assert_import_invoice('IT01234567893_NO_BODY_FPR01.xml', [{}])
+        self.assertEqual(
+            invoice.message_ids[0].body,
+            (
+                "<p>The imported file does not contain invoice data. "
+                "The required 'FatturaElettronicaBody' section is missing.</p>"
+            ),
+        )

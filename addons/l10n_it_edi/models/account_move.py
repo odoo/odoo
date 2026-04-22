@@ -1256,7 +1256,13 @@ class AccountMove(models.Model):
 
             tree = data['xml_tree']
             # Identify the first invoice if there are several in the file.
-            tree = tree.find('.//FatturaElettronicaBody')
+            if (tree := tree.find('.//FatturaElettronicaBody')) is None:
+                invoice.message_post(
+                    body=_("The imported file does not contain invoice data. "
+                           "The required 'FatturaElettronicaBody' section is missing."
+                    )
+                )
+                return
             company = self.company_id
 
             # There are 2 cases:
