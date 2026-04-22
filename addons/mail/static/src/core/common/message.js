@@ -1,4 +1,5 @@
 import { useChildSubEnv, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
@@ -202,9 +203,12 @@ export class Message extends Component {
                             : this.props.messageSearch?.highlight(this.message.richBody) ??
                                   this.message.richBody
                     );
-                    this.prepareMessageBody(bodyEl);
+                    const roots = this.prepareMessageBody(bodyEl) ?? [];
                     this.shadowRoot.appendChild(bodyEl);
                     return () => {
+                        for (const root of roots) {
+                            root.destroy();
+                        }
                         this.shadowRoot.removeChild(bodyEl);
                     };
                 }
@@ -219,11 +223,16 @@ export class Message extends Component {
         );
         useLayoutEffect(
             () => {
-                if (!this.isEditing) {
-                    this.prepareMessageBody(this.messageBody.el);
-                }
+                const roots = this.isEditing
+                    ? []
+                    : this.prepareMessageBody(this.messageBody.el) ?? [];
+                return () => {
+                    for (const root of roots) {
+                        root.destroy();
+                    }
+                };
             },
-            () => [this.isEditing, this.message.richBody]
+            () => [this.isEditing, this.message.richBody, this.props.messageSearch?.searchTerm]
         );
     }
 
@@ -521,6 +530,36 @@ export class Message extends Component {
                 }
             }
         }
+        return this.renderEmbeddedCodeBlocks(bodyEl);
+    }
+
+     /** @param {HTMLElement} bodyEl */
+    renderEmbeddedCodeBlocks(bodyEl) {
+        const { name, Component, getProps } = readonlySyntaxHighlightingEmbedding;
+        const selector = `[data-embedded='${name}']`;
+        const embeddedElements = [...bodyEl.querySelectorAll(selector)];
+        if (bodyEl.matches(selector)) {
+            embeddedElements.unshift(bodyEl);
+        }
+        const roots = [];
+        for (const el of embeddedElements) {
+            if (el.dataset.embeddedMounted === "1") {
+                continue;
+            }
+            // getProps(el) for readonly syntax highlighting reads the current host content
+            // from the pre node. If call replaceChildren() first, that content is gone,
+            // so value becomes empty and highlighting loses the original code text.
+            const props = getProps(el);
+            el.replaceChildren();
+            const root = this.__owl__.app.createRoot(Component, {
+                props,
+                env: this.env,
+            });
+            root.mount(el).catch();
+            el.dataset.embeddedMounted = "1";
+            roots.push(root);
+        }
+        return roots;
     }
 
     getAuthorAttClass() {

@@ -199,6 +199,31 @@ test("Display multiple highlighted search in Discuss", async () => {
     });
 });
 
+test("Search update keeps embedded code block rendering in Discuss", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: `<p>prefix text</p><pre data-embedded="readonlySyntaxHighlighting" data-language-id="python">print('hello')</pre><p>suffix text</p>`,
+        attachment_ids: [],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await click("button[title='Search Messages']");
+    await insertText(".o_searchview_input", "prefix");
+    triggerHotkey("Enter");
+    await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:text('prefix')`);
+    await contains(".o-mail-SearchMessagesPanel pre[data-embedded='readonlySyntaxHighlighting']");
+    await insertText(".o_searchview_input", " suffix");
+    triggerHotkey("Enter");
+    await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:text('suffix')`);
+    await contains(".o-mail-SearchMessagesPanel pre[data-embedded='readonlySyntaxHighlighting']");
+});
+
 test("Display highlighted with escaped character must ignore them", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
