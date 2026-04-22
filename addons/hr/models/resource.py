@@ -114,8 +114,8 @@ class ResourceResource(models.Model):
         for contract in contracts:
             tz = ZoneInfo(contract.employee_id.tz)
             res[contract.employee_id.resource_id.id][contract.resource_calendar_id] |= Intervals([(
-                datetime.combine(contract.contract_date_start, datetime.min.time(), tzinfo=tz) if contract.contract_date_start > start.astimezone(tz).date() else start,
-                datetime.combine(contract.contract_date_end, datetime.max.time(), tzinfo=tz) if contract.contract_date_end and contract.contract_date_end < end.astimezone(tz).date() else end,
+                datetime.combine(contract.date_start, datetime.min.time(), tzinfo=tz) if contract.date_start > start.astimezone(tz).date() else start,
+                datetime.combine(contract.date_end, datetime.max.time(), tzinfo=tz) if contract.date_end and contract.date_end < end.astimezone(tz).date() else end,
                 self.env['resource.calendar.attendance']
             )])
         return res
