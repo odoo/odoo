@@ -658,6 +658,7 @@ class AccountTax(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        self.env.cr.cache.pop('retrieved_tax_map', None)
         context = clean_context(self.env.context)
         context.update({
             'mail_create_nosubscribe': True,  # At create or message_post, do not subscribe the current user to the record thread
@@ -669,6 +670,7 @@ class AccountTax(models.Model):
         return taxes.with_context(self.env.context)
 
     def write(self, vals):
+        self.env.cr.cache.pop('retrieved_tax_map', None)
         return super().write(self._sanitize_vals(vals))
 
     def copy_data(self, default=None):
@@ -4911,35 +4913,6 @@ class AccountTax(models.Model):
             raise ValidationError(self.env._("You cannot delete taxes that are currently in use. Consider archiving them instead."))
 
     @api.model
-    def _import_retrieve_tax_from_invoice_predictive(self, tax_values):
-        # Check if 'account_accountant' is installed.
-        if 'payment_state_before_switch' not in self.env['account.move']._fields:
-            return
-
-        invoice_predictive = tax_values.get('invoice_predictive')
-        if not invoice_predictive:
-            return
-
-        def search_predictive(values):
-            domain = values['static_domain']
-            predicted_tax_ids = self.env['account.move.line']._predict_specific_tax(
-                move=invoice_predictive['invoice'],
-                name=invoice_predictive['name'],
-                partner=invoice_predictive['partner'],
-                amount_type=tax_values['amount_type'],
-                amount=tax_values['amount'],
-                type_tax_use=tax_values['type_tax_use'],
-            )
-            return self.env['account.tax'].browse(predicted_tax_ids).filtered_domain(domain)[:1]
-
-        return {
-            'criteria': [{
-                'search_method': search_predictive,
-                'cache_key': frozendict(invoice_predictive),
-            }],
-        }
-
-    @api.model
     def _import_retrieve_tax_from_price_include_exclude(self, tax_values):
         price_include = tax_values.get('price_include')
         fiscal_position = tax_values.get('fiscal_position')
@@ -4968,11 +4941,12 @@ class AccountTax(models.Model):
 
         static_domain = Domain(self._check_company_domain(company))
         for tax_values in tax_values_list:
+            if tax_values.get('tax'):
+                continue
             tax_domain = (
-               Domain('amount_type', '=', tax_values['amount_type']) &
-               Domain('type_tax_use', '=', tax_values['type_tax_use']) &
-               Domain('amount', '=', tax_values['amount']) &
-               Domain([*([('country_id', '=', tax_values['invoice_predictive']['invoice'].tax_country_id.id)] if 'invoice_predictive' in tax_values else [])])
+               Domain('amount_type', '=', tax_values['amount_type'])
+               & Domain('type_tax_use', '=', tax_values['type_tax_use'])
+               & Domain('amount', '=', tax_values['amount'])
             )
             orders = ['sequence', 'id']
             if name := tax_values.get('name'):

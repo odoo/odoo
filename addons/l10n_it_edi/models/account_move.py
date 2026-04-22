@@ -345,7 +345,7 @@ class AccountMove(models.Model):
             # from products, while in Italian EDI, taxes are generally explicited in the XML file
             # while the product may not be labelled exactly the same as in the database.
             def decoder(invoice, file_data, new=False):
-                self.with_context(disable_onchange_name_predictive=True)._l10n_it_edi_import_invoice(invoice, file_data, new)
+                self.with_context(disable_onchange_name_predictive=['all'])._l10n_it_edi_import_invoice(invoice, file_data, new)
             return {
                 'priority': 20,
                 'decoder': decoder,
@@ -1850,8 +1850,9 @@ class AccountMove(models.Model):
                         break
 
         # If no product is found, try to find a product that may be fitting
+        predicted_values = self.env['account.move.line']._get_predicted_values(move_line.name, self) if predict_enabled else {}
         if predict_enabled and not move_line.product_id:
-            fitting_product = move_line._predict_product()
+            fitting_product = predicted_values.get('product_id')
             if fitting_product:
                 name = move_line.name
                 move_line.product_id = fitting_product
@@ -1859,7 +1860,7 @@ class AccountMove(models.Model):
 
         if predict_enabled:
             # Fitting account for the line
-            fitting_account = move_line._predict_account()
+            fitting_account = predicted_values.get('account_id')
             if fitting_account:
                 move_line.account_id = fitting_account
 
@@ -1910,9 +1911,9 @@ class AccountMove(models.Model):
 
         # If no taxes were found, try to find taxes that may be fitting
         if predict_enabled and not move_line.tax_ids:
-            fitting_taxes = move_line._predict_taxes()
+            fitting_taxes = predicted_values.get('tax_ids')
             if fitting_taxes:
-                move_line.tax_ids = [Command.set(fitting_taxes)]
+                move_line.tax_ids = [Command.set(fitting_taxes.ids)]
 
         # Discounts
         if (discounts := element.xpath('.//ScontoMaggiorazione')) and not float_is_zero(move_line.price_unit, precision_rounding=move_line.currency_id.rounding):

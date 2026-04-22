@@ -2220,18 +2220,11 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_ubl_invoice_line_add_product_values(self, collected_values):
         line_tree = collected_values['line_tree']
-        partner = collected_values.get('customer_values', {}).get('customer')
-        name = collected_values['to_write'].get('name')
 
         product_values = collected_values['product_values'] = {
             'default_code': line_tree.findtext('.//{*}Item/{*}SellersItemIdentification/{*}ID'),
             'name': line_tree.findtext('.//{*}Item/{*}Name'),
             'barcode': line_tree.findtext('.//{*}Item/{*}StandardItemIdentification/{*}ID[@schemeID="0160"]'),
-            'invoice_predictive': {
-                'invoice': collected_values['invoice'],
-                'name': name,
-                'partner': partner or self.env['res.partner'],
-            },
         }
 
         # CommodityClassification
@@ -2262,14 +2255,7 @@ class AccountEdiUBL(models.AbstractModel):
                 product_uom_values['uom_code'] = uom_code
 
     def _import_ubl_invoice_line_add_account_values(self, collected_values):
-        account_values = collected_values['account_values'] = {}
-        partner = collected_values.get('customer_values', {}).get('customer')
-        name = collected_values['to_write'].get('name')
-        account_values['invoice_predictive'] = {
-            'invoice': collected_values['invoice'],
-            'name': name,
-            'partner': partner or self.env['res.partner'],
-        }
+        collected_values['account_values'] = {}
 
     def _import_ubl_invoice_line_add_deferred_dates(self, collected_values):
         if not self.module_installed('account_accountant'):
@@ -2299,22 +2285,13 @@ class AccountEdiUBL(models.AbstractModel):
         if not global_tax_values:
             return
 
-        tax_values = {
+        return {
             'amount_type': global_tax_values['amount_type'],
             'type_tax_use': global_tax_values['type_tax_use'],
             'amount': global_tax_values['amount'],
             'ubl_cii_tax_category_code': global_tax_values['ubl_cii_tax_category_code'],
             '_tax_key': tax_key,
         }
-
-        partner = collected_values.get('customer_values', {}).get('customer')
-        if partner and (name := collected_values['to_write'].get('name')):
-            tax_values['invoice_predictive'] = {
-                'invoice': collected_values['invoice'],
-                'name': name,
-                'partner': partner,
-            }
-        return tax_values
 
     def _import_ubl_invoice_line_prepare_charge_tax_values(self, collected_values, charge):
         if charge['reason_code'] != 'AEO':
@@ -2330,13 +2307,6 @@ class AccountEdiUBL(models.AbstractModel):
             'tax_amount_currency': fixed_tax_amount,
         }
 
-        partner = collected_values.get('customer_values', {}).get('customer')
-        if partner and (name := collected_values['to_write'].get('name')):
-            tax_values['invoice_predictive'] = {
-                'invoice': collected_values['invoice'],
-                'name': name,
-                'partner': partner,
-            }
         return tax_values
 
     def _import_ubl_invoice_line_add_taxes_values(self, collected_values):
@@ -2391,7 +2361,6 @@ class AccountEdiUBL(models.AbstractModel):
     def _import_ubl_retrieve_taxes_search_plan(self, collected_values):
         AccountTax = self.env['account.tax']
         return [
-            AccountTax._import_retrieve_tax_from_invoice_predictive,
             AccountTax._import_retrieve_tax_from_price_include_exclude,
         ]
 
@@ -2401,10 +2370,14 @@ class AccountEdiUBL(models.AbstractModel):
         lines_collected_values = collected_values['lines_collected_values']
         tax_values_list = list(collected_values['taxes_values'])
         for line_collected_values in lines_collected_values:
-            tax_values_list += line_collected_values['taxes_values']
+            line_tax_values_list = line_collected_values['taxes_values']
             for charge in line_collected_values['charges']:
                 if tax_values := charge.get('attempt_tax_values'):
-                    tax_values_list.append(tax_values)
+                    line_tax_values_list.append(tax_values)
+            if 'tax_ids' in line_collected_values.get('predicted_vals', {}):
+                for line_tax_values in line_tax_values_list:
+                    line_tax_values['tax'] = line_collected_values['predicted_vals']['tax_ids']
+            tax_values_list.extend(line_tax_values_list)
 
         if customer := collected_values.get('customer_values', {}).get('customer'):
             fiscal_position = self.env['account.move'].new({
@@ -2540,20 +2513,43 @@ class AccountEdiUBL(models.AbstractModel):
         base_line_kwargs['_create_values']['name'] = reason
         return base_line_kwargs
 
+    def _import_ubl_invoice_predict_values(self, collected_values):
+        if (
+            self.module_installed('account_accountant')
+            and (partner := collected_values.get('customer_values', {}).get('customer'))
+        ):
+            for line_collected_values in collected_values['lines_collected_values']:
+                taxes_values = line_collected_values['taxes_values']
+                line_domain = []
+                if len(taxes_values) == 1:
+                    line_domain = [('tax_ids', 'any', [
+                        ('amount', '=', taxes_values[0]['amount']),
+                        ('amount_type', '=', taxes_values[0]['amount_type']),
+                        ('type_tax_use', '=', taxes_values[0]['type_tax_use']),
+                    ])]
+
+                line_collected_values['predicted_vals'] = self.env['account.move.line']._get_predicted_values(
+                    name=line_collected_values['name'],
+                    move=self.env['account.move'].new({
+                        'move_type': collected_values['invoice'].move_type,
+                        'journal_id': collected_values['invoice'].journal_id,
+                        'partner_id': partner,
+                    }),
+                    line_domain=line_domain,
+                )
+
     def _import_ubl_retrieve_products_search_plan(self, collected_values):
         ProductProduct = self.env['product.product']
-        search_plan = [method[1] for method in sorted(ProductProduct._get_retrieval_product_search_plan())]
-        search_plan.append(ProductProduct._import_retrieve_product_from_invoice_predictive)
-
-        return search_plan
+        return [method[1] for method in sorted(ProductProduct._get_retrieval_product_search_plan())]
 
     def _import_ubl_invoice_retrieve_products(self, collected_values):
         company = collected_values['company']
         lines_collected_values = collected_values['lines_collected_values']
-        product_values_list = [
-            line_collected_values['product_values']
-            for line_collected_values in lines_collected_values
-        ]
+        product_values_list = []
+        for line_collected_values in lines_collected_values:
+            product_values_list.append(line_collected_values['product_values'])
+            if product := line_collected_values.get('predicted_vals', {}).get('product_id'):
+                product_values_list[-1]['product'] = product
 
         self.env['product.product']._import_retrieve_product(
             search_plan=self._import_ubl_retrieve_products_search_plan(collected_values),
@@ -2589,22 +2585,11 @@ class AccountEdiUBL(models.AbstractModel):
                         product_uom_values['uom'] = uom
 
     def _import_ubl_invoice_retrieve_accounts(self, collected_values):
-        if not self.module_installed('account_accountant'):
-            # _predict_specific_account is defined in account_accountant
-            return
-
-        accounts_map = {}
         lines_collected_values = collected_values['lines_collected_values']
         for line_collected_values in lines_collected_values:
             account_values = line_collected_values['account_values']
-            if predictive := account_values.get('invoice_predictive'):
-                account_params = {'move': predictive['invoice'], 'name': predictive['name'], 'partner': predictive['partner']}
-                account_key = tuple(account_params.values())
-                if account_key not in accounts_map:
-                    accounts_map[account_key] = self.env['account.move.line']._predict_specific_account(**account_params)
-                account_id = accounts_map.get(account_key)
-                if account_id:
-                    account_values['account'] = self.env['account.account'].browse(account_id)
+            if account := line_collected_values.get('predicted_vals', {}).get('account_id'):
+                account_values['account'] = account
 
     def _import_ubl_invoice_retrieve_vehicles(self, collected_values):
         company = collected_values['company']
@@ -2972,6 +2957,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         # Invoice lines values.
         self._import_ubl_invoice_add_invoice_line_values(collected_values)
+        self._import_ubl_invoice_predict_values(collected_values)
         self._import_ubl_invoice_retrieve_products(collected_values)
         self._import_ubl_invoice_retrieve_product_uoms(collected_values)
         self._import_ubl_invoice_retrieve_accounts(collected_values)

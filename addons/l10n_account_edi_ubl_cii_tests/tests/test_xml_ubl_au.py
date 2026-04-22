@@ -45,6 +45,12 @@ class TestUBLAU(TestUBLCommon):
             'country_id': cls.env.ref('base.au').id,
         })
 
+        # The stemmer for the prediction in english transforms `product_a` to `product a`
+        # then removes the letter `a` as it is just an article useless for full text search.
+        # Since the taxes are the same on all the lines, we need to help the prediction by
+        # making it see the difference between `product_a` and `product_b`.
+        cls.product_a.name = 'producta'
+        cls.product_b.name = 'productb'
     ####################################################
     # Test export - import
     ####################################################
