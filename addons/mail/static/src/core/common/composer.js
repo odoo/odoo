@@ -48,6 +48,7 @@ import { useComposerActions } from "@mail/core/common/composer_actions";
 import { ActionList } from "@mail/core/common/action_list";
 import { closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { rightPos } from "@html_editor/utils/position";
+import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -381,6 +382,7 @@ export class Composer extends Component {
         return {
             content: this.props.composer.composerHtml,
             placeholder: this.placeholder,
+            baseContainers: ["DIV", "P"],
             Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
             composerPluginDependencies: {
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
@@ -389,7 +391,11 @@ export class Composer extends Component {
                 onInput: this.onInput.bind(this),
                 onKeydown: this.onKeydown.bind(this),
             },
-            classList: ["o-mail-Composer-html"],
+            embeddedComponentInfo: { app: this.__owl__.app, env: this.env },
+            resources: {
+                embedded_components: [syntaxHighlightingEmbedding],
+            },
+            classList: ["o-mail-Composer-html", "min-w-0"],
             onChange: () => this.onChangeWysiwygContent(),
             onEditorReady: () => {
                 this.setEditorCursorEnd();
