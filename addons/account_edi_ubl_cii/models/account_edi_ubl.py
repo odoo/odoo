@@ -3158,7 +3158,9 @@ class AccountEdiUBL(models.AbstractModel):
     def _import_attachments(self, invoice, tree):
         """ EXTENDS 'account_edi_common': ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
         IrConfigParam = self.env['ir.config_parameter'].sudo()
-        disable_pdf_in_xml = str2bool(IrConfigParam.get_param("account_edi_ubl_cii.disable_pdf_in_xml", 'False'))
+        disable_pdf_in_xml = self.env.context.get('disable_pdf_in_xml') or\
+            str2bool(IrConfigParam.get_param("account_edi_ubl_cii.disable_pdf_in_xml", 'False'))
+
         additional_docs = super()._import_attachments(invoice, tree)
         if (
             additional_docs or

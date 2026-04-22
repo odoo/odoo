@@ -455,7 +455,7 @@ class AccountEdiCommon(models.AbstractModel):
                 'res_id': invoice.id,
             })
 
-        attachments = self._import_attachments(invoice, tree)
+        attachments = self.with_context(disable_pdf_in_xml=bool(file_data.get('originator_pdf')))._import_attachments(invoice, tree)
         if attachments:
             invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
 
