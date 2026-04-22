@@ -27,7 +27,6 @@ def _extract_values_from_document(rendered_document):
     }
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMarketingCardMail(MailCase, MarketingCardCommon):
 
     def assertSentMailCorrectCard(self, sent_mails, cards):
@@ -115,7 +114,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         mailing.card_lang = 'fr_FR'
         self.assertFalse(mailing.card_requires_sync_count)
 
-        with self.mock_mail_gateway(), self.assertQueryCount(65):
+        with self.mock_mail_gateway(), self.assertQueryCount(42):
             mailing._action_send_mail()
 
         cards = self.env['card.card'].search([('campaign_id', '=', campaign.id)])
