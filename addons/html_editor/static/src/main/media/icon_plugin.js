@@ -8,7 +8,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
-    static dependencies = ["history", "selection", "dialog"];
+    static dependencies = ["history", "selection", "color", "dialog"];
     toolbarNamespace = "icon";
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -144,6 +144,11 @@ export class IconPlugin extends Plugin {
             },
         ],
         click_overrides: this.onClickIcon.bind(this),
+        /** Providers */
+        selected_background_color_providers: withSequence(
+            5,
+            this.computeBackgroundColorForIcon.bind(this)
+        ),
     };
 
     onClickIcon(ev) {
@@ -227,5 +232,19 @@ export class IconPlugin extends Plugin {
             prevIcon.setAttribute(attribute.nodeName, attribute.nodeValue);
         }
         this.dependencies.history.addStep();
+    }
+
+    computeBackgroundColorForIcon() {
+        const nodes = this.dependencies.selection
+            .getTargetedNodes()
+            .filter((node) => node.classList?.contains("fa"));
+        if (nodes.length === 0) {
+            return;
+        }
+        const el = closestElement(nodes[0], "font");
+        if (!el) {
+            return;
+        }
+        return this.dependencies.color.getElementColors(el).backgroundColor;
     }
 }
