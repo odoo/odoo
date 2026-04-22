@@ -604,3 +604,39 @@ test("dragging element in iframe offset", async () => {
     expect(itemRect.y).toBe(prevItemRect.y + 10);
     await press("Escape");
 });
+
+test("Dragging cancels previous drag sequences", async () => {
+    class List extends Component {
+        static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    </ul>
+                </div>`;
+        static props = ["*"];
+
+        setup() {
+            useDraggable({
+                ref: useRef("root"),
+                elements: ".item",
+            });
+        }
+    }
+
+    await mountWithCleanup(List);
+
+    expect(".item").toHaveCount(3);
+    expect(".o_dragged").toHaveCount(0);
+
+    contains(".item").drag();
+    await Promise.resolve();
+
+    // Immediatly start new drag sequence
+    const { cancel } = await contains(".item").drag();
+
+    expect(".o_dragged").toHaveCount(1);
+
+    await cancel();
+
+    expect(".o_dragged").toHaveCount(0);
+});
