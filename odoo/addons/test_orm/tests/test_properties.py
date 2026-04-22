@@ -1274,7 +1274,7 @@ class PropertiesCase(TestPropertiesMixin):
         def name_get(records):
             return list(zip(records._ids, records.mapped('display_name')))
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             self.message_1.attributes = [
                 {
                     "name": "moderator_partner_ids",
@@ -1772,7 +1772,7 @@ class PropertiesCase(TestPropertiesMixin):
         messages = self.message_1 | self.message_2 | self.message_3
         self.env.invalidate_all()
 
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(7):
             messages[0]['attributes']['many2many']
             messages[1]['attributes']['many2many']
 

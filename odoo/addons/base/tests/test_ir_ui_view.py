@@ -315,10 +315,9 @@ class TestViewInheritance(ViewCase):
         # fetch an extra field on views. You better fetch that extra field with
         # the query of _get_inheriting_views() and manually feed the cache.
         self.env.invalidate_all()
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             # 1: browse([self.view_ids['A']])
             # 2: _get_inheriting_views: id, inherit_id, mode, groups
-            # 3: _combine: arch_db
             self.view_ids['A'].get_combined_arch()
 
     def test_view_validate_button_action_query_count(self):
@@ -326,7 +325,7 @@ class TestViewInheritance(ViewCase):
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.action_ui_view')
         hit, miss = counter.hit, counter.miss
 
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(6):
             base_view = self.assertValid("""
                 <form string="View">
                     <header>
@@ -352,7 +351,7 @@ class TestViewInheritance(ViewCase):
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.group_system')
         hit, miss = counter.hit, counter.miss
 
-        with self.assertQueryCount(6):
+        with self.assertQueryCount(2):
             base_view = self.assertValid("""
                 <form string="View">
                     <field name="name" groups="base.group_system"/>
