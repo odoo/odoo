@@ -48,6 +48,9 @@ def MockRequest(
             referrer=referrer or '',
             remote_addr=remote_addr,
             url_root=url_root,
+            user_agent=DotDict(
+                string='mockrequest',
+            ),
             args=[],
         ),
         type='http',
