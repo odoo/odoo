@@ -9,7 +9,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
-from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_calendar.utils.google_calendar_service import GoogleCalendarService
 
 
 class CalendarEvent(models.Model):

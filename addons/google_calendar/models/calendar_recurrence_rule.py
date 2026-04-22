@@ -7,7 +7,7 @@ from odoo import api, models
 from odoo.fields import Command, Domain
 from odoo.tools import email_normalize
 
-from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_calendar.utils.google_calendar_service import GoogleCalendarService
 
 _logger = logging.getLogger(__name__)
 

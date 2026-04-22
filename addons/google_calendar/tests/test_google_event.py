@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests.common import tagged, BaseCase
-from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
+from odoo.addons.google_calendar.utils.google_calendar_service import GoogleEvent
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
