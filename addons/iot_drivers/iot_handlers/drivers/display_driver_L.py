@@ -110,7 +110,7 @@ class DisplayDriver(Driver):
             return
 
         origin = helpers.get_odoo_server_url() or http.request.httprequest.origin
-        self.update_url(f"{origin}/pos_customer_display/{data['pos_id']}/{data['access_token']}")
+        self.update_url(f"{origin}/pos_customer_display/{data['pos_id']}/{data['access_token']}?access_token={data['access_token']}")
 
     def _action_close_customer_display(self, data):
         system.update_conf({"browser_url": "", "screen_orientation": ""})
