@@ -291,10 +291,10 @@ export function checkTicketData(data, basic = false) {
                 if (line.cssRules) {
                     for (const rule of line.cssRules) {
                         const statement = orderline.querySelectorAll(rule.css);
-                        if (!statement && rule.negation) {
+                        if (!statement.length && rule.negation) {
                             continue; // No statement found and negation is true so the rule is validated
                         }
-                        if (!statement) {
+                        if (!statement.length) {
                             throw new Error(`CSS rule ${rule.css} not found in receipt.`);
                         }
                         if (rule.length && rule.length !== statement.length) {
@@ -306,7 +306,7 @@ export function checkTicketData(data, basic = false) {
                             const ruleFound = [...statement].some((s) =>
                                 s.textContent.includes(rule.text)
                             );
-                            if (ruleFound == rule.negation) {
+                            if (ruleFound === (rule.negation || false)) {
                                 throw new Error(`Rule ${rule.css} not found in printed receipt.`);
                             }
                         }
@@ -318,15 +318,15 @@ export function checkTicketData(data, basic = false) {
         if (data.cssRules) {
             for (const rule of data.cssRules) {
                 const statement = ticket.querySelectorAll(rule.css);
-                if (!statement && rule.negation) {
+                if (!statement.length && rule.negation) {
                     continue; // No statement found and negation is true so the rule is validated
                 }
-                if (!statement) {
+                if (!statement.length) {
                     throw new Error(`CSS rule ${rule.css} not found in receipt.`);
                 }
                 if (rule.text) {
                     const ruleFound = [...statement].some((s) => s.textContent.includes(rule.text));
-                    if (ruleFound == rule.negation) {
+                    if (ruleFound === (rule.negation || false)) {
                         throw new Error(`Rule ${rule.css} not found in printed receipt.`);
                     }
                 }
