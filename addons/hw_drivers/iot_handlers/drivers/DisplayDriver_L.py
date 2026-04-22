@@ -139,7 +139,7 @@ class DisplayController(http.Controller):
         display = self.ensure_display()
         if action == 'open':
             origin = helpers.get_odoo_server_url()
-            display.update_url(f"{origin}/pos_customer_display/{pos_id}/{access_token}")
+            display.update_url(f"{origin}/pos_customer_display/{pos_id}/{access_token}?access_token={access_token}")
             return {'status': 'opened'}
         if action == 'close':
             helpers.unlink_file('browser-url.conf')
