@@ -11,7 +11,7 @@ import {
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 
-import { Component, onWillDestroy, onWillStart, xml } from "@odoo/owl";
+import { Component, computed, onWillDestroy, onWillStart, signal, xml } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
@@ -13734,9 +13734,17 @@ test("one2many custom which can clear the relation", async () => {
         static props = ["*"];
         static template = xml`
             <div>
-                <span t-out="this.props.record.data[this.props.name].count"/>
+                <span t-out="this.count()"/>
                 <button t-on-click="this.clear">Clear</button>
             </div>`;
+
+        setup() {
+            this.list = signal(this.props.record.data[this.props.name]);
+            this.count = computed(() => {
+                void this.list().records;
+                return this.list().count;
+            });
+        }
 
         clear() {
             return this.props.record.data[this.props.name].clear();
