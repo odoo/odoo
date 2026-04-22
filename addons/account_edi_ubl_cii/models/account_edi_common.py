@@ -148,9 +148,6 @@ class FloatFmt(float):
     """ A float with a given precision.
     The precision is used when formatting the float.
     """
-    def __new__(cls, value, min_dp=None, max_dp=None):
-        return super().__new__(cls, value)
-
     def __init__(self, value, min_dp=None, max_dp=None):
         if min_dp is None and max_dp is None:
             self.min_dp = 2
@@ -182,6 +179,9 @@ class FloatFmt(float):
     def __repr__(self):
         self_float = float(self)
         return f"FloatFmt({self_float!r}, {self.min_dp!r}, {self.max_dp!r})"
+
+    def rounded(self):
+        return float_round(self, precision_digits=self.max_dp)
 
 
 class AccountEdiCommon(models.AbstractModel):

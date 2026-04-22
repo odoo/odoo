@@ -98,9 +98,9 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
     # EXPORT: New (dict_to_xml) helpers
     # -------------------------------------------------------------------------
 
-    def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
+    def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values, currency_dp=None):
         # EXTENDS account.edi.xml.ubl_bis3
-        discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)
+        discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values, currency_dp=currency_dp)
         discount_node['cbc:AllowanceChargeReason'] = None
         discount_node['cbc:MultiplierFactorNumeric'] = None
         discount_node['cbc:BaseAmount'] = None
