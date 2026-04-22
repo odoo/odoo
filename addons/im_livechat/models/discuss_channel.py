@@ -257,7 +257,6 @@ class DiscussChannel(models.Model):
         store.add(need_help_before - need_help_after, ["livechat_status"])
         if "livechat_expertise_ids" in vals:
             store.add(need_help_after, lambda res: res.many("livechat_expertise_ids", ["name", "color"]))
-        store.bus_send()
         return result
 
     def channel_change_description(self, description):
@@ -758,19 +757,19 @@ class DiscussChannel(models.Model):
             subtype_xmlid="mail.mt_comment",
         )
         if rated_partner not in self.channel_member_ids.partner_id:
-            store = Store(bus_channel=rated_partner.sudo().user_ids)
-            store.add(user, lambda res: res.one("partner_id", ["name"]))
-            store.add(guest, ["name"]).add(self, [])
-            rated_partner.sudo().user_ids._bus_send(
-                "livechat_rating_notification", {
+            store = Store(
+                rated_partner.sudo().user_ids,
+                notification_type="livechat_rating_notification",
+                notification_payload={
                     "guest_id": guest.id,
                     "user_id": user.id,
                     "feedback": reason,
                     "rating_image_url": rating_url,
                     "channel_id": self.id,
-                    "store_data": store,
                 },
             )
+            store.add(user, lambda res: res.one("partner_id", ["name"])).add(guest, ["name"])
+            store.add(self, [])
 
     # =======================
     # Chatbot
@@ -866,7 +865,7 @@ class DiscussChannel(models.Model):
                         "message": question_msg.mail_message_id.id,
                         "selectedAnswer": selected_answer.id,
                     },
-                ).bus_send()
+                )
 
             self.env["chatbot.message"].sudo().create(
                 {
@@ -1055,7 +1054,7 @@ class DiscussChannel(models.Model):
                     "message": step_message.id,
                     "operatorFound": True,
                 },
-            ).bus_send()
+            )
 
     def _allow_invite_by_email(self):
         return self.channel_type == "livechat" or super()._allow_invite_by_email()

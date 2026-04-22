@@ -16,12 +16,12 @@ export class DiscussCorePublicWeb {
         this.notificationService = services.notification;
         this.busService.subscribe("discuss.channel/joined", async (payload) => {
             const {
-                data,
+                store_data,
                 channel_id,
                 invite_to_rtc_call,
                 invited_by_user_id: invitedByUserId,
             } = payload;
-            this.store.insert(data);
+            this.store.insert(store_data);
             await this.store.fetchChannel(channel_id);
             const channel = this.store["discuss.channel"].get(channel_id);
             if (

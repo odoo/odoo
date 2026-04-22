@@ -2492,13 +2492,13 @@ export const rtcService = {
         services["bus_service"].subscribe(
             "discuss.channel.rtc.session/update_and_broadcast",
             (payload) => {
-                const { data, channelId } = payload;
+                const { store_data, channelId } = payload;
                 /**
                  * If this event comes from the channel of the current call, information is shared in real time
                  * through the peer to peer connection. So we do not use this less accurate broadcast.
                  */
                 if (channelId !== rtc.channel?.id) {
-                    rtc.store.insert(data);
+                    rtc.store.insert(store_data);
                 }
             }
         );

@@ -109,7 +109,6 @@ class MailPresence(models.Model):
                 persona,
                 {"presence_status": im_status or presence.status},
             )
-        stores.bus_send()
 
     @api.autovacuum
     def _gc_bus_presence(self):

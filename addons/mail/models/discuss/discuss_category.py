@@ -32,7 +32,6 @@ class DiscussCategory(models.Model):
         for category in self:
             for channel in category.channel_ids:
                 stores[channel].delete(category)
-        stores.bus_send()
 
     def _get_bus_channel_access_token(self):
         """Return a scoped limited access token that indicates the current category

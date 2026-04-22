@@ -472,7 +472,7 @@ class DiscussChannel(models.Model):
         channels = channels.with_context(mail_create_bypass_create_check=None)
         channels._subscribe_users_automatically()
         if not self.env.context.get("install_mode") and not self.env.user._is_public():
-            Store(bus_channel=self.env.user).add(channels, "_store_channel_fields").bus_send()
+            Store(bus_channel=self.env.user).add(channels, "_store_channel_fields")
         return channels
 
     def action_reset_invitation_uuid(self):
@@ -578,8 +578,7 @@ class DiscussChannel(models.Model):
         ]
         # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
         new_members = self.env["discuss.channel.member"].sudo().create(to_create)
-        stores = Store.Stores()
-        for member, store in new_members._get_member_store_list(stores):
+        for member, store in new_members._get_member_store_list():
             store.add(member.channel_id, "_store_channel_fields").add(
                 member,
                 lambda res: (
@@ -587,7 +586,6 @@ class DiscussChannel(models.Model):
                     res.attr("unpin_dt"),
                 ),
             )
-        stores.bus_send()
 
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
@@ -618,7 +616,7 @@ class DiscussChannel(models.Model):
         )
         for bus_channel in ((member or partner or guest)._bus_channels()):
             custom_store = Store(bus_channel=bus_channel)
-            custom_store.add(self, {"close_chat_window": True, "isLocallyPinned": False}).bus_send()
+            custom_store.add(self, {"close_chat_window": True, "isLocallyPinned": False})
         if not member:
             return
         if self.channel_type != "channel" and post_leave_message:
@@ -693,18 +691,21 @@ class DiscussChannel(models.Model):
             else:
                 new_members = self.env["discuss.channel.member"].create(members_to_create)
             all_new_members += new_members
-            joined_stores = Store.Stores()
-            for member, joined_store in new_members._get_member_store_list(joined_stores):
-                joined_store.add(member.channel_id, "_store_channel_fields")
-                joined_store.add(member, ["unpin_dt"])
-                payload = {
-                    "channel_id": member.channel_id.id,
-                    "invite_to_rtc_call": invite_to_rtc_call,
-                    "data": joined_store,
-                }
-                if not member.is_self and not self.env.user._is_public():
-                    payload["invited_by_user_id"] = self.env.user.id
-                member._bus_send("discuss.channel/joined", payload)
+            for member in new_members:
+                for bus_channel in member._bus_channels():
+                    payload = {
+                        "channel_id": member.channel_id.id,
+                        "invite_to_rtc_call": invite_to_rtc_call,
+                    }
+                    if not member.is_self and not self.env.user._is_public():
+                        payload["invited_by_user_id"] = self.env.user.id
+                    store = Store(
+                        bus_channel,
+                        notification_type="discuss.channel/joined",
+                        notification_payload=payload,
+                    )
+                    store.add(member.channel_id, "_store_channel_fields")
+                    store.add(member, ["unpin_dt"])
                 if channel.channel_type != "channel" and post_joined_message:
                     notification = member.channel_id._get_member_join_notification(member)
                     member.channel_id.message_post(
@@ -722,7 +723,6 @@ class DiscussChannel(models.Model):
                 # create channel from form view, and then join from discuss without refreshing the page.
                 stores[bus_channel].add(channel, ["member_count"])
                 stores[bus_channel].add(existing_members, "_store_member_fields")
-        stores.bus_send()
         if invite_to_rtc_call:
             for channel in self:
                 # sudo: discuss.channel.rtc.session - reading rtc sessions of current user
@@ -846,7 +846,7 @@ class DiscussChannel(models.Model):
                     mode="DELETE",
                     value=members,
                 ),
-            ).bus_send()
+            )
             devices, private_key, public_key = self._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
                 self._web_push_send_notification(devices, private_key, public_key, payload={
@@ -986,15 +986,18 @@ class DiscussChannel(models.Model):
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        store = Store(bus_channel=self).add(message, "_store_message_fields")
-        if message.channel_id.parent_channel_id:
-            store.add(message.channel_id, ["message_count"])
-        payload = {"data": store, "id": self.id}
+        payload = {"id": self.id}
         if temporary_id := self.env.context.get("temporary_id"):
             payload["temporary_id"] = temporary_id
         if kwargs.get("silent"):
             payload["silent"] = True
-        self._bus_send("discuss.channel/new_message", payload)
+        store = Store(
+            self,
+            notification_type="discuss.channel/new_message",
+            notification_payload=payload,
+        ).add(message, "_store_message_fields")
+        if message.channel_id.parent_channel_id:
+            store.add(message.channel_id, ["message_count"])
         return rdata
 
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False, force_record_name=False):
@@ -1171,7 +1174,7 @@ class DiscussChannel(models.Model):
             Store(bus_channel=user).add(
                 self.with_user(user).with_context(allowed_company_ids=[]),
                 "_store_channel_fields",
-            ).bus_send()
+            )
 
     # ------------------------------------------------------------
     # INSTANT MESSAGING API
