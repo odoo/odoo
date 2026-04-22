@@ -185,7 +185,9 @@ export class IoTLongpolling {
             },
             (e) => {
                 if (e.name === "TimeoutError") {
-                    this._onError();
+                    this._onPollTimeout();
+                } else {
+                    this._onPollNetworkError(iot_ip);
                 }
             }
         );
@@ -197,9 +199,15 @@ export class IoTLongpolling {
         this._retries = 0;
     }
 
-    _onError() {
+    _onPollTimeout() {
         this._retries++;
         this._delayedStartPolling(Math.min(this.rpcDelay * this._retries, this.maxRpcDelay));
+    }
+
+    _onPollNetworkError(iot_ip) {
+        for (const device of Object.values(this._listeners[iot_ip].devices)) {
+            device.callback({ status: "unreachable" });
+        }
     }
 
     /**
