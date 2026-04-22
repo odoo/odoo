@@ -92,7 +92,7 @@ export class MailThread extends models.ServerModel {
 
     /** @param {number[]} ids */
     message_post(ids) {
-        const kwargs = getKwArgs(arguments, "ids", "subtype_id", "tracking_value_ids");
+        const kwargs = getKwArgs(arguments, "ids", "subtype_id");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -555,7 +555,7 @@ export class MailThread extends models.ServerModel {
             );
         }
         for (const record of model) {
-            const { trackingValueIds, changedFieldNames } = tracking[record.id] || {};
+            const { changedFieldNames } = tracking[record.id] || {};
             if (!changedFieldNames || !changedFieldNames.length) {
                 continue;
             }
@@ -568,7 +568,7 @@ export class MailThread extends models.ServerModel {
                 this,
                 changedFieldsInitialValues
             );
-            MailThread.message_post.call(this, [record.id], subtype.id, trackingValueIds);
+            MailThread.message_post.call(this, [record.id], subtype.id);
         }
         return tracking;
     }
