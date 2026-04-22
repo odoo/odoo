@@ -156,7 +156,6 @@ class TestMailRenderCommon(common.MailCommon):
 
 
 @tagged('mail_render')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailRender(TestMailRenderCommon):
 
     @users('employee')
@@ -277,7 +276,7 @@ class TestMailRender(TestMailRenderCommon):
         partner_ids = self.env['res.partner'].sudo().create([{
             'name': f'test partner {n}'
         } for n in range(20)]).ids
-        with patch('odoo.models.Model.get_base_url', new=_mock_get_base_url), self.assertQueryCount(13):
+        with patch('odoo.models.Model.get_base_url', new=_mock_get_base_url), self.assertQueryCount(12):
             # make sure name isn't already in cache
             self.env['res.partner'].browse(partner_ids).invalidate_recordset(['name', 'display_name'])
             render_results = self.env['mail.render.mixin']._render_template(

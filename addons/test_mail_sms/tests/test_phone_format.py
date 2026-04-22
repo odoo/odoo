@@ -1,10 +1,28 @@
-from odoo.tests import tagged
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.tests import tagged, users
 from odoo.tests.common import TransactionCase
 
 
-@tagged('phone_validation')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('phone_validation', 'mail_performance')
 class TestPhoneFormat(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.user_admin = cls.env.ref('base.user_admin')
+        # standard users
+        cls.user_emp_email = mail_new_test_user(
+            cls.env,
+            company_id=cls.user_admin.company_id.id,
+            company_ids=[(4, cls.user_admin.company_id.id)],
+            email='user.emp.email@test.example.com',
+            login='user_emp_email',
+            groups='base.group_user,base.group_partner_manager',
+            name='Ernestine Email',
+            notification_type='email',
+            signature='Ernestine',
+        )
 
     def test_phone_format_country_guess(self):
         # based on partner country
@@ -46,10 +64,11 @@ class TestPhoneFormat(TransactionCase):
                         number=input_number,
                     ), expected_number)
 
+    @users('user_emp_email')
     def test_phone_format_perf(self):
         PARTNER_COUNT = 100
 
-        countries = self.env['res.country'].create([{
+        countries = self.env['res.country'].sudo().create([{
             'name': f'Test Country {n}',
             'code': str(n),
         } for n in range(20)])
@@ -74,8 +93,9 @@ class TestPhoneFormat(TransactionCase):
         test_records.invalidate_recordset()
         (country_partners + nocountry_partners).invalidate_recordset()
         countries.invalidate_recordset()
-        # 1 query per country + 4
-        with self.assertQueryCount(24):
+
+        # 1 query per country + 4 - TDE: to update since it works better than previously
+        with self.assertQueryCount(7):
             for record in test_records:
                 record._phone_format(
                     number='078 9216 4126',
