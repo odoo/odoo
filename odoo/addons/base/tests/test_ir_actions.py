@@ -862,102 +862,6 @@ class TestCustomFields(TestCommonCustomFields):
         for partner in partners:
             self.assertEqual(partner.x_oh_boy, partner.country_id.code)
 
-    def test_related_field_non_stored_not_allowed(self):
-        """ Test related field behavior with stored/non-stored combinations """
-
-        model_id = self.env['ir.model']._get_id('res.partner')
-        dummy_model = self.env['ir.model'].create({
-            'name': 'Dummy Model Test',
-            'model': 'x_dummy_model_test',
-        })
-
-        # NON-STORED M2O
-        self.env['ir.model.fields'].create({
-            'model_id': model_id,
-            'name': 'x_non_stored_m2o_test',
-            'field_description': 'x_non_stored_m2o_test',
-            'ttype': 'many2one',
-            'relation': 'x_dummy_model_test',
-            'store': False,
-        })
-
-        # Stored M2O
-        self.env['ir.model.fields'].create({
-            'model_id': model_id,
-            'name': 'x_stored_m2o_test',
-            'field_description': 'x_stored_m2o_test',
-            'ttype': 'many2one',
-            'relation': 'x_dummy_model_test',
-            'store': True,
-        })
-
-        # Stored boolean
-        self.env['ir.model.fields'].create({
-            'model_id': dummy_model.id,
-            'name': 'x_bool_stored_test',
-            'field_description': 'x_bool_stored_test',
-            'ttype': 'boolean',
-            'store': True,
-        })
-
-        # Non-stored boolean
-        self.env['ir.model.fields'].create({
-            'model_id': dummy_model.id,
-            'name': 'x_bool_non_stored_test',
-            'field_description': 'x_bool_non_stored_test',
-            'ttype': 'boolean',
-            'store': False,
-        })
-
-        # 1. Intermediate non-stored → should FAIL
-        with self.assertRaises(UserError):
-            self.env.registry.clear_cache()
-            self.env['ir.model.fields'].create({
-                'model_id': model_id,
-                'name': 'x_fail_intermediate_non_stored',
-                'field_description': 'x_fail_intermediate_non_stored',
-                'ttype': 'boolean',
-                'related': 'x_non_stored_m2o_test.x_bool_stored_test',
-                'store': True,
-            })
-
-        # 2. Last non-stored → should PASS
-        self.env.registry.clear_cache()
-        field = self.env['ir.model.fields'].create({
-            'model_id': model_id,
-            'name': 'x_pass_last_non_stored',
-            'field_description': 'x_pass_last_non_stored',
-            'ttype': 'boolean',
-            'related': 'x_stored_m2o_test.x_bool_non_stored_test',
-            'store': True,
-        })
-        self.assertTrue(field)
-
-        # 3. All stored → should PASS
-        self.env.registry.clear_cache()
-        field = self.env['ir.model.fields'].create({
-            'model_id': model_id,
-            'name': 'x_pass_all_stored',
-            'field_description': 'x_pass_all_stored',
-            'ttype': 'boolean',
-            'related': 'x_stored_m2o_test.x_bool_stored_test',
-            'store': True,
-        })
-        self.assertTrue(field)
-
-        # 4. One non-stored → should PASS
-        self.env.registry.clear_cache()
-        field = self.env['ir.model.fields'].create({
-            'model_id': model_id,
-            'name': 'x_pass_single_non_stored',
-            'field_description': 'x_pass_single_non_stored',
-            'ttype': 'many2one',
-            'relation': 'x_dummy_model_test',
-            'related': 'x_non_stored_m2o_test',
-            'store': True,
-        })
-        self.assertTrue(field)
-
     def test_relation_of_a_custom_field(self):
         """ change the relation model of a custom field """
         model = self.env['ir.model'].search([('model', '=', self.MODEL)])
@@ -1031,6 +935,103 @@ class TestCustomFields(TestCommonCustomFields):
 
 @tagged('post_install', '-at_install')
 class TestCustomFieldsPostInstall(TestCommonCustomFields):
+
+    def test_related_field_non_stored_not_allowed(self):
+        """ Test related field behavior with stored/non-stored combinations """
+
+        model_id = self.env['ir.model']._get_id('res.partner')
+        dummy_model = self.env['ir.model'].create({
+            'name': 'Dummy Model Test',
+            'model': 'x_dummy_model_test',
+        })
+
+        # NON-STORED M2O
+        self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_non_stored_m2o_test',
+            'field_description': 'x_non_stored_m2o_test',
+            'ttype': 'many2one',
+            'relation': 'x_dummy_model_test',
+            'store': False,
+        })
+
+        # Stored M2O
+        self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_stored_m2o_test',
+            'field_description': 'x_stored_m2o_test',
+            'ttype': 'many2one',
+            'relation': 'x_dummy_model_test',
+            'store': True,
+        })
+
+        # Stored boolean
+        self.env['ir.model.fields'].create({
+            'model_id': dummy_model.id,
+            'name': 'x_bool_stored_test',
+            'field_description': 'x_bool_stored_test',
+            'ttype': 'boolean',
+            'store': True,
+        })
+
+        # Non-stored boolean
+        self.env['ir.model.fields'].create({
+            'model_id': dummy_model.id,
+            'name': 'x_bool_non_stored_test',
+            'field_description': 'x_bool_non_stored_test',
+            'ttype': 'boolean',
+            'store': False,
+        })
+
+        # 1. Intermediate non-stored → should FAIL
+        self.env.registry.clear_cache()
+        with self.assertRaises(UserError):
+            self.env['ir.model.fields'].create({
+                'model_id': model_id,
+                'name': 'x_fail_intermediate_non_stored',
+                'field_description': 'x_fail_intermediate_non_stored',
+                'ttype': 'boolean',
+                'related': 'x_non_stored_m2o_test.x_bool_stored_test',
+                'store': True,
+            })
+
+        # 2. Last non-stored → should PASS
+        self.env.registry.clear_cache()
+        field = self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_pass_last_non_stored',
+            'field_description': 'x_pass_last_non_stored',
+            'ttype': 'boolean',
+            'related': 'x_stored_m2o_test.x_bool_non_stored_test',
+            'store': True,
+        })
+        self.assertTrue(field)
+
+        # 3. All stored → should PASS
+        self.env.registry.clear_cache()
+        field = self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_pass_all_stored',
+            'field_description': 'x_pass_all_stored',
+            'ttype': 'boolean',
+            'related': 'x_stored_m2o_test.x_bool_stored_test',
+            'store': True,
+        })
+        self.assertTrue(field)
+
+        # 4. One non-stored → should PASS
+        self.env.registry.clear_cache()
+        field = self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_pass_single_non_stored',
+            'field_description': 'x_pass_single_non_stored',
+            'ttype': 'many2one',
+            'relation': 'x_dummy_model_test',
+            'related': 'x_non_stored_m2o_test',
+            'store': True,
+        })
+        self.assertTrue(field)
+
     def test_add_field_valid(self):
         """ custom field names must start with 'x_', even when bypassing the constraints
 
