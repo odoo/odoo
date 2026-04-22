@@ -194,7 +194,7 @@
             </page>
             <page name="resume" position="after">
                 <page name="certification" string="Certifications">
-                    <field name="certification_ids" mode="list" nolabel="1" readonly="1">
+                    <field name="certification_ids" mode="list" nolabel="1" readonly="1" invisible="not certification_ids">
                         <list
                             no_open="1"
                             decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')">
@@ -211,6 +211,11 @@
                             }"/>
                         </list>
                     </field>
+                    <div class="o_view_nocontent position-relative" invisible="certification_ids">
+                        <div class="o_nocontent_help">
+                            <p class="o_view_nocontent_empty_folder fs-4 fw-normal">No certifications found.</p>
+                        </div>
+                    </div>
                 </page>
             </page>
         </field>
