@@ -1004,5 +1004,32 @@ export function isRedundantElement(node) {
     return true;
 }
 
+/**
+ * Determines whether an HTML string consists entirely of empty nodes or whitespace.
+ * * It parses the string into a temporary DOM structure and evaluates its children
+ * to ensure no visible text or structural elements (other than empty <br> or <p>) exist.
+ * * @param {string} htmlString - The raw HTML string to evaluate.
+ * @returns {boolean} True if the HTML string is structurally/visually empty, false otherwise.
+ */
+export function isHtmlStringEmpty(htmlString) {
+    if (!htmlString) {
+        return true;
+    }
+
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlString;
+
+    for (const node of tempDiv.childNodes) {
+        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== "") {
+            return false;
+        }
+        if (node.nodeType === Node.ELEMENT_NODE && !isEmpty(node)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 // Selector for QWeb-specific attributes
 export const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";

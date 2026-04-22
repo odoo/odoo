@@ -29,6 +29,7 @@ import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { isHtmlStringEmpty } from "@html_editor/utils/dom_info";
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-steps"];
 
@@ -52,6 +53,7 @@ export class HtmlField extends Component {
     static template = "html_editor.HtmlField";
     static props = {
         ...standardFieldProps,
+        trim: { type: Boolean, optional: true },
         isCollaborative: { type: Boolean, optional: true },
         collaborativeTrigger: { type: String, optional: true },
         dynamicField: { type: Boolean, optional: true },
@@ -162,6 +164,10 @@ export class HtmlField extends Component {
     }
 
     async updateValue(value, { changeId } = { changeId: this.lastChangeId }) {
+        if (this.props.trim && isHtmlStringEmpty(value)) {
+            value = false;
+        }
+
         this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
         await this.props.record.update({ [this.props.name]: value }).then(
             () => {
@@ -412,6 +418,7 @@ export const htmlField = {
             sandboxedPreview: Boolean(options.sandboxedPreview),
             cssReadonlyAssetId: options.cssReadonly,
             codeview: Boolean(odoo.debug && options.codeview),
+            trim: Boolean(options.trim),
         };
 
         if (viewType === "list") {
