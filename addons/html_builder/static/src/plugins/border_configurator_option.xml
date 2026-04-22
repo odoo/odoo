@@ -17,7 +17,7 @@
     </BuilderRow>
 
     <!-- TODO: handle the dependency with border_width_opt bg_color_opt-->
-    <BuilderRow t-if="this.props.withRoundCorner and this.state.hasBorder" label.translate="Round Corners" level="this.props.level">
+    <BuilderRow t-if="this.props.withRoundCorner" label.translate="Round Corners" level="this.props.level">
         <BuilderNumberInput action="this.props.action" actionParam="{ mainParam: this.getStyleActionParam('radius'), extraClass: this.props.withBSClass and 'rounded' }" unit="'px'" min="0" composable="true"/>
     </BuilderRow>
 </t>
