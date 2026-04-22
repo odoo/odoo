@@ -155,8 +155,12 @@ export class ForecastedDetails extends Component {
         for(let i = 0; i < lines.length-1; i++){
             const line = lines[i];
             const nextLine = lines[i + 1];
-            if (line.product.id != nextLine.product.id || !this._sameLineRule(line, nextLine)) {
-                lastIndex = i+1;
+            if (
+                line.product.id != nextLine.product.id ||
+                !this._sameLineRule(line, nextLine) ||
+                !(line.receipt_date === nextLine.receipt_date)
+            ) {
+                lastIndex = i + 1;
                 continue;
             }
             if (!this.mergesLinesData[lastIndex]){
