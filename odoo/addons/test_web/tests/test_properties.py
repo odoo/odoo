@@ -188,7 +188,7 @@ class PropertiesCase(TestPropertiesMixin):
                 msg='Should take the values of the new definition record',
             )
 
-        with self.assertQueryCount(6):
+        with self.assertQueryCount(5):
             message = message_form.save()
 
         self.assertEqual(message.attributes, {'state': 'draft'})

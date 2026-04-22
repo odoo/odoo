@@ -2082,21 +2082,17 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         # invalidate 'categories' for the assertQueryCount
         self.env.transaction.invalidate_access_cache()
         records.invalidate_model(['categories'])
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             # <categories>.__get__(existing)
-            #  -> records.check_access('read')
-            #      -> records.has_access('read')
-            #          -> records.sudo().filtered_domain(...)
-            #              -> <name>.__get__(existing)
-            #                  -> records._fetch_field(<name>)
-            #                      -> records.fetch(['name', ...])
-            #                          -> ONE QUERY to read ['name', ...] of records
-            #                          -> ONE QUERY for deleted.exists() / code: forbidden = missing.exists()
-            #      -> ONE QUERY for records.exists() / MissingError during _check_access
-            #  -> ONE QUERY for records.exists()
-            #  -> records._fetch_field(<categories>)
-            #      -> records.fetch(['categories'])
-            #              -> ONE QUERY to read the many2many of existing
+            #  -> records.fetch(['categories'])
+            #      -> records.check_access('read')
+            #          -> records.__check_access_fill_cache(...)
+            #              -> records.filtered_domain(...)
+            #                  -> <name>.__get__(record)
+            #                      -> ONE QUERY to read ['name', ...] of records
+            #              -> ONE QUERY for records.exists() / MissingError
+            #      -> ONE QUERY for records.exists() / MissingError
+            #      -> ONE QUERY to read the many2many of existing
             existing.categories
 
         # this one must trigger a MissingError

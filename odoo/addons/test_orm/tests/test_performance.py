@@ -580,7 +580,7 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
             records.invalidate_model(['value'])
             records.mapped('value')
 
-        with self.assertQueryCount(__system__=2, demo=2):
+        with self.assertQueryCount(__system__=1, demo=1):
             records.invalidate_model(['value'])
             new_recs = records.browse(records.new(origin=record).id for record in records)
             new_recs.mapped('value')
@@ -644,8 +644,8 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
         new_records_ids.append(new_record.id)
         new_records = model.browse(new_records_ids)
 
-        # fetch 'line_ids' on all records (2 queries), fetch 'value' on all lines (1 query)
-        with self.assertQueryCount(3):
+        # fetch 'line_ids' on all records (1 query), fetch 'value' on all lines (1 query)
+        with self.assertQueryCount(2):
             for record in new_records:
                 for line in record.line_ids:
                     line.value
