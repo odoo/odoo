@@ -20,20 +20,20 @@ def _get_notification_message():
 # -------------------------------------------------------------------------
 
 
-def _mock_call_nemhandel_proxy(func, self, *args, **kwargs):
+def _mock_call_nemhandel_proxy(func, self, endpoint, params=None):
 
-    def _mock_get_all_documents(user, args, kwargs):
+    def _mock_get_all_documents(user):
         return {'messages': []}
 
-    def _mock_get_document(user, args, kwargs):
-        message_uuid = args[1]['message_uuids'][0]
+    def _mock_get_document(user):
+        message_uuid = params['message_uuids'][0]
         return {message_uuid: {
             'state': 'done',
             'origin_message_uuid': message_uuid,
             'document_type': 'Invoice'
         }}
 
-    def _mock_send_document(user, args, kwargs):
+    def _mock_send_document(user):
         # Trigger the reception of vendor bills
         get_messages_cron = user.env['ir.cron'].sudo().env.ref(
             'l10n_dk.ir_cron_nemhandel_get_new_documents',
@@ -44,19 +44,20 @@ def _mock_call_nemhandel_proxy(func, self, *args, **kwargs):
         return {
             'messages': [{
                 'message_uuid': 'demo_%s' % uuid.uuid4(),
-            } for i in args[1]['documents']],
+            } for i in params['documents']],
         }
 
-    endpoint = args[0].split('/')[-1]
+    endpoint = endpoint.rsplit('/', 1)[-1]
+    params = params or {}
     return {
-        'ack': lambda _user, _args, _kwargs: {},
-        'activate_participant': lambda _user, _args, _kwargs: {},
+        'ack': lambda _user: {},
+        'activate_participant': lambda _user: {},
         'get_all_documents': _mock_get_all_documents,
         'get_document': _mock_get_document,
-        'participant_status': lambda _user, _args, _kwargs: {'nemhandel_state': 'active'},
+        'participant_status': lambda _user: {'nemhandel_state': 'active'},
         'send_document': _mock_send_document,
-        'set_webhook': lambda _user, _args, _kwargs: {}
-    }[endpoint](self, args, kwargs)
+        'set_webhook': lambda _user: {}
+    }[endpoint](self)
 
 
 def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
