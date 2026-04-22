@@ -16,7 +16,6 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
-import { Deferred } from "@web/core/utils/concurrency";
 
 defineLivechatModels();
 describe.current.tags("desktop");
@@ -187,9 +186,9 @@ test("Hide 'help already received' notification when channel is not visible", as
     });
     // Simulate another agent attempting to join the channel to provide help at the same time,
     // but succeeding just before the current agent (server returns false when it happens).
-    let canRespondDeferred;
+    let joinChannelPromise;
     onRpc("discuss.channel", "livechat_join_channel_needing_help", async () => {
-        await canRespondDeferred;
+        await joinChannelPromise;
         return false;
     });
     const channel = pyEnv["discuss.channel"].create({
@@ -205,11 +204,12 @@ test("Hide 'help already received' notification when channel is not visible", as
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     await click("button[name='join-channel']");
     expect.waitForSteps(["warning - Someone has already joined this conversation"]);
-    canRespondDeferred = new Deferred();
+    const { promise, resolve: resolveJoinChannel } = Promise.withResolvers();
+    joinChannelPromise = promise;
     await click("button[name='join-channel']");
     await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
     await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
-    canRespondDeferred.resolve();
+    resolveJoinChannel();
     await tick();
     await expect.waitForSteps([]);
 });

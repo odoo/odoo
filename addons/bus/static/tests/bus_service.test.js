@@ -12,7 +12,7 @@ import {
     WORKER_STATE,
 } from "@bus/workers/websocket_worker";
 import { advanceTime, describe, expect, test } from "@odoo/hoot";
-import { Deferred, manuallyDispatchProgrammaticEvent, runAllTimers, waitFor } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, runAllTimers, waitFor } from "@odoo/hoot-dom";
 import { mockWebSocket } from "@odoo/hoot-mock";
 import {
     contains,
@@ -300,7 +300,7 @@ test("can reconnect after late close event", async () => {
         ["BUS:RECONNECT", () => expect.step("BUS:RECONNECT")],
         ["BUS:RECONNECTING", () => expect.step("BUS:RECONNECTING")]
     );
-    const closeDeferred = new Deferred();
+    const { promise: closeEventPromise, resolve: resolveCloseEvent } = Promise.withResolvers();
     await makeMockEnv();
     startBusService();
     await expect.waitForSteps(["BUS:CONNECT"]);
@@ -309,7 +309,7 @@ test("can reconnect after late close event", async () => {
             this._readyState = 2; // WebSocket.CLOSING
             if (code === WEBSOCKET_CLOSE_CODES.CLEAN) {
                 // Simulate that the connection could not be closed cleanly.
-                await closeDeferred;
+                await closeEventPromise;
                 code = WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE;
             }
             return super.close(code, reason);
@@ -327,7 +327,7 @@ test("can reconnect after late close event", async () => {
     await expect.waitForSteps(["BUS:DISCONNECT", "BUS:CONNECT"]);
     // Trigger the close event, it shouldn't have any effect since it is
     // related to an old connection that is no longer in use.
-    closeDeferred.resolve();
+    resolveCloseEvent();
     await expect.waitForSteps([]);
     // Server closes the connection, the worker should reconnect.
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);

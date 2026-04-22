@@ -13,7 +13,7 @@ import {
     waitFor,
     waitForNone,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
     makeMockServer,
@@ -52,11 +52,11 @@ beforeEach(() => {
 });
 
 test("media dialog: upload", async function () {
-    const isUploaded = new Deferred();
+    const { promise: isUploaded, resolve: resolveUpload } = Promise.withResolvers();
     patchWithCleanup(FileSelector.prototype, {
         async onUploaded() {
             await super.onUploaded(...arguments);
-            isUploaded.resolve();
+            resolveUpload();
         },
     });
 

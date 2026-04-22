@@ -9,7 +9,7 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, tick } from "@odoo/hoot-dom";
+import { tick } from "@odoo/hoot-dom";
 import { onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDate } from "@web/core/l10n/dates";
 
@@ -187,14 +187,14 @@ test("list activity widget: batch selection from list", async (assert) => {
     ]);
     const env = await start();
     let scheduleWizardContext = null;
-    let wizardOpened = new Deferred();
+    let { promise: wizardOpened, resolve: resolveWizardOpened } = Promise.withResolvers();
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             if (action.res_model === "mail.activity.schedule") {
                 scheduleWizardContext = action.context;
                 expect.step("do_action_activity");
                 options.onClose();
-                wizardOpened.resolve();
+                resolveWizardOpened();
                 return true;
             }
             return super.doAction(action);
@@ -244,7 +244,7 @@ test("list activity widget: batch selection from list", async (assert) => {
         active_model: "res.partner",
     });
     // But when clicking on the clock of one of the non-selected row, it applies to only that row
-    wizardOpened = new Deferred();
+    ({ promise: wizardOpened, resolve: resolveWizardOpened } = Promise.withResolvers());
     await click(".o-mail-ActivityButton", { target: alexanderRow });
     await contains(".o-mail-ActivityListPopover button:text('Schedule an activity')");
     await contains(
@@ -258,7 +258,7 @@ test("list activity widget: batch selection from list", async (assert) => {
         active_model: "res.partner",
     });
     // We now check that when clicking on the clock of the other selected row, it applies to both row
-    wizardOpened = new Deferred();
+    ({ promise: wizardOpened, resolve: resolveWizardOpened } = Promise.withResolvers());
     await click(".o-mail-ActivityButton", { target: marioRow });
     await contains(
         ".o-mail-ActivityListPopover button:text('Schedule an activity on selected records')"

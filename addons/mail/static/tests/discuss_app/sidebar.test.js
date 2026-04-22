@@ -19,7 +19,7 @@ import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model"
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { animationFrame, drag, press, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, mockDate } from "@odoo/hoot-mock";
+import { mockDate } from "@odoo/hoot-mock";
 import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
@@ -1060,11 +1060,11 @@ test("Update channel data via bus notification", async () => {
 
 test("sidebar: show loading on initial opening", async () => {
     // This could load a lot of data (all pinned conversations)
-    const def = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     listenStoreFetch("channels_as_member", {
         async onRpc() {
             expect.step("before channels_as_member");
-            await def;
+            await promise;
         },
     });
     const pyEnv = await startServer();
@@ -1076,7 +1076,7 @@ test("sidebar: show loading on initial opening", async () => {
     );
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')", { count: 0 });
     await expect.waitForSteps(["before channels_as_member"]);
-    def.resolve();
+    resolve();
     await waitStoreFetch("channels_as_member");
     await contains(
         ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin",

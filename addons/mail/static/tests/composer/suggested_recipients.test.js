@@ -10,7 +10,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, tick } from "@odoo/hoot-mock";
+import { tick } from "@odoo/hoot-mock";
 import { mockService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -52,7 +52,7 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
         phone: "123456789",
         partner_ids: [partnerId],
     });
-    const def = new Deferred();
+    const { promise: doActionCalled, resolve: resolveDoActionCalled } = Promise.withResolvers();
     mockService("action", {
         async doAction(action) {
             if (action?.res_model === "res.fake") {
@@ -66,7 +66,7 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
                 ["email", "=", "john@test.be"],
             ]);
             expect(action.context.default_partner_ids).toEqual([johnTestPartnerId, partnerId]);
-            def.resolve();
+            resolveDoActionCalled();
         },
     });
     await start();
@@ -75,7 +75,7 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
     await contains(".o-mail-RecipientsInput .o_tag_badge_text:contains(John Jane)");
     await contains(".o-mail-RecipientsInput .o_tag_badge_text:contains(john@test.be)");
     await click("button[title='Open Full Composer']");
-    await def;
+    await doActionCalled;
     await expect.waitForSteps(["do-action"]);
 });
 
@@ -89,7 +89,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
         email_cc: "john@test.be",
         partner_ids: [partnerId],
     });
-    const def = new Deferred();
+    const { promise: doActionCalled, resolve: resolveDoActionCalled } = Promise.withResolvers();
     mockService("action", {
         async doAction(action) {
             if (action?.res_model === "res.fake") {
@@ -99,7 +99,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
             expect(action.name).toBe("Log note");
             expect(action.context.default_subtype_xmlid).toBe("mail.mt_note");
             expect(action.context.default_partner_ids).toBeEmpty();
-            def.resolve();
+            resolveDoActionCalled();
         },
     });
     await start();
@@ -109,7 +109,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
     await contains(".o-mail-RecipientsInput .o_tag_badge_text:contains(john@test.be)");
     await click("button:text('Log note')");
     await click("button[title='Open Full Composer']");
-    await def;
+    await doActionCalled;
     await expect.waitForSteps(["do-action"]);
 });
 

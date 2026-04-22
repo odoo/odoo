@@ -18,7 +18,7 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, mockUserAgent, test } from "@odoo/hoot";
-import { Deferred, advanceTime } from "@odoo/hoot-mock";
+import { advanceTime } from "@odoo/hoot-mock";
 
 import { range } from "@web/core/utils/numbers";
 import {
@@ -152,12 +152,12 @@ test("No attachment loading spinner when creating records", async () => {
 });
 
 test("No attachment loading spinner when switching from loading record to creation of record", async () => {
-    const def = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     const pyEnv = await startServer();
     listenStoreFetch("mail.thread", {
         async onRpc() {
             expect.step("before mail.thread");
-            await def;
+            await promise;
         },
     });
     await start();
@@ -169,7 +169,7 @@ test("No attachment loading spinner when switching from loading record to creati
     await click(".o_control_panel_main_buttons .o_form_button_create");
     await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
     await expect.waitForSteps(["before mail.thread"]);
-    def.resolve();
+    resolve();
     await waitStoreFetch("mail.thread");
 });
 
@@ -619,7 +619,7 @@ test("post message on draft record", async () => {
 });
 
 test("schedule activities on draft record should prompt with scheduling an activity (proceed with action)", async () => {
-    const wizardOpened = new Deferred();
+    const { promise: wizardOpened, resolve: resolveWizardOpened } = Promise.withResolvers();
     mockService("action", {
         doAction(action, options) {
             if (action.res_model === "res.partner") {
@@ -629,7 +629,7 @@ test("schedule activities on draft record should prompt with scheduling an activ
                 expect(action.context.active_model).toBe("res.partner");
                 expect(Number(action.context.active_id)).toBeGreaterThan(0);
                 options.onClose();
-                wizardOpened.resolve();
+                resolveWizardOpened();
             } else {
                 expect.step("Unexpected action" + action.res_model);
             }

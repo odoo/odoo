@@ -11,7 +11,6 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
 import { fields, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
@@ -458,7 +457,7 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const def = new Deferred();
+    const { promise: doActionCalled, resolve: resolveDoActionCalled } = Promise.withResolvers();
     mockService("action", {
         async doAction(action) {
             if (action?.res_model !== "res.fake") {
@@ -472,14 +471,14 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
             expect(action.views).toEqual([[false, "form"]]);
             expect(action.res_model).toBe("res.fake");
             expect(action.res_id).toBe(fakeId);
-            def.resolve();
+            resolveDoActionCalled();
         },
     });
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click(".o-mail-Message-header a:text('Some record')");
-    await def;
+    await doActionCalled;
     await expect.waitForSteps(["do-action"]);
 });
 

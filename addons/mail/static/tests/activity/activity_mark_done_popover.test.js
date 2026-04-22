@@ -8,7 +8,6 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
 import { mockService, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -152,11 +151,11 @@ test("[technical] activity mark done & schedule next with new action", async () 
     onRpc("mail.activity", "action_feedback_schedule_next", () => ({
         type: "ir.actions.act_window",
     }));
-    const def = new Deferred();
+    const { promise: doActionCalled, resolve: resolveDoActionCalled } = Promise.withResolvers();
     mockService("action", {
         doAction(action) {
             if (action?.res_model !== "res.partner") {
-                def.resolve();
+                resolveDoActionCalled();
                 expect.step("activity_action");
                 expect(action).toEqual(
                     { type: "ir.actions.act_window" },
@@ -171,6 +170,6 @@ test("[technical] activity mark done & schedule next with new action", async () 
     await openFormView("res.partner", partnerId);
     await click(".btn:text('Mark Done')");
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
-    await def;
+    await doActionCalled;
     await expect.waitForSteps(["activity_action"]);
 });

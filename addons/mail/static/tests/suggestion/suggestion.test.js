@@ -13,7 +13,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, expect, describe, test } from "@odoo/hoot";
-import { Deferred, tick } from "@odoo/hoot-mock";
+import { tick } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
@@ -618,10 +618,10 @@ test("mention a channel thread", async () => {
 test("[text composer] Channel suggestions do not crash after rpc returns", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    const deferred = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     onRpc("discuss.channel", "get_mention_suggestions", () => {
         expect.step("get_mention_suggestions");
-        deferred.resolve();
+        resolve();
     });
     await start();
     await openDiscuss(channelId);
@@ -629,7 +629,7 @@ test("[text composer] Channel suggestions do not crash after rpc returns", async
     await insertText(".o-mail-Composer-input", "#");
     await tick();
     await insertText(".o-mail-Composer-input", "f");
-    await deferred;
+    await promise;
     await expect.waitForSteps(["get_mention_suggestions"]);
 });
 
@@ -637,10 +637,10 @@ test.tags("html composer");
 test("Channel suggestions do not crash after rpc returns", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    const deferred = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     onRpc("discuss.channel", "get_mention_suggestions", () => {
         expect.step("get_mention_suggestions");
-        deferred.resolve();
+        resolve();
     });
     await start();
     const composerService = getService("mail.composer");
@@ -656,7 +656,7 @@ test("Channel suggestions do not crash after rpc returns", async () => {
     await htmlInsertText(editor, "#");
     await tick();
     await htmlInsertText(editor, "f");
-    await deferred;
+    await promise;
     await expect.waitForSteps(["get_mention_suggestions"]);
 });
 

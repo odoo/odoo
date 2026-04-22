@@ -9,7 +9,7 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, advanceTime } from "@odoo/hoot-mock";
+import { advanceTime } from "@odoo/hoot-mock";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal_project/chatter";
 
@@ -143,13 +143,13 @@ test("attachment counter with attachments", async () => {
 });
 
 test("attachment counter while loading attachments", async () => {
-    const def = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     listenStoreFetch("mail.thread", {
         async onRpc() {
             expect.step("before mail.thread");
-            await def;
+            await promise;
         },
     });
     await start();
@@ -159,18 +159,18 @@ test("attachment counter while loading attachments", async () => {
     await contains("button[aria-label='Attach files'] .fa-spin");
     await contains("button[aria-label='Attach files']:text('0')", { count: 0 });
     await expect.waitForSteps(["before mail.thread"]);
-    def.resolve();
+    resolve();
     await waitStoreFetch("mail.thread");
 });
 
 test("attachment counter transition when attachments become loaded", async () => {
-    const def = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     listenStoreFetch("mail.thread", {
         async onRpc() {
             expect.step("before mail.thread");
-            await def;
+            await promise;
         },
     });
     await start();
@@ -179,7 +179,7 @@ test("attachment counter transition when attachments become loaded", async () =>
     await advanceTime(DELAY_FOR_SPINNER);
     await contains("button[aria-label='Attach files'] .fa-spin");
     await expect.waitForSteps(["before mail.thread"]);
-    def.resolve();
+    resolve();
     await waitStoreFetch("mail.thread");
     await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
 });

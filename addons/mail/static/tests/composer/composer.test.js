@@ -28,7 +28,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
@@ -952,17 +952,17 @@ test("composer: add an attachment in reply to message in history", async () => {
 
 test("composer: send button is disabled if attachment upload is not finished", async () => {
     const pyEnv = await startServer();
-    const attachmentUploadedDef = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
-    onRpcBefore("/mail/attachment/upload", async () => await attachmentUploadedDef);
+    onRpcBefore("/mail/attachment/upload", async () => await promise);
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer .o_input_file", [text]);
     await contains(".o-mail-AttachmentContainer.o-isUploading:contains(text.txt)");
     await press("Enter");
     // simulates attachment finishes uploading
-    attachmentUploadedDef.resolve();
+    resolve();
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)");
     await contains(".o-mail-AttachmentContainer.o-isUploading", { count: 0 });
     await press("Enter");
@@ -1075,7 +1075,7 @@ test("remove an uploading attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
-    onRpc("/mail/attachment/upload", () => new Deferred()); // simulates uploading indefinitely
+    onRpc("/mail/attachment/upload", () => new Promise(() => {})); // simulates uploading indefinitely
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer .o_input_file", [text]);
@@ -1089,7 +1089,7 @@ test("Uploading multiple files in the composer create multiple temporary attachm
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const text1 = new File(["hello, world"], "text1.txt", { type: "text/plain" });
     const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
-    onRpc("/mail/attachment/upload", () => new Deferred());
+    onRpc("/mail/attachment/upload", () => new Promise(() => {}));
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer .o_input_file", [text1, text2]);
@@ -1104,11 +1104,11 @@ test("[technical] does not crash when an attachment is removed before its upload
     // upload started.
     const pyEnv = await startServer();
     // Promise to block attachment uploading
-    const uploadDef = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const text1 = new File(["hello, world"], "text1.txt", { type: "text/plain" });
     const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
-    onRpcBefore("/mail/attachment/upload", async () => await uploadDef);
+    onRpcBefore("/mail/attachment/upload", async () => await promise);
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer .o_input_file", [text1, text2]);
@@ -1118,7 +1118,7 @@ test("[technical] does not crash when an attachment is removed before its upload
     );
     await contains(".o-mail-AttachmentContainer:contains('text2.txt')", { count: 0 });
     // Simulates the completion of the upload of the first attachment
-    uploadDef.resolve();
+    resolve();
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text1.txt)");
 });
 

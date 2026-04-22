@@ -14,7 +14,7 @@ import { getOrigin } from "@web/core/utils/urls";
 import { MailComposerAttachmentSelector } from "@mail/core/web/mail_composer_attachment_selector";
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, mockDate, Deferred } from "@odoo/hoot-mock";
+import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import { manuallyDispatchProgrammaticEvent, queryAll } from "@odoo/hoot-dom";
 
 beforeEach(() => mockDate("2024-10-20 10:00:00"));
@@ -419,11 +419,11 @@ test("Scheduled message with attachments", async () => {
 test("widget mail_composer_attachment_selector: edit attachment of scheduled message", async () => {
     expect.assertions(1);
 
-    const isUploaded = new Deferred();
+    const { promise: isUploaded, resolve: resolveUpload } = Promise.withResolvers();
     patchWithCleanup(MailComposerAttachmentSelector.prototype, {
         async onFileUploaded() {
             await super.onFileUploaded(...arguments);
-            isUploaded.resolve();
+            resolveUpload();
         },
     });
     const pyEnv = await startServer();

@@ -21,7 +21,7 @@ import { Store } from "@mail/model/store";
 import { toRawValue } from "@mail/utils/common/local_storage";
 
 import { describe, expect, mockPermission, test } from "@odoo/hoot";
-import { Deferred, mockUserAgent } from "@odoo/hoot-mock";
+import { mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
@@ -1224,18 +1224,18 @@ test("messaging menu should show new needaction messages from chatter", async ()
 test("can open messaging menu even if messaging is not initialized", async () => {
     mockPermission("notifications", "prompt");
     await startServer();
-    const def = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     listenStoreFetch("init_messaging", {
         async onRpc() {
             expect.step("before init_messaging");
-            await def;
+            await promise;
         },
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem-name:text('Turn on notifications')");
     await expect.waitForSteps(["before init_messaging"]);
-    def.resolve();
+    resolve();
     await waitStoreFetch("init_messaging");
 });
 
@@ -1243,18 +1243,18 @@ test("can open messaging menu even if channels are not fetched", async () => {
     mockPermission("notifications", "denied");
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
-    const def = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     listenStoreFetch("channels_as_member", {
         async onRpc() {
             expect.step("before channels_as_member");
-            await def;
+            await promise;
         },
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-DiscussSystray:has(:text('Loading…'))");
     await expect.waitForSteps(["before channels_as_member"]);
-    def.resolve();
+    resolve();
     await waitStoreFetch("channels_as_member");
     await contains(".o-mail-NotificationItem-name:text('General')");
 });

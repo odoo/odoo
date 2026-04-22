@@ -30,7 +30,6 @@ import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
-    Deferred,
     press,
     rightClick,
     runAllTimers,
@@ -1134,7 +1133,7 @@ test('all messages in "Inbox" in "History" after marked all as read', async () =
 test("post a simple message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    const messagePostDef = new Deferred();
+    const { promise: messagePostPromise, resolve: resolveMessagePost } = Promise.withResolvers();
     onRpcBefore("/mail/message/post", async (args) => {
         expect.step("message_post");
         expect(args.thread_model).toBe("discuss.channel");
@@ -1142,7 +1141,7 @@ test("post a simple message", async () => {
         expect(args.post_data.body).toBe("Test");
         expect(args.post_data.message_type).toBe("comment");
         expect(args.post_data.subtype_xmlid).toBe("mail.mt_comment");
-        await messagePostDef;
+        await messagePostPromise;
     });
     await start();
     await openDiscuss(channelId);
@@ -1158,7 +1157,7 @@ test("post a simple message", async () => {
     expect(".o-mail-Message-content").toHaveStyle({ opacity: "0.5" });
     await contains(".o-mail-Message-pendingProgress"); // visible after 0.5 sec. elapsed
     // simulate message genuinely posted
-    messagePostDef.resolve();
+    resolveMessagePost();
     await contains(".o-mail-Message-pendingProgress", { count: 0 });
     await contains(".o-mail-Message-content:text('Test')");
     expect(".o-mail-Message-content").toHaveStyle({ opacity: "1" });
@@ -1168,9 +1167,13 @@ test("post several messages with failures", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     /** awaiting deferreds of message_post of msg 0, 1, 2 respectively  */
-    const messagePostDefs = [new Deferred(), new Deferred(), new Deferred()];
+    const messagePostPromWithResolvers = [
+        Promise.withResolvers(),
+        Promise.withResolvers(),
+        Promise.withResolvers(),
+    ];
     onRpcBefore("/mail/message/post", async (args) => {
-        await messagePostDefs[parseInt(args.post_data.body)];
+        await messagePostPromWithResolvers[parseInt(args.post_data.body)].promise;
     });
     await start();
     await openDiscuss(channelId);
@@ -1200,16 +1203,16 @@ test("post several messages with failures", async () => {
     expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "0.5" });
     await contains(".o-mail-Message-pendingProgress", { count: 3 }); // visible after 0.5 sec. elapsed
     // simulate OK for 1, NOT-OK for 0, 2
-    messagePostDefs[0].reject();
-    messagePostDefs[1].resolve();
-    messagePostDefs[2].reject();
+    messagePostPromWithResolvers[0].reject();
+    messagePostPromWithResolvers[1].resolve();
+    messagePostPromWithResolvers[2].reject();
     await contains(".o-mail-Message-pendingProgress", { count: 0 });
     expect(".o-mail-Message-content:eq(0)").toHaveStyle({ opacity: "0.5" });
     expect(".o-mail-Message-content:eq(1)").toHaveStyle({ opacity: "1" });
     expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "0.5" });
     // re-try failed posted messages
-    messagePostDefs[0] = true;
-    messagePostDefs[2] = true;
+    messagePostPromWithResolvers[0] = true;
+    messagePostPromWithResolvers[2] = true;
     await click(
         ".o-mail-Message:contains(0) button[title='Failed to post the message. Click to retry']"
     );
@@ -2063,7 +2066,7 @@ test("mark channel as seen if last message is visible when switching channels wh
 test("warning on send with shortcut when attempting to post message with still-uploading attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    onRpcBefore("/mail/attachment/upload", async () => await new Deferred()); // simulates attachment is never finished uploading
+    onRpcBefore("/mail/attachment/upload", () => new Promise(() => {})); // simulates an attachment upload that never completes
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer input[type=file]");
@@ -2081,7 +2084,7 @@ test("warning on send with shortcut when attempting to post message with still-u
 test("[text composer] Can post message with only attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    onRpcBefore("/mail/message/post", async () => await new Deferred());
+    onRpcBefore("/mail/message/post", () => new Promise(() => {}));
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer input[type=file]");
@@ -2100,7 +2103,7 @@ test.tags("html composer");
 test("Can post message with only attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    onRpcBefore("/mail/message/post", async () => await new Deferred());
+    onRpcBefore("/mail/message/post", () => new Promise(() => {}));
     await start();
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();

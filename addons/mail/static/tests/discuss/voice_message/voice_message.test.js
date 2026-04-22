@@ -9,7 +9,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, globals, test } from "@odoo/hoot";
-import { Deferred, mockDate } from "@odoo/hoot-mock";
+import { mockDate } from "@odoo/hoot-mock";
 import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
@@ -22,7 +22,7 @@ defineMailModels();
 
 test("make voice message in chat", async () => {
     const file = new File([new Uint8Array(25000)], "test.mp3", { type: "audio/mp3" });
-    const voicePlayerDrawing = new Deferred();
+    const { promise: voicePlayerDrawn, resolve: resolveVoicePlayerDrawn } = Promise.withResolvers();
     patchWithCleanup(Mp3Encoder.prototype, {
         encode() {},
         finish() {
@@ -32,7 +32,7 @@ test("make voice message in chat", async () => {
     patchWithCleanup(patchable, { makeFile: () => file });
     patchWithCleanup(VoicePlayer.prototype, {
         async drawWave(...args) {
-            voicePlayerDrawing.resolve();
+            resolveVoicePlayerDrawn();
             return super.drawWave(...args);
         },
         async fetchFile() {
@@ -86,7 +86,7 @@ test("make voice message in chat", async () => {
     await click(".o-mail-Composer button[title='Stop Recording']");
     await contains(".o-mail-VoicePlayer");
     // wait for audio stream decode + drawing of waves
-    await voicePlayerDrawing;
+    await voicePlayerDrawn;
     await contains(".o-mail-VoicePlayer button[title='Play']");
     await contains(".o-mail-VoicePlayer canvas", { count: 2 }); // 1 for global waveforms, 1 for played waveforms
     await contains(".o-mail-VoicePlayer:text('00 : 03')"); // duration of call-invitation_.mp3
