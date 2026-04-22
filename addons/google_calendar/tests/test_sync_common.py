@@ -6,7 +6,7 @@ from datetime import datetime
 from freezegun import freeze_time
 from unittest.mock import patch
 
-from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_calendar.utils.google_calendar_service import GoogleCalendarService
 from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.models.google_event_sync import GoogleEventSync
