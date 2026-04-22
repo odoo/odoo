@@ -1810,7 +1810,7 @@ class AccountMove(models.Model):
             tax_lines = [self._prepare_tax_line_for_taxes_computation(tax_line) for tax_line in tax_amls]
             if round_from_tax_lines == 'reapply_currency_rate':
                 for tax_line in tax_lines:
-                    rate = tax_line['record'].currency_rate
+                    rate = self.invoice_currency_rate
                     if rate:
                         tax_line['balance'] = self.company_currency_id.round(tax_line['amount_currency'] / rate)
             AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines if round_from_tax_lines else [])
@@ -3384,9 +3384,6 @@ class AccountMove(models.Model):
             elif any(line not in base_lines for line, values in move_base_lines_values_before.items() if values['tax_ids']):
                 # Removed a base line affecting the taxes.
                 round_from_tax_lines = any_field_has_changed(move_tax_lines_values_before, tax_lines)
-            elif field_has_changed(moves_values_before, move, 'invoice_currency_rate') and not field_has_changed(moves_values_before, move, 'invoice_date'):
-                # Changing the rate should preserve the tax amounts in foreign currency but reapply the currency rate.
-                round_from_tax_lines = 'reapply_currency_rate'
             elif changed_lines := list(get_changed_lines(move_base_lines_values_before, base_lines)):
                 # A base line has been modified.
                 round_from_tax_lines = (
@@ -3413,6 +3410,9 @@ class AccountMove(models.Model):
                     and any(line[field] for line in changed_lines for field in ('amount_currency', 'balance'))
                 ):
                     continue
+            elif field_has_changed(moves_values_before, move, 'invoice_currency_rate'):
+                # Changing the rate should preserve the tax amounts in foreign currency but reapply the currency rate.
+                round_from_tax_lines = 'reapply_currency_rate'
             else:
                 continue
 
