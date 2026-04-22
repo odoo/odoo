@@ -306,12 +306,14 @@ class WebsocketCase(HttpCase, BusCase):
         self._websockets.add(ws)
         return ws
 
-    def subscribe(self, websocket, channels=None, last=None, wait_for_dispatch=True):
+    def subscribe(self, websocket, channels=None, last=None, check_outdated=False, wait_for_dispatch=True):
         """ Subscribe the websocket to the given channels.
 
         :param websocket: The websocket of the client.
         :param channels: The list of channels to subscribe to.
         :param last: The last notification id the client received.
+        :param check_outdated: Whether the websocket should check if the last_id matches a
+            known notification.
         :param wait_for_dispatch: Whether to wait for the notification
             dispatching trigerred by the subscription.
         """
@@ -325,6 +327,7 @@ class WebsocketCase(HttpCase, BusCase):
         with patch.object(Websocket, '_dispatch_bus_notifications', _mocked_dispatch_bus_notifications):
             sub = {'event_name': 'subscribe', 'data': {
                 'channels': channels or [],
+                'check_outdated': check_outdated,
             }}
             if last is not None:
                 sub['data']['last'] = last

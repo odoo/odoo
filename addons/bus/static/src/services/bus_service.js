@@ -72,9 +72,12 @@ export const busService = {
                 }
                 case "BUS:NOTIFICATION": {
                     const notifications = data.map(({ id, message }) => ({ id, ...message }));
-                    if (notifications.at(-1).id > state.lastNotificationId) {
-                        state.lastNotificationId = notifications.at(-1).id;
-                        localStorage.setItem("bus.last_notification_id", state.lastNotificationId);
+                    const receivedLastId = notifications.at(-1).id;
+                    const lsLastId = parseInt(
+                        localStorage.getItem("bus.last_notification_id") ?? 0
+                    );
+                    if (receivedLastId > lsLastId) {
+                        localStorage.setItem("bus.last_notification_id", receivedLastId);
                     }
                     for (const { id, type, payload } of notifications) {
                         notificationBus.trigger(type, { id, payload });
@@ -90,7 +93,9 @@ export const busService = {
                     state.workerState = data;
                     break;
                 case "BUS:OUTDATED": {
-                    multiTab.unregister();
+                    if (data.unregisterMultiTab) {
+                        multiTab.unregister();
+                    }
                     notification.add(
                         _t(
                             "Save your work and refresh to get the latest updates and avoid potential issues."
@@ -231,8 +236,6 @@ export const busService = {
             },
             startedAt,
             workerState: null,
-            /** The id of the last notification received by this tab. */
-            lastNotificationId: null,
         });
         return state;
     },
