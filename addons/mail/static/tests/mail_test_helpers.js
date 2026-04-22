@@ -81,6 +81,7 @@ import { MailPushDevice } from "./mock_server/mock_models/mail_push_device";
 import { MailScheduledMessage } from "./mock_server/mock_models/mail_scheduled_message";
 import { MailTemplate } from "./mock_server/mock_models/mail_template";
 import { MailThread } from "./mock_server/mock_models/mail_thread";
+import { MailTrackingValue } from "./mock_server/mock_models/mail_tracking_value";
 import { ResCountry } from "./mock_server/mock_models/res_country";
 import { ResFake } from "./mock_server/mock_models/res_fake";
 import { ResLang } from "./mock_server/mock_models/res_lang";
@@ -154,6 +155,7 @@ export const mailModels = {
     MailScheduledMessage,
     MailTemplate,
     MailThread,
+    MailTrackingValue,
     ResCountry,
     ResFake,
     ResLang,

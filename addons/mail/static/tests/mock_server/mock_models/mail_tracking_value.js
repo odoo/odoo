@@ -18,3 +18,7 @@ patch(models.ServerModel.prototype, {
         return result;
     },
 });
+
+export class MailTrackingValue extends models.ServerModel {
+    _name = "mail.tracking.value";
+}
