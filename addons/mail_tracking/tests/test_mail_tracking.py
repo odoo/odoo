@@ -1,5 +1,6 @@
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.exceptions import UserError
 from odoo.tests import tagged, users
 
 
@@ -149,3 +150,40 @@ class TestMailTracking(MailCommon):
             'body': '',
             'tracking_values': tracking_value_list,
         })
+
+    @users('employee')
+    def test_message_copy(self):
+        partner = self.env['res.partner'].create({'name': 'Test'})
+        self.flush_tracking()
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            partner.name = 'New Test'
+            self.flush_tracking()
+
+        tracking_message = self._new_msgs.with_user(self.env.user)
+        self.assertMessageFields(
+            tracking_message, {
+                'message_type': 'tracking',
+                'tracking_values': [
+                    ('name', 'char', 'Test', 'New Test'),
+                    ('commercial_company_name', 'char', 'Test', 'New Test'),
+                ],
+            }
+        )
+
+        with self.assertRaises(UserError):
+            tracking_message.copy({
+                'message_type': 'notification',
+            })
+
+        new_tracking_message = tracking_message.copy()
+        self.assertMessageFields(
+            new_tracking_message, {
+                'message_type': 'tracking',
+                'tracking_values': [
+                    ('name', 'char', 'Test', 'New Test'),
+                    ('commercial_company_name', 'char', 'Test', 'New Test'),
+                ],
+            }
+        )
+        self.assertEqual(len((tracking_message + new_tracking_message).sudo().tracking_value_ids), 4, 'Not the same trackings')
