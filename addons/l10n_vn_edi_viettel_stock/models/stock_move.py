@@ -7,7 +7,7 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     l10n_vn_edi_unit_price = fields.Float(
-        string='Unit Price',
+        string='Vietnam EDI Unit Price',
         compute='_compute_l10n_vn_edi_unit_price',
         store=True,
         readonly=False,
