@@ -1270,6 +1270,8 @@ class Website(models.CachedModel):
         return page_temp
 
     def _is_tracking_enabled(self, main_object):
+        if self.env['ir.http'].is_a_bot():
+            return False
         if main_object._name in ['ir.ui.view', 'website.page']:
             return main_object.track
         return True

@@ -30,7 +30,7 @@ export class RecentlyViewedProducts extends Interaction {
             res_model: 'product.product',
             res_id: productId,
         }));
-        cookie.set(cookieName, productId, 30 * 60, 'optional');
+        cookie.set(cookieName, productId, 30 * 60);
     }
 }
 

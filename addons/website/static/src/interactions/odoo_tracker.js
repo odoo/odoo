@@ -11,10 +11,12 @@ export class OdooTracker extends Interaction {
         const { trackingEnabled, mainObject } = document.documentElement.dataset;
         const matches = mainObject?.match(recordRE);
         if (trackingEnabled && matches) {
-            rpc('/website/odoo_track', {
-                res_model: matches[1],
-                res_id: matches[2],
-            });
+            this.waitForTimeout(() => {
+                rpc('/website/odoo_track', {
+                    res_model: matches[1],
+                    res_id: matches[2],
+                });
+            }, 3000);
         }
     }
 }
