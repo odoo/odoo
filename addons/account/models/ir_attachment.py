@@ -11,6 +11,18 @@ import zipfile
 
 _logger = logging.getLogger(__name__)
 
+# -------------------------------------------------------------------------
+# SUPPORTED FILE TYPES FOR IMPORT
+# -------------------------------------------------------------------------
+SUPPORTED_FILE_TYPES = {
+    'application/pdf': '.pdf',
+    'application/vnd.oasis.opendocument.spreadsheet': '.ods',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': '.xlsx',
+    'image/jpeg': '.jpeg',
+    'image/png': '.png',
+    'text/csv': '.csv',
+}
+
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
@@ -47,7 +59,45 @@ class IrAttachment(models.Model):
                 'sort_weight': 10,
                 'type': 'xml',
             })
+            for attachment in self._extract_additional_documents(xml_tree):
+                to_process.append({
+                    'attachment': attachment,
+                    'filename': attachment.name,
+                    'content': attachment.raw,
+                    'sort_weight': 11,
+                    'type': 'binary',
+                })
         return to_process
+
+    def _extract_additional_documents(self, xml_tree):
+        """Helper to extract all additional documents defined in the xml tree
+        """
+        to_create = []
+        additional_docs = xml_tree.findall('./{*}AdditionalDocumentReference')
+        for document in additional_docs:
+            attachment_name = document.find('{*}ID')
+            attachment_data = document.find('{*}Attachment/{*}EmbeddedDocumentBinaryObject')
+            if attachment_name is not None and attachment_data is not None:
+                mimetype = attachment_data.attrib.get('mimeCode')
+                if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)):
+                    continue
+                text = attachment_data.text.strip()
+                text += '=' * (len(text) % 3)  # Fix incorrect padding
+
+                # Normalize the name of the file : some e-fff emitters put the full path of the file
+                # (Windows or Linux style) and/or the name of the xml instead of the pdf.
+                # Get only the filename with the right extension.
+                name = (attachment_name.text or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + extension
+                to_create.append({
+                    'name': name,
+                    'res_id': self.res_id,
+                    'res_model': self.res_model,
+                    'datas': text,
+                    'type': 'binary',
+                    'mimetype': mimetype,
+                })
+        attachments = self.env['ir.attachment'].create(to_create)
+        return attachments
 
     def _decode_edi_pdf(self, filename, content):
         """Decodes a pdf and unwrap sub-attachment into a list of dictionary each representing an attachment.

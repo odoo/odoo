@@ -16,6 +16,7 @@ from urllib.parse import urlencode
 from odoo import api, fields, models, _, Command, SUPERUSER_ID, modules, tools
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
+from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import clean_context
 from odoo.tools import (
     date_utils,
@@ -4768,6 +4769,13 @@ class AccountMove(models.Model):
         pdf_content = self.env['ir.actions.report']._render('account.account_invoices', self.ids)[0]
         pdf_name = self._get_invoice_report_filename() if len(self) == 1 else "Invoices.pdf"
         return pdf_content, pdf_name
+
+    # this override is to make sure that the main attachment is not an xml
+    def _message_set_main_attachment_id(self, attachment_ids):
+        attachments = self.env['ir.attachment'].browse(attachment_ids).filtered(
+            lambda att: not (att.mimetype == 'text/plain' and guess_mimetype(att.raw or '').endswith('/xml'))
+        )
+        super()._message_set_main_attachment_id(attachments.ids)
 
     def _get_invoice_report_filename(self, extension='pdf'):
         """ Get the filename of the generated invoice report with extension file. """
