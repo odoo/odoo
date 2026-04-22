@@ -23,20 +23,27 @@ var owl = (() => {
   __export(index_exports, {
     App: () => App,
     Component: () => Component,
+    ErrorBoundary: () => ErrorBoundary,
     EventBus: () => EventBus,
     OwlError: () => OwlError,
     Plugin: () => Plugin,
+    Portal: () => Portal,
     Registry: () => Registry,
     Resource: () => Resource,
+    Scope: () => Scope,
+    Suspense: () => Suspense,
+    TemplateSet: () => TemplateSet,
     __info__: () => __info__,
     assertType: () => assertType,
+    asyncComputed: () => asyncComputed,
     batched: () => batched,
     blockDom: () => blockDom,
     computed: () => computed,
     config: () => config2,
     effect: () => effect,
+    getScope: () => getScope,
+    globalTemplates: () => globalTemplates,
     htmlEscape: () => htmlEscape,
-    immediateEffect: () => immediateEffect,
     markRaw: () => markRaw,
     markup: () => markup,
     mount: () => mount2,
@@ -49,61 +56,1279 @@ var owl = (() => {
     onWillUnmount: () => onWillUnmount,
     onWillUpdateProps: () => onWillUpdateProps,
     plugin: () => plugin,
+    prop: () => prop,
     props: () => props,
     providePlugins: () => providePlugins,
     proxy: () => proxy,
     signal: () => signal,
     status: () => status,
     toRaw: () => toRaw,
-    types: () => types,
+    types: () => types2,
     untrack: () => untrack,
     useApp: () => useApp,
-    useContext: () => useContext,
     useEffect: () => useEffect,
     useListener: () => useListener,
-    useResource: () => useResource,
+    useScope: () => useScope,
     validateType: () => validateType,
     whenReady: () => whenReady,
     xml: () => xml
   });
 
-  // src/common/owl_error.ts
+  // ../owl-runtime/dist/owl-runtime.es.js
+  var version = "3.0.0-alpha.28";
   var OwlError = class extends Error {
     cause;
   };
-
-  // src/common/utils.ts
-  function parseXML(xml2) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xml2, "text/xml");
-    if (doc.getElementsByTagName("parsererror").length) {
-      let msg = "Invalid XML in template.";
-      const parsererrorText = doc.getElementsByTagName("parsererror")[0].textContent;
-      if (parsererrorText) {
-        msg += "\nThe parser has produced the following error message:\n" + parsererrorText;
-        const re = /\d+/g;
-        const firstMatch = re.exec(parsererrorText);
-        if (firstMatch) {
-          const lineNumber = Number(firstMatch[0]);
-          const line = xml2.split("\n")[lineNumber - 1];
-          const secondMatch = re.exec(parsererrorText);
-          if (line && secondMatch) {
-            const columnIndex = Number(secondMatch[0]) - 1;
-            if (line[columnIndex]) {
-              msg += `
-The error might be located at xml line ${lineNumber} column ${columnIndex}
-${line}
-${"-".repeat(columnIndex - 1)}^`;
-            }
+  var STATUS = {
+    NEW: 0,
+    MOUNTED: 1,
+    // is ready, and in DOM. It has a valid el
+    // component has been created, but has been replaced by a newer component before being mounted
+    // it is cancelled until the next animation frame where it will be destroyed
+    CANCELLED: 2,
+    DESTROYED: 3
+  };
+  function batched(callback) {
+    let scheduled = false;
+    return function batchedCall(...args) {
+      if (!scheduled) {
+        scheduled = true;
+        Promise.resolve().then(() => {
+          scheduled = false;
+          callback(...args);
+        });
+      }
+    };
+  }
+  var ComputationState = /* @__PURE__ */ ((ComputationState2) => {
+    ComputationState2[ComputationState2["EXECUTED"] = 0] = "EXECUTED";
+    ComputationState2[ComputationState2["STALE"] = 1] = "STALE";
+    ComputationState2[ComputationState2["PENDING"] = 2] = "PENDING";
+    return ComputationState2;
+  })(ComputationState || {});
+  var atomSymbol = /* @__PURE__ */ Symbol("Atom");
+  var observers = [];
+  var immediateObservers = [];
+  var currentComputation;
+  function createComputation(compute, isDerived, state = 1, immediate = false) {
+    return {
+      state,
+      value: void 0,
+      compute,
+      sources: /* @__PURE__ */ new Set(),
+      observers: /* @__PURE__ */ new Set(),
+      isDerived,
+      immediate
+    };
+  }
+  function onReadAtom(atom) {
+    if (!currentComputation) {
+      return;
+    }
+    currentComputation.sources.add(atom);
+    atom.observers.add(currentComputation);
+  }
+  function onWriteAtom(atom) {
+    for (const ctx of atom.observers) {
+      if (ctx.state === 0) {
+        if (ctx.isDerived) {
+          markDownstream(ctx);
+        } else if (ctx.immediate) {
+          immediateObservers.push(ctx);
+        } else {
+          observers.push(ctx);
+        }
+      }
+      ctx.state = 1;
+    }
+    if (immediateObservers.length) {
+      const toRun = immediateObservers;
+      immediateObservers = [];
+      for (const ctx of toRun) {
+        updateComputation(ctx);
+      }
+    }
+    batchProcessEffects();
+  }
+  var batchProcessEffects = batched(processEffects);
+  function processEffects() {
+    for (let i = 0; i < observers.length; i++) {
+      updateComputation(observers[i]);
+    }
+    observers.length = 0;
+  }
+  function getCurrentComputation() {
+    return currentComputation;
+  }
+  function setComputation(computation) {
+    currentComputation = computation;
+  }
+  function updateComputation(computation) {
+    const state = computation.state;
+    if (state === 0) {
+      return;
+    }
+    if (state === 2) {
+      for (const source of computation.sources) {
+        if (!("compute" in source)) {
+          continue;
+        }
+        updateComputation(source);
+      }
+      if (computation.state !== 1) {
+        computation.state = 0;
+        return;
+      }
+    }
+    removeSources(computation);
+    const previousComputation = currentComputation;
+    currentComputation = computation;
+    computation.value = computation.compute();
+    computation.state = 0;
+    currentComputation = previousComputation;
+  }
+  function removeSources(computation) {
+    const sources = computation.sources;
+    for (const source of sources) {
+      const observers22 = source.observers;
+      observers22.delete(computation);
+    }
+    sources.clear();
+  }
+  function disposeComputation(computation) {
+    for (const source of computation.sources) {
+      source.observers.delete(computation);
+      if ("compute" in source && source.isDerived && source.observers.size === 0) {
+        disposeComputation(source);
+      }
+    }
+    computation.sources.clear();
+    computation.state = 1;
+  }
+  function markDownstream(computation) {
+    const stack = [computation];
+    let current;
+    while (current = stack.pop()) {
+      for (const observer of current.observers) {
+        if (observer.state) {
+          continue;
+        }
+        observer.state = 2;
+        if (observer.isDerived) {
+          stack.push(observer);
+        } else {
+          observers.push(observer);
+        }
+      }
+    }
+  }
+  function untrack(fn) {
+    const previousComputation = currentComputation;
+    currentComputation = void 0;
+    let result;
+    try {
+      result = fn();
+    } finally {
+      currentComputation = previousComputation;
+    }
+    return result;
+  }
+  var scopeStack = [];
+  function useScope() {
+    const scope = getScope();
+    if (!scope) {
+      throw new OwlError("No active scope");
+    }
+    return scope;
+  }
+  var Scope = class {
+    app;
+    status = STATUS.NEW;
+    computations = [];
+    willStart = [];
+    _controller = null;
+    _destroyCbs = null;
+    constructor(app) {
+      this.app = app;
+    }
+    /**
+     * Pushes this scope on the stack for the duration of `callback`. Any code
+     * executed inside `callback` can reach this scope via `useScope()`.
+     */
+    run(callback) {
+      scopeStack.push(this);
+      try {
+        return callback();
+      } finally {
+        scopeStack.pop();
+      }
+    }
+    /**
+     * An AbortSignal tied to this scope's lifetime. If the scope is already
+     * dead, returns a pre-aborted signal. Lazily allocates an AbortController
+     * on first access.
+     */
+    get abortSignal() {
+      if (this.status > STATUS.MOUNTED) {
+        if (!this._controller) {
+          this._controller = new AbortController();
+          this._controller.abort();
+        }
+        return this._controller.signal;
+      }
+      return (this._controller ??= new AbortController()).signal;
+    }
+    /**
+     * Awaits `p`, throwing an AbortError if the scope is dead before or after
+     * the await. Unlike `until(signal, p)`, this does not allocate an
+     * AbortController — status checks are sufficient for guarding between
+     * awaits.
+     */
+    async until(p) {
+      if (this.status > STATUS.MOUNTED) {
+        throw makeAbortError();
+      }
+      const result = await p;
+      if (this.status > STATUS.MOUNTED) {
+        throw makeAbortError();
+      }
+      return result;
+    }
+    /**
+     * Registers a callback to run when the scope is destroyed. If the scope is
+     * already destroyed, the callback is invoked immediately.
+     */
+    onDestroy(cb) {
+      if (this.status >= STATUS.DESTROYED) {
+        cb();
+        return;
+      }
+      (this._destroyCbs ??= []).push(cb);
+    }
+    /**
+     * Marks the scope as cancelled and aborts its signal. Used when an entity is
+     * abandoned before it reaches the MOUNTED state. Subclasses may override to
+     * extend the behavior (e.g. ComponentNode recurses to children).
+     */
+    cancel() {
+      if (this.status > STATUS.MOUNTED) {
+        return;
+      }
+      this.status = STATUS.CANCELLED;
+      this._controller?.abort();
+    }
+    /**
+     * Aborts the scope's signal, runs all registered onDestroy callbacks in
+     * reverse registration order, disposes any computations attached to this
+     * scope, and transitions status to DESTROYED. Callbacks run *before* the
+     * status transition so they can still observe the pre-destroyed state
+     * (matching the prior onWillDestroy contract). Errors in callbacks are
+     * routed to `reportError`.
+     */
+    finalize(reportError) {
+      if (this.status >= STATUS.DESTROYED) {
+        return;
+      }
+      if (this._controller && !this._controller.signal.aborted) {
+        this._controller.abort();
+      }
+      const cbs = this._destroyCbs;
+      if (cbs) {
+        this._destroyCbs = null;
+        for (let i = cbs.length - 1; i >= 0; i--) {
+          try {
+            cbs[i]();
+          } catch (e) {
+            reportError(e);
           }
         }
       }
-      throw new OwlError(msg);
+      for (const computation of this.computations) {
+        disposeComputation(computation);
+      }
+      this.status = STATUS.DESTROYED;
     }
-    return doc;
+    /**
+     * Wrapper applied to lifecycle callbacks before they are stored. The base
+     * implementation prepends the scope as the first argument, so every
+     * lifecycle callback receives the scope it was registered in.
+     * ComponentNode overrides to additionally bind `this` to the component and,
+     * in dev mode, to rename the bound function so the hook shows up as
+     * `ComponentName.hookName` in stack traces.
+     */
+    decorate(fn, _hookName) {
+      return fn.bind(void 0, this);
+    }
+  };
+  function getScope() {
+    const len = scopeStack.length;
+    return len ? scopeStack[len - 1] : null;
   }
-
-  // src/runtime/blockdom/config.ts
+  function isAbortError(e) {
+    return typeof e === "object" && e !== null && e.name === "AbortError";
+  }
+  function makeAbortError() {
+    const err = new Error("The operation was aborted");
+    err.name = "AbortError";
+    return err;
+  }
+  var KEYCHANGES = /* @__PURE__ */ Symbol("Key changes");
+  var objectToString = Object.prototype.toString;
+  var objectHasOwnProperty = Object.prototype.hasOwnProperty;
+  function canBeMadeReactive(value) {
+    if (typeof value !== "object" || value === null) {
+      return false;
+    }
+    const raw = toRaw(value);
+    if (Array.isArray(raw) || raw instanceof Set || raw instanceof Map || raw instanceof WeakMap) {
+      return true;
+    }
+    return objectToString.call(raw) === "[object Object]";
+  }
+  function possiblyReactive(val, atom) {
+    return !atom && canBeMadeReactive(val) ? proxy(val) : val;
+  }
+  var skipped = /* @__PURE__ */ new WeakSet();
+  function markRaw(value) {
+    skipped.add(value);
+    return value;
+  }
+  function toRaw(value) {
+    return targets.has(value) ? targets.get(value) : value;
+  }
+  var targetToKeysToAtomItem = /* @__PURE__ */ new WeakMap();
+  function getTargetKeyAtom(target, key) {
+    let keyToAtomItem = targetToKeysToAtomItem.get(target);
+    if (!keyToAtomItem) {
+      keyToAtomItem = /* @__PURE__ */ new Map();
+      targetToKeysToAtomItem.set(target, keyToAtomItem);
+    }
+    let atom = keyToAtomItem.get(key);
+    if (!atom) {
+      atom = {
+        value: void 0,
+        observers: /* @__PURE__ */ new Set()
+      };
+      keyToAtomItem.set(key, atom);
+    }
+    return atom;
+  }
+  function onReadTargetKey(target, key, atom) {
+    onReadAtom(atom ?? getTargetKeyAtom(target, key));
+  }
+  function onWriteTargetKey(target, key, atom) {
+    if (!atom) {
+      const keyToAtomItem = targetToKeysToAtomItem.get(target);
+      if (!keyToAtomItem) {
+        return;
+      }
+      if (!keyToAtomItem.has(key)) {
+        return;
+      }
+      atom = keyToAtomItem.get(key);
+    }
+    onWriteAtom(atom);
+  }
+  var targets = /* @__PURE__ */ new WeakMap();
+  var proxyCache = /* @__PURE__ */ new WeakMap();
+  function proxifyTarget(target, atom) {
+    if (!canBeMadeReactive(target)) {
+      throw new OwlError(`Cannot make the given value reactive`);
+    }
+    if (skipped.has(target)) {
+      return target;
+    }
+    if (targets.has(target)) {
+      return target;
+    }
+    const reactive = proxyCache.get(target);
+    if (reactive) {
+      return reactive;
+    }
+    let handler;
+    if (target instanceof Map) {
+      handler = collectionsProxyHandler(target, "Map", atom);
+    } else if (target instanceof Set) {
+      handler = collectionsProxyHandler(target, "Set", atom);
+    } else if (target instanceof WeakMap) {
+      handler = collectionsProxyHandler(target, "WeakMap", atom);
+    } else {
+      handler = basicProxyHandler(atom);
+    }
+    const proxy22 = new Proxy(target, handler);
+    proxyCache.set(target, proxy22);
+    targets.set(proxy22, target);
+    return proxy22;
+  }
+  function proxy(target) {
+    return proxifyTarget(target, null);
+  }
+  function basicProxyHandler(atom) {
+    return {
+      get(target, key, receiver) {
+        onReadTargetKey(target, key, atom);
+        const value = Reflect.get(target, key, receiver);
+        if (atom || typeof value !== "object" || value === null) {
+          return value;
+        }
+        if (!canBeMadeReactive(value)) {
+          return value;
+        }
+        const desc = Object.getOwnPropertyDescriptor(target, key);
+        if (desc && !desc.writable && !desc.configurable) {
+          return value;
+        }
+        return proxifyTarget(value, null);
+      },
+      set(target, key, value, receiver) {
+        const hadKey = objectHasOwnProperty.call(target, key);
+        const originalValue = Reflect.get(target, key, receiver);
+        const ret = Reflect.set(target, key, toRaw(value), receiver);
+        if (!hadKey && objectHasOwnProperty.call(target, key)) {
+          onWriteTargetKey(target, KEYCHANGES, atom);
+        }
+        if (originalValue !== Reflect.get(target, key, receiver) || key === "length" && Array.isArray(target)) {
+          onWriteTargetKey(target, key, atom);
+        }
+        return ret;
+      },
+      deleteProperty(target, key) {
+        const ret = Reflect.deleteProperty(target, key);
+        onWriteTargetKey(target, KEYCHANGES, atom);
+        onWriteTargetKey(target, key, atom);
+        return ret;
+      },
+      ownKeys(target) {
+        onReadTargetKey(target, KEYCHANGES, atom);
+        return Reflect.ownKeys(target);
+      },
+      has(target, key) {
+        onReadTargetKey(target, KEYCHANGES, atom);
+        return Reflect.has(target, key);
+      }
+    };
+  }
+  function makeKeyObserver(methodName, target, atom) {
+    return (key) => {
+      key = toRaw(key);
+      onReadTargetKey(target, key, atom);
+      return possiblyReactive(target[methodName](key), atom);
+    };
+  }
+  function makeIteratorObserver(methodName, target, atom) {
+    return function* () {
+      onReadTargetKey(target, KEYCHANGES, atom);
+      const keys = target.keys();
+      for (const item of target[methodName]()) {
+        const key = keys.next().value;
+        onReadTargetKey(target, key, atom);
+        yield possiblyReactive(item, atom);
+      }
+    };
+  }
+  function makeForEachObserver(target, atom) {
+    return function forEach(forEachCb, thisArg) {
+      onReadTargetKey(target, KEYCHANGES, atom);
+      target.forEach(function(val, key, targetObj) {
+        onReadTargetKey(target, key, atom);
+        forEachCb.call(
+          thisArg,
+          possiblyReactive(val, atom),
+          possiblyReactive(key, atom),
+          possiblyReactive(targetObj, atom)
+        );
+      }, thisArg);
+    };
+  }
+  function delegateAndNotify(setterName, getterName, target, atom) {
+    return (key, value) => {
+      key = toRaw(key);
+      const hadKey = target.has(key);
+      const originalValue = target[getterName](key);
+      const ret = target[setterName](key, value);
+      const hasKey = target.has(key);
+      if (hadKey !== hasKey) {
+        onWriteTargetKey(target, KEYCHANGES, atom);
+      }
+      if (originalValue !== target[getterName](key)) {
+        onWriteTargetKey(target, key, atom);
+      }
+      return ret;
+    };
+  }
+  function makeClearNotifier(target, atom) {
+    return () => {
+      const allKeys = [...target.keys()];
+      target.clear();
+      onWriteTargetKey(target, KEYCHANGES, atom);
+      for (const key of allKeys) {
+        onWriteTargetKey(target, key, atom);
+      }
+    };
+  }
+  var rawTypeToFuncHandlers = {
+    Set: (target, atom) => ({
+      has: makeKeyObserver("has", target, atom),
+      add: delegateAndNotify("add", "has", target, atom),
+      delete: delegateAndNotify("delete", "has", target, atom),
+      keys: makeIteratorObserver("keys", target, atom),
+      values: makeIteratorObserver("values", target, atom),
+      entries: makeIteratorObserver("entries", target, atom),
+      [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, atom),
+      forEach: makeForEachObserver(target, atom),
+      clear: makeClearNotifier(target, atom),
+      get size() {
+        onReadTargetKey(target, KEYCHANGES, atom);
+        return target.size;
+      }
+    }),
+    Map: (target, atom) => ({
+      has: makeKeyObserver("has", target, atom),
+      get: makeKeyObserver("get", target, atom),
+      set: delegateAndNotify("set", "get", target, atom),
+      delete: delegateAndNotify("delete", "has", target, atom),
+      keys: makeIteratorObserver("keys", target, atom),
+      values: makeIteratorObserver("values", target, atom),
+      entries: makeIteratorObserver("entries", target, atom),
+      [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, atom),
+      forEach: makeForEachObserver(target, atom),
+      clear: makeClearNotifier(target, atom),
+      get size() {
+        onReadTargetKey(target, KEYCHANGES, atom);
+        return target.size;
+      }
+    }),
+    WeakMap: (target, atom) => ({
+      has: makeKeyObserver("has", target, atom),
+      get: makeKeyObserver("get", target, atom),
+      set: delegateAndNotify("set", "get", target, atom),
+      delete: delegateAndNotify("delete", "has", target, atom)
+    })
+  };
+  function collectionsProxyHandler(target, targetRawType, atom) {
+    const specialHandlers = rawTypeToFuncHandlers[targetRawType](target, atom);
+    return Object.assign(basicProxyHandler(atom), {
+      // FIXME: probably broken when part of prototype chain since we ignore the receiver
+      get(target2, key) {
+        if (objectHasOwnProperty.call(specialHandlers, key)) {
+          return specialHandlers[key];
+        }
+        onReadTargetKey(target2, key, atom);
+        return possiblyReactive(target2[key], atom);
+      }
+    });
+  }
+  function buildSignal(value, set) {
+    const atom = {
+      type: "signal",
+      value,
+      observers: /* @__PURE__ */ new Set()
+    };
+    let readValue = set(atom);
+    const readSignal = () => {
+      onReadAtom(atom);
+      return readValue;
+    };
+    readSignal[atomSymbol] = atom;
+    readSignal.set = function writeSignal(newValue) {
+      if (Object.is(atom.value, newValue)) {
+        return;
+      }
+      atom.value = newValue;
+      readValue = set(atom);
+      onWriteAtom(atom);
+    };
+    return readSignal;
+  }
+  function invalidateSignal(signal22) {
+    if (typeof signal22 !== "function" || signal22[atomSymbol]?.type !== "signal") {
+      throw new OwlError(`Value is not a signal (${signal22})`);
+    }
+    onWriteAtom(signal22[atomSymbol]);
+  }
+  function signalArray(initialValue) {
+    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+  }
+  function signalObject(initialValue) {
+    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+  }
+  function signalMap(initialValue) {
+    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+  }
+  function signalSet(initialValue) {
+    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+  }
+  function signal(value) {
+    return buildSignal(value, (atom) => atom.value);
+  }
+  signal.invalidate = invalidateSignal;
+  signal.Array = signalArray;
+  signal.Map = signalMap;
+  signal.Object = signalObject;
+  signal.Set = signalSet;
+  function readonlySetter() {
+    throw new OwlError(
+      "Cannot write to a read-only computed value. Pass a `set` option to make it writable."
+    );
+  }
+  function computed(getter, options = {}) {
+    const computation = createComputation(() => {
+      const newValue = getter();
+      if (!Object.is(computation.value, newValue)) {
+        onWriteAtom(computation);
+      }
+      return newValue;
+    }, true);
+    function readComputed() {
+      if (computation.state !== 0) {
+        updateComputation(computation);
+      }
+      onReadAtom(computation);
+      return computation.value;
+    }
+    readComputed[atomSymbol] = computation;
+    readComputed.set = options.set ?? readonlySetter;
+    getScope()?.computations.push(computation);
+    return readComputed;
+  }
+  function effect(fn) {
+    const computation = createComputation(() => {
+      setComputation(void 0);
+      unsubscribeEffect(computation);
+      setComputation(computation);
+      return fn();
+    }, false);
+    getCurrentComputation()?.observers.add(computation);
+    updateComputation(computation);
+    return function cleanupEffect2() {
+      const previousComputation = getCurrentComputation();
+      setComputation(void 0);
+      unsubscribeEffect(computation);
+      setComputation(previousComputation);
+    };
+  }
+  function unsubscribeEffect(effect2) {
+    removeSources(effect2);
+    cleanupEffect(effect2);
+    for (const childEffect of effect2.observers) {
+      childEffect.state = 0;
+      removeSources(childEffect);
+      unsubscribeEffect(childEffect);
+    }
+    effect2.observers.clear();
+  }
+  function cleanupEffect(effect2) {
+    const cleanupFn = effect2.value;
+    if (cleanupFn && typeof cleanupFn === "function") {
+      cleanupFn();
+      effect2.value = void 0;
+    }
+  }
+  function asyncComputed(fetcher, options = {}) {
+    const value = signal(options.initial);
+    const loading = signal(false);
+    const error = signal(null);
+    const refreshTick = signal(0);
+    const scope = getScope();
+    let runId = 0;
+    let runController = null;
+    const stopEffect = effect(() => {
+      refreshTick();
+      const myRunId = ++runId;
+      if (runController) {
+        runController.abort();
+      }
+      const controller = new AbortController();
+      runController = controller;
+      const abortSignals = [controller.signal];
+      if (scope?.abortSignal) {
+        abortSignals.push(scope.abortSignal);
+      }
+      loading.set(true);
+      error.set(null);
+      let promise;
+      try {
+        promise = fetcher({ abortSignal: AbortSignal.any(abortSignals) });
+      } catch (e) {
+        if (myRunId !== runId) return;
+        if (isAbortError(e)) {
+          loading.set(false);
+          return;
+        }
+        error.set(e);
+        loading.set(false);
+        return;
+      }
+      promise.then(
+        (result) => {
+          if (myRunId !== runId) return;
+          value.set(result);
+          loading.set(false);
+        },
+        (e) => {
+          if (myRunId !== runId) return;
+          if (isAbortError(e)) {
+            loading.set(false);
+            return;
+          }
+          error.set(e);
+          loading.set(false);
+        }
+      );
+    });
+    function dispose() {
+      stopEffect();
+      runController?.abort();
+      runController = null;
+    }
+    scope?.onDestroy(dispose);
+    const read = (() => value());
+    read.loading = () => loading();
+    read.error = () => error();
+    read.refresh = () => refreshTick.set(refreshTick() + 1);
+    read.dispose = dispose;
+    return read;
+  }
+  function assertType(value, validation, errorMessage = "Value does not match the type") {
+    const issues = validateType(value, validation);
+    if (issues.length) {
+      const issueStrings = JSON.stringify(
+        issues,
+        (key, value2) => {
+          if (typeof value2 === "function") {
+            return value2.name;
+          }
+          return value2;
+        },
+        2
+      );
+      throw new OwlError(`${errorMessage}
+${issueStrings}`);
+    }
+  }
+  function createContext(issues, value, path, parent) {
+    return {
+      issueDepth: 0,
+      path,
+      value,
+      get isValid() {
+        return !issues.length;
+      },
+      addIssue(issue) {
+        issues.push({
+          received: this.value,
+          path: this.path,
+          ...issue
+        });
+      },
+      mergeIssues(newIssues) {
+        issues.push(...newIssues);
+      },
+      validate(type) {
+        type(this);
+        if (!this.isValid && parent) {
+          parent.issueDepth = this.issueDepth + 1;
+        }
+      },
+      withIssues(issues2) {
+        return createContext(issues2, this.value, this.path, this);
+      },
+      withKey(key) {
+        return createContext(issues, this.value[key], this.path.concat(key), this);
+      }
+    };
+  }
+  function validateType(value, validation) {
+    const issues = [];
+    validation(createContext(issues, value, []));
+    return issues;
+  }
+  function anyType() {
+    return function validateAny() {
+    };
+  }
+  function booleanType() {
+    return function validateBoolean(context) {
+      if (typeof context.value !== "boolean") {
+        context.addIssue({ message: "value is not a boolean" });
+      }
+    };
+  }
+  function numberType() {
+    return function validateNumber(context) {
+      if (typeof context.value !== "number") {
+        context.addIssue({ message: "value is not a number" });
+      }
+    };
+  }
+  function stringType() {
+    return function validateString(context) {
+      if (typeof context.value !== "string") {
+        context.addIssue({ message: "value is not a string" });
+      }
+    };
+  }
+  function arrayType(elementType) {
+    return function validateArray(context) {
+      if (!Array.isArray(context.value)) {
+        context.addIssue({ message: "value is not an array" });
+        return;
+      }
+      if (!elementType) {
+        return;
+      }
+      for (let index = 0; index < context.value.length; index++) {
+        context.withKey(index).validate(elementType);
+      }
+    };
+  }
+  function constructorType(constructor) {
+    return function validateConstructor(context) {
+      if (!(typeof context.value === "function") || !(context.value === constructor || context.value.prototype instanceof constructor)) {
+        context.addIssue({ message: `value is not '${constructor.name}' or an extension` });
+      }
+    };
+  }
+  function customValidator(type, validator, errorMessage = "value does not match custom validation") {
+    return function validateCustom(context) {
+      context.validate(type);
+      if (!context.isValid) {
+        return;
+      }
+      if (!validator(context.value)) {
+        context.addIssue({ message: errorMessage });
+      }
+    };
+  }
+  function functionType(parameters = [], result = void 0) {
+    return function validateFunction(context) {
+      if (typeof context.value !== "function") {
+        context.addIssue({ message: "value is not a function" });
+      }
+    };
+  }
+  function instanceType(constructor) {
+    return function validateInstanceType(context) {
+      if (!(context.value instanceof constructor)) {
+        context.addIssue({ message: `value is not an instance of '${constructor.name}'` });
+      }
+    };
+  }
+  function intersection(types22) {
+    return function validateIntersection(context) {
+      for (const type of types22) {
+        context.validate(type);
+      }
+    };
+  }
+  function literalType(literal) {
+    return function validateLiteral(context) {
+      if (context.value !== literal) {
+        context.addIssue({
+          message: `value is not equal to ${typeof literal === "string" ? `'${literal}'` : literal}`
+        });
+      }
+    };
+  }
+  function literalSelection(literals) {
+    return union(literals.map(literalType));
+  }
+  function validateObject(context, schema, isStrict) {
+    if (typeof context.value !== "object" || Array.isArray(context.value) || context.value === null) {
+      context.addIssue({ message: "value is not an object" });
+      return;
+    }
+    if (!schema) {
+      return;
+    }
+    const isShape = !Array.isArray(schema);
+    let shape = schema;
+    if (Array.isArray(schema)) {
+      shape = {};
+      for (const key of schema) {
+        shape[key] = null;
+      }
+    }
+    const missingKeys = [];
+    for (const key in shape) {
+      const property = key.endsWith("?") ? key.slice(0, -1) : key;
+      if (context.value[property] === void 0) {
+        if (!key.endsWith("?")) {
+          missingKeys.push(property);
+        }
+        continue;
+      }
+      if (isShape) {
+        context.withKey(property).validate(shape[key]);
+      }
+    }
+    if (missingKeys.length) {
+      context.addIssue({
+        message: "object value has missing keys",
+        missingKeys
+      });
+    }
+    if (isStrict) {
+      const unknownKeys = [];
+      for (const key in context.value) {
+        if (!(key in shape) && !(`${key}?` in shape)) {
+          unknownKeys.push(key);
+        }
+      }
+      if (unknownKeys.length) {
+        context.addIssue({
+          message: "object value has unknown keys",
+          unknownKeys
+        });
+      }
+    }
+  }
+  function objectType(schema = {}) {
+    return function validateLooseObject(context) {
+      validateObject(context, schema, false);
+    };
+  }
+  function strictObjectType(schema) {
+    return function validateStrictObject(context) {
+      validateObject(context, schema, true);
+    };
+  }
+  function promiseType(type) {
+    return function validatePromise(context) {
+      if (!(context.value instanceof Promise)) {
+        context.addIssue({ message: "value is not a promise" });
+      }
+    };
+  }
+  function recordType(valueType) {
+    return function validateRecord(context) {
+      if (typeof context.value !== "object" || Array.isArray(context.value) || context.value === null) {
+        context.addIssue({ message: "value is not an object" });
+        return;
+      }
+      if (!valueType) {
+        return;
+      }
+      for (const key in context.value) {
+        context.withKey(key).validate(valueType);
+      }
+    };
+  }
+  function tuple(types22) {
+    return function validateTuple(context) {
+      if (!Array.isArray(context.value)) {
+        context.addIssue({ message: "value is not an array" });
+        return;
+      }
+      if (context.value.length !== types22.length) {
+        context.addIssue({ message: "tuple value does not have the correct length" });
+        return;
+      }
+      for (let index = 0; index < types22.length; index++) {
+        context.withKey(index).validate(types22[index]);
+      }
+    };
+  }
+  function union(types22) {
+    return function validateUnion(context) {
+      let firstIssueIndex = 0;
+      const subIssues = [];
+      for (const type of types22) {
+        const subContext = context.withIssues(subIssues);
+        subContext.validate(type);
+        if (subIssues.length === firstIssueIndex || subContext.issueDepth > 0) {
+          context.mergeIssues(subIssues.slice(firstIssueIndex));
+          return;
+        }
+        firstIssueIndex = subIssues.length;
+      }
+      context.addIssue({
+        message: "value does not match union type",
+        subIssues
+      });
+    };
+  }
+  function reactiveValueType(type) {
+    return function validateReactiveValue(context) {
+      if (typeof context.value !== "function" || !context.value[atomSymbol]) {
+        context.addIssue({ message: "value is not a reactive value" });
+      }
+    };
+  }
+  function ref(type) {
+    return union([literalType(null), instanceType(type)]);
+  }
+  var types = {
+    and: intersection,
+    any: anyType,
+    array: arrayType,
+    boolean: booleanType,
+    constructor: constructorType,
+    customValidator,
+    function: functionType,
+    instanceOf: instanceType,
+    literal: literalType,
+    number: numberType,
+    object: objectType,
+    or: union,
+    promise: promiseType,
+    record: recordType,
+    ref,
+    selection: literalSelection,
+    signal: reactiveValueType,
+    strictObject: strictObjectType,
+    string: stringType,
+    tuple
+  };
+  var Registry = class {
+    _map = signal.Object(/* @__PURE__ */ Object.create(null));
+    _name;
+    _validation;
+    constructor(options = {}) {
+      this._name = options.name || "registry";
+      this._validation = options.validation;
+    }
+    entries = computed(() => {
+      const entries = Object.entries(this._map()).sort((el1, el2) => el1[1][0] - el2[1][0]).map(([str, elem]) => [str, elem[1]]);
+      return entries;
+    });
+    items = computed(() => this.entries().map((e) => e[1]));
+    addById(item, options = {}) {
+      if (!item.id) {
+        throw new OwlError(`Item should have an id key (registry '${this._name}')`);
+      }
+      return this.add(item.id, item, options);
+    }
+    add(key, value, options = {}) {
+      if (!options.force && key in this._map()) {
+        throw new OwlError(
+          `Key "${key}" is already registered (registry '${this._name}'). Use { force: true } to overwrite.`
+        );
+      }
+      if (this._validation) {
+        const info = this._name ? ` (registry '${this._name}', key: '${key}')` : ` (key: '${key}')`;
+        assertType(value, this._validation, `Registry entry does not match the type${info}`);
+      }
+      this._map()[key] = [options.sequence ?? 50, value];
+      return this;
+    }
+    get(key, defaultValue) {
+      const hasKey = key in this._map();
+      if (!hasKey && arguments.length < 2) {
+        throw new OwlError(`Cannot find key "${key}" (registry '${this._name}')`);
+      }
+      return hasKey ? this._map()[key][1] : defaultValue;
+    }
+    delete(key) {
+      delete this._map()[key];
+    }
+    has(key) {
+      return key in this._map();
+    }
+    use(key, value, options = {}) {
+      const scope = useScope();
+      this.add(key, value, options);
+      scope.onDestroy(() => {
+        if (this._map()[key]?.[1] === value) {
+          this.delete(key);
+        }
+      });
+      return this;
+    }
+    useById(item, options = {}) {
+      if (!item.id) {
+        throw new OwlError(`Item should have an id key (registry '${this._name}')`);
+      }
+      return this.use(item.id, item, options);
+    }
+  };
+  var Resource = class {
+    _items = signal.Array([]);
+    _name;
+    _validation;
+    constructor(options = {}) {
+      this._name = options.name;
+      this._validation = options.validation;
+    }
+    items = computed(() => {
+      return this._items().sort((el1, el2) => el1[0] - el2[0]).map((elem) => elem[1]);
+    });
+    add(item, options = {}) {
+      if (this._validation) {
+        const info = this._name ? ` (resource '${this._name}')` : "";
+        assertType(item, this._validation, `Resource item does not match the type${info}`);
+      }
+      this._items().push([options.sequence ?? 50, item]);
+      return this;
+    }
+    delete(item) {
+      const items = this._items().filter(([seq, val]) => val !== item);
+      this._items.set(items);
+      return this;
+    }
+    has(item) {
+      return this._items().some(([s, value]) => value === item);
+    }
+    use(item, options = {}) {
+      const scope = useScope();
+      this.add(item, options);
+      scope.onDestroy(() => this.delete(item));
+      return this;
+    }
+  };
+  var Plugin = class {
+    static _shadowId;
+    static get id() {
+      return this._shadowId ?? this.name;
+    }
+    static set id(shadowId) {
+      this._shadowId = shadowId;
+    }
+    __owl__;
+    constructor(manager) {
+      this.__owl__ = manager;
+    }
+    setup() {
+    }
+  };
+  var PluginManager = class extends Scope {
+    config;
+    plugins;
+    // Resolves once all pending plugin willStart callbacks have settled. The
+    // scope transitions to MOUNTED as the last step of this chain. Consumers
+    // (App.mount, providePlugins) await this before treating the manager as
+    // ready. `willStart` itself is inherited from Scope.
+    ready = Promise.resolve();
+    constructor(app, options = {}) {
+      super(app);
+      this.config = options.config ?? {};
+      if (options.parent) {
+        const parent = options.parent;
+        parent.onDestroy(() => this.destroy());
+        this.plugins = Object.create(parent.plugins);
+      } else {
+        this.plugins = {};
+      }
+    }
+    destroy() {
+      this.finalize((e) => console.error(e));
+    }
+    getPluginById(id) {
+      return this.plugins[id] || null;
+    }
+    getPlugin(pluginConstructor) {
+      return this.getPluginById(pluginConstructor.id);
+    }
+    startPlugin(pluginConstructor) {
+      if (!pluginConstructor.id) {
+        throw new OwlError(`Plugin "${pluginConstructor.name}" has no id`);
+      }
+      if (this.plugins.hasOwnProperty(pluginConstructor.id)) {
+        const existingPluginType = this.getPluginById(pluginConstructor.id).constructor;
+        if (existingPluginType !== pluginConstructor) {
+          throw new OwlError(
+            `Trying to start a plugin with the same id as an other plugin (id: '${pluginConstructor.id}', existing plugin: '${existingPluginType.name}', starting plugin: '${pluginConstructor.name}')`
+          );
+        }
+        return null;
+      }
+      const plugin2 = new pluginConstructor(this);
+      this.plugins[pluginConstructor.id] = plugin2;
+      plugin2.setup();
+      return plugin2;
+    }
+    startPlugins(pluginConstructors) {
+      scopeStack.push(this);
+      try {
+        for (const pluginConstructor of pluginConstructors) {
+          this.startPlugin(pluginConstructor);
+        }
+      } finally {
+        scopeStack.pop();
+      }
+      const pending = this.willStart.splice(0);
+      if (pending.length) {
+        this.ready = Promise.all(pending.map((fn) => fn())).then(() => {
+          if (this.status < STATUS.MOUNTED) {
+            this.status = STATUS.MOUNTED;
+          }
+        });
+      } else if (this.status < STATUS.MOUNTED) {
+        this.status = STATUS.MOUNTED;
+      }
+    }
+  };
+  function startPlugins(manager, plugins) {
+    if (Array.isArray(plugins)) {
+      manager.startPlugins(plugins);
+    } else {
+      manager.onDestroy(
+        effect(() => {
+          const pluginItems = plugins.items();
+          untrack(() => manager.startPlugins(pluginItems));
+        })
+      );
+    }
+  }
+  var fibersInError = /* @__PURE__ */ new WeakMap();
+  var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
+  function invokeErrorHandlers(node, error, finalize, markFibers) {
+    while (node) {
+      if (markFibers && node.fiber) {
+        fibersInError.set(node.fiber, error);
+      }
+      const handlers = nodeErrorHandlers.get(node);
+      if (handlers) {
+        for (let i = handlers.length - 1; i >= 0; i--) {
+          try {
+            handlers[i](error, finalize);
+            return { handled: true, error };
+          } catch (e) {
+            error = e;
+          }
+        }
+      }
+      node = node.parent;
+    }
+    return { handled: false, error };
+  }
+  function forwardErrorToParent(boundary) {
+    return (error, finalize) => {
+      const { handled } = invokeErrorHandlers(boundary, error, finalize, false);
+      if (!handled) {
+        boundary.app._handleError(finalize());
+      }
+    };
+  }
+  function handleError(params) {
+    let { error } = params;
+    let node = "node" in params ? params.node : params.fiber.node;
+    const fiber = "fiber" in params ? params.fiber : node.fiber;
+    const app = node.app;
+    if (fiber) {
+      let current = fiber;
+      do {
+        current.node.fiber = current;
+        fibersInError.set(current, error);
+        current = current.parent;
+      } while (current);
+      fibersInError.set(fiber.root, error);
+    }
+    const finalize = () => {
+      try {
+        app.destroy();
+      } catch (e) {
+      }
+      return Object.assign(new OwlError(`[Owl] Unhandled error. Destroying the root component`), {
+        cause: error
+      });
+    };
+    const result = invokeErrorHandlers(node, error, finalize, true);
+    if (!result.handled) {
+      error = result.error;
+      app._handleError(finalize());
+    }
+  }
   function filterOutModifiersFromData(dataList) {
     dataList = dataList.slice();
     const modifiers = [];
@@ -130,8 +1355,6 @@ ${"-".repeat(columnIndex - 1)}^`;
       return false;
     }
   };
-
-  // src/runtime/blockdom/toggler.ts
   var txt = document.createTextNode("");
   var VToggler = class {
     key;
@@ -187,8 +1410,6 @@ ${"-".repeat(columnIndex - 1)}^`;
   function toggler(key, child) {
     return new VToggler(key, child);
   }
-
-  // src/runtime/blockdom/attributes.ts
   var elemSetAttribute;
   var removeAttribute;
   var tokenListAdd;
@@ -324,12 +1545,12 @@ ${"-".repeat(columnIndex - 1)}^`;
     }
   }
   var CSS_PROP_CACHE = {};
-  function toKebabCase(prop) {
-    if (prop in CSS_PROP_CACHE) {
-      return CSS_PROP_CACHE[prop];
+  function toKebabCase(prop2) {
+    if (prop2 in CSS_PROP_CACHE) {
+      return CSS_PROP_CACHE[prop2];
     }
-    const result = prop.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
-    CSS_PROP_CACHE[prop] = result;
+    const result = prop2.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
+    CSS_PROP_CACHE[prop2] = result;
     return result;
   }
   function toStyleObj(expr) {
@@ -350,19 +1571,19 @@ ${"-".repeat(columnIndex - 1)}^`;
           if (colonIdx === -1) {
             continue;
           }
-          const prop = trim.call(part.slice(0, colonIdx));
+          const prop2 = trim.call(part.slice(0, colonIdx));
           const value = trim.call(part.slice(colonIdx + 1));
-          if (prop && value && value !== "undefined") {
-            result[prop] = value;
+          if (prop2 && value && value !== "undefined") {
+            result[prop2] = value;
           }
         }
         return result;
       }
       case "object":
-        for (let prop in expr) {
-          const value = expr[prop];
+        for (let prop2 in expr) {
+          const value = expr[prop2];
           if (value || value === 0) {
-            result[toKebabCase(prop)] = String(value);
+            result[toKebabCase(prop2)] = String(value);
           }
         }
         return result;
@@ -393,41 +1614,27 @@ ${"-".repeat(columnIndex - 1)}^`;
   function setStyle(val) {
     val = val === "" ? {} : toStyleObj(val);
     const style = this.style;
-    for (let prop in val) {
-      style.setProperty(prop, val[prop]);
+    for (let prop2 in val) {
+      style.setProperty(prop2, val[prop2]);
     }
   }
   function updateStyle(val, oldVal) {
     oldVal = oldVal === "" ? {} : toStyleObj(oldVal);
     val = val === "" ? {} : toStyleObj(val);
     const style = this.style;
-    for (let prop in oldVal) {
-      if (!(prop in val)) {
-        style.removeProperty(prop);
+    for (let prop2 in oldVal) {
+      if (!(prop2 in val)) {
+        style.removeProperty(prop2);
       }
     }
-    for (let prop in val) {
-      if (val[prop] !== oldVal[prop]) {
-        style.setProperty(prop, val[prop]);
+    for (let prop2 in val) {
+      if (val[prop2] !== oldVal[prop2]) {
+        style.setProperty(prop2, val[prop2]);
       }
     }
     if (!style.cssText) {
       removeAttribute.call(this, "style");
     }
-  }
-
-  // src/runtime/utils.ts
-  function batched(callback) {
-    let scheduled = false;
-    return function batchedCall(...args) {
-      if (!scheduled) {
-        scheduled = true;
-        Promise.resolve().then(() => {
-          scheduled = false;
-          callback(...args);
-        });
-      }
-    };
   }
   function inOwnerDocument(el) {
     if (!el) {
@@ -464,8 +1671,8 @@ ${"-".repeat(columnIndex - 1)}^`;
           "Cannot mount a component: the target document is not attached to a window (defaultView is missing)"
         );
       }
-      const HTMLElement = document2.defaultView.HTMLElement;
-      if (target instanceof HTMLElement || target instanceof ShadowRoot) {
+      const HTMLElement2 = document2.defaultView.HTMLElement;
+      if (target instanceof HTMLElement2 || target instanceof ShadowRoot) {
         if (!isAttachedToDocument(target, document2)) {
           throw new OwlError("Cannot mount a component on a detached dom node");
         }
@@ -526,8 +1733,6 @@ ${"-".repeat(columnIndex - 1)}^`;
     acc += strings[i];
     return new Markup(acc);
   }
-
-  // src/runtime/blockdom/events.ts
   function createEventHandler(rawEvent) {
     const eventName = rawEvent.split(".")[0];
     const capture = rawEvent.includes(".capture");
@@ -607,8 +1812,6 @@ ${"-".repeat(columnIndex - 1)}^`;
     });
     CONFIGURED_SYNTHETIC_EVENTS[eventKey] = true;
   }
-
-  // src/runtime/blockdom/multi.ts
   var getDescriptor = (o, p) => Object.getOwnPropertyDescriptor(o, p);
   var nodeInsertBefore;
   var nodeSetTextContent;
@@ -746,8 +1949,6 @@ ${"-".repeat(columnIndex - 1)}^`;
   function multi(children) {
     return new VMulti(children);
   }
-
-  // src/runtime/blockdom/text.ts
   var getDescriptor2 = (o, p) => Object.getOwnPropertyDescriptor(o, p);
   var nodeInsertBefore2;
   var characterDataSetData;
@@ -812,8 +2013,6 @@ ${"-".repeat(columnIndex - 1)}^`;
         return value || "";
     }
   }
-
-  // src/runtime/blockdom/block_compiler.ts
   var getDescriptor3 = (o, p) => Object.getOwnPropertyDescriptor(o, p);
   var nodeProto;
   var elementProto;
@@ -1291,8 +2490,6 @@ ${"-".repeat(columnIndex - 1)}^`;
   function setText(value) {
     characterDataSetData2.call(this, toText(value));
   }
-
-  // src/runtime/blockdom/list.ts
   var getDescriptor4 = (o, p) => Object.getOwnPropertyDescriptor(o, p);
   var nodeInsertBefore3;
   var nodeAppendChild;
@@ -1509,8 +2706,6 @@ ${"-".repeat(columnIndex - 1)}^`;
     }
     return mapping;
   }
-
-  // src/runtime/blockdom/html.ts
   var nodeInsertBefore4;
   var nodeRemoveChild4;
   if (typeof Node !== "undefined") {
@@ -1591,8 +2786,6 @@ ${"-".repeat(columnIndex - 1)}^`;
   function html(str) {
     return new VHtml(str);
   }
-
-  // src/runtime/blockdom/event_catcher.ts
   function createCatcher(eventsSpec) {
     const n = Object.keys(eventsSpec).length;
     class VCatcher {
@@ -1681,8 +2874,6 @@ ${"-".repeat(columnIndex - 1)}^`;
       return new VCatcher(child, handlers);
     };
   }
-
-  // src/runtime/blockdom/index.ts
   function mount(vnode, fixture, afterNode = null) {
     vnode.mount(fixture, afterNode);
   }
@@ -1695,302 +2886,6 @@ ${"-".repeat(columnIndex - 1)}^`;
     }
     vnode.remove();
   }
-
-  // src/runtime/reactivity/computations.ts
-  var atomSymbol = /* @__PURE__ */ Symbol("Atom");
-  var observers = [];
-  var immediateObservers = [];
-  var currentComputation;
-  function createComputation(compute, isDerived, state = 1 /* STALE */, immediate = false) {
-    return {
-      state,
-      value: void 0,
-      compute,
-      sources: /* @__PURE__ */ new Set(),
-      observers: /* @__PURE__ */ new Set(),
-      isDerived,
-      immediate
-    };
-  }
-  function onReadAtom(atom) {
-    if (!currentComputation) {
-      return;
-    }
-    currentComputation.sources.add(atom);
-    atom.observers.add(currentComputation);
-  }
-  function onWriteAtom(atom) {
-    for (const ctx of atom.observers) {
-      if (ctx.state === 0 /* EXECUTED */) {
-        if (ctx.isDerived) {
-          markDownstream(ctx);
-        } else if (ctx.immediate) {
-          immediateObservers.push(ctx);
-        } else {
-          observers.push(ctx);
-        }
-      }
-      ctx.state = 1 /* STALE */;
-    }
-    if (immediateObservers.length) {
-      const toRun = immediateObservers;
-      immediateObservers = [];
-      for (const ctx of toRun) {
-        updateComputation(ctx);
-      }
-    }
-    batchProcessEffects();
-  }
-  var batchProcessEffects = batched(processEffects);
-  function processEffects() {
-    for (let i = 0; i < observers.length; i++) {
-      updateComputation(observers[i]);
-    }
-    observers.length = 0;
-  }
-  function getCurrentComputation() {
-    return currentComputation;
-  }
-  function setComputation(computation) {
-    currentComputation = computation;
-  }
-  function updateComputation(computation) {
-    const state = computation.state;
-    if (state === 0 /* EXECUTED */) {
-      return;
-    }
-    if (state === 2 /* PENDING */) {
-      for (const source of computation.sources) {
-        if (!("compute" in source)) {
-          continue;
-        }
-        updateComputation(source);
-      }
-      if (computation.state !== 1 /* STALE */) {
-        computation.state = 0 /* EXECUTED */;
-        return;
-      }
-    }
-    removeSources(computation);
-    const previousComputation = currentComputation;
-    currentComputation = computation;
-    computation.value = computation.compute();
-    computation.state = 0 /* EXECUTED */;
-    currentComputation = previousComputation;
-  }
-  function removeSources(computation) {
-    const sources = computation.sources;
-    for (const source of sources) {
-      const observers2 = source.observers;
-      observers2.delete(computation);
-    }
-    sources.clear();
-  }
-  function disposeComputation(computation) {
-    for (const source of computation.sources) {
-      source.observers.delete(computation);
-      if ("compute" in source && source.isDerived && source.observers.size === 0) {
-        disposeComputation(source);
-      }
-    }
-    computation.sources.clear();
-    computation.state = 1 /* STALE */;
-  }
-  function markDownstream(computation) {
-    const stack = [computation];
-    let current;
-    while (current = stack.pop()) {
-      for (const observer of current.observers) {
-        if (observer.state) {
-          continue;
-        }
-        observer.state = 2 /* PENDING */;
-        if (observer.isDerived) {
-          stack.push(observer);
-        } else {
-          observers.push(observer);
-        }
-      }
-    }
-  }
-  function untrack(fn) {
-    const previousComputation = currentComputation;
-    currentComputation = void 0;
-    let result;
-    try {
-      result = fn();
-    } finally {
-      currentComputation = previousComputation;
-    }
-    return result;
-  }
-
-  // src/runtime/reactivity/effect.ts
-  function effect(fn) {
-    const computation = createComputation(() => {
-      setComputation(void 0);
-      unsubscribeEffect(computation);
-      setComputation(computation);
-      return fn();
-    }, false);
-    getCurrentComputation()?.observers.add(computation);
-    updateComputation(computation);
-    return function cleanupEffect2() {
-      const previousComputation = getCurrentComputation();
-      setComputation(void 0);
-      unsubscribeEffect(computation);
-      setComputation(previousComputation);
-    };
-  }
-  function immediateEffect(fn) {
-    const computation = createComputation(
-      () => {
-        setComputation(void 0);
-        unsubscribeEffect(computation);
-        setComputation(computation);
-        return fn();
-      },
-      false,
-      1 /* STALE */,
-      true
-    );
-    getCurrentComputation()?.observers.add(computation);
-    updateComputation(computation);
-    return function cleanupImmediateEffect() {
-      const previousComputation = getCurrentComputation();
-      setComputation(void 0);
-      unsubscribeEffect(computation);
-      setComputation(previousComputation);
-    };
-  }
-  function unsubscribeEffect(effect2) {
-    removeSources(effect2);
-    cleanupEffect(effect2);
-    for (const childEffect of effect2.observers) {
-      childEffect.state = 0 /* EXECUTED */;
-      removeSources(childEffect);
-      unsubscribeEffect(childEffect);
-    }
-    effect2.observers.clear();
-  }
-  function cleanupEffect(effect2) {
-    const cleanupFn = effect2.value;
-    if (cleanupFn && typeof cleanupFn === "function") {
-      cleanupFn();
-      effect2.value = void 0;
-    }
-  }
-
-  // src/runtime/plugin_manager.ts
-  var Plugin = class {
-    static _shadowId;
-    static get id() {
-      return this._shadowId ?? this.name;
-    }
-    static set id(shadowId) {
-      this._shadowId = shadowId;
-    }
-    __owl__;
-    constructor(manager) {
-      this.__owl__ = manager;
-    }
-    setup() {
-    }
-  };
-  var PluginManager = class {
-    app;
-    config;
-    onDestroyCb = [];
-    computations = [];
-    plugins;
-    status = STATUS.NEW;
-    constructor(app, options = {}) {
-      this.app = app;
-      this.config = options.config ?? {};
-      if (options.parent) {
-        const parent = options.parent;
-        parent.onDestroyCb.push(() => this.destroy());
-        this.plugins = Object.create(parent.plugins);
-      } else {
-        this.plugins = {};
-      }
-    }
-    destroy() {
-      const cbs = this.onDestroyCb;
-      while (cbs.length) {
-        cbs.pop()();
-      }
-      for (const computation of this.computations) {
-        disposeComputation(computation);
-      }
-      this.status = STATUS.DESTROYED;
-    }
-    getPluginById(id) {
-      return this.plugins[id] || null;
-    }
-    getPlugin(pluginConstructor) {
-      return this.getPluginById(pluginConstructor.id);
-    }
-    startPlugin(pluginConstructor) {
-      if (!pluginConstructor.id) {
-        throw new OwlError(`Plugin "${pluginConstructor.name}" has no id`);
-      }
-      if (this.plugins.hasOwnProperty(pluginConstructor.id)) {
-        const existingPluginType = this.getPluginById(pluginConstructor.id).constructor;
-        if (existingPluginType !== pluginConstructor) {
-          throw new OwlError(
-            `Trying to start a plugin with the same id as an other plugin (id: '${pluginConstructor.id}', existing plugin: '${existingPluginType.name}', starting plugin: '${pluginConstructor.name}')`
-          );
-        }
-        return null;
-      }
-      const plugin2 = new pluginConstructor(this);
-      this.plugins[pluginConstructor.id] = plugin2;
-      plugin2.setup();
-      return plugin2;
-    }
-    startPlugins(pluginConstructors) {
-      contextStack.push({
-        type: "plugin",
-        app: this.app,
-        manager: this,
-        get status() {
-          return this.manager.status;
-        }
-      });
-      try {
-        for (const pluginConstructor of pluginConstructors) {
-          this.startPlugin(pluginConstructor);
-        }
-      } finally {
-        contextStack.pop();
-      }
-      this.status = STATUS.MOUNTED;
-    }
-  };
-  function startPlugins(manager, plugins) {
-    if (Array.isArray(plugins)) {
-      manager.startPlugins(plugins);
-    } else {
-      manager.onDestroyCb.push(
-        effect(() => {
-          const pluginItems = plugins.items();
-          untrack(() => manager.startPlugins(pluginItems));
-        })
-      );
-    }
-  }
-
-  // src/runtime/status.ts
-  var STATUS = {
-    NEW: 0,
-    MOUNTED: 1,
-    // is ready, and in DOM. It has a valid el
-    // component has been created, but has been replaced by a newer component before being mounted
-    // it is cancelled until the next animation frame where it will be destroyed
-    CANCELLED: 2,
-    DESTROYED: 3
-  };
   function status(entity) {
     switch (entity.__owl__.status) {
       case STATUS.NEW:
@@ -2003,130 +2898,6 @@ ${"-".repeat(columnIndex - 1)}^`;
         return "destroyed";
     }
   }
-
-  // src/runtime/context.ts
-  var contextStack = [];
-  function saveContext() {
-    const savedStack = contextStack.slice();
-    return () => {
-      contextStack = savedStack;
-    };
-  }
-  function getContext(type) {
-    const context = contextStack.at(-1);
-    if (!context) {
-      throw new OwlError(`No active context`);
-    }
-    if (type && type !== context.type) {
-      throw new OwlError(`Expected to be in a ${type} context`);
-    }
-    return context;
-  }
-  function createAsyncProtection(context, callback) {
-    return async function asyncContextProtection(...args) {
-      if (context.status > STATUS.MOUNTED) {
-        throw new OwlError(`Function called after the end of life of the ${context.type}`);
-      }
-      const result = await callback.call(this, ...args);
-      if (context.status > STATUS.MOUNTED) {
-        return new Promise(() => {
-        });
-      }
-      return result;
-    };
-  }
-  function useContext() {
-    const context = contextStack.at(-1);
-    return {
-      run(callback) {
-        if (context) {
-          contextStack.push(context);
-          let result;
-          try {
-            result = callback();
-          } finally {
-            contextStack.pop();
-          }
-          return result;
-        } else {
-          return callback();
-        }
-      },
-      protectAsync(callback) {
-        if (context) {
-          callback = createAsyncProtection(context, callback);
-        }
-        return callback;
-      },
-      runWithAsyncProtection(callback) {
-        if (context) {
-          callback = createAsyncProtection(context, callback);
-        }
-        return callback();
-      }
-    };
-  }
-
-  // src/runtime/component.ts
-  var Component = class {
-    static template = "";
-    __owl__;
-    constructor(node) {
-      this.__owl__ = node;
-    }
-    setup() {
-    }
-  };
-
-  // src/runtime/rendering/error_handling.ts
-  var fibersInError = /* @__PURE__ */ new WeakMap();
-  var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
-  function handleError(params) {
-    let { error } = params;
-    let node = "node" in params ? params.node : params.fiber.node;
-    const fiber = "fiber" in params ? params.fiber : node.fiber;
-    const app = node.app;
-    if (fiber) {
-      let current = fiber;
-      do {
-        current.node.fiber = current;
-        fibersInError.set(current, error);
-        current = current.parent;
-      } while (current);
-      fibersInError.set(fiber.root, error);
-    }
-    const finalize = () => {
-      try {
-        app.destroy();
-      } catch (e) {
-      }
-      return Object.assign(new OwlError(`[Owl] Unhandled error. Destroying the root component`), {
-        cause: error
-      });
-    };
-    while (node) {
-      const nodeFiber = node.fiber;
-      if (nodeFiber) {
-        fibersInError.set(nodeFiber, error);
-      }
-      const errorHandlers = nodeErrorHandlers.get(node);
-      if (errorHandlers) {
-        for (let i = errorHandlers.length - 1; i >= 0; i--) {
-          try {
-            errorHandlers[i](error, finalize);
-            return;
-          } catch (e) {
-            error = e;
-          }
-        }
-      }
-      node = node.parent;
-    }
-    const owlError = finalize();
-    app._handleError(owlError);
-  }
-
-  // src/runtime/rendering/fibers.ts
   function makeChildFiber(node, parent) {
     let current = node.fiber;
     if (current) {
@@ -2233,7 +3004,7 @@ ${"-".repeat(columnIndex - 1)}^`;
         const c = getCurrentComputation();
         removeSources(node.signalComputation);
         setComputation(node.signalComputation);
-        node.signalComputation.state = 0 /* EXECUTED */;
+        node.signalComputation.state = ComputationState.EXECUTED;
         try {
           this.bdom = true;
           this.bdom = node.renderFn();
@@ -2311,12 +3082,36 @@ ${"-".repeat(columnIndex - 1)}^`;
   var MountFiber = class extends RootFiber {
     target;
     position;
+    afterNode = null;
+    // true once the render phase finishes (counter reaches 0). If target is
+    // set at that point, we mount immediately; otherwise we signal readiness
+    // via onPrepared and wait for commit() to supply a target.
+    prepared = false;
+    onPrepared = null;
     constructor(node, target, options = {}) {
       super(node, null);
       this.target = target;
       this.position = options.position || "last-child";
+      this.afterNode = options.afterNode ?? null;
     }
     complete() {
+      this.prepared = true;
+      if (this.target) {
+        this._mount();
+      } else {
+        this.appliedToDom = true;
+        this.onPrepared?.();
+      }
+    }
+    commit(target, options = {}) {
+      this.target = target;
+      this.position = options.position || "last-child";
+      this.afterNode = options.afterNode ?? null;
+      if (this.prepared) {
+        this._mount();
+      }
+    }
+    _mount() {
       let current = this;
       try {
         const node = this.node;
@@ -2326,7 +3121,9 @@ ${"-".repeat(columnIndex - 1)}^`;
           node.updateDom();
         } else {
           node.bdom = this.bdom;
-          if (this.position === "last-child" || this.target.childNodes.length === 0) {
+          if (this.afterNode) {
+            mount(node.bdom, this.target, this.afterNode);
+          } else if (this.position === "last-child" || this.target.childNodes.length === 0) {
             mount(node.bdom, this.target);
           } else {
             const firstChild = this.target.childNodes[0];
@@ -2349,14 +3146,11 @@ ${"-".repeat(columnIndex - 1)}^`;
       }
     }
   };
-
-  // src/runtime/component_node.ts
-  var ComponentNode = class {
-    app;
+  var ComponentNode = class extends Scope {
     fiber = null;
     component;
     bdom = null;
-    status = STATUS.NEW;
+    componentName;
     forceNextRender = false;
     parentKey;
     props;
@@ -2364,44 +3158,51 @@ ${"-".repeat(columnIndex - 1)}^`;
     renderFn;
     parent;
     children = /* @__PURE__ */ Object.create(null);
-    willStart = [];
     willUpdateProps = [];
     willUnmount = [];
     mounted = [];
     willPatch = [];
     patched = [];
-    willDestroy = [];
     signalComputation;
-    computations = [];
     pluginManager;
     constructor(C, props2, app, parent, parentKey) {
-      this.app = app;
+      super(app);
       this.parent = parent;
       this.parentKey = parentKey;
       this.pluginManager = parent ? parent.pluginManager : app.pluginManager;
+      this.componentName = C.name;
       this.signalComputation = createComputation(
         () => this.render(false),
         false,
-        0 /* EXECUTED */
+        ComputationState.EXECUTED
       );
       this.props = props2;
-      contextStack.push({
-        type: "component",
-        app,
-        componentName: C.name,
-        node: this,
-        get status() {
-          return this.node.status;
-        }
-      });
       const previousComputation = getCurrentComputation();
       setComputation(void 0);
-      this.component = new C(this);
-      const ctx = { this: this.component, __owl__: this };
-      this.renderFn = app.getTemplate(C.template).bind(this.component, ctx, this);
-      this.component.setup();
-      setComputation(previousComputation);
-      contextStack.length = 0;
+      scopeStack.push(this);
+      try {
+        this.component = new C(this);
+        const ctx = { this: this.component, __owl__: this };
+        this.renderFn = app.getTemplate(C.template).bind(this.component, ctx, this);
+        this.component.setup();
+      } finally {
+        scopeStack.pop();
+        setComputation(previousComputation);
+      }
+    }
+    decorate(f, hookName) {
+      const component = this.component;
+      const scope = this;
+      if (this.app.dev) {
+        const name = `${this.componentName}.${hookName}`;
+        const wrapper = {
+          [name](...args) {
+            return f.call(component, scope, ...args);
+          }
+        };
+        return wrapper[name];
+      }
+      return f.bind(component, scope);
     }
     async initiateRender(fiber) {
       this.fiber = fiber;
@@ -2417,6 +3218,9 @@ ${"-".repeat(columnIndex - 1)}^`;
         await Promise.all(promises);
       } catch (e) {
         setComputation(prev);
+        if (isAbortError(e) && this.status > STATUS.MOUNTED) {
+          return;
+        }
         handleError({ node: this, error: e });
         return;
       }
@@ -2462,7 +3266,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       this.app.scheduler.scheduleDestroy(this);
     }
     _cancel() {
-      this.status = STATUS.CANCELLED;
+      super.cancel();
       const children = this.children;
       for (let childKey in children) {
         children[childKey]._cancel();
@@ -2485,20 +3289,8 @@ ${"-".repeat(columnIndex - 1)}^`;
       for (let childKey in this.children) {
         this.children[childKey]._destroy();
       }
-      if (this.willDestroy.length) {
-        try {
-          for (let cb of this.willDestroy) {
-            cb.call(component);
-          }
-        } catch (e) {
-          handleError({ error: e, node: this });
-        }
-      }
-      for (const computation of this.computations) {
-        disposeComputation(computation);
-      }
+      this.finalize((e) => handleError({ error: e, node: this }));
       disposeComputation(this.signalComputation);
-      this.status = STATUS.DESTROYED;
     }
     /**
      * Finds a child that has dom that is not yet updated, and update it. This
@@ -2566,256 +3358,108 @@ ${"-".repeat(columnIndex - 1)}^`;
       this.bdom.remove();
     }
   };
-
-  // src/runtime/reactivity/proxy.ts
-  var KEYCHANGES = /* @__PURE__ */ Symbol("Key changes");
-  var objectToString = Object.prototype.toString;
-  var objectHasOwnProperty = Object.prototype.hasOwnProperty;
-  function canBeMadeReactive(value) {
-    if (typeof value !== "object" || value === null) {
-      return false;
+  function getComponentScope() {
+    const scope = useScope();
+    if (!(scope instanceof ComponentNode)) {
+      throw new OwlError("Expected to be in a component scope");
     }
-    const raw = toRaw(value);
-    if (Array.isArray(raw) || raw instanceof Set || raw instanceof Map || raw instanceof WeakMap) {
-      return true;
+    return scope;
+  }
+  var requestAnimationFrame;
+  if (typeof window !== "undefined") {
+    requestAnimationFrame = window.requestAnimationFrame.bind(window);
+  }
+  var Scheduler = class _Scheduler {
+    // capture the value of requestAnimationFrame as soon as possible, to avoid
+    // interactions with other code, such as test frameworks that override them
+    static requestAnimationFrame = requestAnimationFrame;
+    tasks = /* @__PURE__ */ new Set();
+    requestAnimationFrame;
+    frame = 0;
+    delayedRenders = [];
+    cancelledNodes = /* @__PURE__ */ new Set();
+    processing = false;
+    constructor() {
+      this.requestAnimationFrame = _Scheduler.requestAnimationFrame;
+      this.processTasks = this.processTasks.bind(this);
     }
-    return objectToString.call(raw) === "[object Object]";
-  }
-  function possiblyReactive(val, atom) {
-    return !atom && canBeMadeReactive(val) ? proxy(val) : val;
-  }
-  var skipped = /* @__PURE__ */ new WeakSet();
-  function markRaw(value) {
-    skipped.add(value);
-    return value;
-  }
-  function toRaw(value) {
-    return targets.has(value) ? targets.get(value) : value;
-  }
-  var targetToKeysToAtomItem = /* @__PURE__ */ new WeakMap();
-  function getTargetKeyAtom(target, key) {
-    let keyToAtomItem = targetToKeysToAtomItem.get(target);
-    if (!keyToAtomItem) {
-      keyToAtomItem = /* @__PURE__ */ new Map();
-      targetToKeysToAtomItem.set(target, keyToAtomItem);
+    addFiber(fiber) {
+      this.tasks.add(fiber.root);
     }
-    let atom = keyToAtomItem.get(key);
-    if (!atom) {
-      atom = {
-        value: void 0,
-        observers: /* @__PURE__ */ new Set()
-      };
-      keyToAtomItem.set(key, atom);
+    scheduleDestroy(node) {
+      this.cancelledNodes.add(node);
+      if (this.frame === 0) {
+        this.frame = this.requestAnimationFrame(this.processTasks);
+      }
     }
-    return atom;
-  }
-  function onReadTargetKey(target, key, atom) {
-    onReadAtom(atom ?? getTargetKeyAtom(target, key));
-  }
-  function onWriteTargetKey(target, key, atom) {
-    if (!atom) {
-      const keyToAtomItem = targetToKeysToAtomItem.get(target);
-      if (!keyToAtomItem) {
+    /**
+     * Process all current tasks. This only applies to the fibers that are ready.
+     * Other tasks are left unchanged.
+     */
+    flush() {
+      if (this.delayedRenders.length) {
+        let renders = this.delayedRenders;
+        this.delayedRenders = [];
+        for (let f of renders) {
+          if (f.root && f.node.status !== STATUS.DESTROYED && f.node.fiber === f) {
+            f.render();
+          }
+        }
+      }
+      if (this.frame === 0) {
+        this.frame = this.requestAnimationFrame(this.processTasks);
+      }
+    }
+    processTasks() {
+      if (this.processing) {
         return;
       }
-      if (!keyToAtomItem.has(key)) {
-        return;
+      this.processing = true;
+      this.frame = 0;
+      for (let node of this.cancelledNodes) {
+        node._destroy();
       }
-      atom = keyToAtomItem.get(key);
-    }
-    onWriteAtom(atom);
-  }
-  var targets = /* @__PURE__ */ new WeakMap();
-  var proxyCache = /* @__PURE__ */ new WeakMap();
-  function proxifyTarget(target, atom) {
-    if (!canBeMadeReactive(target)) {
-      throw new OwlError(`Cannot make the given value reactive`);
-    }
-    if (skipped.has(target)) {
-      return target;
-    }
-    if (targets.has(target)) {
-      return target;
-    }
-    const reactive = proxyCache.get(target);
-    if (reactive) {
-      return reactive;
-    }
-    let handler;
-    if (target instanceof Map) {
-      handler = collectionsProxyHandler(target, "Map", atom);
-    } else if (target instanceof Set) {
-      handler = collectionsProxyHandler(target, "Set", atom);
-    } else if (target instanceof WeakMap) {
-      handler = collectionsProxyHandler(target, "WeakMap", atom);
-    } else {
-      handler = basicProxyHandler(atom);
-    }
-    const proxy2 = new Proxy(target, handler);
-    proxyCache.set(target, proxy2);
-    targets.set(proxy2, target);
-    return proxy2;
-  }
-  function proxy(target) {
-    return proxifyTarget(target, null);
-  }
-  function basicProxyHandler(atom) {
-    return {
-      get(target, key, receiver) {
-        onReadTargetKey(target, key, atom);
-        const value = Reflect.get(target, key, receiver);
-        if (atom || typeof value !== "object" || value === null) {
-          return value;
+      this.cancelledNodes.clear();
+      for (let fiber of this.tasks) {
+        if (fiber.root !== fiber) {
+          this.tasks.delete(fiber);
+          continue;
         }
-        if (!canBeMadeReactive(value)) {
-          return value;
+        const hasError = fibersInError.has(fiber);
+        if (hasError && fiber.counter !== 0) {
+          this.tasks.delete(fiber);
+          continue;
         }
-        const desc = Object.getOwnPropertyDescriptor(target, key);
-        if (desc && !desc.writable && !desc.configurable) {
-          return value;
+        if (fiber.node.status === STATUS.DESTROYED) {
+          this.tasks.delete(fiber);
+          continue;
         }
-        return proxifyTarget(value, null);
-      },
-      set(target, key, value, receiver) {
-        const hadKey = objectHasOwnProperty.call(target, key);
-        const originalValue = Reflect.get(target, key, receiver);
-        const ret = Reflect.set(target, key, toRaw(value), receiver);
-        if (!hadKey && objectHasOwnProperty.call(target, key)) {
-          onWriteTargetKey(target, KEYCHANGES, atom);
+        if (fiber.counter === 0) {
+          if (!hasError) {
+            fiber.complete();
+          }
+          if (fiber.appliedToDom) {
+            this.tasks.delete(fiber);
+          }
         }
-        if (originalValue !== Reflect.get(target, key, receiver) || key === "length" && Array.isArray(target)) {
-          onWriteTargetKey(target, key, atom);
+      }
+      for (let task of this.tasks) {
+        if (task.node.status === STATUS.DESTROYED) {
+          this.tasks.delete(task);
         }
-        return ret;
-      },
-      deleteProperty(target, key) {
-        const ret = Reflect.deleteProperty(target, key);
-        onWriteTargetKey(target, KEYCHANGES, atom);
-        onWriteTargetKey(target, key, atom);
-        return ret;
-      },
-      ownKeys(target) {
-        onReadTargetKey(target, KEYCHANGES, atom);
-        return Reflect.ownKeys(target);
-      },
-      has(target, key) {
-        onReadTargetKey(target, KEYCHANGES, atom);
-        return Reflect.has(target, key);
       }
-    };
-  }
-  function makeKeyObserver(methodName, target, atom) {
-    return (key) => {
-      key = toRaw(key);
-      onReadTargetKey(target, key, atom);
-      return possiblyReactive(target[methodName](key), atom);
-    };
-  }
-  function makeIteratorObserver(methodName, target, atom) {
-    return function* () {
-      onReadTargetKey(target, KEYCHANGES, atom);
-      const keys = target.keys();
-      for (const item of target[methodName]()) {
-        const key = keys.next().value;
-        onReadTargetKey(target, key, atom);
-        yield possiblyReactive(item, atom);
-      }
-    };
-  }
-  function makeForEachObserver(target, atom) {
-    return function forEach(forEachCb, thisArg) {
-      onReadTargetKey(target, KEYCHANGES, atom);
-      target.forEach(function(val, key, targetObj) {
-        onReadTargetKey(target, key, atom);
-        forEachCb.call(
-          thisArg,
-          possiblyReactive(val, atom),
-          possiblyReactive(key, atom),
-          possiblyReactive(targetObj, atom)
-        );
-      }, thisArg);
-    };
-  }
-  function delegateAndNotify(setterName, getterName, target, atom) {
-    return (key, value) => {
-      key = toRaw(key);
-      const hadKey = target.has(key);
-      const originalValue = target[getterName](key);
-      const ret = target[setterName](key, value);
-      const hasKey = target.has(key);
-      if (hadKey !== hasKey) {
-        onWriteTargetKey(target, KEYCHANGES, atom);
-      }
-      if (originalValue !== target[getterName](key)) {
-        onWriteTargetKey(target, key, atom);
-      }
-      return ret;
-    };
-  }
-  function makeClearNotifier(target, atom) {
-    return () => {
-      const allKeys = [...target.keys()];
-      target.clear();
-      onWriteTargetKey(target, KEYCHANGES, atom);
-      for (const key of allKeys) {
-        onWriteTargetKey(target, key, atom);
-      }
-    };
-  }
-  var rawTypeToFuncHandlers = {
-    Set: (target, atom) => ({
-      has: makeKeyObserver("has", target, atom),
-      add: delegateAndNotify("add", "has", target, atom),
-      delete: delegateAndNotify("delete", "has", target, atom),
-      keys: makeIteratorObserver("keys", target, atom),
-      values: makeIteratorObserver("values", target, atom),
-      entries: makeIteratorObserver("entries", target, atom),
-      [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, atom),
-      forEach: makeForEachObserver(target, atom),
-      clear: makeClearNotifier(target, atom),
-      get size() {
-        onReadTargetKey(target, KEYCHANGES, atom);
-        return target.size;
-      }
-    }),
-    Map: (target, atom) => ({
-      has: makeKeyObserver("has", target, atom),
-      get: makeKeyObserver("get", target, atom),
-      set: delegateAndNotify("set", "get", target, atom),
-      delete: delegateAndNotify("delete", "has", target, atom),
-      keys: makeIteratorObserver("keys", target, atom),
-      values: makeIteratorObserver("values", target, atom),
-      entries: makeIteratorObserver("entries", target, atom),
-      [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, atom),
-      forEach: makeForEachObserver(target, atom),
-      clear: makeClearNotifier(target, atom),
-      get size() {
-        onReadTargetKey(target, KEYCHANGES, atom);
-        return target.size;
-      }
-    }),
-    WeakMap: (target, atom) => ({
-      has: makeKeyObserver("has", target, atom),
-      get: makeKeyObserver("get", target, atom),
-      set: delegateAndNotify("set", "get", target, atom),
-      delete: delegateAndNotify("delete", "has", target, atom)
-    })
+      this.processing = false;
+    }
   };
-  function collectionsProxyHandler(target, targetRawType, atom) {
-    const specialHandlers = rawTypeToFuncHandlers[targetRawType](target, atom);
-    return Object.assign(basicProxyHandler(atom), {
-      // FIXME: probably broken when part of prototype chain since we ignore the receiver
-      get(target2, key) {
-        if (objectHasOwnProperty.call(specialHandlers, key)) {
-          return specialHandlers[key];
-        }
-        onReadTargetKey(target2, key, atom);
-        return possiblyReactive(target2[key], atom);
-      }
-    });
-  }
-
-  // src/runtime/rendering/template_helpers.ts
+  var Component = class {
+    static template = "";
+    __owl__;
+    constructor(node) {
+      this.__owl__ = node;
+    }
+    setup() {
+    }
+  };
   var ObjectCreate = Object.create;
   function withDefault(value, defaultValue) {
     return value === void 0 || value === null || value === false ? defaultValue : value;
@@ -2950,6 +3594,23 @@ ${"-".repeat(columnIndex - 1)}^`;
     }
     fn.call(ctx["this"], ev);
   }
+  var signalCaches = /* @__PURE__ */ new WeakMap();
+  function toSignal(node, cacheKey, value) {
+    let cache22 = signalCaches.get(node);
+    if (!cache22) {
+      cache22 = /* @__PURE__ */ new Map();
+      signalCaches.set(node, cache22);
+    }
+    const existing = cache22.get(cacheKey);
+    if (existing) {
+      existing.set(value);
+      return existing.readonly;
+    }
+    const s = signal(value);
+    s.readonly = computed(s);
+    cache22.set(cacheKey, s);
+    return s.readonly;
+  }
   function modelExpr(value) {
     if (typeof value !== "function" || typeof value.set !== "function") {
       throw new OwlError(
@@ -3026,11 +3687,16 @@ ${"-".repeat(columnIndex - 1)}^`;
           }
           if (promises) {
             const p = promises.length === 1 ? promises[0] : Promise.all(promises);
-            p.then(() => {
-              if (fiber !== node.fiber) return;
-              node.props = props2;
-              fiber.render();
-            });
+            p.then(
+              () => {
+                if (fiber !== node.fiber) return;
+                node.props = props2;
+                fiber.render();
+              },
+              (error) => {
+                handleError({ node, error });
+              }
+            );
           } else {
             node.props = props2;
             fiber.render();
@@ -3091,10 +3757,9 @@ ${"-".repeat(columnIndex - 1)}^`;
     modelExpr,
     createComponent,
     callTemplate,
-    callHandler
+    callHandler,
+    toSignal
   };
-
-  // src/runtime/template_set.ts
   var bdom = { text, createBlock, list, multi, html, toggler };
   var TemplateSet = class {
     static registerTemplate(name, fn) {
@@ -3146,7 +3811,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       if (!xml2) {
         return;
       }
-      xml2 = xml2 instanceof Document ? xml2 : parseXML(xml2);
+      xml2 = xml2 instanceof Document ? xml2 : this._parseXML(xml2);
       for (const template of xml2.querySelectorAll("[t-name]")) {
         const name = template.getAttribute("t-name");
         this.addTemplate(name, template);
@@ -3158,10 +3823,9 @@ ${"-".repeat(columnIndex - 1)}^`;
         const rawTemplate = this.getRawTemplate?.(name) || this.rawTemplates[name];
         if (rawTemplate === void 0) {
           let extraInfo = "";
-          try {
-            const { componentName } = getContext("component");
-            extraInfo = ` (for component "${componentName}")`;
-          } catch {
+          const scope = getScope();
+          if (scope instanceof ComponentNode) {
+            extraInfo = ` (for component "${scope.componentName}")`;
           }
           throw new OwlError(`Missing template: "${name}"${extraInfo}`);
         }
@@ -3179,6 +3843,11 @@ ${"-".repeat(columnIndex - 1)}^`;
     _compileTemplate(name, template) {
       throw new OwlError(`Unable to compile a template. Please use owl full build instead`);
     }
+    _parseXML(xml2) {
+      throw new OwlError(
+        `Unable to parse XML templates. Please use owl full build instead, or pass a Document instance.`
+      );
+    }
   };
   var globalTemplates = {};
   function xml(...args) {
@@ -3188,8 +3857,883 @@ ${"-".repeat(columnIndex - 1)}^`;
     return name;
   }
   xml.nextId = 1;
+  var hasBeenLogged = false;
+  var apps = /* @__PURE__ */ new Set();
+  if (typeof window !== "undefined") {
+    window.__OWL_DEVTOOLS__ ||= { apps, Fiber, RootFiber, toRaw, proxy };
+  }
+  var App = class _App extends TemplateSet {
+    static validateTarget = validateTarget;
+    static apps = apps;
+    static version = version;
+    name;
+    scheduler = new Scheduler();
+    roots = /* @__PURE__ */ new Set();
+    pluginManager;
+    constructor(config3 = {}) {
+      super(config3);
+      this.name = config3.name || "";
+      apps.add(this);
+      this.pluginManager = new PluginManager(this, { config: config3.config });
+      if (config3.plugins) {
+        startPlugins(this.pluginManager, config3.plugins);
+      } else {
+        this.pluginManager.status = STATUS.MOUNTED;
+      }
+      if (config3.test) {
+        this.dev = true;
+      }
+      if (this.dev && !config3.test && !hasBeenLogged) {
+        console.info(`Owl is running in 'dev' mode.`);
+        hasBeenLogged = true;
+      }
+    }
+    createRoot(Root, config3 = {}) {
+      const props2 = config3.props || {};
+      let resolve;
+      let reject;
+      const promise = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
+      let node;
+      let error = null;
+      try {
+        node = new ComponentNode(Root, props2, this, null, null);
+      } catch (e) {
+        error = e;
+        reject(e);
+      }
+      let fiber = null;
+      let preparedPromise = null;
+      const prepare = () => {
+        if (preparedPromise) {
+          return preparedPromise;
+        }
+        if (error) {
+          return Promise.reject(error);
+        }
+        fiber = new MountFiber(node, null);
+        let handlers = nodeErrorHandlers.get(node);
+        if (!handlers) {
+          handlers = [];
+          nodeErrorHandlers.set(node, handlers);
+        }
+        handlers.unshift((_, finalize) => {
+          const finalError = finalize();
+          reject(finalError);
+        });
+        const ready = new Promise((res) => {
+          fiber.onPrepared = () => res();
+        });
+        preparedPromise = ready;
+        node.mounted.push(() => {
+          resolve(node.component);
+          handlers.shift();
+        });
+        this.scheduler.addFiber(fiber);
+        if (this.pluginManager.status < STATUS.MOUNTED) {
+          node.willStart.unshift(() => this.pluginManager.ready);
+        }
+        if (node.willStart.length) {
+          node.initiateRender(fiber);
+        } else {
+          node.fiber = fiber;
+          if (node.mounted.length) {
+            fiber.root.mounted.push(fiber);
+          }
+          try {
+            fiber.render();
+          } catch (e) {
+            reject(e);
+          }
+        }
+        return preparedPromise;
+      };
+      const mount3 = (target, options) => {
+        if (error) {
+          return promise;
+        }
+        _App.validateTarget(target);
+        prepare();
+        fiber.commit(target, options);
+        return promise;
+      };
+      const root = {
+        node,
+        promise,
+        prepare,
+        mount: mount3,
+        destroy: () => {
+          this.roots.delete(root);
+          node?.destroy();
+          this.scheduler.processTasks();
+        }
+      };
+      this.roots.add(root);
+      return root;
+    }
+    destroy() {
+      for (let root of this.roots) {
+        root.destroy();
+      }
+      this.pluginManager.destroy();
+      this.scheduler.processTasks();
+      apps.delete(this);
+    }
+    _handleError(error) {
+      throw error;
+    }
+  };
+  async function mount2(C, target, config3 = {}) {
+    const app = new App(config3);
+    const root = app.createRoot(C, config3);
+    return root.mount(target, config3);
+  }
+  var mainEventHandler = (data, ev, currentTarget) => {
+    const { data: _data, modifiers } = filterOutModifiersFromData(data);
+    data = _data;
+    let stopped = false;
+    if (modifiers.length) {
+      let selfMode = false;
+      const isSelf = ev.target === currentTarget;
+      for (const mod of modifiers) {
+        switch (mod) {
+          case "self":
+            selfMode = true;
+            if (isSelf) {
+              continue;
+            } else {
+              return stopped;
+            }
+          case "prevent":
+            if (selfMode && isSelf || !selfMode) ev.preventDefault();
+            continue;
+          case "stop":
+            if (selfMode && isSelf || !selfMode) ev.stopPropagation();
+            stopped = true;
+            continue;
+        }
+      }
+    }
+    if (Object.hasOwnProperty.call(data, 0)) {
+      const handler = data[0];
+      if (typeof handler !== "function") {
+        throw new OwlError(`Invalid handler (expected a function, received: '${handler}')`);
+      }
+      let node = data[1] ? data[1].__owl__ : null;
+      if (node ? node.status === STATUS.MOUNTED : true) {
+        handler(data[1], ev);
+      }
+    }
+    return stopped;
+  };
+  function onWillStart(fn) {
+    const scope = useScope();
+    scope.willStart.push(scope.decorate(fn, "onWillStart"));
+  }
+  function onWillUpdateProps(fn) {
+    const scope = getComponentScope();
+    function swapped(s, nextProps) {
+      return fn.call(this, nextProps, s);
+    }
+    scope.willUpdateProps.push(scope.decorate(swapped, "onWillUpdateProps"));
+  }
+  function onMounted(fn) {
+    const scope = getComponentScope();
+    scope.mounted.push(scope.decorate(fn, "onMounted"));
+  }
+  function onWillPatch(fn) {
+    const scope = getComponentScope();
+    scope.willPatch.unshift(scope.decorate(fn, "onWillPatch"));
+  }
+  function onPatched(fn) {
+    const scope = getComponentScope();
+    scope.patched.push(scope.decorate(fn, "onPatched"));
+  }
+  function onWillUnmount(fn) {
+    const scope = getComponentScope();
+    scope.willUnmount.unshift(scope.decorate(fn, "onWillUnmount"));
+  }
+  function onWillDestroy(fn) {
+    const scope = useScope();
+    scope.onDestroy(scope.decorate(fn, "onWillDestroy"));
+  }
+  function onError(callback) {
+    const scope = getComponentScope();
+    let handlers = nodeErrorHandlers.get(scope);
+    if (!handlers) {
+      handlers = [];
+      nodeErrorHandlers.set(scope, handlers);
+    }
+    handlers.push(callback.bind(scope.component));
+  }
+  function componentType() {
+    return constructorType(Component);
+  }
+  var types2 = { ...types, component: componentType };
+  function validateObjectWithDefaults(schema, defaultValues) {
+    const keys = Array.isArray(schema) ? schema : Object.keys(schema);
+    const mandatoryDefaultedKeys = keys.filter((key) => !key.endsWith("?") && key in defaultValues);
+    return (context) => {
+      if (mandatoryDefaultedKeys.length) {
+        context.addIssue({
+          message: "props have default values on mandatory keys",
+          keys: mandatoryDefaultedKeys
+        });
+      }
+      context.validate(types2.object(schema));
+    };
+  }
+  function props(type, defaults) {
+    const node = getComponentScope();
+    const { app, componentName } = node;
+    if (defaults) {
+      node.defaultProps = Object.assign(node.defaultProps || {}, defaults);
+    }
+    function getProp(key) {
+      if (node.props[key] === void 0 && defaults) {
+        return defaults[key];
+      }
+      return node.props[key];
+    }
+    const result = /* @__PURE__ */ Object.create(null);
+    function applyPropGetters(keys) {
+      for (const key of keys) {
+        Reflect.defineProperty(result, key, {
+          enumerable: true,
+          get: getProp.bind(null, key)
+        });
+      }
+    }
+    if (type) {
+      const keys = (Array.isArray(type) ? type : Object.keys(type)).map(
+        (key) => key.endsWith("?") ? key.slice(0, -1) : key
+      );
+      applyPropGetters(keys);
+      if (app.dev) {
+        const validation = defaults ? validateObjectWithDefaults(type, defaults) : types2.object(type);
+        assertType(node.props, validation, `Invalid component props (${componentName})`);
+        node.willUpdateProps.push((np) => {
+          assertType(np, validation, `Invalid component props (${componentName})`);
+        });
+      }
+    } else {
+      const getKeys = (props2) => {
+        const keys2 = [];
+        for (const k in props2) {
+          if (k.charCodeAt(0) !== 1) {
+            keys2.push(k);
+          }
+        }
+        if (defaults) {
+          for (const k in defaults) {
+            if (!(k in props2)) {
+              keys2.push(k);
+            }
+          }
+        }
+        return keys2;
+      };
+      let keys = getKeys(node.props);
+      applyPropGetters(keys);
+      node.willUpdateProps.push((np) => {
+        for (const key of keys) {
+          Reflect.deleteProperty(result, key);
+        }
+        keys = getKeys(np);
+        applyPropGetters(keys);
+      });
+    }
+    return result;
+  }
+  var ErrorBoundary = class extends Component {
+    static template = xml`
+    <t t-if="this.props.error()">
+      <t t-call-slot="fallback"/>
+    </t>
+    <t t-else="">
+      <t t-call-slot="default"/>
+    </t>
+  `;
+    props = props({ "error?": types2.signal() }, { error: signal(null) });
+    setup() {
+      onError((e) => this.props.error.set(e));
+    }
+  };
+  function useEffect(fn) {
+    onWillDestroy(effect(fn));
+  }
+  function useListener(target, eventName, handler, eventParams) {
+    if (typeof target === "function") {
+      useEffect(() => {
+        const el = target();
+        if (el) {
+          el.addEventListener(eventName, handler, eventParams);
+          return () => el.removeEventListener(eventName, handler, eventParams);
+        }
+        return;
+      });
+    } else {
+      target.addEventListener(eventName, handler, eventParams);
+      onWillDestroy(() => target.removeEventListener(eventName, handler, eventParams));
+    }
+  }
+  function useApp() {
+    return useScope().app;
+  }
+  var PortalContent = class extends Component {
+    static template = xml`<t t-call-slot="default"/>`;
+  };
+  var Portal = class extends Component {
+    static template = xml``;
+    props = props({
+      slots: types2.object(["default"]),
+      target: types2.or([types2.string(), types2.signal(types2.instanceOf(HTMLElement)), types2.instanceOf(HTMLElement)])
+    });
+    setup() {
+      const portalNode = this.__owl__;
+      const app = portalNode.app;
+      const slots = this.props.slots;
+      let root = null;
+      const tearDown = () => {
+        if (root) {
+          root.destroy();
+          root = null;
+        }
+      };
+      useEffect(() => {
+        const target = resolveTarget(this.props.target);
+        if (!target) {
+          return;
+        }
+        root = app.createRoot(PortalContent, { props: { slots } });
+        root.node.pluginManager = portalNode.pluginManager;
+        nodeErrorHandlers.set(root.node, [forwardErrorToParent(portalNode)]);
+        root.mount(target);
+        return tearDown;
+      });
+      onWillDestroy(tearDown);
+    }
+  };
+  function resolveTarget(target) {
+    if (typeof target === "function") {
+      target = target();
+    }
+    if (typeof target === "string") {
+      return document.querySelector(target);
+    }
+    if (target instanceof HTMLElement) {
+      return target;
+    }
+    return null;
+  }
+  var SuspenseHost = class extends Component {
+    static template = xml`<t t-call-slot="default"/>`;
+  };
+  var Suspense = class extends Component {
+    static template = xml`
+    <t t-if="!this.prepared()">
+      <t t-call-slot="fallback"/>
+    </t>
+  `;
+    props = props({ slots: types2.object(["default", "fallback?"]) });
+    prepared = signal(false);
+    mounted = signal(false);
+    subRootMounted = false;
+    setup() {
+      const suspenseNode = this.__owl__;
+      const root = suspenseNode.app.createRoot(SuspenseHost, {
+        props: { slots: this.props.slots }
+      });
+      root.node.pluginManager = suspenseNode.pluginManager;
+      nodeErrorHandlers.set(root.node, [forwardErrorToParent(suspenseNode)]);
+      root.prepare().then(() => this.prepared.set(true));
+      const fiber = root.node.fiber;
+      if (fiber && fiber.counter === 0) {
+        this.prepared.set(true);
+      }
+      onMounted(() => this.mounted.set(true));
+      useEffect(() => {
+        if (this.subRootMounted || !this.prepared() || !this.mounted()) {
+          return;
+        }
+        this.subRootMounted = true;
+        const anchor = suspenseNode.bdom.firstNode();
+        root.mount(anchor.parentElement, { afterNode: anchor });
+      });
+      onWillDestroy(() => root.destroy());
+    }
+  };
+  function prop(key, type, ...args) {
+    const node = getComponentScope();
+    const hasDefault = args.length > 0;
+    const propValue = node.props[key];
+    if (node.app.dev) {
+      if (type !== void 0 && (!hasDefault || propValue !== void 0)) {
+        assertType(propValue, type, `Invalid prop '${key}' in '${node.componentName}'`);
+      }
+      node.willUpdateProps.push((nextProps) => {
+        if (nextProps[key] !== node.props[key]) {
+          throw new OwlError(
+            `Prop '${key}' changed in component '${node.componentName}'. Props declared with \`prop()\` are static and should not change. If the prop is a signal, pass the same signal reference (its inner value may change).`
+          );
+        }
+      });
+    }
+    return propValue === void 0 && hasDefault ? args[0] : propValue;
+  }
+  function plugin(pluginType) {
+    const scope = useScope();
+    const manager = scope instanceof ComponentNode ? scope.pluginManager : scope;
+    let plugin2 = manager.getPluginById(pluginType.id);
+    if (!plugin2) {
+      if (scope instanceof PluginManager) {
+        plugin2 = manager.startPlugin(pluginType);
+      } else {
+        throw new OwlError(`Unknown plugin "${pluginType.id}"`);
+      }
+    }
+    return plugin2;
+  }
+  function config2(name, type) {
+    const scope = useScope();
+    if (!(scope instanceof PluginManager)) {
+      throw new OwlError("Expected to be in a plugin scope");
+    }
+    if (scope.app.dev && type) {
+      assertType(scope.config, types2.object({ [name]: type }), "Config does not match the type");
+    }
+    return scope.config[name.endsWith("?") ? name.slice(0, -1) : name];
+  }
+  function providePlugins(pluginConstructors, config3) {
+    const node = getComponentScope();
+    const manager = new PluginManager(node.app, { parent: node.pluginManager, config: config3 });
+    node.pluginManager = manager;
+    onWillDestroy(() => manager.destroy());
+    startPlugins(manager, pluginConstructors);
+    if (manager.status < STATUS.MOUNTED) {
+      onWillStart(() => manager.ready);
+    }
+  }
+  config.shouldNormalizeDom = false;
+  config.mainEventHandler = mainEventHandler;
+  var blockDom = {
+    config,
+    // bdom entry points
+    mount,
+    patch,
+    remove,
+    // bdom block types
+    list,
+    multi,
+    text,
+    toggler,
+    createBlock,
+    html
+  };
+  var __info__ = {
+    version: App.version,
+    date: "2026-04-22T14:48:17.624Z",
+    hash: "4ddb5890",
+    url: "https://github.com/odoo/owl"
+  };
 
-  // src/compiler/inline_expressions.ts
+  // ../owl-compiler/dist/owl-compiler.es.js
+  var OwlError2 = class extends Error {
+    cause;
+  };
+  function batched2(callback) {
+    let scheduled = false;
+    return function batchedCall(...args) {
+      if (!scheduled) {
+        scheduled = true;
+        Promise.resolve().then(() => {
+          scheduled = false;
+          callback(...args);
+        });
+      }
+    };
+  }
+  var atomSymbol2 = /* @__PURE__ */ Symbol("Atom");
+  var observers2 = [];
+  var immediateObservers2 = [];
+  var currentComputation2;
+  function onReadAtom2(atom) {
+    if (!currentComputation2) {
+      return;
+    }
+    currentComputation2.sources.add(atom);
+    atom.observers.add(currentComputation2);
+  }
+  function onWriteAtom2(atom) {
+    for (const ctx of atom.observers) {
+      if (ctx.state === 0) {
+        if (ctx.isDerived) {
+          markDownstream2(ctx);
+        } else if (ctx.immediate) {
+          immediateObservers2.push(ctx);
+        } else {
+          observers2.push(ctx);
+        }
+      }
+      ctx.state = 1;
+    }
+    if (immediateObservers2.length) {
+      const toRun = immediateObservers2;
+      immediateObservers2 = [];
+      for (const ctx of toRun) {
+        updateComputation2(ctx);
+      }
+    }
+    batchProcessEffects2();
+  }
+  var batchProcessEffects2 = batched2(processEffects2);
+  function processEffects2() {
+    for (let i = 0; i < observers2.length; i++) {
+      updateComputation2(observers2[i]);
+    }
+    observers2.length = 0;
+  }
+  function updateComputation2(computation) {
+    const state = computation.state;
+    if (state === 0) {
+      return;
+    }
+    if (state === 2) {
+      for (const source of computation.sources) {
+        if (!("compute" in source)) {
+          continue;
+        }
+        updateComputation2(source);
+      }
+      if (computation.state !== 1) {
+        computation.state = 0;
+        return;
+      }
+    }
+    removeSources2(computation);
+    const previousComputation = currentComputation2;
+    currentComputation2 = computation;
+    computation.value = computation.compute();
+    computation.state = 0;
+    currentComputation2 = previousComputation;
+  }
+  function removeSources2(computation) {
+    const sources = computation.sources;
+    for (const source of sources) {
+      const observers22 = source.observers;
+      observers22.delete(computation);
+    }
+    sources.clear();
+  }
+  function markDownstream2(computation) {
+    const stack = [computation];
+    let current;
+    while (current = stack.pop()) {
+      for (const observer of current.observers) {
+        if (observer.state) {
+          continue;
+        }
+        observer.state = 2;
+        if (observer.isDerived) {
+          stack.push(observer);
+        } else {
+          observers2.push(observer);
+        }
+      }
+    }
+  }
+  var KEYCHANGES2 = /* @__PURE__ */ Symbol("Key changes");
+  var objectToString2 = Object.prototype.toString;
+  var objectHasOwnProperty2 = Object.prototype.hasOwnProperty;
+  function canBeMadeReactive2(value) {
+    if (typeof value !== "object" || value === null) {
+      return false;
+    }
+    const raw = toRaw2(value);
+    if (Array.isArray(raw) || raw instanceof Set || raw instanceof Map || raw instanceof WeakMap) {
+      return true;
+    }
+    return objectToString2.call(raw) === "[object Object]";
+  }
+  function possiblyReactive2(val, atom) {
+    return !atom && canBeMadeReactive2(val) ? proxy2(val) : val;
+  }
+  var skipped2 = /* @__PURE__ */ new WeakSet();
+  function toRaw2(value) {
+    return targets2.has(value) ? targets2.get(value) : value;
+  }
+  var targetToKeysToAtomItem2 = /* @__PURE__ */ new WeakMap();
+  function getTargetKeyAtom2(target, key) {
+    let keyToAtomItem = targetToKeysToAtomItem2.get(target);
+    if (!keyToAtomItem) {
+      keyToAtomItem = /* @__PURE__ */ new Map();
+      targetToKeysToAtomItem2.set(target, keyToAtomItem);
+    }
+    let atom = keyToAtomItem.get(key);
+    if (!atom) {
+      atom = {
+        value: void 0,
+        observers: /* @__PURE__ */ new Set()
+      };
+      keyToAtomItem.set(key, atom);
+    }
+    return atom;
+  }
+  function onReadTargetKey2(target, key, atom) {
+    onReadAtom2(atom ?? getTargetKeyAtom2(target, key));
+  }
+  function onWriteTargetKey2(target, key, atom) {
+    if (!atom) {
+      const keyToAtomItem = targetToKeysToAtomItem2.get(target);
+      if (!keyToAtomItem) {
+        return;
+      }
+      if (!keyToAtomItem.has(key)) {
+        return;
+      }
+      atom = keyToAtomItem.get(key);
+    }
+    onWriteAtom2(atom);
+  }
+  var targets2 = /* @__PURE__ */ new WeakMap();
+  var proxyCache2 = /* @__PURE__ */ new WeakMap();
+  function proxifyTarget2(target, atom) {
+    if (!canBeMadeReactive2(target)) {
+      throw new OwlError2(`Cannot make the given value reactive`);
+    }
+    if (skipped2.has(target)) {
+      return target;
+    }
+    if (targets2.has(target)) {
+      return target;
+    }
+    const reactive = proxyCache2.get(target);
+    if (reactive) {
+      return reactive;
+    }
+    let handler;
+    if (target instanceof Map) {
+      handler = collectionsProxyHandler2(target, "Map", atom);
+    } else if (target instanceof Set) {
+      handler = collectionsProxyHandler2(target, "Set", atom);
+    } else if (target instanceof WeakMap) {
+      handler = collectionsProxyHandler2(target, "WeakMap", atom);
+    } else {
+      handler = basicProxyHandler2(atom);
+    }
+    const proxy22 = new Proxy(target, handler);
+    proxyCache2.set(target, proxy22);
+    targets2.set(proxy22, target);
+    return proxy22;
+  }
+  function proxy2(target) {
+    return proxifyTarget2(target, null);
+  }
+  function basicProxyHandler2(atom) {
+    return {
+      get(target, key, receiver) {
+        onReadTargetKey2(target, key, atom);
+        const value = Reflect.get(target, key, receiver);
+        if (atom || typeof value !== "object" || value === null) {
+          return value;
+        }
+        if (!canBeMadeReactive2(value)) {
+          return value;
+        }
+        const desc = Object.getOwnPropertyDescriptor(target, key);
+        if (desc && !desc.writable && !desc.configurable) {
+          return value;
+        }
+        return proxifyTarget2(value, null);
+      },
+      set(target, key, value, receiver) {
+        const hadKey = objectHasOwnProperty2.call(target, key);
+        const originalValue = Reflect.get(target, key, receiver);
+        const ret = Reflect.set(target, key, toRaw2(value), receiver);
+        if (!hadKey && objectHasOwnProperty2.call(target, key)) {
+          onWriteTargetKey2(target, KEYCHANGES2, atom);
+        }
+        if (originalValue !== Reflect.get(target, key, receiver) || key === "length" && Array.isArray(target)) {
+          onWriteTargetKey2(target, key, atom);
+        }
+        return ret;
+      },
+      deleteProperty(target, key) {
+        const ret = Reflect.deleteProperty(target, key);
+        onWriteTargetKey2(target, KEYCHANGES2, atom);
+        onWriteTargetKey2(target, key, atom);
+        return ret;
+      },
+      ownKeys(target) {
+        onReadTargetKey2(target, KEYCHANGES2, atom);
+        return Reflect.ownKeys(target);
+      },
+      has(target, key) {
+        onReadTargetKey2(target, KEYCHANGES2, atom);
+        return Reflect.has(target, key);
+      }
+    };
+  }
+  function makeKeyObserver2(methodName, target, atom) {
+    return (key) => {
+      key = toRaw2(key);
+      onReadTargetKey2(target, key, atom);
+      return possiblyReactive2(target[methodName](key), atom);
+    };
+  }
+  function makeIteratorObserver2(methodName, target, atom) {
+    return function* () {
+      onReadTargetKey2(target, KEYCHANGES2, atom);
+      const keys = target.keys();
+      for (const item of target[methodName]()) {
+        const key = keys.next().value;
+        onReadTargetKey2(target, key, atom);
+        yield possiblyReactive2(item, atom);
+      }
+    };
+  }
+  function makeForEachObserver2(target, atom) {
+    return function forEach(forEachCb, thisArg) {
+      onReadTargetKey2(target, KEYCHANGES2, atom);
+      target.forEach(function(val, key, targetObj) {
+        onReadTargetKey2(target, key, atom);
+        forEachCb.call(
+          thisArg,
+          possiblyReactive2(val, atom),
+          possiblyReactive2(key, atom),
+          possiblyReactive2(targetObj, atom)
+        );
+      }, thisArg);
+    };
+  }
+  function delegateAndNotify2(setterName, getterName, target, atom) {
+    return (key, value) => {
+      key = toRaw2(key);
+      const hadKey = target.has(key);
+      const originalValue = target[getterName](key);
+      const ret = target[setterName](key, value);
+      const hasKey = target.has(key);
+      if (hadKey !== hasKey) {
+        onWriteTargetKey2(target, KEYCHANGES2, atom);
+      }
+      if (originalValue !== target[getterName](key)) {
+        onWriteTargetKey2(target, key, atom);
+      }
+      return ret;
+    };
+  }
+  function makeClearNotifier2(target, atom) {
+    return () => {
+      const allKeys = [...target.keys()];
+      target.clear();
+      onWriteTargetKey2(target, KEYCHANGES2, atom);
+      for (const key of allKeys) {
+        onWriteTargetKey2(target, key, atom);
+      }
+    };
+  }
+  var rawTypeToFuncHandlers2 = {
+    Set: (target, atom) => ({
+      has: makeKeyObserver2("has", target, atom),
+      add: delegateAndNotify2("add", "has", target, atom),
+      delete: delegateAndNotify2("delete", "has", target, atom),
+      keys: makeIteratorObserver2("keys", target, atom),
+      values: makeIteratorObserver2("values", target, atom),
+      entries: makeIteratorObserver2("entries", target, atom),
+      [Symbol.iterator]: makeIteratorObserver2(Symbol.iterator, target, atom),
+      forEach: makeForEachObserver2(target, atom),
+      clear: makeClearNotifier2(target, atom),
+      get size() {
+        onReadTargetKey2(target, KEYCHANGES2, atom);
+        return target.size;
+      }
+    }),
+    Map: (target, atom) => ({
+      has: makeKeyObserver2("has", target, atom),
+      get: makeKeyObserver2("get", target, atom),
+      set: delegateAndNotify2("set", "get", target, atom),
+      delete: delegateAndNotify2("delete", "has", target, atom),
+      keys: makeIteratorObserver2("keys", target, atom),
+      values: makeIteratorObserver2("values", target, atom),
+      entries: makeIteratorObserver2("entries", target, atom),
+      [Symbol.iterator]: makeIteratorObserver2(Symbol.iterator, target, atom),
+      forEach: makeForEachObserver2(target, atom),
+      clear: makeClearNotifier2(target, atom),
+      get size() {
+        onReadTargetKey2(target, KEYCHANGES2, atom);
+        return target.size;
+      }
+    }),
+    WeakMap: (target, atom) => ({
+      has: makeKeyObserver2("has", target, atom),
+      get: makeKeyObserver2("get", target, atom),
+      set: delegateAndNotify2("set", "get", target, atom),
+      delete: delegateAndNotify2("delete", "has", target, atom)
+    })
+  };
+  function collectionsProxyHandler2(target, targetRawType, atom) {
+    const specialHandlers = rawTypeToFuncHandlers2[targetRawType](target, atom);
+    return Object.assign(basicProxyHandler2(atom), {
+      // FIXME: probably broken when part of prototype chain since we ignore the receiver
+      get(target2, key) {
+        if (objectHasOwnProperty2.call(specialHandlers, key)) {
+          return specialHandlers[key];
+        }
+        onReadTargetKey2(target2, key, atom);
+        return possiblyReactive2(target2[key], atom);
+      }
+    });
+  }
+  function buildSignal2(value, set) {
+    const atom = {
+      type: "signal",
+      value,
+      observers: /* @__PURE__ */ new Set()
+    };
+    let readValue = set(atom);
+    const readSignal = () => {
+      onReadAtom2(atom);
+      return readValue;
+    };
+    readSignal[atomSymbol2] = atom;
+    readSignal.set = function writeSignal(newValue) {
+      if (Object.is(atom.value, newValue)) {
+        return;
+      }
+      atom.value = newValue;
+      readValue = set(atom);
+      onWriteAtom2(atom);
+    };
+    return readSignal;
+  }
+  function invalidateSignal2(signal22) {
+    if (typeof signal22 !== "function" || signal22[atomSymbol2]?.type !== "signal") {
+      throw new OwlError2(`Value is not a signal (${signal22})`);
+    }
+    onWriteAtom2(signal22[atomSymbol2]);
+  }
+  function signalArray2(initialValue) {
+    return buildSignal2(initialValue, (atom) => proxifyTarget2(atom.value, atom));
+  }
+  function signalObject2(initialValue) {
+    return buildSignal2(initialValue, (atom) => proxifyTarget2(atom.value, atom));
+  }
+  function signalMap2(initialValue) {
+    return buildSignal2(initialValue, (atom) => proxifyTarget2(atom.value, atom));
+  }
+  function signalSet2(initialValue) {
+    return buildSignal2(initialValue, (atom) => proxifyTarget2(atom.value, atom));
+  }
+  function signal2(value) {
+    return buildSignal2(value, (atom) => atom.value);
+  }
+  signal2.invalidate = invalidateSignal2;
+  signal2.Array = signalArray2;
+  signal2.Map = signalMap2;
+  signal2.Object = signalObject2;
+  signal2.Set = signalSet2;
   var RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,eval,void,Math,RegExp,Array,Object,Date,__globals__".split(
     ","
   );
@@ -3227,14 +4771,14 @@ ${"-".repeat(columnIndex - 1)}^`;
         i++;
         cur = expr[i];
         if (!cur) {
-          throw new OwlError("Invalid expression");
+          throw new OwlError2("Invalid expression");
         }
         s += cur;
       }
       i++;
     }
     if (expr[i] !== start) {
-      throw new OwlError("Invalid expression");
+      throw new OwlError2("Invalid expression");
     }
     s += start;
     if (start === "`") {
@@ -3326,7 +4870,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       error = e;
     }
     if (current.length || error) {
-      throw new OwlError(`Tokenizer error: could not tokenize \`${expr}\``);
+      throw new OwlError2(`Tokenizer error: could not tokenize \`${expr}\``);
     }
     return result;
   }
@@ -3440,8 +4984,35 @@ ${"-".repeat(columnIndex - 1)}^`;
   function interpolate(s) {
     return replaceDynamicParts(s, compileExpr);
   }
-
-  // src/compiler/parser.ts
+  function parseXML(xml2) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xml2, "text/xml");
+    if (doc.getElementsByTagName("parsererror").length) {
+      let msg = "Invalid XML in template.";
+      const parsererrorText = doc.getElementsByTagName("parsererror")[0].textContent;
+      if (parsererrorText) {
+        msg += "\nThe parser has produced the following error message:\n" + parsererrorText;
+        const re = /\d+/g;
+        const firstMatch = re.exec(parsererrorText);
+        if (firstMatch) {
+          const lineNumber = Number(firstMatch[0]);
+          const line = xml2.split("\n")[lineNumber - 1];
+          const secondMatch = re.exec(parsererrorText);
+          if (line && secondMatch) {
+            const columnIndex = Number(secondMatch[0]) - 1;
+            if (line[columnIndex]) {
+              msg += `
+The error might be located at xml line ${lineNumber} column ${columnIndex}
+${line}
+${"-".repeat(columnIndex - 1)}^`;
+            }
+          }
+        }
+      }
+      throw new OwlError2(msg);
+    }
+    return doc;
+  }
   var ASTType = {
     Text: 0,
     DomNode: 2,
@@ -3517,13 +5088,13 @@ ${"-".repeat(columnIndex - 1)}^`;
     const nodeAttrsNames = node.getAttributeNames();
     for (let attr of nodeAttrsNames) {
       if (attr === "t-custom" || attr === "t-custom-") {
-        throw new OwlError("Missing custom directive name with t-custom directive");
+        throw new OwlError2("Missing custom directive name with t-custom directive");
       }
       if (attr.startsWith("t-custom-")) {
         const directiveName = attr.split(".")[0].slice(9);
         const customDirective = ctx.customDirectives[directiveName];
         if (!customDirective) {
-          throw new OwlError(`Custom directive "${directiveName}" is not defined`);
+          throw new OwlError2(`Custom directive "${directiveName}" is not defined`);
         }
         const value = node.getAttribute(attr);
         const modifiers = attr.split(".").slice(1);
@@ -3531,7 +5102,7 @@ ${"-".repeat(columnIndex - 1)}^`;
         try {
           customDirective(node, value, modifiers);
         } catch (error) {
-          throw new OwlError(
+          throw new OwlError2(
             `Custom directive "${directiveName}" throw the following error: ${error}`
           );
         }
@@ -3578,7 +5149,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       return null;
     }
     if (tagName.startsWith("block-")) {
-      throw new OwlError(`Invalid tag name: '${tagName}'`);
+      throw new OwlError2(`Invalid tag name: '${tagName}'`);
     }
     ctx = Object.assign({}, ctx);
     if (tagName === "pre") {
@@ -3595,14 +5166,14 @@ ${"-".repeat(columnIndex - 1)}^`;
     for (let attr of nodeAttrsNames) {
       const value = node.getAttribute(attr);
       if (attr === "t-on" || attr === "t-on-") {
-        throw new OwlError("Missing event name with t-on directive");
+        throw new OwlError2("Missing event name with t-on directive");
       }
       if (attr.startsWith("t-on-")) {
         on = on || {};
         on[attr.slice(5)] = value;
       } else if (attr.startsWith("t-model")) {
         if (!["input", "select", "textarea"].includes(tagName)) {
-          throw new OwlError(
+          throw new OwlError2(
             "The t-model directive only works with <input>, <textarea> and <select>"
           );
         }
@@ -3631,7 +5202,7 @@ ${"-".repeat(columnIndex - 1)}^`;
           ctx.tModelInfo = model;
         }
       } else if (attr.startsWith("block-")) {
-        throw new OwlError(`Invalid attribute: '${attr}'`);
+        throw new OwlError2(`Invalid attribute: '${attr}'`);
       } else if (attr === "xmlns") {
         ns = value;
       } else if (attr.startsWith("t-translation-context-")) {
@@ -3640,7 +5211,7 @@ ${"-".repeat(columnIndex - 1)}^`;
         attrsTranslationCtx[attrName] = value;
       } else if (attr !== "t-name") {
         if (attr.startsWith("t-") && !attr.startsWith("t-att")) {
-          throw new OwlError(`Unknown QWeb directive: '${attr}'`);
+          throw new OwlError2(`Unknown QWeb directive: '${attr}'`);
         }
         const tModel = ctx.tModelInfo;
         if (tModel && ["t-att-value", "t-attf-value"].includes(attr)) {
@@ -3707,7 +5278,7 @@ ${"-".repeat(columnIndex - 1)}^`;
     node.removeAttribute("t-as");
     const key = node.getAttribute("t-key");
     if (!key) {
-      throw new OwlError(
+      throw new OwlError2(
         `"Directive t-foreach should always be used with a t-key!" (expression: t-foreach="${collection}" t-as="${elem}")`
       );
     }
@@ -3756,7 +5327,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       return null;
     }
     if (node.tagName !== "t") {
-      throw new OwlError(
+      throw new OwlError2(
         `Directive 't-call' can only be used on <t> nodes (used on a <${node.tagName}>)`
       );
     }
@@ -3860,7 +5431,7 @@ ${"-".repeat(columnIndex - 1)}^`;
     const firstLetter = name[0];
     let isDynamic = node.hasAttribute("t-component");
     if (isDynamic && name !== "t") {
-      throw new OwlError(
+      throw new OwlError2(
         `Directive 't-component' can only be used on <t> nodes (used on a <${name}>)`
       );
     }
@@ -3890,7 +5461,7 @@ ${"-".repeat(columnIndex - 1)}^`;
           on[name2.slice(5)] = value;
         } else {
           const message = directiveErrorMap.get(name2.split("-").slice(0, 2).join("-"));
-          throw new OwlError(message || `unsupported directive on Component: ${name2}`);
+          throw new OwlError2(message || `unsupported directive on Component: ${name2}`);
         }
       } else {
         props2 = props2 || {};
@@ -3903,7 +5474,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       const slotNodes = Array.from(clone.querySelectorAll("[t-set-slot]"));
       for (let slotNode of slotNodes) {
         if (slotNode.tagName !== "t") {
-          throw new OwlError(
+          throw new OwlError2(
             `Directive 't-set-slot' can only be used on <t> nodes (used on a <${slotNode.tagName}>)`
           );
         }
@@ -4090,24 +5661,24 @@ ${"-".repeat(columnIndex - 1)}^`;
       let nattr = (name) => +!!node.getAttribute(name);
       if (prevElem && (pattr("t-if") || pattr("t-elif"))) {
         if (pattr("t-foreach")) {
-          throw new OwlError(
+          throw new OwlError2(
             "t-if cannot stay at the same level as t-foreach when using t-elif or t-else"
           );
         }
         if (["t-if", "t-elif", "t-else"].map(nattr).reduce(function(a, b) {
           return a + b;
         }) > 1) {
-          throw new OwlError("Only one conditional branching directive is allowed per node");
+          throw new OwlError2("Only one conditional branching directive is allowed per node");
         }
         let textNode;
         while ((textNode = node.previousSibling) !== prevElem) {
           if (textNode.nodeValue.trim().length && textNode.nodeType !== 8) {
-            throw new OwlError("text is not allowed between branching directives");
+            throw new OwlError2("text is not allowed between branching directives");
           }
           textNode.remove();
         }
       } else {
-        throw new OwlError(
+        throw new OwlError2(
           "t-elif and t-else directives must be preceded by a t-if or t-elif directive"
         );
       }
@@ -4119,7 +5690,7 @@ ${"-".repeat(columnIndex - 1)}^`;
     );
     for (const el2 of elements) {
       if (el2.childNodes.length) {
-        throw new OwlError(`Cannot have t-out on a component that already has content`);
+        throw new OwlError2(`Cannot have t-out on a component that already has content`);
       }
       const value = el2.getAttribute("t-out");
       el2.removeAttribute("t-out");
@@ -4134,8 +5705,6 @@ ${"-".repeat(columnIndex - 1)}^`;
     normalizeTIf(el);
     normalizeTOut(el);
   }
-
-  // src/compiler/code_generator.ts
   var zero = /* @__PURE__ */ Symbol("zero");
   var whitespaceRE = /\s+/g;
   var xmlDoc;
@@ -4224,7 +5793,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       return t.innerHTML;
     }
   };
-  function createContext(parentCtx, params) {
+  function createContext2(parentCtx, params) {
     return Object.assign(
       {
         block: null,
@@ -4397,7 +5966,7 @@ ${code}`;
       const target = new CodeTarget(name, on);
       this.targets.push(target);
       this.target = target;
-      this.compileAST(ast, createContext(ctx));
+      this.compileAST(ast, createContext2(ctx));
       this.target = initialTarget;
       return name;
     }
@@ -4528,7 +6097,7 @@ ${code}`;
     generateHandlerCode(rawEvent, handler) {
       const modifiers = rawEvent.split(".").slice(1).map((m) => {
         if (!MODS.has(m)) {
-          throw new OwlError(`Unknown event modifier: '${m}'`);
+          throw new OwlError2(`Unknown event modifier: '${m}'`);
         }
         return `"${m}"`;
       });
@@ -4696,7 +6265,7 @@ ${code}`;
         const children = ast.content;
         for (let i = 0; i < children.length; i++) {
           const child = ast.content[i];
-          const subCtx = createContext(ctx, {
+          const subCtx = createContext2(ctx, {
             block,
             index: block.childNumber,
             forceNewBlock: false,
@@ -4749,7 +6318,7 @@ ${code}`;
       } else if (ast.body) {
         let bodyValue = null;
         bodyValue = BlockDescription.nextBlockId;
-        const subCtx = createContext(ctx);
+        const subCtx = createContext2(ctx);
         this.compileAST({ type: ASTType.Multi, content: ast.body }, subCtx);
         this.helpers.add("safeOutput");
         blockStr = `safeOutput(${compileExpr(ast.expr)}, b${bodyValue})`;
@@ -4763,7 +6332,7 @@ ${code}`;
     compileTIfBranch(content, block, ctx) {
       this.target.indentLevel++;
       let childN = block.children.length;
-      this.compileAST(content, createContext(ctx, { block, index: ctx.index }));
+      this.compileAST(content, createContext2(ctx, { block, index: ctx.index }));
       if (block.children.length > childN) {
         this.insertAnchor(block, childN);
       }
@@ -4855,7 +6424,7 @@ ${code}`;
         );
         this.addLine(`keys${block.id}.add(String(key${this.target.loopLevel}));`);
       }
-      const subCtx = createContext(ctx, { block, index: loopVar });
+      const subCtx = createContext2(ctx, { block, index: loopVar });
       this.compileAST(ast.body, subCtx);
       this.target.indentLevel--;
       this.target.loopLevel--;
@@ -4867,7 +6436,7 @@ ${code}`;
     compileTKey(ast, ctx) {
       const tKeyExpr = generateId("tKey_");
       this.define(tKeyExpr, compileExpr(ast.expr));
-      ctx = createContext(ctx, {
+      ctx = createContext2(ctx, {
         tKeyExpr,
         block: ctx.block,
         index: ctx.index
@@ -4902,7 +6471,7 @@ ${code}`;
       for (let i = 0, l = ast.content.length; i < l; i++) {
         const child = ast.content[i];
         const forceNewBlock2 = !child.hasNoRepresentation;
-        const subCtx = createContext(ctx, {
+        const subCtx = createContext2(ctx, {
           block,
           index,
           forceNewBlock: forceNewBlock2
@@ -5044,6 +6613,13 @@ ${code}`;
       }
       return `${currentKey} + \`${parts.join("__")}\``;
     }
+    generateSignalCacheKey() {
+      const parts = [generateId("__sig_")];
+      for (let i = 0; i < this.target.loopLevel; i++) {
+        parts.push(`\${key${i + 1}}`);
+      }
+      return `\`${parts.join("__")}\``;
+    }
     /**
      * Formats a prop name and value into a string suitable to be inserted in the
      * generated code. For example:
@@ -5073,7 +6649,7 @@ ${code}`;
           case "translate":
             break;
           default:
-            throw new OwlError(`Invalid prop suffix: ${suffix}`);
+            throw new OwlError2(`Invalid prop suffix: ${suffix}`);
         }
       }
       name = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
@@ -5098,6 +6674,14 @@ ${code}`;
       const propList = [];
       for (let p in ast.props || {}) {
         let [name, suffix] = p.split(".");
+        if (suffix === "signal") {
+          const compiledValue2 = compileExpr(ast.props[p]);
+          const propName2 = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
+          this.helpers.add("toSignal");
+          const cacheKey = this.generateSignalCacheKey();
+          props2.push(`${propName2}: toSignal(node, ${cacheKey}, ${compiledValue2})`);
+          continue;
+        }
         if (suffix) {
           props2.push(this.formatProp(p, ast.props[p], ast.propsTranslationCtx, ctx.translationCtx));
           continue;
@@ -5270,8 +6854,6 @@ ${code}`;
       return null;
     }
   };
-
-  // src/compiler/index.ts
   function compile(template, options = {
     hasGlobalValues: false
   }) {
@@ -5283,7 +6865,7 @@ ${code}`;
     } catch (originalError) {
       const { name } = options;
       const nameStr = name ? `template "${name}"` : "anonymous template";
-      const err = new OwlError(
+      const err = new OwlError2(
         `Failed to compile ${nameStr}: ${originalError.message}
 
 generated code:
@@ -5296,922 +6878,6 @@ ${code}
     }
   }
 
-  // src/version.ts
-  var version = "3.0.0-alpha.26";
-
-  // src/runtime/rendering/scheduler.ts
-  var requestAnimationFrame;
-  if (typeof window !== "undefined") {
-    requestAnimationFrame = window.requestAnimationFrame.bind(window);
-  }
-  var Scheduler = class _Scheduler {
-    // capture the value of requestAnimationFrame as soon as possible, to avoid
-    // interactions with other code, such as test frameworks that override them
-    static requestAnimationFrame = requestAnimationFrame;
-    tasks = /* @__PURE__ */ new Set();
-    requestAnimationFrame;
-    frame = 0;
-    delayedRenders = [];
-    cancelledNodes = /* @__PURE__ */ new Set();
-    processing = false;
-    constructor() {
-      this.requestAnimationFrame = _Scheduler.requestAnimationFrame;
-      this.processTasks = this.processTasks.bind(this);
-    }
-    addFiber(fiber) {
-      this.tasks.add(fiber.root);
-    }
-    scheduleDestroy(node) {
-      this.cancelledNodes.add(node);
-      if (this.frame === 0) {
-        this.frame = this.requestAnimationFrame(this.processTasks);
-      }
-    }
-    /**
-     * Process all current tasks. This only applies to the fibers that are ready.
-     * Other tasks are left unchanged.
-     */
-    flush() {
-      if (this.delayedRenders.length) {
-        let renders = this.delayedRenders;
-        this.delayedRenders = [];
-        for (let f of renders) {
-          if (f.root && f.node.status !== STATUS.DESTROYED && f.node.fiber === f) {
-            f.render();
-          }
-        }
-      }
-      if (this.frame === 0) {
-        this.frame = this.requestAnimationFrame(this.processTasks);
-      }
-    }
-    processTasks() {
-      if (this.processing) {
-        return;
-      }
-      this.processing = true;
-      this.frame = 0;
-      for (let node of this.cancelledNodes) {
-        node._destroy();
-      }
-      this.cancelledNodes.clear();
-      for (let fiber of this.tasks) {
-        if (fiber.root !== fiber) {
-          this.tasks.delete(fiber);
-          continue;
-        }
-        const hasError = fibersInError.has(fiber);
-        if (hasError && fiber.counter !== 0) {
-          this.tasks.delete(fiber);
-          continue;
-        }
-        if (fiber.node.status === STATUS.DESTROYED) {
-          this.tasks.delete(fiber);
-          continue;
-        }
-        if (fiber.counter === 0) {
-          if (!hasError) {
-            fiber.complete();
-          }
-          if (fiber.appliedToDom) {
-            this.tasks.delete(fiber);
-          }
-        }
-      }
-      for (let task of this.tasks) {
-        if (task.node.status === STATUS.DESTROYED) {
-          this.tasks.delete(task);
-        }
-      }
-      this.processing = false;
-    }
-  };
-
-  // src/runtime/app.ts
-  var hasBeenLogged = false;
-  var apps = /* @__PURE__ */ new Set();
-  if (typeof window !== "undefined") {
-    window.__OWL_DEVTOOLS__ ||= { apps, Fiber, RootFiber, toRaw, proxy };
-  }
-  var App = class _App extends TemplateSet {
-    static validateTarget = validateTarget;
-    static apps = apps;
-    static version = version;
-    name;
-    scheduler = new Scheduler();
-    roots = /* @__PURE__ */ new Set();
-    pluginManager;
-    constructor(config3 = {}) {
-      super(config3);
-      this.name = config3.name || "";
-      apps.add(this);
-      this.pluginManager = new PluginManager(this, { config: config3.config });
-      if (config3.plugins) {
-        startPlugins(this.pluginManager, config3.plugins);
-      }
-      if (config3.test) {
-        this.dev = true;
-      }
-      if (this.dev && !config3.test && !hasBeenLogged) {
-        console.info(`Owl is running in 'dev' mode.`);
-        hasBeenLogged = true;
-      }
-    }
-    createRoot(Root, config3 = {}) {
-      const props2 = config3.props || {};
-      let resolve;
-      let reject;
-      const promise = new Promise((res, rej) => {
-        resolve = res;
-        reject = rej;
-      });
-      const restore = saveContext();
-      let node;
-      let error = null;
-      try {
-        node = new ComponentNode(Root, props2, this, null, null);
-      } catch (e) {
-        error = e;
-        reject(e);
-      } finally {
-        restore();
-      }
-      const root = {
-        node,
-        promise,
-        mount: (target, options) => {
-          if (error) {
-            return promise;
-          }
-          _App.validateTarget(target);
-          let handlers = nodeErrorHandlers.get(node);
-          if (!handlers) {
-            handlers = [];
-            nodeErrorHandlers.set(node, handlers);
-          }
-          handlers.unshift((e, finalize) => {
-            const finalError = finalize();
-            reject(finalError);
-          });
-          node.mounted.push(() => {
-            resolve(node.component);
-            handlers.shift();
-          });
-          const fiber = new MountFiber(node, target, options);
-          this.scheduler.addFiber(fiber);
-          if (node.willStart.length) {
-            node.initiateRender(fiber);
-          } else {
-            node.fiber = fiber;
-            if (node.mounted.length) {
-              fiber.root.mounted.push(fiber);
-            }
-            try {
-              fiber.render();
-            } catch (e) {
-              reject(e);
-            }
-          }
-          return promise;
-        },
-        destroy: () => {
-          this.roots.delete(root);
-          node?.destroy();
-          this.scheduler.processTasks();
-        }
-      };
-      this.roots.add(root);
-      return root;
-    }
-    destroy() {
-      for (let root of this.roots) {
-        root.destroy();
-      }
-      this.pluginManager.destroy();
-      this.scheduler.processTasks();
-      apps.delete(this);
-    }
-    _handleError(error) {
-      throw error;
-    }
-  };
-  async function mount2(C, target, config3 = {}) {
-    const app = new App(config3);
-    const root = app.createRoot(C, config3);
-    return root.mount(target, config3);
-  }
-
-  // src/runtime/event_handling.ts
-  var mainEventHandler = (data, ev, currentTarget) => {
-    const { data: _data, modifiers } = filterOutModifiersFromData(data);
-    data = _data;
-    let stopped = false;
-    if (modifiers.length) {
-      let selfMode = false;
-      const isSelf = ev.target === currentTarget;
-      for (const mod of modifiers) {
-        switch (mod) {
-          case "self":
-            selfMode = true;
-            if (isSelf) {
-              continue;
-            } else {
-              return stopped;
-            }
-          case "prevent":
-            if (selfMode && isSelf || !selfMode) ev.preventDefault();
-            continue;
-          case "stop":
-            if (selfMode && isSelf || !selfMode) ev.stopPropagation();
-            stopped = true;
-            continue;
-        }
-      }
-    }
-    if (Object.hasOwnProperty.call(data, 0)) {
-      const handler = data[0];
-      if (typeof handler !== "function") {
-        throw new OwlError(`Invalid handler (expected a function, received: '${handler}')`);
-      }
-      let node = data[1] ? data[1].__owl__ : null;
-      if (node ? node.status === STATUS.MOUNTED : true) {
-        handler(data[1], ev);
-      }
-    }
-    return stopped;
-  };
-
-  // src/runtime/lifecycle_hooks.ts
-  function decorate(node, f, hookName) {
-    if (node.app.dev) {
-      const component = node.component;
-      const componentName = component ? component.constructor.name : "Component";
-      const name = `${componentName}.${hookName}`;
-      const wrapper = {
-        [name](...args) {
-          return f.call(component, ...args);
-        }
-      };
-      return wrapper[name];
-    }
-    return f.bind(node.component);
-  }
-  function onWillStart(fn) {
-    const { node } = getContext("component");
-    node.willStart.push(decorate(node, fn, "onWillStart"));
-  }
-  function onWillUpdateProps(fn) {
-    const { node } = getContext("component");
-    node.willUpdateProps.push(decorate(node, fn, "onWillUpdateProps"));
-  }
-  function onMounted(fn) {
-    const { node } = getContext("component");
-    node.mounted.push(decorate(node, fn, "onMounted"));
-  }
-  function onWillPatch(fn) {
-    const { node } = getContext("component");
-    node.willPatch.unshift(decorate(node, fn, "onWillPatch"));
-  }
-  function onPatched(fn) {
-    const { node } = getContext("component");
-    node.patched.push(decorate(node, fn, "onPatched"));
-  }
-  function onWillUnmount(fn) {
-    const { node } = getContext("component");
-    node.willUnmount.unshift(decorate(node, fn, "onWillUnmount"));
-  }
-  function onWillDestroy(fn) {
-    const context = getContext();
-    if (context.type === "component") {
-      context.node.willDestroy.unshift(decorate(context.node, fn, "onWillDestroy"));
-    } else {
-      context.manager.onDestroyCb.push(fn);
-    }
-  }
-  function onError(callback) {
-    const { node } = getContext("component");
-    let handlers = nodeErrorHandlers.get(node);
-    if (!handlers) {
-      handlers = [];
-      nodeErrorHandlers.set(node, handlers);
-    }
-    handlers.push(callback.bind(node.component));
-  }
-
-  // src/runtime/reactivity/computed.ts
-  function computed(getter, options = {}) {
-    const computation = createComputation(() => {
-      const newValue = getter();
-      if (!Object.is(computation.value, newValue)) {
-        onWriteAtom(computation);
-      }
-      return newValue;
-    }, true);
-    function readComputed() {
-      if (computation.state !== 0 /* EXECUTED */) {
-        updateComputation(computation);
-      }
-      onReadAtom(computation);
-      return computation.value;
-    }
-    readComputed[atomSymbol] = computation;
-    readComputed.set = options.set ?? (() => {
-    });
-    const context = contextStack.at(-1);
-    if (context) {
-      if (context.type === "component") {
-        context.node.computations.push(computation);
-      } else if (context.type === "plugin") {
-        context.manager.computations.push(computation);
-      }
-    }
-    return readComputed;
-  }
-
-  // src/runtime/reactivity/signal.ts
-  function buildSignal(value, set) {
-    const atom = {
-      type: "signal",
-      value,
-      observers: /* @__PURE__ */ new Set()
-    };
-    let readValue = set(atom);
-    const readSignal = () => {
-      onReadAtom(atom);
-      return readValue;
-    };
-    readSignal[atomSymbol] = atom;
-    readSignal.set = function writeSignal(newValue) {
-      if (Object.is(atom.value, newValue)) {
-        return;
-      }
-      atom.value = newValue;
-      readValue = set(atom);
-      onWriteAtom(atom);
-    };
-    return readSignal;
-  }
-  function invalidateSignal(signal2) {
-    if (typeof signal2 !== "function" || signal2[atomSymbol]?.type !== "signal") {
-      throw new OwlError(`Value is not a signal (${signal2})`);
-    }
-    onWriteAtom(signal2[atomSymbol]);
-  }
-  function signalArray(initialValue) {
-    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
-  }
-  function signalObject(initialValue) {
-    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
-  }
-  function signalMap(initialValue) {
-    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
-  }
-  function signalSet(initialValue) {
-    return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
-  }
-  function signal(value) {
-    return buildSignal(value, (atom) => atom.value);
-  }
-  signal.invalidate = invalidateSignal;
-  signal.Array = signalArray;
-  signal.Map = signalMap;
-  signal.Object = signalObject;
-  signal.Set = signalSet;
-
-  // src/runtime/validation.ts
-  function assertType(value, validation, errorMessage = "Value does not match the type") {
-    const issues = validateType(value, validation);
-    if (issues.length) {
-      const issueStrings = JSON.stringify(
-        issues,
-        (key, value2) => {
-          if (typeof value2 === "function") {
-            return value2.name;
-          }
-          return value2;
-        },
-        2
-      );
-      throw new OwlError(`${errorMessage}
-${issueStrings}`);
-    }
-  }
-  function createContext2(issues, value, path, parent) {
-    return {
-      issueDepth: 0,
-      path,
-      value,
-      get isValid() {
-        return !issues.length;
-      },
-      addIssue(issue) {
-        issues.push({
-          received: this.value,
-          path: this.path,
-          ...issue
-        });
-      },
-      mergeIssues(newIssues) {
-        issues.push(...newIssues);
-      },
-      validate(type) {
-        type(this);
-        if (!this.isValid && parent) {
-          parent.issueDepth = this.issueDepth + 1;
-        }
-      },
-      withIssues(issues2) {
-        return createContext2(issues2, this.value, this.path, this);
-      },
-      withKey(key) {
-        return createContext2(issues, this.value[key], this.path.concat(key), this);
-      }
-    };
-  }
-  function validateType(value, validation) {
-    const issues = [];
-    validation(createContext2(issues, value, []));
-    return issues;
-  }
-
-  // src/runtime/resource.ts
-  var Resource = class {
-    _items = signal.Array([]);
-    _name;
-    _validation;
-    constructor(options = {}) {
-      this._name = options.name;
-      this._validation = options.validation;
-    }
-    items = computed(() => {
-      return this._items().sort((el1, el2) => el1[0] - el2[0]).map((elem) => elem[1]);
-    });
-    add(item, options = {}) {
-      if (this._validation) {
-        const info = this._name ? ` (resource '${this._name}')` : "";
-        assertType(item, this._validation, `Resource item does not match the type${info}`);
-      }
-      this._items().push([options.sequence ?? 50, item]);
-      return this;
-    }
-    delete(item) {
-      const items = this._items().filter(([seq, val]) => val !== item);
-      this._items.set(items);
-      return this;
-    }
-    has(item) {
-      return this._items().some(([s, value]) => value === item);
-    }
-  };
-  function useResource(r, elements) {
-    for (let elem of elements) {
-      r.add(elem);
-    }
-    onWillDestroy(() => {
-      for (let elem of elements) {
-        r.delete(elem);
-      }
-    });
-  }
-
-  // src/runtime/registry.ts
-  var Registry = class {
-    _map = signal.Object(/* @__PURE__ */ Object.create(null));
-    _name;
-    _validation;
-    constructor(options = {}) {
-      this._name = options.name || "registry";
-      this._validation = options.validation;
-    }
-    entries = computed(() => {
-      const entries = Object.entries(this._map()).sort((el1, el2) => el1[1][0] - el2[1][0]).map(([str, elem]) => [str, elem[1]]);
-      return entries;
-    });
-    items = computed(() => this.entries().map((e) => e[1]));
-    addById(item, options = {}) {
-      if (!item.id) {
-        throw new OwlError(`Item should have an id key (registry '${this._name}')`);
-      }
-      return this.add(item.id, item, { sequence: options.sequence ?? 50 });
-    }
-    add(key, value, options = {}) {
-      if (this._validation) {
-        const info = this._name ? ` (registry '${this._name}', key: '${key}')` : ` (key: '${key}')`;
-        assertType(value, this._validation, `Registry entry does not match the type${info}`);
-      }
-      this._map()[key] = [options.sequence ?? 50, value];
-      return this;
-    }
-    get(key, defaultValue) {
-      const hasKey = key in this._map();
-      if (!hasKey && arguments.length < 2) {
-        throw new Error(`KeyNotFoundError: Cannot find key "${key}" (registry '${this._name}')`);
-      }
-      return hasKey ? this._map()[key][1] : defaultValue;
-    }
-    delete(key) {
-      delete this._map()[key];
-    }
-    has(key) {
-      return key in this._map();
-    }
-  };
-
-  // src/runtime/types.ts
-  function anyType() {
-    return function validateAny() {
-    };
-  }
-  function booleanType() {
-    return function validateBoolean(context) {
-      if (typeof context.value !== "boolean") {
-        context.addIssue({ message: "value is not a boolean" });
-      }
-    };
-  }
-  function numberType() {
-    return function validateNumber(context) {
-      if (typeof context.value !== "number") {
-        context.addIssue({ message: "value is not a number" });
-      }
-    };
-  }
-  function stringType() {
-    return function validateString(context) {
-      if (typeof context.value !== "string") {
-        context.addIssue({ message: "value is not a string" });
-      }
-    };
-  }
-  function arrayType(elementType) {
-    return function validateArray(context) {
-      if (!Array.isArray(context.value)) {
-        context.addIssue({ message: "value is not an array" });
-        return;
-      }
-      if (!elementType) {
-        return;
-      }
-      for (let index = 0; index < context.value.length; index++) {
-        context.withKey(index).validate(elementType);
-      }
-    };
-  }
-  function constructorType(constructor) {
-    return function validateConstructor(context) {
-      if (!(typeof context.value === "function") || !(context.value === constructor || context.value.prototype instanceof constructor)) {
-        context.addIssue({ message: `value is not '${constructor.name}' or an extension` });
-      }
-    };
-  }
-  function customValidator(type, validator, errorMessage = "value does not match custom validation") {
-    return function validateCustom(context) {
-      context.validate(type);
-      if (!context.isValid) {
-        return;
-      }
-      if (!validator(context.value)) {
-        context.addIssue({ message: errorMessage });
-      }
-    };
-  }
-  function functionType(parameters = [], result = void 0) {
-    return function validateFunction(context) {
-      if (typeof context.value !== "function") {
-        context.addIssue({ message: "value is not a function" });
-      }
-    };
-  }
-  function instanceType(constructor) {
-    return function validateInstanceType(context) {
-      if (!(context.value instanceof constructor)) {
-        context.addIssue({ message: `value is not an instance of '${constructor.name}'` });
-      }
-    };
-  }
-  function intersection(types2) {
-    return function validateIntersection(context) {
-      for (const type of types2) {
-        context.validate(type);
-      }
-    };
-  }
-  function literalType(literal) {
-    return function validateLiteral(context) {
-      if (context.value !== literal) {
-        context.addIssue({
-          message: `value is not equal to ${typeof literal === "string" ? `'${literal}'` : literal}`
-        });
-      }
-    };
-  }
-  function literalSelection(literals) {
-    return union(literals.map(literalType));
-  }
-  function validateObject(context, schema, isStrict) {
-    if (typeof context.value !== "object" || Array.isArray(context.value) || context.value === null) {
-      context.addIssue({ message: "value is not an object" });
-      return;
-    }
-    if (!schema) {
-      return;
-    }
-    const isShape = !Array.isArray(schema);
-    let shape = schema;
-    if (Array.isArray(schema)) {
-      shape = {};
-      for (const key of schema) {
-        shape[key] = null;
-      }
-    }
-    const missingKeys = [];
-    for (const key in shape) {
-      const property = key.endsWith("?") ? key.slice(0, -1) : key;
-      if (context.value[property] === void 0) {
-        if (!key.endsWith("?")) {
-          missingKeys.push(property);
-        }
-        continue;
-      }
-      if (isShape) {
-        context.withKey(property).validate(shape[key]);
-      }
-    }
-    if (missingKeys.length) {
-      context.addIssue({
-        message: "object value has missing keys",
-        missingKeys
-      });
-    }
-    if (isStrict) {
-      const unknownKeys = [];
-      for (const key in context.value) {
-        if (!(key in shape) && !(`${key}?` in shape)) {
-          unknownKeys.push(key);
-        }
-      }
-      if (unknownKeys.length) {
-        context.addIssue({
-          message: "object value has unknown keys",
-          unknownKeys
-        });
-      }
-    }
-  }
-  function objectType(schema = {}) {
-    return function validateLooseObject(context) {
-      validateObject(context, schema, false);
-    };
-  }
-  function strictObjectType(schema) {
-    return function validateStrictObject(context) {
-      validateObject(context, schema, true);
-    };
-  }
-  function promiseType(type) {
-    return function validatePromise(context) {
-      if (!(context.value instanceof Promise)) {
-        context.addIssue({ message: "value is not a promise" });
-      }
-    };
-  }
-  function recordType(valueType) {
-    return function validateRecord(context) {
-      if (typeof context.value !== "object" || Array.isArray(context.value) || context.value === null) {
-        context.addIssue({ message: "value is not an object" });
-        return;
-      }
-      if (!valueType) {
-        return;
-      }
-      for (const key in context.value) {
-        context.withKey(key).validate(valueType);
-      }
-    };
-  }
-  function tuple(types2) {
-    return function validateTuple(context) {
-      if (!Array.isArray(context.value)) {
-        context.addIssue({ message: "value is not an array" });
-        return;
-      }
-      if (context.value.length !== types2.length) {
-        context.addIssue({ message: "tuple value does not have the correct length" });
-        return;
-      }
-      for (let index = 0; index < types2.length; index++) {
-        context.withKey(index).validate(types2[index]);
-      }
-    };
-  }
-  function union(types2) {
-    return function validateUnion(context) {
-      let firstIssueIndex = 0;
-      const subIssues = [];
-      for (const type of types2) {
-        const subContext = context.withIssues(subIssues);
-        subContext.validate(type);
-        if (subIssues.length === firstIssueIndex || subContext.issueDepth > 0) {
-          context.mergeIssues(subIssues.slice(firstIssueIndex));
-          return;
-        }
-        firstIssueIndex = subIssues.length;
-      }
-      context.addIssue({
-        message: "value does not match union type",
-        subIssues
-      });
-    };
-  }
-  function reactiveValueType(type) {
-    return function validateReactiveValue(context) {
-      if (typeof context.value !== "function" || !context.value[atomSymbol]) {
-        context.addIssue({ message: "value is not a reactive value" });
-      }
-    };
-  }
-  function componentType() {
-    return constructorType(Component);
-  }
-  function ref(type) {
-    return union([literalType(null), instanceType(type)]);
-  }
-  var types = {
-    and: intersection,
-    any: anyType,
-    array: arrayType,
-    boolean: booleanType,
-    component: componentType,
-    constructor: constructorType,
-    customValidator,
-    function: functionType,
-    instanceOf: instanceType,
-    literal: literalType,
-    number: numberType,
-    object: objectType,
-    or: union,
-    promise: promiseType,
-    record: recordType,
-    ref,
-    selection: literalSelection,
-    signal: reactiveValueType,
-    strictObject: strictObjectType,
-    string: stringType,
-    tuple
-  };
-
-  // src/runtime/props.ts
-  function validateObjectWithDefaults(schema, defaultValues) {
-    const keys = Array.isArray(schema) ? schema : Object.keys(schema);
-    const mandatoryDefaultedKeys = keys.filter((key) => !key.endsWith("?") && key in defaultValues);
-    return (context) => {
-      if (mandatoryDefaultedKeys.length) {
-        context.addIssue({
-          message: "props have default values on mandatory keys",
-          keys: mandatoryDefaultedKeys
-        });
-      }
-      context.validate(types.object(schema));
-    };
-  }
-  function props(type, defaults) {
-    const { node, app, componentName } = getContext("component");
-    if (defaults) {
-      node.defaultProps = Object.assign(node.defaultProps || {}, defaults);
-    }
-    function getProp(key) {
-      if (node.props[key] === void 0 && defaults) {
-        return defaults[key];
-      }
-      return node.props[key];
-    }
-    const result = /* @__PURE__ */ Object.create(null);
-    function applyPropGetters(keys) {
-      for (const key of keys) {
-        Reflect.defineProperty(result, key, {
-          enumerable: true,
-          get: getProp.bind(null, key)
-        });
-      }
-    }
-    if (type) {
-      const keys = (Array.isArray(type) ? type : Object.keys(type)).map(
-        (key) => key.endsWith("?") ? key.slice(0, -1) : key
-      );
-      applyPropGetters(keys);
-      if (app.dev) {
-        const validation = defaults ? validateObjectWithDefaults(type, defaults) : types.object(type);
-        assertType(node.props, validation, `Invalid component props (${componentName})`);
-        node.willUpdateProps.push(async (np) => {
-          assertType(np, validation, `Invalid component props (${componentName})`);
-        });
-      }
-    } else {
-      const getKeys = (props2) => {
-        const keys2 = [];
-        for (const k in props2) {
-          if (k.charCodeAt(0) !== 1) {
-            keys2.push(k);
-          }
-        }
-        if (defaults) {
-          for (const k in defaults) {
-            if (!(k in props2)) {
-              keys2.push(k);
-            }
-          }
-        }
-        return keys2;
-      };
-      let keys = getKeys(node.props);
-      applyPropGetters(keys);
-      node.willUpdateProps.push((np) => {
-        for (const key of keys) {
-          Reflect.deleteProperty(result, key);
-        }
-        keys = getKeys(np);
-        applyPropGetters(keys);
-      });
-    }
-    return result;
-  }
-
-  // src/runtime/hooks.ts
-  function useEffect(fn) {
-    onWillDestroy(effect(fn));
-  }
-  function useListener(target, eventName, handler, eventParams) {
-    if (typeof target === "function") {
-      useEffect(() => {
-        const el = target();
-        if (el) {
-          el.addEventListener(eventName, handler, eventParams);
-          return () => el.removeEventListener(eventName, handler, eventParams);
-        }
-        return;
-      });
-    } else {
-      target.addEventListener(eventName, handler, eventParams);
-      onWillDestroy(() => target.removeEventListener(eventName, handler, eventParams));
-    }
-  }
-  function useApp() {
-    return getContext().app;
-  }
-
-  // src/runtime/plugin_hooks.ts
-  function plugin(pluginType) {
-    const context = getContext();
-    const manager = context.type === "component" ? context.node.pluginManager : context.manager;
-    let plugin2 = manager.getPluginById(pluginType.id);
-    if (!plugin2) {
-      if (context.type === "plugin") {
-        plugin2 = manager.startPlugin(pluginType);
-      } else {
-        throw new OwlError(`Unknown plugin "${pluginType.id}"`);
-      }
-    }
-    return plugin2;
-  }
-  function config2(name, type) {
-    const { app, manager } = getContext("plugin");
-    if (app.dev && type) {
-      assertType(manager.config, types.object({ [name]: type }), "Config does not match the type");
-    }
-    return manager.config[name.endsWith("?") ? name.slice(0, -1) : name];
-  }
-  function providePlugins(pluginConstructors, config3) {
-    const { node } = getContext("component");
-    const manager = new PluginManager(node.app, { parent: node.pluginManager, config: config3 });
-    node.pluginManager = manager;
-    onWillDestroy(() => manager.destroy());
-    startPlugins(manager, pluginConstructors);
-  }
-
-  // src/runtime/index.ts
-  config.shouldNormalizeDom = false;
-  config.mainEventHandler = mainEventHandler;
-  var blockDom = {
-    config,
-    // bdom entry points
-    mount,
-    patch,
-    remove,
-    // bdom block types
-    list,
-    multi,
-    text,
-    toggler,
-    createBlock,
-    html
-  };
-  var __info__ = {
-    version: App.version,
-    date: "2026-04-17T15:14:37.900Z",
-    hash: "94559d43",
-    url: "https://github.com/odoo/owl"
-  };
-
   // src/index.ts
   TemplateSet.prototype._compileTemplate = function _compileTemplate(name, template) {
     return compile(template, {
@@ -6222,6 +6888,9 @@ ${issueStrings}`);
       customDirectives: this.customDirectives,
       hasGlobalValues: this.hasGlobalValues
     });
+  };
+  TemplateSet.prototype._parseXML = function _parseXML(xml2) {
+    return parseXML(xml2);
   };
   return __toCommonJS(index_exports);
 })();
