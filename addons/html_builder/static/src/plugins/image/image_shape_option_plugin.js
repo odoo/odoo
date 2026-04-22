@@ -172,6 +172,15 @@ export class ImageShapeOptionPlugin extends Plugin {
             newDataset.shapeColors ??
             (isNewShape ? defaultShapeColors : img.dataset.shapeColors ?? defaultShapeColors);
 
+        // Get animation speed - only for animable shapes.
+        if (this.isAnimableShape(shapeId)) {
+            newDataset.shapeAnimationSpeed =
+                newDataset.shapeAnimationSpeed ??
+                (isNewShape ? "0" : img.dataset.shapeAnimationSpeed ?? "0");
+        } else {
+            newDataset.shapeAnimationSpeed = "";
+        }
+
         const getNaturalWidth = async () => {
             if (img.naturalWidth) {
                 return img.naturalWidth;
