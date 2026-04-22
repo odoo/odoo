@@ -117,9 +117,14 @@ class AccountPayment(models.Model):
         comodel_name='res.partner',
         string="Customer/Vendor",
         ondelete='restrict',
-        domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
         tracking=True,
         check_company=True)
+    commercial_partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Commercial Entity',
+        compute='_compute_commercial_partner_id',
+        search='_search_commercial_partner_id',
+    )
     outstanding_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Outstanding Account",
@@ -289,7 +294,7 @@ class AccountPayment(models.Model):
         return [{
             'name': default_values['name'],
             'date_maturity': self.date,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.commercial_partner_id.id,
             'account_id': self.outstanding_account_id.id,
             'currency_id': self.currency_id.id,
             'balance': default_values['balance'],
@@ -301,7 +306,7 @@ class AccountPayment(models.Model):
         return [{
             'name': default_values['name'],
             'date_maturity': self.date,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.commercial_partner_id.id,
             'account_id': self.destination_account_id.id,
             'currency_id': self.currency_id.id,
             'balance': default_values['balance'],
@@ -423,15 +428,23 @@ class AccountPayment(models.Model):
                     )
                 )
 
+    @api.depends('partner_id')
+    def _compute_commercial_partner_id(self):
+        for payment in self:
+            payment.commercial_partner_id = payment.partner_id.commercial_partner_id
+
+    def _search_commercial_partner_id(self, operator, value):
+        return [('partner_id.commercial_partner_id', operator, value)]
+
     @api.depends('company_id', 'partner_id')
     def _compute_journal_id(self):
         for payment in self:
             # default customer payment method logic
-            partner = payment.partner_id
+            partner = payment.commercial_partner_id
             payment_type = payment.payment_type if payment.payment_type in ('inbound', 'outbound') else None
             if not bool(payment._origin) and (partner or payment_type):
                 field_name = f'property_{payment_type}_payment_method_line_id'
-                default_payment_method_line = payment.partner_id.with_company(payment.company_id)[field_name]
+                default_payment_method_line = partner.with_company(payment.company_id)[field_name]
                 journal = default_payment_method_line.journal_id
                 if journal:
                     payment.journal_id = journal
@@ -552,7 +565,7 @@ class AccountPayment(models.Model):
             if pay.payment_type == 'inbound':
                 pay.available_partner_bank_ids = pay.journal_id.bank_account_id
             else:
-                pay.available_partner_bank_ids = pay.partner_id.bank_ids\
+                pay.available_partner_bank_ids = pay.commercial_partner_id.bank_ids\
                         .filtered(lambda x: x.company_id.id in (False, pay.company_id.id))._origin
 
     @api.depends('available_partner_bank_ids', 'journal_id')
@@ -569,8 +582,8 @@ class AccountPayment(models.Model):
         '''
         for pay in self:
             available_payment_method_lines = pay.available_payment_method_line_ids
-            inbound_payment_method = pay.partner_id.property_inbound_payment_method_line_id
-            outbound_payment_method = pay.partner_id.property_outbound_payment_method_line_id
+            inbound_payment_method = pay.commercial_partner_id.property_inbound_payment_method_line_id
+            outbound_payment_method = pay.commercial_partner_id.property_outbound_payment_method_line_id
             if pay.payment_type == 'inbound' and inbound_payment_method.id in available_payment_method_lines.ids:
                 pay.payment_method_line_id = inbound_payment_method
             elif pay.payment_type == 'outbound' and outbound_payment_method.id in available_payment_method_lines.ids:
@@ -628,8 +641,8 @@ class AccountPayment(models.Model):
         for pay in self:
             if pay.partner_type == 'customer':
                 # Receive money from invoice or send money to refund it.
-                if pay.partner_id:
-                    pay.destination_account_id = pay.partner_id.with_company(pay.company_id).property_account_receivable_id
+                if pay.commercial_partner_id:
+                    pay.destination_account_id = pay.commercial_partner_id.with_company(pay.company_id).property_account_receivable_id
                 else:
                     pay.destination_account_id = self.env['account.account'].with_company(pay.company_id).search([
                         *self.env['account.account']._check_company_domain(pay.company_id),
@@ -637,8 +650,8 @@ class AccountPayment(models.Model):
                     ], limit=1)
             elif pay.partner_type == 'supplier':
                 # Send money to pay a bill or receive money to refund it.
-                if pay.partner_id:
-                    pay.destination_account_id = pay.partner_id.with_company(pay.company_id).property_account_payable_id
+                if pay.commercial_partner_id:
+                    pay.destination_account_id = pay.commercial_partner_id.with_company(pay.company_id).property_account_payable_id
                 else:
                     pay.destination_account_id = self.env['account.account'].with_company(pay.company_id).search([
                         *self.env['account.account']._check_company_domain(pay.company_id),
@@ -803,6 +816,7 @@ class AccountPayment(models.Model):
         # Update tables involved in the query
         used_fields = ("company_id", "partner_id", "date", "state", "amount", 'payment_type')
         self.flush_model(used_fields)
+        self.env['res.partner'].flush_model(['commercial_partner_id'])
 
         payment_table_and_alias = SQL("account_payment AS payment")
         if not self[0].id:  # if record is under creation/edition in UI, safely inject values in the query
@@ -826,13 +840,15 @@ class AccountPayment(models.Model):
                 SELECT payment.id AS payment_id,
                        ARRAY_AGG(DISTINCT duplicate_payment.id) AS duplicate_payment_ids
                   FROM %(payment_table_and_alias)s
+                  JOIN res_partner partner ON partner.id = payment.partner_id
                   JOIN account_payment AS duplicate_payment ON payment.id != duplicate_payment.id
-                                                           AND payment.partner_id = duplicate_payment.partner_id
                                                            AND payment.company_id = duplicate_payment.company_id
                                                            AND payment.date = duplicate_payment.date
                                                            AND payment.payment_type = duplicate_payment.payment_type
                                                            AND payment.amount = duplicate_payment.amount
                                                            AND duplicate_payment.state IN %(matching_states)s
+                  JOIN res_partner duplicate_partner ON duplicate_partner.id = duplicate_payment.partner_id
+                                                    AND duplicate_partner.commercial_partner_id = partner.commercial_partner_id
                  WHERE payment.id = ANY(%(payments)s)
               GROUP BY payment.id
             """,

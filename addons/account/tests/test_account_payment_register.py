@@ -188,6 +188,20 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             'company_ids': [Command.set(cls.branch.ids)],
         })
 
+        # Commercial partner with an invoice-typed child contact, used to exercise
+        # how the wizard batches and addresses payments when bills target the child.
+        cls.commercial_partner = cls.env['res.partner'].create({
+            'name': 'Ready Mat',
+            'is_company': True,
+            'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
+            'property_account_payable_id': cls.company_data['default_account_payable'].id,
+        })
+        cls.invoice_contact = cls.env['res.partner'].create({
+            'name': 'Billy Fox',
+            'type': 'invoice',
+            'parent_id': cls.commercial_partner.id,
+        })
+
     @classmethod
     def get_wizard_available_journals(cls, wizard):
         return wizard.available_journal_ids.filtered_domain([
@@ -2185,3 +2199,34 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
 
         payments = self._register_payment(move1 + move2, group_payment=False)
         self.assertEqual(len(payments), 3, "We should get 2 payments from the first move and 1 for the second one")
+
+    def test_payment_register_uses_bill_partner(self):
+        """ Flow test (Form-based) bill => payment register => payment. """
+        bill = self.init_invoice('in_invoice', partner=self.commercial_partner, amounts=[100.0], post=True)
+        payment = self._register_payment(bill)
+
+        self.assertEqual(payment.partner_id, self.commercial_partner)
+        self.assertEqual(payment.commercial_partner_id, self.commercial_partner)
+
+    def test_payment_register_groups_by_commercial(self):
+        """ Two bills for the same commercial partner are batched into a single payment
+        addressed to that commercial.
+        """
+        bills = self._create_invoice(move_type='in_invoice', partner_id=self.commercial_partner) \
+              | self._create_invoice(move_type='in_invoice', partner_id=self.commercial_partner)
+        bills.action_post()
+        payments = self._register_payment(bills)
+        self.assertEqual(len(payments), 1)
+        self.assertEqual(payments.partner_id, self.commercial_partner)
+
+    def test_payment_register_groups_by_invoice_contact(self):
+        """ Two bills whose partner_id is the same invoice contact are
+        batched into a single payment addressed to that child contact.
+        """
+        bills = self._create_invoice(move_type='in_invoice', partner_id=self.invoice_contact) \
+              | self._create_invoice(move_type='in_invoice', partner_id=self.invoice_contact)
+        bills.action_post()
+        payments = self._register_payment(bills)
+        self.assertEqual(len(payments), 1)
+        self.assertEqual(payments.partner_id, self.invoice_contact)
+        self.assertEqual(payments.commercial_partner_id, self.commercial_partner)

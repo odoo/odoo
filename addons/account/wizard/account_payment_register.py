@@ -271,11 +271,13 @@ class AccountPaymentRegister(models.TransientModel):
         move = line.move_id
 
         partner_bank_account = self.env['res.partner.bank']
+        partner_id = line.partner_id.id  # commercial partner
         if move.is_invoice(include_receipts=True):
             partner_bank_account = move.partner_bank_id._origin
+            partner_id = move.partner_id.id  # possibly an invoice contact
 
         return {
-            'partner_id': line.partner_id.id,
+            'partner_id': partner_id,
             'account_id': line.account_id.id,
             'currency_id': line.currency_id.id,
             'partner_bank_id': partner_bank_account.id,
@@ -1041,7 +1043,7 @@ class AccountPaymentRegister(models.TransientModel):
                     payment_vals['write_off_line_vals'].append({
                         'name': self.writeoff_label,
                         'account_id': self.writeoff_account_id.id,
-                        'partner_id': self.partner_id.id,
+                        'partner_id': self.partner_id.commercial_partner_id.id,
                         'currency_id': self.currency_id.id,
                         'amount_currency': write_off_amount_currency,
                         'balance': self.currency_id._convert(write_off_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date),
