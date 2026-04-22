@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
+import { press, queryAllTexts } from "@odoo/hoot-dom";
 import {
+    contains,
     defineModels,
     fields,
     getFacetTexts,
@@ -165,4 +166,56 @@ test(`select a field name in Custom Group menu properly trigger the correspondin
     expect(`.o_group_by_menu .o_menu_item`).toHaveCount(2);
     expect(`.o_add_custom_group_menu`).toHaveCount(1);
     expect(getFacetTexts()).toEqual(["Candlelight"]);
+});
+
+test(`keyboard navigation on custom group by item`, async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["groupBy"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter string="Foo" name="group_by_foo" context="{'group_by': 'foo'}"/>
+            </search>
+        `,
+        searchViewFields: {
+            foo: { string: "Foo", type: "char", store: true, sortable: true, groupable: true },
+            date: { string: "Date", type: "date", store: true, sortable: true, groupable: true },
+        },
+    });
+
+    await toggleSearchBarMenu();
+    await press("arrowup");
+    expect(".o_add_custom_group_menu").toHaveClass("focus", {
+        message: "arrowup with no currently focused item always jumps to the last navigable item",
+    });
+});
+
+test.tags("desktop");
+test(`hover on custom group by item`, async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["groupBy"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter string="Foo" name="group_by_foo" context="{'group_by': 'foo'}"/>
+            </search>
+        `,
+        searchViewFields: {
+            foo: { string: "Foo", type: "char", store: true, sortable: true, groupable: true },
+            date: { string: "Date", type: "date", store: true, sortable: true, groupable: true },
+        },
+    });
+
+    await toggleSearchBarMenu();
+    await contains(".o_group_by_menu .o_menu_item:first").hover();
+    expect(".o_group_by_menu .focus").toHaveCount(1);
+    expect(".o_add_custom_group_menu").not.toHaveClass("focus");
+
+    await contains(".o_add_custom_group_menu").hover();
+    expect(".o_add_custom_group_menu").toHaveClass("focus");
+    expect(".o_group_by_menu .focus").toHaveCount(1, {
+        message: "only one item should be focused at a time",
+    });
 });
