@@ -26,11 +26,7 @@ export class InvoiceButton extends Component {
         return Boolean(this.props.order.raw.account_move);
     }
     get commandName() {
-        if (!this.props.order) {
-            return _t("Invoice");
-        } else {
-            return this.isAlreadyInvoiced ? _t("Print Invoice") : _t("Invoice");
-        }
+        return _t("Invoice");
     }
     async _downloadInvoice(orderId) {
         try {

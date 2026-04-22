@@ -32,6 +32,7 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { TipCell } from "@point_of_sale/app/screens/ticket_screen/tip_cell/tip_cell";
 import { ProgressBar } from "@point_of_sale/app/screens/ticket_screen/progress_bar/progress_bar";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { SendReceiptPopup } from "@point_of_sale/app/components/popups/send_receipt_popup/send_receipt_popup";
 import { PrintPopup } from "@point_of_sale/app/components/popups/print_popup/print_popup";
 
 const { DateTime } = luxon;
@@ -180,6 +181,13 @@ export class TicketScreen extends Component {
     }
     async print(order) {
         this.dialog.add(PrintPopup, { order });
+    }
+    onClickSend() {
+        if (this.pos.canSendReceipt) {
+            this.dialog.add(SendReceiptPopup, {
+                order: this.getSelectedOrder(),
+            });
+        }
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;
