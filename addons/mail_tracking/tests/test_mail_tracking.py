@@ -1,5 +1,6 @@
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.exceptions import UserError
 
 
 class TestMailTracking(MailCommon):
@@ -141,3 +142,26 @@ class TestMailTracking(MailCommon):
 
         self.assertEqual(len(tracking_values), len(tracking_value_list),
                          "Tracking values count mismatch")
+
+    def test_copy_message_with_tracking_and_change_type(self):
+        partner = self.env['res.partner'].create({'name': 'test'})
+
+        self.flush_tracking()
+        partner.name = 'new test'
+        self.flush_tracking()
+
+        tracking_message = partner.message_ids.filtered(lambda m: m.message_type == 'tracking')
+
+        self.assertTrue(tracking_message.tracking_value_ids,
+            "Message should have tracking values for this partner"
+        )
+
+        with self.assertRaises(UserError):
+            tracking_message.copy({
+                'message_type': 'notification',
+            })
+
+        new_tracking_message = tracking_message.copy()
+
+        self.assertTrue(new_tracking_message)
+        self.assertEqual(new_tracking_message.message_type, tracking_message.message_type)

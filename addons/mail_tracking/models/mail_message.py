@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import api, Command, fields, models
+from odoo.exceptions import UserError
 
 
 class MailMessage(models.Model):
@@ -11,6 +12,21 @@ class MailMessage(models.Model):
         groups="base.group_system",
         help='Tracked values are stored in a separate model. This field allow to reconstruct '
              'the tracking and to generate statistics on the model.')
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default)
+        for record, vals in zip(self, vals_list):
+            if 'message_type' in default and default.get('message_type') != record.message_type and record.sudo().tracking_value_ids:
+                raise UserError(self.env._(
+                    "You cannot change message type while copying a message that contains tracking values."
+                ))
+
+            tracking_vals = []
+            for tv in record.sudo().tracking_value_ids:
+                tracking_vals.append(Command.create(tv.copy_data()[0]))
+            vals['tracking_value_ids'] = tracking_vals
+        return vals_list
 
     @api.model_create_multi
     def create(self, vals_list):
