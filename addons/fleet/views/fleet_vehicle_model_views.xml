@@ -71,6 +71,7 @@
                                         <field name="default_co2"/>
                                         <field name="co2_emission_unit"/>
                                     </div>
+                                    <field name="is_false_hybrid" invisible="default_fuel_type not in ['plug_in_hybrid_diesel', 'plug_in_hybrid_gasoline', 'full_hybrid']"/>
                                     <field name="co2_standard" placeholder="eg. WLTP, Euro 6, or EPA, ..."/>
                                     <label for="horsepower" invisible="power_unit != 'horsepower'"/>
                                     <div class="o_row" invisible="power_unit != 'horsepower'">

@@ -74,12 +74,44 @@ class FleetVehicleModel(models.Model):
         ('rwd', 'Rear-Wheel Drive (RWD)'),
         ('4wd', 'Four-Wheel Drive (4WD)'),
     ])
+    is_false_hybrid = fields.Boolean(default=False, string="False Hybrid")
 
     @api.model
     def _search_display_name(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         return ['|', ('name', operator, value), ('brand_id.name', operator, value)]
+
+    def _get_similar_model(self):
+        self.ensure_one()
+        searched_fuel_type = False
+        if self.default_fuel_type == 'plug_in_hybrid_diesel':
+            searched_fuel_type = 'diesel'
+        if self.default_fuel_type in ['plug_in_hybrid_gasoline', 'full_hybrid']:
+            searched_fuel_type = 'gasoline'
+        if searched_fuel_type:
+            searched_models = self.env['fleet.vehicle.model'].search([('default_fuel_type', '=', searched_fuel_type), ('name', '=', self.name), ('id', '!=', self.id)])
+            if len(searched_models):
+                return searched_models[0]
+        return None
+
+    @api.onchange('default_fuel_type')
+    def _onchange_default_fuel_type(self):
+        similar_model = self._get_similar_model()
+        if self.is_false_hybrid and similar_model:
+            self.default_co2 = similar_model.default_co2
+
+    @api.onchange('is_false_hybrid')
+    def _onchange_is_false_hybrid(self):
+        similar_model = self._get_similar_model()
+        if self.is_false_hybrid:
+            if similar_model:
+                self.default_co2 = similar_model.default_co2
+            else:
+                self.default_co2 *= 2.5
+        else:
+            if not similar_model:
+                self.default_co2 /= 2.5
 
     @api.depends('brand_id')
     def _compute_display_name(self):

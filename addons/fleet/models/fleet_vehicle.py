@@ -143,6 +143,7 @@ class FleetVehicle(models.Model):
             a full tank (for fuel-powered vehicles)")
     range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')],
         compute='_compute_range_unit', store=True, readonly=False, default="km", required=True)
+    is_false_hybrid = fields.Boolean(related='model_id.is_false_hybrid')
 
     _unique_license_plate = models.Constraint(
         'UNIQUE(license_plate)',
