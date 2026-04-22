@@ -52,6 +52,10 @@ export class EditorOverlay extends Component {
             getTarget = this.getSelectionTarget.bind(this);
         }
 
+        let isPreviewActive = false;
+        useExternalListener(this.props.bus, "previewChange", ({ detail }) => {
+            isPreviewActive = detail.isPreviewActive;
+        });
         useExternalListener(this.props.bus, "updatePosition", () => {
             position.unlock();
         });
@@ -60,7 +64,9 @@ export class EditorOverlay extends Component {
 
         if (this.props.positionOptions?.updatePositionOnResize ?? true) {
             const resizeObserver = new ResizeObserver(() => {
-                position.unlock();
+                if (!isPreviewActive) {
+                    position.unlock();
+                }
             });
             useLayoutEffect(
                 (root) => {

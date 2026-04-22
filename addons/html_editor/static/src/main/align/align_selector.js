@@ -13,6 +13,10 @@ export class AlignSelector extends Component {
         getDisplay: Function,
         onSelected: Function,
         ...toolbarButtonProps,
+        applyAlignResetPreview: Function,
+        applyAlignPreview: Function,
+        applyAlignCommit: Function,
+        overlay: { type: Object, optional: true },
     };
     static components = { Dropdown, DropdownItem };
 
@@ -24,6 +28,23 @@ export class AlignSelector extends Component {
     }
 
     onSelected(item) {
-        this.props.onSelected(item);
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: false,
+        });
+        this.props.applyAlignCommit(item, this.props.onSelected);
+    }
+
+    onItemHover(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: true,
+        });
+        this.props.applyAlignPreview(item, this.props.onSelected);
+    }
+
+    onItemHoverOut(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: false,
+        });
+        this.props.applyAlignResetPreview(item);
     }
 }

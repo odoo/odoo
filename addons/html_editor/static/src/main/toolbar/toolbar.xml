@@ -9,7 +9,7 @@
                     <t t-foreach="buttonGroup.buttons" t-as="button" t-key="button.id">
                             <t t-if="button.Component">
                                 <t t-component="button.Component"
-                                    t-props="button.props"
+                                    t-props="{...button.props, overlay: this.props.overlay}"
                                     title="button.description"
                                     getSelection.bind="this.props.getSelection"
                                     isDisabled="'isDisabled' in button.props ? button.props.isDisabled : !!button.isDisabled"/>

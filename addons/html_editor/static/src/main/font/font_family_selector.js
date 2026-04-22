@@ -13,11 +13,36 @@ export class FontFamilySelector extends Component {
         currentFontFamily: Object,
         onSelected: Function,
         ...toolbarButtonProps,
+        applyFontFamilyResetPreview: Function,
+        applyFontFamliyPreview: Function,
+        applyFontFamilyCommit: Function,
+        overlay: { type: Object, optional: true },
     };
     static components = { Dropdown, DropdownItem };
 
     setup() {
         this.menuRef = useChildRef();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
+    }
+
+    onSelected(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: false,
+        });
+        this.props.applyFontFamilyCommit(item, this.props.onSelected);
+    }
+
+    onItemHover(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: true,
+        });
+        this.props.applyFontFamliyPreview(item, this.props.onSelected);
+    }
+
+    onItemHoverOut(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: false,
+        });
+        this.props.applyFontFamilyResetPreview(item);
     }
 }

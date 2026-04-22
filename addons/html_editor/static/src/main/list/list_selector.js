@@ -12,6 +12,10 @@ export class ListSelector extends Component {
         getButtons: Function,
         getListMode: Function,
         key: Object,
+        applyListResetPreview: Function,
+        applyListPreview: Function,
+        applyListCommit: Function,
+        overlay: { type: Object, optional: true },
     };
     static components = { Dropdown };
 
@@ -23,5 +27,26 @@ export class ListSelector extends Component {
         const { editableSelection: selection } = this.props.getSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
         return closestLI && this.props.getListMode(closestLI.parentNode);
+    }
+
+    onSelected(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: false,
+        });
+        this.props.applyListCommit(item);
+    }
+
+    onItemHover(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: true,
+        });
+        this.props.applyListPreview(item);
+    }
+
+    onItemHoverOut() {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: false,
+        });
+        this.props.applyListResetPreview();
     }
 }

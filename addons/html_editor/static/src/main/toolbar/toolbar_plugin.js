@@ -279,6 +279,10 @@ export class ToolbarPlugin extends Plugin {
                 this.addDomListener(this.editable, "mousedown", () => (this.isMouseDown = true));
                 this.addDomListener(this.document, "mouseup", () => (this.isMouseDown = false));
             }
+            this.isPreviewActive = false;
+            this.overlay.bus?.addEventListener("previewChange", ({ detail }) => {
+                this.isPreviewActive = detail.isPreviewActive;
+            });
         }
         this.isToolbarExpanded = false;
         this.toolbarProps = {
@@ -286,6 +290,7 @@ export class ToolbarPlugin extends Plugin {
             getSelection: () => this.dependencies.selection.getSelectionData(),
             focusEditable: () => this.dependencies.selection.focusEditable(),
             state: this.state,
+            overlay: this.overlay,
         };
     }
 
@@ -376,6 +381,9 @@ export class ToolbarPlugin extends Plugin {
     _updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
         // Prevent toolbar to open if the selection is not in the editable area,
         // or if the selection is protected or protecting.
+        if (this.isPreviewActive) {
+            return;
+        }
         if (
             !(
                 selectionData.documentSelectionIsInEditable &&

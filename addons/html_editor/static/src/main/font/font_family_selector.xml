@@ -5,11 +5,13 @@
                 <span class="px-1" t-out="this.props.currentFontFamily.displayName"/>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
+                <div data-prevent-closing-overlay="true" t-on-mouseleave="() => this.onItemHoverOut(item)">
                     <t t-foreach="this.props.fontFamilyItems" t-as="item" t-key="item_index">
                         <DropdownItem
                             attrs="{ name: item.nameShort }"
-                            onSelected="() => this.props.onSelected(item)" t-on-pointerdown.prevent="() => {}">
+                            onSelected="() => this.onSelected(item)"
+                            t-on-mouseover="() => this.onItemHover(item)"
+                            t-on-pointerdown.prevent="() => {}">
                             <t t-out="item.name"/>
                         </DropdownItem>
                     </t>

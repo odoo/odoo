@@ -35,7 +35,7 @@ export const fontSizeItems = [
 
 export class FontSizePlugin extends Plugin {
     static id = "fontSize";
-    static dependencies = ["format", "selection"];
+    static dependencies = ["format", "selection", "history"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         toolbar_items: [
@@ -77,6 +77,9 @@ export class FontSizePlugin extends Plugin {
                         this.dependencies.selection.focusEditable();
                     },
                     document: this.document,
+                    applyFontSizeResetPreview: this.applyFontSizeResetPreview.bind(this),
+                    applyFontSizePreview: this.applyFontSizePreview.bind(this),
+                    applyFontSizeCommit: this.applyFontSizeCommit.bind(this),
                 },
                 isAvailable: isHtmlContentSupported,
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
@@ -102,6 +105,9 @@ export class FontSizePlugin extends Plugin {
     setup() {
         this.fontSize = reactive({ displayName: "" });
         this.isTypingFontSize = false;
+        this.previewableApplyFontSize = this.dependencies.history.makePreviewableOperation(
+            (item, onSelected) => onSelected(item)
+        );
     }
 
     normalize(root) {
@@ -193,5 +199,18 @@ export class FontSizePlugin extends Plugin {
             return;
         }
         this.fontSize.displayName = this.fontSizeName;
+    }
+
+    applyFontSizeCommit(item, onSelected) {
+        this.previewableApplyFontSize.commit(item, onSelected);
+    }
+
+    applyFontSizePreview(item, onSelected) {
+        this.previewableApplyFontSize.preview(item, onSelected);
+    }
+
+    applyFontSizeResetPreview() {
+        this.previewableApplyFontSize.revert();
+        this.updateFontSizeSelectorParams();
     }
 }

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, hover, test } from "@odoo/hoot";
 import { getContent, setSelection } from "./_helpers/selection";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { ensureDistinctHistoryStep, insertText, splitBlock } from "./_helpers/user_actions";
@@ -8,7 +8,7 @@ import {
     patchPrism,
     testTextareaRange,
 } from "./_helpers/syntax_highlighting";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup, contains } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
@@ -1430,5 +1430,70 @@ describe("Arrow navigation (up/down) across syntax-highlighted code blocks", () 
                 `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a<br>bc<br>d</pre>` +
                 "<p>[]after</p>",
         });
+    });
+});
+
+describe("Syntax highlighting preview", () => {
+    test.tags("desktop");
+    test("should preview syntax highlighting on hover without closing the toolbar", async () => {
+        const { editor } = await setupEditor("<p>a[bc]d</p>", {
+            config: {
+                ...configWithEmbeddings,
+                // Reduce the syntax highlighting limit for tests.
+                // Real limit (e.g. 1 million characters) is too large to use
+                // in unit test, so use smaller value to reliably test behavior.
+                syntaxHighlightingTextLimit: 50,
+            },
+        });
+        await waitFor(".btn[name='font_type']");
+        expect(".btn[name='font_type']").toHaveText("Paragraph");
+        await contains(".btn[name='font_type']").click();
+        await waitFor(".o_font_type_selector_menu");
+        await hover(".o_font_type_selector_menu .o-dropdown-item[name='pre']");
+        await animationFrame();
+        await compareHighlightedContent(
+            getContent(editor.editable),
+            unformat(
+                `<p data-selection-placeholder=""><br></p>
+                ${highlightedPre({ value: "abcd", textareaRange: 0 })}
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            ),
+            "Initial code block is highlighted",
+            editor
+        );
+        expect(".o-we-toolbar").toHaveCount(1);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying font syntax highlighting", async () => {
+        const { editor, el } = await setupEditor("<p>a[bc]d</p>", {
+            config: {
+                ...configWithEmbeddings,
+                // Reduce the syntax highlighting limit for tests.
+                // Real limit (e.g. 1 million characters) is too large to use
+                // in unit test, so use smaller value to reliably test behavior.
+                syntaxHighlightingTextLimit: 50,
+            },
+        });
+        await waitFor(".btn[name='font_type']");
+        expect(".btn[name='font_type']").toHaveText("Paragraph");
+        await contains(".btn[name='font_type']").click();
+        await waitFor(".o_font_type_selector_menu");
+        await hover(".o_font_type_selector_menu .o-dropdown-item[name='pre']");
+        await animationFrame();
+        await compareHighlightedContent(
+            getContent(editor.editable),
+            unformat(
+                `<p data-selection-placeholder=""><br></p>
+                ${highlightedPre({ value: "abcd", textareaRange: 0 })}
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            ),
+            "Initial code block is highlighted",
+            editor
+        );
+        expect(".o-we-toolbar").toHaveCount(1);
+        await hover(el);
+        await animationFrame();
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
     });
 });
