@@ -922,11 +922,11 @@ class MailMessage(models.Model):
         if not notifications:
             return
         notifications.write({"is_read": False, "read_date": False})
-        store = Store().add(notifications.mail_message_id, "_store_message_fields")
-        self.env.user._bus_send(
-            "mail.message/mark_as_unread",
-            {"message_ids": notifications.mail_message_id.ids, "store_data": store},
-        )
+        Store(
+            self.env.user,
+            notification_type="mail.message/mark_as_unread",
+            notification_payload={"message_ids": notifications.mail_message_id.ids},
+        ).add(notifications.mail_message_id, "_store_message_fields")
 
     @api.model
     def _message_fetch(self, domain, *, thread=None, search_term=None, is_notification=None, before=None, after=None, around=None, limit=30):
@@ -1035,7 +1035,6 @@ class MailMessage(models.Model):
     def _bus_send_reaction_group(self, content):
         store = Store(bus_channel=self)
         store.add(self, "_store_reaction_group_fields", fields_params={"content": content})
-        store.bus_send()
 
     def _store_reaction_group_fields(self, res: Store.FieldList, *, content):
         group_domain = [("message_id", "in", self.ids), ("content", "=", content)]
@@ -1360,7 +1359,6 @@ class MailMessage(models.Model):
                 store = Store(bus_channel=user)
                 user_messages = messages.with_user(user)._filtered_access('read')
                 store.add(user_messages, "_store_notification_fields")
-                store.bus_send()
 
     def _bus_channels(self):
         return self.env.user._bus_channels()

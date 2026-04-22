@@ -3014,7 +3014,7 @@ class MailThread(models.AbstractModel):
             "UPDATE mail_message SET pinned_at=%(pinned_at)s WHERE id=%(id)s",
             {"pinned_at": fields.Datetime.now() if pinned else None, "id": message.id},
         )
-        Store(bus_channel=message).add(message, ["pinned_at"]).bus_send()
+        Store(bus_channel=message).add(message, ["pinned_at"])
         return True
 
     # ------------------------------------------------------------
@@ -3466,7 +3466,12 @@ class MailThread(models.AbstractModel):
             )
             batch_vals = {"msg_vals": msg_vals, "inbox_fields": True, "followers": followers}
             for user in users:
-                store = Store(bus_channel=user).add(
+                store = Store(
+                    user,
+                    notification_type="mail.message/inbox",
+                    notification_payload={"message_id": message.id},
+                )
+                store.add(
                     message.with_user(user).with_context(allowed_company_ids=[]),
                     "_store_message_fields",
                     fields_params=batch_vals,
@@ -3474,8 +3479,8 @@ class MailThread(models.AbstractModel):
                 # In tests, emails are sent immediately instead of in postcommit. The
                 # resulting mail unlink invalidates the ORM cache; call `as_dict()` now to
                 # benefit from the cache and maintain a realistic query count.
-                data = store.as_dict() if modules.module.current_test else store
-                user._bus_send("mail.message/inbox", {"message_id": message.id, "store_data": data})
+                if modules.module.current_test:
+                    store.as_dict()
 
     def _notify_thread_by_email(self, message, recipients_data, *, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
@@ -5110,7 +5115,7 @@ class MailThread(models.AbstractModel):
                 self._store_message_update_extra_fields(res),
                 res.attr("translationValue", False, predicate=lambda m: m.body is not None),
             ),
-        ).bus_send()
+        )
 
     def _clean_empty_message(self, message):
         message.message_link_preview_ids._unlink_and_notify()

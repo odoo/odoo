@@ -162,7 +162,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                     Store(bus_channel=channel, bus_subchannel="internal_users").add(
                         channel,
                         ["livechat_status", "livechat_looking_for_help_since_dt"],
-                    ),
+                    )._build_result(),
                 ),
                 BusResult(
                     (group, "LOOKING_FOR_HELP"),
@@ -170,7 +170,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                     Store(bus_channel=group, bus_subchannel="LOOKING_FOR_HELP").add(
                         channel,
                         "_store_channel_fields",
-                    ),
+                    )._build_result(),
                 ),
             ],
         ):

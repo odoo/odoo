@@ -41,7 +41,7 @@ class TestStoreVersioning(HttpCase, MailCase):
                 for channel, fields in fields_by_channel.items():
                     model_name, record_id = channel.split(":")
                     record = self.env[model_name].browse(int(record_id))
-                    Store(bus_channel=record).add(record, fields).bus_send()
+                    Store(bus_channel=record).add(record, fields)
 
         cls.env.registry.clear_cache("routing")
         cls.addClassCleanup(cls.env.registry.clear_cache, "routing")

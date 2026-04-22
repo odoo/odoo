@@ -89,7 +89,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                     test_group,
                     "discuss.channel/new_message",
                     {
-                        "data": {
+                        "store_data": {
                             "mail.message": self._filter_messages_fields(
                                 {
                                     "attachment_ids": [],

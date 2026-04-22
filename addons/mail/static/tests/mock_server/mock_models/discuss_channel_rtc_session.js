@@ -143,7 +143,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const [member] = DiscussChannelMember.browse(session.channel_member_id);
         const [channel] = DiscussChannel.search_read([["id", "=", member.channel_id]]);
         BusBus._sendone(channel, "discuss.channel.rtc.session/update_and_broadcast", {
-            data: new mailDataHelpers.Store(
+            store_data: new mailDataHelpers.Store(
                 DiscussChannelRtcSession.browse(id),
                 makeKwArgs({ extra: true })
             ).get_result(),

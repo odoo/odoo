@@ -101,10 +101,8 @@ class DiscussChannelMember(models.Model):
             [("id", "in", [row[0] for row in self.env.cr.fetchall()])],
         )
         members.unpin_dt = fields.Datetime.now()
-        stores = Store.Stores()
-        for member, store in members._get_member_store_list(stores):
+        for member, store in members._get_member_store_list():
             store.add(member.channel_id, {"close_chat_window": True})
-        stores.bus_send()
 
     @api.constrains('partner_id')
     def _contrains_no_public_member(self):
@@ -253,7 +251,7 @@ class DiscussChannelMember(models.Model):
             Store(bus_channel=channel).add(
                 channel,
                 lambda res: res.many("channel_name_member_ids", "_store_member_fields", sort="id"),
-            ).bus_send()
+            )
         return res
 
     def write(self, vals):
@@ -324,7 +322,6 @@ class DiscussChannelMember(models.Model):
             )
         for channel, members in members_by_channel.items():
             stores[channel].delete(members).add(channel, ["member_count"])
-        stores.bus_send()
         return res
 
     def _bus_channels(self):
@@ -342,7 +339,7 @@ class DiscussChannelMember(models.Model):
                     res.attr("isTyping", is_typing),
                     res.attr("is_typing_dt", fields.Datetime.now()),
                 ),
-            ).bus_send()
+            )
 
     def _notify_mute(self):
         for member in self:
@@ -358,10 +355,11 @@ class DiscussChannelMember(models.Model):
         members.write({"mute_until_dt": False})
         members._notify_mute()
 
-    def _get_member_store_list(self, stores: Store.Stores):
+    def _get_member_store_list(self):
         """Returns the list of (member, store) combinations.
         This is necessary because members are currently linked to partners,
         which can have multiple users."""
+        stores = Store.Stores()
         return [
             (member, stores[bus_channel])
             for member in self
@@ -593,7 +591,7 @@ class DiscussChannelMember(models.Model):
                     value=members,
                     mode="ADD",
                 ),
-            ).bus_send()
+            )
             devices, private_key, public_key = self.channel_id._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
                 if self.channel_id.channel_type != 'chat':
@@ -676,7 +674,7 @@ class DiscussChannelMember(models.Model):
         if not notify:
             return
         for bus_channel in bus_channels:
-            Store(bus_channel=bus_channel).add(self, "_store_seen_fields").bus_send()
+            Store(bus_channel=bus_channel).add(self, "_store_seen_fields")
 
     def _set_new_message_separator(self, message_id):
         """
@@ -695,7 +693,7 @@ class DiscussChannelMember(models.Model):
                         res.attr("new_message_separator"),
                         res.from_method("_store_identifying_fields"),
                     ),
-                ).bus_send()
+                )
             return
         self.new_message_separator = message_id
 
