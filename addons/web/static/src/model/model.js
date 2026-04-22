@@ -7,15 +7,7 @@ import { useSetupAction } from "@web/search/action_hook";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "./sample_server";
 
-import {
-    EventBus,
-    markRaw,
-    onWillStart,
-    onWillUnmount,
-    onWillUpdateProps,
-    signal,
-    status,
-} from "@odoo/owl";
+import { EventBus, onWillStart, onWillUnmount, onWillUpdateProps, signal, status } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/env").OdooEnv} OdooEnv
@@ -180,7 +172,7 @@ function _useModel(ModelClass, params, options) {
     });
     onWillUpdateProps(raceLoad);
 
-    return markRaw(model);
+    return model;
 }
 
 /**
