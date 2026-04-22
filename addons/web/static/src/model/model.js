@@ -1,8 +1,8 @@
-import { render, useComponent } from "@web/owl2/utils";
 import { RPCError } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { Race } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
+import { render, useComponent } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "./sample_server";
@@ -111,6 +111,11 @@ export function useModel(ModelClass, params, options = {}) {
     }
     services.orm = services.orm || useService("orm");
     const model = new ModelClass(component.env, params, services);
+
+    const onUpdate = () => render(component, true);
+    model.bus.addEventListener("update", onUpdate);
+    onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
+
     onWillStart(async () => {
         await options.beforeFirstLoad?.();
         await model.load(getSearchParams(component.props));
