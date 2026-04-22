@@ -985,7 +985,7 @@ class ResPartner(models.Model):
                 # recompute tracked computed fields (e.g. vies_valid) mid-inverse.
                 partner.with_context(mail_notrack=True).additional_identifiers = {**identifiers, **new_identifiers}
             except ValidationError:
-                _logger.warning("Skipped %s: deduced identifier from %s could not be validated.", deduced_identifiers, vat_key)
+                _logger.info("Skipped %s: deduced identifier from %s could not be validated.", deduced_identifiers, vat_key)
                 continue
 
     def _clean_additional_identifiers(self, vals):
