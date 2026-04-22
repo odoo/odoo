@@ -104,11 +104,15 @@
     </template>
 
     <template id="web.login_layout" name="Login Layout">
+        <t t-set="head">
+            <t t-out="head"/>
+        </t>
         <t t-call="web.frontend_layout"
             html_data="{'style': 'height: 100%;'}"
             body_classname.f="bg-100"
             no_header="True"
-            no_footer="True">
+            no_footer="True"
+            head="head">
 
             <div class="container py-5">
                 <div t-attf-class="card border-0 mx-auto bg-100 {{login_card_classes}} o_database_list" style="max-width: 300px;">
@@ -130,7 +134,30 @@
     </template>
 
     <template id="web.login" name="Login">
-        <t t-call="web.login_layout">
+        <t t-set="head">
+            <t t-if="disable_opengraph">
+                <!-- Open Graph / Facebook -->
+                <meta property="og:site_name" content="Odoo"/>
+                <meta property="og:type" content="website"/>
+                <meta property="og:url" t-att-content="og_url"/>
+                <meta property="og:title" t-att-content="og_title"/>
+                <meta property="og:description" content="All your business on one platform. Simple, efficient, yet affordable!"/>
+                <meta property="og:image" t-att-content="og_image_url"/>
+                <meta property="og:image:alt" content="All your business on one platform. Simple, efficient, yet affordable!"/>
+                <meta property="og:image:width" content="747"/>
+                <meta property="og:image:height" content="420"/>
+                <!-- Twitter -->
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta name="twitter:site" content="@Odoo"/>
+                <meta name="twitter:url" t-att-content="og_url"/>
+                <meta name="twitter:domain" t-att-content="og_domain"/>
+                <meta name="twitter:title" t-att-content="og_title"/>
+                <meta name="twitter:description" content="All your business on one platform. Simple, efficient, yet affordable!"/>
+                <meta name="twitter:image" t-att-content="og_image_url"/>
+                <meta name="twitter:image:alt" content="All your business on one platform. Simple, efficient, yet affordable!"/>
+            </t>
+        </t>
+        <t t-call="web.login_layout" head="head">
             <h1 class="visually-hidden">Login</h1>
             <div class="oe_structure" id="oe_structure_login_top"/>
             <owl-component t-if="not login" name="web.user_switch" />
