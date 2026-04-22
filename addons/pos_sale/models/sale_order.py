@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
 
     def load_sale_order_from_pos(self, config_id):
         product_ids = self.order_line.product_id.ids
-        product_tmpls = self.env['product.template'].load_product_from_pos(
+        product_tmpls = self.env['product.template'].with_context(load_archived=True).load_product_from_pos(
             config_id,
             [('product_variant_ids.id', 'in', product_ids)]
         )
