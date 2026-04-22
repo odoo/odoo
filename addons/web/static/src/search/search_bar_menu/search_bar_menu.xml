@@ -159,7 +159,14 @@
                             onSelected="() => this.onFavoriteSelected(item.id)"
         >
             <span class="d-flex p-0 align-items-center justify-content-between">
-                <span t-out="item.description" t-att-title="item.description.length > 15 ? item.description : ''" class="text-truncate flex-grow-1"/>
+                <t t-set="invalidTooltip">Disabled due to invalid configuration</t>
+                <span
+                    t-out="item.description"
+                    t-att-title="item.description.length > 15 ? item.description : ''"
+                    class="text-truncate flex-grow-1"
+                    t-att-class="item.isInvalid ? 'text-muted' : ''"
+                    t-att-data-tooltip="item.isInvalid and invalidTooltip"
+                />
                 <i class="ms-1 fa fa-pencil"
                     title="Edit favorite"
                     t-on-click.stop="() => this.editFavorite(item.id)"
