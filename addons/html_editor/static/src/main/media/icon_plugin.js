@@ -3,6 +3,8 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { ColorSelector } from "../font/color_selector";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { computeBackgroundColorForElement } from "@html_editor/utils/color";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -129,6 +131,11 @@ export class IconPlugin extends Plugin {
                 text: _t("Replace"),
             },
         ],
+        /** Providers */
+        selected_background_color_providers: withSequence(
+            5,
+            this.computeBackgroundColorForIcon.bind(this)
+        ),
     };
 
     /**
@@ -208,5 +215,19 @@ export class IconPlugin extends Plugin {
             prevIcon.setAttribute(attribute.nodeName, attribute.nodeValue);
         }
         this.dependencies.history.addStep();
+    }
+
+    computeBackgroundColorForIcon() {
+        const nodes = this.dependencies.selection
+            .getTargetedNodes()
+            .filter((node) => node.classList?.contains("fa"));
+        if (nodes.length === 0) {
+            return;
+        }
+        const el = closestElement(nodes[0], "font");
+        if (!el) {
+            return;
+        }
+        return computeBackgroundColorForElement(el);
     }
 }
