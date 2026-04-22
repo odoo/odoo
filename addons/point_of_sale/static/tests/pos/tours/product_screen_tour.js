@@ -874,21 +874,10 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
-                orderlines: [
-                    {
-                        name: "Test Product",
-                        cssRules: [
-                            {
-                                css: ".tax-group",
-                                text: "Tax Group 1",
-                            },
-                        ],
-                    },
-                ],
                 cssRules: [
                     {
-                        css: ".pos-receipt-taxes",
-                        text: "Tax Group 1  ",
+                        css: "tr[name='taxes_line']",
+                        text: "Tax Group 15%",
                     },
                 ],
             }),
@@ -902,21 +891,10 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
-                orderlines: [
-                    {
-                        name: "Test Product",
-                        cssRules: [
-                            {
-                                css: ".tax-group",
-                                text: "Tax Group 2",
-                            },
-                        ],
-                    },
-                ],
                 cssRules: [
                     {
-                        css: ".pos-receipt-taxes",
-                        text: "Tax Group 2  ",
+                        css: "tr[name='taxes_line']",
+                        text: "Tax Group 5%",
                     },
                 ],
             }),
