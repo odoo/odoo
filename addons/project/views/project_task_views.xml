@@ -28,7 +28,7 @@
                         <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;=', 'today -365d'), ('date_last_stage_update', '&lt;', 'today')]"/>
                     </filter>
                     <separator/>
-                    <filter string="Templates" context="{'render_task_templates': True}" name="templates" domain="['|', ('has_template_ancestor', '=', True), ('has_project_template', '=', True)]"/>
+                    <filter string="Templates" context="{'render_task_templates': True, 'default_is_template': True}" name="templates" domain="['|', ('has_template_ancestor', '=', True), ('has_project_template', '=', True)]"/>
                     <group>
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone" invisible="not context.get('allow_milestones', True)"/>
