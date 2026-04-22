@@ -1,19 +1,6 @@
 import { markRaw, signal } from "@odoo/owl";
+import { makeReactive } from "@web/owl2/utils";
 import { getId } from "./utils";
-
-/**
- * @template T
- * @param {T} target
- * @param {keyof T} name
- * @param {typeof signal} signalFn
- */
-export function makeReactive(target, name, signalFn) {
-    const _signal = signalFn(target[name]);
-    Object.defineProperty(target, name, {
-        get: _signal,
-        set: _signal.set,
-    });
-}
 
 /**
  * @typedef {import("@web/search/search_model").Field} Field

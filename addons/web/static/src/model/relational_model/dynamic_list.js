@@ -1,10 +1,10 @@
-import { signal } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { unique } from "@web/core/utils/arrays";
-import { DataPoint, makeReactive } from "./datapoint";
+import { makeReactive } from "@web/owl2/utils";
+import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";
 import { Record as RelationalRecord } from "./record";
 import { getFieldsSpec, getScheduleORMExtras, resequence } from "./utils";
@@ -32,8 +32,8 @@ export class DynamicList extends DataPoint {
         this.isDomainSelected = false;
         this.evalContext = this.context;
 
-        makeReactive(this, "count", signal);
-        makeReactive(this, "isDomainSelected", signal);
+        makeReactive(this, "count");
+        makeReactive(this, "isDomainSelected");
     }
 
     // -------------------------------------------------------------------------

@@ -4,7 +4,8 @@ import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { pick } from "@web/core/utils/objects";
-import { DataPoint, makeReactive } from "./datapoint";
+import { makeReactive } from "@web/owl2/utils";
+import { DataPoint } from "./datapoint";
 import { FetchRecordError } from "./errors";
 import { Operation } from "./operation";
 import {
@@ -90,10 +91,10 @@ export class Record extends DataPoint {
         this._setData(data);
 
         makeReactive(this, "data", signal.Object);
-        makeReactive(this, "dirty", signal);
+        makeReactive(this, "dirty");
         makeReactive(this, "evalContext", signal.Object);
         makeReactive(this, "evalContextWithVirtualIds", signal.Object);
-        makeReactive(this, "selected", signal);
+        makeReactive(this, "selected");
         makeReactive(this, "_invalidFields", signal.Set);
     }
 

@@ -1,5 +1,5 @@
 import { signal } from "@odoo/owl";
-import { makeReactive } from "./datapoint";
+import { makeReactive } from "@web/owl2/utils";
 import { DynamicList } from "./dynamic_list";
 
 /**
