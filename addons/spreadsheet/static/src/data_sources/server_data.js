@@ -268,16 +268,13 @@ export class BatchEndpoint {
         }
         this._isScheduled = true;
         queueMicrotask(async () => {
+            this._isScheduled = false;
+            const batch = this._pendingBatch;
+            const { resModel, method } = batch;
+            this._pendingBatch = new ListRequestBatch(resModel, method);
             try {
-                this._isScheduled = false;
-                const batch = this._pendingBatch;
-                const { resModel, method } = batch;
-                this._pendingBatch = new ListRequestBatch(resModel, method);
-                await this.orm
-                    .call(resModel, method, batch.payload)
-                    .then((result) => batch.splitResponse(result))
-                    .catch(() => this._retryOneByOne(batch))
-                    .then((batchResults) => this._notifyResults(batchResults));
+                const batchResults = await this._resolveBatch(batch);
+                this._notifyResults(batchResults);
             } finally {
                 this.batchedFetchedCallback();
             }
@@ -289,24 +286,24 @@ export class BatchEndpoint {
      * @param {ListRequestBatch} batch
      * @returns {Promise<Map<Request, unknown>>}
      */
-    async _retryOneByOne(batch) {
-        const mergedResults = new Map();
-        const { resModel, method } = batch;
-        const singleRequestBatches = batch.requests.map(
-            (request) => new ListRequestBatch(resModel, method, [request])
-        );
-        const proms = [];
-        for (const batch of singleRequestBatches) {
-            const request = batch.requests[0];
-            const prom = this.orm
-                .call(resModel, method, batch.payload)
-                .then((result) =>
-                    mergedResults.set(request, batch.splitResponse(result).get(request))
-                )
-                .catch((error) => mergedResults.set(request, error));
-            proms.push(prom);
+    async _resolveBatch(batch) {
+        try {
+            const res = await this.orm.call(batch.resModel, batch.method, batch.payload);
+            return batch.splitResponse(res);
+        } catch (error) {
+            const { requests, resModel, method } = batch;
+            if (requests.length <= 1) {
+                return new Map([[requests[0], error]]);
+            }
+
+            const mid = requests.length >> 1;
+            const leftBatch = new ListRequestBatch(resModel, method, requests.slice(0, mid));
+            const rightBatch = new ListRequestBatch(resModel, method, requests.slice(mid));
+            const [left, right] = await Promise.all([
+                this._resolveBatch(leftBatch),
+                this._resolveBatch(rightBatch),
+            ]);
+            return new Map([...left, ...right]);
         }
-        await Promise.allSettled(proms);
-        return mergedResults;
     }
 }
