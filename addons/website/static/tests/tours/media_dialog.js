@@ -3,6 +3,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
     changeImageShape,
+    openPowerbox,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -217,20 +218,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_text_block p",
             run: "editor test",
         },
-        {
-            content: "Show the powerbox",
-            trigger: ":iframe .s_text_block p:last-child",
-            async run(actions) {
-                await actions.editor(`/`);
-                const wrapwrap = this.anchor.closest("#wrapwrap");
-                wrapwrap.dispatchEvent(
-                    new InputEvent("input", {
-                        inputType: "insertText",
-                        data: "/",
-                    })
-                );
-            },
-        },
+        openPowerbox(":iframe .s_text_block p:last-child"),
         {
             content: "Click on the media item from powerbox",
             trigger: "div.o-we-command-name:contains('Media')",
