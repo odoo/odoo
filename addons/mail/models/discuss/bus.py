@@ -11,5 +11,7 @@ class BusBus(models.Model):
 
     def _prepare_payload(self, payload):
         if isinstance(payload, Store):
+            if not payload._auto_send:
+                return SKIP_NOTIFICATION
             return payload.as_dict() or SKIP_NOTIFICATION
         return super()._prepare_payload(payload)

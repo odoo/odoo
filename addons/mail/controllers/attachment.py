@@ -151,7 +151,7 @@ class AttachmentController(ThreadController):
             with file_open("web/static/img/mimetypes/unknown.svg", "rb") as f:
                 thumbnail = BinaryBytes(f.read())
         attachment_sudo.thumbnail = thumbnail
-        Store(bus_channel=attachment_sudo).add(attachment_sudo, ["has_thumbnail"]).bus_send()
+        Store(bus_channel=attachment_sudo).add(attachment_sudo, ["has_thumbnail"])
 
     def _get_pdf_first_page_response(self, attachment):
         try:

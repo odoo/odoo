@@ -483,7 +483,7 @@ export class MailThread extends models.ServerModel {
                     channel,
                     "discuss.channel/new_message",
                     {
-                        data: new mailDataHelpers.Store(
+                        store_data: new mailDataHelpers.Store(
                             MailMessage.browse(message_id)
                         ).get_result(),
                         id: channel.id,
@@ -564,7 +564,10 @@ export class MailThread extends models.ServerModel {
             for (const fname in changedFieldNames) {
                 changedFieldsInitialValues[fname] = initialFieldValues[fname];
             }
-            const subtype = MailThread._track_log_get_default_subtype.call(this, changedFieldsInitialValues);
+            const subtype = MailThread._track_log_get_default_subtype.call(
+                this,
+                changedFieldsInitialValues
+            );
             MailThread.message_post.call(this, [record.id], subtype.id, trackingValueIds);
         }
         return tracking;

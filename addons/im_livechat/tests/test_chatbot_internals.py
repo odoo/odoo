@@ -223,7 +223,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 BusResult(
                     discuss_channel,
                     "discuss.channel/new_message",
-                    {"data": transfer_message_data, "id": discuss_channel.id},
+                    {"store_data": transfer_message_data, "id": discuss_channel.id},
                 ),
                 BusResult(
                     discuss_channel,
@@ -265,14 +265,14 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     {
                         "channel_id": discuss_channel.id,
                         "invite_to_rtc_call": False,
-                        "data": channel_data_join,
+                        "store_data": channel_data_join,
                         "invited_by_user_id": self.env.user.id,
                     },
                 ),
                 BusResult(
                     discuss_channel,
                     "discuss.channel/new_message",
-                    {"data": joined_message_data, "id": discuss_channel.id},
+                    {"store_data": joined_message_data, "id": discuss_channel.id},
                 ),
                 BusResult(
                     discuss_channel,

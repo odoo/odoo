@@ -2795,18 +2795,19 @@ class HttpCase(TransactionCase):
             atexit.callback(self._wait_remaining_requests)
             atexit.enter_context(browser.cleanup)
             if "bus.bus" in self.env.registry:
-                from odoo.addons.bus.models.bus import BusBus  # noqa: PLC0415
+                from odoo.addons.base.models.ir_http import IrHttp  # noqa: PLC0415
                 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler, _kick_all  # noqa: PLC0415
 
                 atexit.callback(_kick_all, CloseCode.KILL_NOW)
-                original_send_one = BusBus._sendone
+                original_post_dispatch = IrHttp._post_dispatch
 
-                def sendone_wrapper(self, target, notification_type, message):
-                    original_send_one(self, target, notification_type, message)
-                    self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
-                    self.env.cr.postcommit.run()  # Trigger notification dispatching
+                def post_dispatch_wrapper(_, response):
+                    original_post_dispatch(response)
+                    # Trigger the creation of bus.bus records and notification dispatching
+                    request.env.cr.precommit.run()
+                    request.env.cr.postcommit.run()
 
-                atexit.enter_context(patch.object(BusBus, "_sendone", sendone_wrapper))
+                atexit.enter_context(patch.object(IrHttp, "_post_dispatch", classmethod(post_dispatch_wrapper)))
                 atexit.enter_context(patch.object(
                     WebsocketConnectionHandler, "websocket_allowed", return_value=True
                 ))

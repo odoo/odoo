@@ -202,9 +202,18 @@ class Store:
     The store instance is then transformed to a dictionnary to be sent either by the HTTP
     or the bus stack. This dictionnary also includes information about the data version,
     which will be used by the client to distinguish stale from new data.
+
+    If `bus_channel` is passed, the store will automatically be sent through the bus.
     """
 
-    def __init__(self, bus_channel=None, bus_subchannel=None):
+    def __init__(
+        self,
+        bus_channel=None,
+        bus_subchannel=None,
+        *,
+        notification_type=None,
+        notification_payload=None,
+    ):
         self.add_depth = 0
         self.already_done = set()
         self.data = {}
@@ -213,10 +222,22 @@ class Store:
         self.operation_queue = []
         self.target = Store.Target(bus_channel, bus_subchannel)
         self._internal_store = None
-        if bus_channel and bus_channel._name == "discuss.channel" and bus_subchannel != "internal_users":
-            self._internal_store = Store(bus_channel=bus_channel, bus_subchannel="internal_users")
         self.__version = None
+        self._auto_send = True
         self.__try_update_version_from_records(bus_channel)
+        assert bus_channel or not (notification_payload or notification_type), (
+            "Notification parameters only make sense when a bus channel is passed."
+        )
+        if bus_channel:
+            type_ = notification_type or "mail.record/insert"
+            payload = (
+                self
+                if notification_payload is None
+                else {**notification_payload, "store_data": self}
+            )
+            bus_channel._bus_send(type_, payload, subchannel=bus_subchannel)
+            if bus_channel._name == "discuss.channel" and bus_subchannel != "internal_users":
+                self._internal_store = Store(bus_channel, bus_subchannel="internal_users")
 
     def __try_update_version_from_records(self, records):
         is_recordset = isinstance(records, models.Model)
@@ -359,14 +380,20 @@ class Store:
         directly. Returns a dictionary representing the aggregated result of all store
         commands, versioned.
         """
-        result = self._build_result()
+        result = self._build_result(disable_auto_send=False)
         if result and self.__version:
             result["__store_version__"] = self.__version.get_formatted_version()
         return result
 
-    def _build_result(self):
+    def _build_result(self, disable_auto_send=True):
         """Do not call directly. Executes pending operations and returns the aggregated
         result, automatically invoked by `as_dict()`."""
+        if disable_auto_send:
+            # Disable auto send, as the result was built manually. Assuming that the
+            # caller doesn't want to send it.
+            self._auto_send = False
+            if self._internal_store:
+                self._internal_store._auto_send = False
         self.is_executing_operation_queue = True
         try:
             for func in self.operation_queue:
@@ -381,14 +408,6 @@ class Store:
             else:
                 res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
-
-    def bus_send(self, notification_type="mail.record/insert", /):
-        assert self.target.channel is not None, (
-            "Missing `bus_channel`. Pass it to the `Store` constructor to use `bus_send`."
-        )
-        self.target.channel._bus_send(notification_type, self, subchannel=self.target.subchannel)
-        if self._internal_store:
-            self._internal_store.bus_send()
 
     @store_enqueue
     def resolve_data_request(self, values=None, *, data_id=None):
@@ -534,7 +553,7 @@ class Store:
             return self.setdefault(target, Store(bus_channel, bus_subchannel))
 
         def __getattr__(self, name):
-            if name not in {"add", "bus_send", "delete"}:
+            if name not in {"add", "delete"}:
                 raise AttributeError(f"'Stores' object has no attribute '{name}'")
 
             def stores_forward(*args, **kwargs):
