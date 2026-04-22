@@ -8,8 +8,8 @@ patch(GeneratePrinterData.prototype, {
     generateReceiptData() {
         const data = super.generateReceiptData(...arguments);
 
-        if (this.is_l10n_es_simplified_invoice) {
-            data.extra_data.invoice_name = this.invoice_name; // Previously set in payment validation
+        if (this.order.is_l10n_es_simplified_invoice) {
+            data.extra_data.invoice_name = this.order.invoice_name; // Previously set in payment validation
         }
 
         return data;

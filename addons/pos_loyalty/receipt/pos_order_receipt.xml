@@ -5,7 +5,7 @@
             <div name="before-footer" position="before">
                 <table t-if="extra_data.get('loyalties')" class="w-100 mt-2">
                     <tbody t-foreach="extra_data['loyalties']" t-as="loyalty">
-                        <tr>
+                        <tr class="loyalty">
                             <td class="text-start" t-out="loyalty['name'] + ' ' + loyalty['type']"/>
                             <td class="text-end w-50"  t-out="loyalty['points']"/>
                         </tr>

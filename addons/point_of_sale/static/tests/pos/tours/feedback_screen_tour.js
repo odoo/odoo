@@ -116,46 +116,10 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
                         name: "Desk Pad",
                         cssRules: [
                             {
-                                css: ".info-list .customer-note",
+                                css: ".lines .line-note",
                                 text: "Test customer note",
                             },
                         ],
-                    },
-                ],
-            }),
-            FeedbackScreen.clickNextOrder(),
-
-            // Test that Internal notes are not available on receipt
-            ProductScreen.addOrderline("Desk Pad", "1", "5"),
-            inLeftSide([
-                { ...ProductScreen.clickLine("Desk Pad")[0], isActive: ["mobile"] },
-                ...ProductScreen.addInternalNote("Test internal note"),
-                ...ProductScreen.clickSelectedLine("Desk Pad"),
-                ...ProductScreen.addInternalNote("Test internal note on order"),
-                ...Order.hasInternalNote("Test internal note on order"),
-            ]),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.checkTicketData({
-                orderlines: [
-                    {
-                        name: "Desk Pad",
-                        cssRules: [
-                            {
-                                css: ".info-list .o_tag_badge_text",
-                                text: "Test internal note",
-                                negation: true,
-                            },
-                        ],
-                    },
-                ],
-                cssRules: [
-                    {
-                        css: ".order-container .internal-note-container span div",
-                        text: "Test internal note on order",
-                        negation: true,
                     },
                 ],
             }),

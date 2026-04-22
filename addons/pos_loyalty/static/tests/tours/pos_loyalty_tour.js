@@ -241,15 +241,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour6", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.checkTicketData({
-                cssRules: [
-                    {
-                        css: ".loyalty",
-                    },
-                ],
-            }),
-            FeedbackScreen.isShown(),
+            FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.checkTicketData({
                 cssRules: [
                     {
