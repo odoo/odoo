@@ -579,7 +579,7 @@ test("selection placeholders are vertically positioned in the middle between it 
             <p data-selection-placeholder="" style="margin: -6px 0px 5px;"><br></p>`
         ),
         stepFunction: async (editor) => {
-            style.innerText = `
+            style.textContent = `
                 *[contenteditable=true] {
                     border: 1px solid blue;
                 }
@@ -605,7 +605,7 @@ test("selection placeholder margins remain correct when an element gets added", 
             <table style="margin: 10px"><tbody><tr><td>[]a</td></tr></tbody></table>`
         ),
         stepFunction: async (editor) => {
-            style.innerText = `
+            style.textContent = `
                 *[contenteditable=true] {
                     border: 1px solid blue;
                 }

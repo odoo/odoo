@@ -171,10 +171,7 @@ export class ClipboardPlugin extends Plugin {
             return;
         }
         // Prepare text content for clipboard.
-        const textContent = this.processThrough(
-            "clipboard_text_processors",
-            selection.textContent()
-        );
+        const textContent = this.processThrough("clipboard_text_processors", selection.toString());
 
         // Prepare html content for clipboard.
         clonedContents = this.processThrough(

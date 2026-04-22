@@ -39,7 +39,7 @@ export class TranslatePlugin extends Plugin {
     };
 
     isNotReplaceableByAI(selection = this.dependencies.selection.getEditableSelection()) {
-        const isEmpty = !selection.textContent().replace(/\s+/g, "");
+        const isEmpty = !selection.toString().replace(/\s+/g, "");
         const cannotReplace = this.dependencies.selection
             .getTargetedNodes()
             .find((el) => this.dependencies.split.isUnsplittable(el) || !isContentEditable(el));
@@ -93,7 +93,7 @@ export class TranslatePlugin extends Plugin {
         dialogParams.baseContainer = this.dependencies.baseContainer.getDefaultNodeName();
         // collapse to end
         const sanitize = this.dependencies.sanitize.sanitize;
-        const originalText = selection.textContent() || "";
+        const originalText = selection.toString() || "";
         this.dependencies.dialog.addDialog(TranslateDialog, {
             ...dialogParams,
             originalText,

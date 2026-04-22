@@ -12,7 +12,7 @@ import { waitFor } from "@odoo/hoot-dom";
 
 function span(text) {
     const span = document.createElement("span");
-    span.innerText = text;
+    span.textContent = text;
     span.classList.add("a");
     return span;
 }

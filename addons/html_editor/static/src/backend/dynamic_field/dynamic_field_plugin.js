@@ -209,7 +209,7 @@ export class DynamicFieldPlugin extends Plugin {
                     const fullPath = this.getFieldPath(target, path);
                     await this.setFieldAttributes(el, path, fullPath, fieldInfo);
                     el.setAttribute("data-oe-demo", label);
-                    el.innerText = label;
+                    el.textContent = label;
 
                     await this.config.dynamicFieldPostprocess?.({
                         path: fullPath,

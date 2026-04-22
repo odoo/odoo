@@ -310,7 +310,7 @@ export class LinkPlugin extends Plugin {
             if (
                 node.nodeName === "A" &&
                 !node.classList.contains("btn") &&
-                cleanZWChars(selection.textContent()) === cleanZWChars(node.innerText)
+                cleanZWChars(selection.toString()) === cleanZWChars(node.innerText)
             ) {
                 return true;
             }
@@ -440,7 +440,7 @@ export class LinkPlugin extends Plugin {
         for (const [param, value] of Object.entries(this.config.defaultLinkAttributes || {})) {
             link.setAttribute(param, `${value}`);
         }
-        link.innerText = label;
+        link.textContent = label;
         this.trigger("on_link_created_handlers", link);
         return link;
     }
@@ -454,7 +454,7 @@ export class LinkPlugin extends Plugin {
         let link = closestElement(selection.anchorNode, "a");
         if (link) {
             link.setAttribute("href", url);
-            link.innerText = label;
+            link.textContent = label;
         } else {
             link = this.createLink(url, label);
             this.dependencies.dom.insert(link);
@@ -552,10 +552,10 @@ export class LinkPlugin extends Plugin {
         this.linkInDocument = linkElement;
         if (!linkElement) {
             // create a new link element
-            linkElement = this.createLink(undefined, selection.textContent());
+            linkElement = this.createLink(undefined, selection.toString());
         }
 
-        const selectionTextContent = selection?.textContent();
+        const selectionTextContent = selection?.toString();
         const isImage = !!findInSelection(selection, "img, .fa");
 
         const applyCallback = (params) => {
@@ -565,9 +565,9 @@ export class LinkPlugin extends Plugin {
                 if (!isImage) {
                     if (
                         this.linkInDocument.childElementCount == 0 &&
-                        cleanZWChars(this.linkInDocument.innerText) !== label
+                        cleanZWChars(this.linkInDocument.textContent) !== label
                     ) {
-                        this.linkInDocument.innerText = label;
+                        this.linkInDocument.textContent = label;
                         cursorsToRestore = null;
                     }
                 }
