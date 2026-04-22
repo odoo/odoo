@@ -6,7 +6,7 @@ from lxml import etree
 from xml.sax.saxutils import escape, quoteattr
 
 from odoo import _, api, fields, models, tools, SUPERUSER_ID
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import SUPPORTED_FILE_TYPES
+from odoo.addons.account.models.ir_attachment import SUPPORTED_FILE_TYPES
 from odoo.tools import cleanup_xml_node
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
