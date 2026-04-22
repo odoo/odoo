@@ -26,7 +26,7 @@ def _mock_call_nemhandel_proxy(func, self, *args, **kwargs):
         return {'messages': []}
 
     def _mock_get_document(user, args, kwargs):
-        message_uuid = args[1]['message_uuids'][0]
+        message_uuid = kwargs.get('params', {}).get('message_uuids', [''])[0]
         return {message_uuid: {
             'state': 'done',
             'origin_message_uuid': message_uuid,
@@ -44,7 +44,7 @@ def _mock_call_nemhandel_proxy(func, self, *args, **kwargs):
         return {
             'messages': [{
                 'message_uuid': 'demo_%s' % uuid.uuid4(),
-            } for i in args[1]['documents']],
+            } for i in kwargs.get('params', {}).get('documents', [])],
         }
 
     endpoint = args[0].split('/')[-1]
