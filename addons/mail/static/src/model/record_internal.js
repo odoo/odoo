@@ -250,26 +250,28 @@ export class RecordInternal {
         }
         this.fieldsComputeStop.get(fieldName)?.();
         let triggered = false;
-        const stopFn = immediateEffect(() => {
-            if (triggered) {
-                return untrack(() => this.requestCompute(record, fieldName));
-            }
-            const store = record._rawStore;
-            this.fieldsComputing.set(fieldName, true);
-            this.fieldsComputeOnNeed.delete(fieldName);
-            let computedValue;
-            try {
-                computedValue = Model._.fieldsCompute.get(fieldName).call(record._proxy);
-            } catch (err) {
-                store.handleError(err);
-            }
-            untrack(() =>
-                store._.updateFields(record, {
-                    [fieldName]: computedValue,
-                })
-            );
-            this.fieldsComputing.delete(fieldName);
-        });
+        const stopFn = untrack(() =>
+            immediateEffect(() => {
+                if (triggered) {
+                    return untrack(() => this.requestCompute(record, fieldName));
+                }
+                const store = record._rawStore;
+                this.fieldsComputing.set(fieldName, true);
+                this.fieldsComputeOnNeed.delete(fieldName);
+                let computedValue;
+                try {
+                    computedValue = Model._.fieldsCompute.get(fieldName).call(record._proxy);
+                } catch (err) {
+                    store.handleError(err);
+                }
+                untrack(() =>
+                    store._.updateFields(record, {
+                        [fieldName]: computedValue,
+                    })
+                );
+                this.fieldsComputing.delete(fieldName);
+            })
+        );
         this.fieldsComputeStop.set(fieldName, stopFn);
         if (fromInNeed) {
             this.fieldsComputeInNeed.set(fieldName, true);
@@ -292,31 +294,35 @@ export class RecordInternal {
         }
         this.fieldsSortStop.get(fieldName)?.();
         let triggered = false;
-        const stopFn = immediateEffect(() => {
-            if (triggered) {
-                return untrack(() => this.requestSort(record, fieldName));
-            }
-            const store = record._rawStore;
-            this.fieldsSortOnNeed.delete(fieldName);
-            this.fieldsSorting.set(fieldName, true);
-            const func = Model._.fieldsSort.get(fieldName).bind(record._proxy);
-            if (isRelation(Model, fieldName)) {
-                try {
-                    store._.sortRecordList(record._proxy[fieldName]._proxy, func);
-                } catch (err) {
-                    store.handleError(err);
+        const stopFn = untrack(() =>
+            immediateEffect(() => {
+                if (triggered) {
+                    return untrack(() => this.requestSort(record, fieldName));
                 }
-            } else {
-                // sort on copy of list so that reactive observers not triggered while sorting
-                const copy = [...record._proxy[fieldName]];
-                copy.sort(func);
-                const hasChanged = copy.some((item, index) => item !== record[fieldName][index]);
-                if (hasChanged) {
-                    record._proxy[fieldName] = copy;
+                const store = record._rawStore;
+                this.fieldsSortOnNeed.delete(fieldName);
+                this.fieldsSorting.set(fieldName, true);
+                const func = Model._.fieldsSort.get(fieldName).bind(record._proxy);
+                if (isRelation(Model, fieldName)) {
+                    try {
+                        store._.sortRecordList(record._proxy[fieldName]._proxy, func);
+                    } catch (err) {
+                        store.handleError(err);
+                    }
+                } else {
+                    // sort on copy of list so that reactive observers not triggered while sorting
+                    const copy = [...record._proxy[fieldName]];
+                    copy.sort(func);
+                    const hasChanged = copy.some(
+                        (item, index) => item !== record[fieldName][index]
+                    );
+                    if (hasChanged) {
+                        record._proxy[fieldName] = copy;
+                    }
                 }
-            }
-            this.fieldsSorting.delete(fieldName);
-        });
+                this.fieldsSorting.delete(fieldName);
+            })
+        );
         this.fieldsSortStop.set(fieldName, stopFn);
         if (fromInNeed) {
             this.fieldsSortInNeed.set(fieldName, true);
