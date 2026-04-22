@@ -1354,8 +1354,6 @@ class AccountMove(models.Model):
             )
             move._extend_with_attachments([file_data], new=True)
 
-        attachments.unlink()
-
         return moves
 
     def _l10n_it_edi_search_partner(self, company, vat, codice_fiscale, email, destination_code=None):
