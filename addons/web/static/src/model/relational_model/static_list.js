@@ -1,12 +1,15 @@
-import { markRaw, signal, types as t } from "@odoo/owl";
+import { markRaw, signal } from "@odoo/owl";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
 import { omit, pick } from "@web/core/utils/objects";
 import { completeActiveFields } from "@web/model/relational_model/utils";
 import { DataPoint, makeReactive } from "./datapoint";
-import { Record as RelationalRecord } from "./record";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
+
+/**
+ * @typedef {import("./record").Record} RelationalRecord
+ */
 
 function compareFieldValues(v1, v2, fieldType) {
     if (fieldType === "many2one") {
@@ -109,7 +112,7 @@ export class StaticList extends DataPoint {
             .slice(this.offset, this.limit)
             .map((r) => this._createRecordDatapoint(r));
 
-        makeReactive(this, "records", signal.Array, t.instanceOf(RelationalRecord));
+        makeReactive(this, "records", signal.Array);
     }
 
     // -------------------------------------------------------------------------

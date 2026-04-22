@@ -1,15 +1,15 @@
 //@ts-check
 
-import { signal, types as t } from "@odoo/owl";
+import { signal } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { makeReactive } from "./datapoint";
 import { DynamicList } from "./dynamic_list";
-import { Group } from "./group";
 import { getGroupServerValue } from "./utils";
 
 export const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
 
 /**
+ * @typedef {import("./group").Group} Group
  * @typedef {import("./record").Record} RelationalRecord
  */
 
@@ -27,7 +27,7 @@ export class DynamicGroupList extends DynamicList {
         this._nbRecordsMatchingDomain = null;
         this._setData(data);
 
-        makeReactive(this, "groups", signal.Array, t.instanceOf(Group));
+        makeReactive(this, "groups", signal.Array);
     }
 
     /**

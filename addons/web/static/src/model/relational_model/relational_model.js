@@ -1,17 +1,18 @@
 // @ts-check
 
-import { EventBus, markRaw, signal, toRaw, types as t } from "@odoo/owl";
+import { EventBus, markRaw, signal, toRaw } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { ConnectionLostError, rpcBus } from "@web/core/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
-import { deepCopy, pick } from "@web/core/utils/objects";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { deepCopy, pick } from "@web/core/utils/objects";
 import { orderByToString } from "@web/search/utils/order_by";
 import { Model } from "../model";
 import { DynamicGroupList } from "./dynamic_group_list";
 import { DynamicRecordList } from "./dynamic_record_list";
+import { FetchRecordError } from "./errors";
 import { Group } from "./group";
 import { Record as RelationalRecord } from "./record";
 import { StaticList } from "./static_list";
@@ -24,8 +25,6 @@ import {
     getId,
     makeActiveField,
 } from "./utils";
-import { FetchRecordError } from "./errors";
-import { DataPoint, makeReactive } from "./datapoint";
 
 /**
  * @typedef {import("@web/core/context").Context} Context
@@ -173,8 +172,6 @@ export class RelationalModel extends Model {
 
         this._urgentSave = false;
         this.couldNotLoadRootOffline = signal(false);
-
-        makeReactive(this, "root", signal, t.or([t.instanceOf(DataPoint), t.literal(null)]));
     }
 
     // -------------------------------------------------------------------------
@@ -228,11 +225,15 @@ export class RelationalModel extends Model {
             }
             throw e;
         }
+        const hasRoot = !!this.root;
         this.couldNotLoadRootOffline.set(false);
         this.root = this._createRoot(config, data);
         resolve({ root: this.root, loadId: config.loadId });
         this.config = config;
         await this.hooks.onRootLoaded(this.root);
+        if (hasRoot) {
+            this.notify();
+        }
     }
 
     // -------------------------------------------------------------------------
