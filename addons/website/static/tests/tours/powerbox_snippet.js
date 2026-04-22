@@ -1,6 +1,7 @@
 import {
     clickOnSnippet,
     insertSnippet,
+    openPowerbox,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
@@ -24,20 +25,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_text_block p:last-child",
             run: "click",
         },
-        {
-            content: "Show the powerbox",
-            trigger: ":iframe .s_text_block p:last-child",
-            async run(actions) {
-                await actions.editor(`/`);
-                const wrapwrap = this.anchor.closest("#wrapwrap");
-                wrapwrap.dispatchEvent(
-                    new InputEvent("input", {
-                        inputType: "insertText",
-                        data: "/",
-                    })
-                );
-            },
-        },
+        openPowerbox(":iframe .s_text_block p:last-child"),
         {
             content: "Click on the alert snippet",
             trigger: ".o-we-powerbox .o-we-command:contains('Alert')",
@@ -70,20 +58,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_text_block p:last-child",
             run: "click",
         },
-        {
-            content: "Show the powerbox",
-            trigger: ":iframe .s_text_block p:last-child",
-            async run(actions) {
-                await actions.editor(`/`);
-                const wrapwrapEl = this.anchor.closest("#wrapwrap");
-                wrapwrapEl.dispatchEvent(
-                    new InputEvent("input", {
-                        inputType: "insertText",
-                        data: "/",
-                    })
-                );
-            },
-        },
+        openPowerbox(":iframe .s_text_block p:last-child"),
         {
             content: "Initially alert snippet should be present in the powerbox",
             trigger: ".o-we-powerbox .o-we-command:contains('Alert')",
