@@ -376,33 +376,24 @@ else:
             filter_domain="[('deadline', '!=', False)]",
             _actions={
                 'state': 'mail_post',
-                'mail_post_method': 'email',
                 'template_id': self.test_mail_template_automation.id,
             },
         )
 
-        send_mail_count = 0
-
-        def _patched_send_mail(*args, **kwargs):
-            nonlocal send_mail_count
-            send_mail_count += 1
-
-        patcher = patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail', _patched_send_mail)
-        self.startPatcher(patcher)
-
         lead = self.env['base.automation.lead.thread.test'].create({
             'name': "Lead Test",
-            'user_id': self.user_root.id,
+            'user_id': self.user_admin.id,
         })
+
         self.addCleanup(lead.unlink)
         self.assertEqual(lead.priority, False)
         self.assertEqual(lead.deadline, False)
-        self.assertEqual(send_mail_count, 0)
+        self.assertEqual(len(lead.message_ids.mail_ids), 0)
 
         lead.write({'priority': True})
         self.assertEqual(lead.priority, True)
         self.assertNotEqual(lead.deadline, False)
-        self.assertEqual(send_mail_count, 1)
+        self.assertEqual(len(lead.message_ids.mail_ids), 1)
 
     def test_020_recursive(self):
         """ Check that a rule is executed recursively by a secondary change. """

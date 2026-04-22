@@ -9,7 +9,7 @@ class IrActionsServer(models.Model):
     _inherit = 'ir.actions.server'
 
     state = fields.Selection(selection_add=[
-        ('sms', 'Send SMS'), ('followers',),
+        ('log_note',), ('sms', 'Send SMS')
     ], ondelete={'sms': 'cascade'})
     # SMS
     sms_template_id = fields.Many2one(
@@ -18,11 +18,6 @@ class IrActionsServer(models.Model):
         ondelete='set null', readonly=False, store=True,
         domain="[('model_id', '=', model_id)]",
     )
-    sms_method = fields.Selection(
-        selection=[('sms', 'SMS (without note)'), ('comment', 'SMS (with note)'), ('note', 'Note only')],
-        string='Send SMS As',
-        compute='_compute_sms_method',
-        readonly=False, store=True)
 
     def _name_depends(self):
         return [*super()._name_depends(), "sms_template_id"]
@@ -51,15 +46,6 @@ class IrActionsServer(models.Model):
         if to_reset:
             to_reset.sms_template_id = False
 
-    @api.depends('state')
-    def _compute_sms_method(self):
-        to_reset = self.filtered(lambda act: act.state != 'sms')
-        if to_reset:
-            to_reset.sms_method = False
-        other = self - to_reset
-        if other:
-            other.sms_method = 'sms'
-
     @api.model
     def _warning_depends(self):
         return super()._warning_depends() + [
@@ -75,7 +61,6 @@ class IrActionsServer(models.Model):
         if self.state == 'sms':
             if self.model_id.transient or not self.model_id.is_mail_thread:
                 warnings.append(_("Sending SMS can only be done on a not transient mail.thread model"))
-
             if self.sms_template_id and self.sms_template_id.model_id != self.model_id:
                 warnings.append(
                     _('SMS template model of %(action_name)s does not match action model.',
@@ -86,7 +71,6 @@ class IrActionsServer(models.Model):
         return warnings
 
     def _run_action_sms_multi(self, eval_context=None):
-        # TDE CLEANME: when going to new api with server action, remove action
         if not self.sms_template_id or self._is_recompute():
             return False
 
@@ -94,12 +78,13 @@ class IrActionsServer(models.Model):
         if not records:
             return False
 
-        composer = self.env['sms.composer'].with_context(
+        ctx_defaults = dict(
             default_res_model=records._name,
             default_res_ids=records.ids,
-            default_composition_mode='comment' if self.sms_method == 'comment' else 'mass',
+            default_composition_mode='comment',
             default_template_id=self.sms_template_id.id,
-            default_mass_keep_log=self.sms_method == 'note',
-        ).create({})
+            default_mass_keep_log=True
+        )
+        composer = self.env['sms.composer'].with_context(**ctx_defaults).create({})
         composer.action_send_sms()
         return False
