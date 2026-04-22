@@ -204,6 +204,7 @@ export class RelationalModel extends Model {
             this.orm.setGroups(this.initialSampleGroups);
         }
         const config = this._getNextConfig(this.config, params);
+        const hasRoot = !!this.root;
         if (!this.isReady()) {
             // We want the control panel to be displayed directly, without waiting for data to be
             // loaded, for instance to be able to interact with the search view. For that reason, we
@@ -225,7 +226,6 @@ export class RelationalModel extends Model {
             }
             throw e;
         }
-        const hasRoot = !!this.root;
         this.couldNotLoadRootOffline.set(false);
         this.root = this._createRoot(config, data);
         resolve({ root: this.root, loadId: config.loadId });
