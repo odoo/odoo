@@ -919,7 +919,7 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
                 cssRules: [
                     {
                         css: ".pos-receipt-taxes",
-                        text: "Tax Group 1  ",
+                        text: "Tax Group 1",
                     },
                 ],
             }),
@@ -947,7 +947,7 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
                 cssRules: [
                     {
                         css: ".pos-receipt-taxes",
-                        text: "Tax Group 2  ",
+                        text: "Tax Group 2",
                     },
                 ],
             }),
