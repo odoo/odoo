@@ -87,6 +87,8 @@ import { Test } from "./test";
  *  options: typeof T_RESOLVER_OPTIONS;
  * }} StepResolver
  *
+ * @typedef {string | number | RegExp} StrictMatcherType
+ *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
  * @typedef {import("@web/../lib/hoot-dom/hoot_dom_utils").InteractionDetails} InteractionDetails
  * @typedef {import("@web/../lib/hoot-dom/hoot_dom_utils").InteractionType} InteractionType
@@ -436,7 +438,7 @@ function scopeError(method) {
 
 /**
  * @param {unknown} value
- * @param {string | number | RegExp} matcher
+ * @param {StrictMatcherType} matcher
  */
 function valueMatches(value, matcher) {
     if (matcher === S_ANY) {
@@ -1606,7 +1608,7 @@ export class Matcher {
     /**
      * Expects the received value to match the given `matcher`.
      *
-     * @param {import("../hoot_utils").Matcher} matcher
+     * @param {import("../hoot_utils").LooseMatcherType} matcher
      * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect(new Error("foo")).toMatch("foo");
@@ -1687,7 +1689,7 @@ export class Matcher {
     /**
      * Expects the received {@link Function} to throw an error after being called.
      *
-     * @param {import("../hoot_utils").Matcher} [matcher=Error]
+     * @param {import("../hoot_utils").LooseMatcherType} [matcher=Error]
      * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect(() => { throw new Error("Woops!") }).toThrow(/woops/i);
@@ -1866,7 +1868,7 @@ export class Matcher {
      * itself, and for that attribute value to match the given `value` if any.
      *
      * @param {string} attribute
-     * @param {import("../hoot_utils").Matcher} [value]
+     * @param {StrictMatcherType} [value]
      * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect("a").toHaveAttribute("href");
@@ -2122,7 +2124,7 @@ export class Matcher {
     /**
      * Expects the received {@link Target} to match the given style properties.
      *
-     * @param {string | Record<string, string | RegExp>} style
+     * @param {StrictMatcherType | Record<string, StrictMatcherType>} style
      * @param {typeof T_MATCHER_DOM_STYLE_OPTIONS} [options]
      * @example
      *  expect("button").toHaveStyle({ color: "red" });
@@ -2131,7 +2133,12 @@ export class Matcher {
      */
     toHaveStyle(style, options) {
         this._assertArguments(arguments, [
-            t.or([t.string(), t.record(t.or([t.string(), t.number()]))]),
+            t.or([
+                t.string(),
+                t.number(),
+                T_REGEX,
+                t.record(t.or([t.string(), t.number(), T_REGEX])),
+            ]),
             T_MATCHER_DOM_STYLE_OPTIONS,
         ]);
 
@@ -2168,7 +2175,7 @@ export class Matcher {
      * - be strictly equal to a given string;
      * - match a given regular expression.
      *
-     * @param {string | RegExp} [text]
+     * @param {StrictMatcherType} [text]
      * @param {typeof T_MATCHER_QUERY_TEXT_OPTIONS} [options]
      * @example
      *  expect("p").toHaveText("lorem ipsum dolor sit amet");
@@ -2441,7 +2448,7 @@ export class Matcher {
      * @private
      * @param {"toHaveInnerHTML" | "toHaveOuterHTML"} name
      * @param {"innerHTML" | "outerHTML"} property
-     * @param {string | RegExp} expected
+     * @param {StrictMatcherType} expected
      * @param {typeof T_MATCHER_FORMAT_XML_OPTIONS} [options]
      */
     _toHaveHTML(name, property, expected, options) {
