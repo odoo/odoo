@@ -109,11 +109,13 @@ export class ComboPage extends Component {
 
         if (!this.hasMultiItemSelection) {
             this.currentChoiceState.selectedItems = {};
+            this.currentChoiceState.selectedItemsOrder = [];
         } else if (!this.canAddMoreItems()) {
             return;
         }
 
         const selectedItems = (this.currentChoiceState.selectedItems ||= {});
+        const selectedItemsOrder = (this.currentChoiceState.selectedItemsOrder ||= []);
 
         if (selectedItems[item.id]) {
             this.changeItemQuantity(null, item, +1);
@@ -123,6 +125,7 @@ export class ComboPage extends Component {
         const selection = (selectedItems[item.id] ||= { item });
         selection.item = item;
         selection.qty = 1;
+        selectedItemsOrder.push(item.id);
         if (this.hasAttribute(product)) {
             this.currentChoiceState.displayAttributesOfItem = item;
         } else if (!this.hasMultiItemSelection) {
@@ -170,6 +173,64 @@ export class ComboPage extends Component {
         return this.getSelectedItems().some((item) => item.qty > 0);
     }
 
+    getExtraQtyForItem(item, comboIndex = null, showZero = false) {
+        const choice = comboIndex !== null ? this.comboChoices[comboIndex] : this.selectedChoice;
+        const choiceState =
+            comboIndex !== null ? this.state.choices[comboIndex] : this.currentChoiceState;
+        if (choice.qty_free === 0) {
+            return showZero ? choiceState.selectedItems?.[item.id]?.qty || 0 : 0;
+        }
+        const selectedItemsOrder = choiceState.selectedItemsOrder;
+        if (!selectedItemsOrder || !selectedItemsOrder.includes(item.id)) {
+            return 0;
+        }
+        const remainingFree = choice.qty_free;
+        const extraPriceItems = selectedItemsOrder.slice(remainingFree);
+        let extraPriceQty = 0;
+        for (const selectedItem of extraPriceItems) {
+            if (selectedItem === item.id) {
+                extraPriceQty += 1;
+            }
+        }
+        return extraPriceQty;
+    }
+
+    getBasePriceForItem(item) {
+        const comboSelection = this.getComboSelection().find(
+            (comboChoice) => comboChoice.combo_item_id.id === item.id
+        );
+        if (!comboSelection || !comboSelection.configuration) {
+            return {
+                pricePerExtra: 0,
+                pricePerUnit: 0,
+            };
+        }
+        let attributeExtraPrice = item.extra_price || 0;
+        for (const attribute of comboSelection.configuration.attribute_value_ids) {
+            const attributeValuePriceExtra =
+                this.selfOrder.models["product.template.attribute.value"].get(
+                    attribute
+                ).price_extra;
+            attributeExtraPrice += attributeValuePriceExtra || 0;
+        }
+        return {
+            pricePerExtra: comboSelection.combo_item_id.combo_id.base_price,
+            pricePerUnit: attributeExtraPrice,
+        };
+    }
+
+    getExtraPriceForItem(item, comboIndex = null, showZero = false) {
+        const choiceState =
+            comboIndex !== null ? this.state.choices[comboIndex] : this.currentChoiceState;
+        const itemQty =
+            showZero || item.combo_id.qty_free > 0
+                ? choiceState.selectedItems?.[item.id]?.qty || 0
+                : 0;
+        const extraQty = this.getExtraQtyForItem(item, comboIndex, showZero);
+        const basePrice = this.getBasePriceForItem(item);
+        return extraQty * basePrice.pricePerExtra + itemQty * basePrice.pricePerUnit;
+    }
+
     changeItemQuantity(evt, item, value) {
         evt?.stopPropagation();
 
@@ -181,6 +242,14 @@ export class ComboPage extends Component {
             return;
         }
         itemState.qty = Math.max(0, itemState.qty + value);
+        if (value < 0) {
+            const lastIndex = this.currentChoiceState.selectedItemsOrder.lastIndexOf(item.id);
+            if (lastIndex !== -1) {
+                this.currentChoiceState.selectedItemsOrder.splice(lastIndex, 1);
+            }
+        } else if (value > 0) {
+            this.currentChoiceState.selectedItemsOrder.push(item.id);
+        }
         if (itemState.qty === 0) {
             delete this.currentChoiceState.selectedItems[item.id];
         }
@@ -259,6 +328,12 @@ export class ComboPage extends Component {
                 // Disable product selection if not all attributes are selected
                 const choiceState = this.currentChoiceState;
                 delete choiceState.selectedItems[choiceState.displayAttributesOfItem.id];
+                const index = choiceState.selectedItemsOrder.indexOf(
+                    choiceState.displayAttributesOfItem.id
+                );
+                if (index !== -1) {
+                    choiceState.selectedItemsOrder.splice(index, 1);
+                }
             }
             this.currentChoiceState.displayAttributesOfItem = false;
         } else {

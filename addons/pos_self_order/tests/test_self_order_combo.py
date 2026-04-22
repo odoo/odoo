@@ -260,3 +260,31 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_product_dont_display_all_variants")
+
+    def test_self_combo_extra_price_selection_and_confirmation(self):
+        """
+        Test extra price display in combo selection and confirmation.
+        - Combo with qty_free=0: All items show "+ €X" price badge
+        - Combo with qty_free>0: Free items have no extra badge, paid items show "Extra: €X"
+        - Confirmation page displays extra prices correctly
+        """
+
+        setup_product_combo_items(self)
+        self.desks_combo.qty_free = 0
+        self.desks_combo.qty_max = 3
+
+        self.desk_accessories_combo.qty_free = 1
+        self.desk_accessories_combo.qty_max = 3
+
+        self.pos_config.write({
+            'self_ordering_default_user_id': self.pos_admin.id,
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'counter',
+            'available_preset_ids': [(5, 0)],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+
+        self.start_tour(self_route, "test_self_combo_extra_price_selection_and_confirmation")
