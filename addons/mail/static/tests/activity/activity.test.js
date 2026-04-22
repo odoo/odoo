@@ -632,10 +632,11 @@ test("activity with a channel mention", async () => {
 test("activity updates are shared between tabs", async () => {
     const pyEnv = await startServer();
     MailActivity._views.form = "<form><field name='summary'/></form>";
-    let stepPostMessage = true;
+    let stepBroadcasts = true;
+    onRpc("/mail/data", () => expect.step("/mail/data"));
     patchWithCleanup(BroadcastChannel.prototype, {
         postMessage({ type, payload }) {
-            if (!stepPostMessage) {
+            if (!stepBroadcasts) {
                 return;
             }
             if (type === "INSERT") {
@@ -667,10 +668,14 @@ test("activity updates are shared between tabs", async () => {
         },
     ]);
     await start();
-    await expect.waitForSteps(["INIT"]); // from rtc service
+    await expect.waitForSteps(["INIT", "/mail/data"]); // INIT from rtc service
     await openFormView("res.partner", serverState.partnerId);
     // Ensure state updates are corectly sent.
-    await expect.waitForSteps(["INSERT - Send an email to Marc", "INSERT - Say hello to Bob"]);
+    await expect.waitForSteps([
+        "/mail/data",
+        "INSERT - Send an email to Marc",
+        "INSERT - Say hello to Bob",
+    ]);
     await contains(".o-mail-Activity", { count: 2 });
     await contains(".o-mail-Activity-info:has(:text(“Send an email to Marc”))");
     await click(".o-mail-Activity-edit:eq(0)");
@@ -678,6 +683,7 @@ test("activity updates are shared between tabs", async () => {
     await click("button:text(Save)");
     // Every insert triggers a broadcast, what matter is that the last value is correctly sent.
     await expect.waitForSteps([
+        "/mail/data",
         "INSERT - Send an email to Marc",
         "INSERT - Say hello to Bob",
         "INSERT - Send an email to Jane",
@@ -686,13 +692,14 @@ test("activity updates are shared between tabs", async () => {
     await click(".o-mail-Activity:eq(0) button:text(Cancel)");
     await expect.waitForSteps([
         `DELETE - ${firstActivityId}`,
+        "/mail/data",
         "INSERT - Say hello to Bob",
         "INSERT - Say hello to Bob",
     ]);
     await contains(".o-mail-Activity", { count: 1 });
     await contains(".o-mail-Activity-info:has(:text(“Say hello to Bob”))");
     // Ensure state update are properly received.
-    stepPostMessage = false;
+    stepBroadcasts = false;
     const newActivityId = pyEnv["mail.activity"].create({
         res_id: serverState.partnerId,
         res_model: "res.partner",
