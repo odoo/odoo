@@ -51,14 +51,8 @@ export function addSectionFromProductCatalog() {
         },
         {
             content: "Add a Product",
-            trigger: '.o_kanban_record:contains("Test Product")',
-            run: function () {
-                setTimeout(() => {
-                    [...document.querySelectorAll('.o_kanban_record')].find(el =>
-                        el.textContent.includes('Test Product')
-                    )?.click();
-                }, 1000);
-            },
+            trigger: `.o_kanban_record:contains("Test Product") button:has(.fa-shopping-cart)`,
+            run: "click",
         },
         {
             content: "Wait for product to be added",
