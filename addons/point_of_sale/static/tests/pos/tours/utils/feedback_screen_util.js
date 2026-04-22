@@ -121,7 +121,7 @@ export function checkTicketData(data, basic = false) {
             }
             if (!img.src.includes(data.logo)) {
                 throw new Error(
-                    `Logo mismatch. Expected URL containing 
+                    `Logo mismatch. Expected URL containing
                     '${data.logo.substring(0, 10)}...
                     got '${img.src.substring(0, 10)}...'`
                 );
@@ -294,10 +294,10 @@ export function checkTicketData(data, basic = false) {
                 if (line.cssRules) {
                     for (const rule of line.cssRules) {
                         const statement = orderline.querySelectorAll(rule.css);
-                        if (!statement && rule.negation) {
+                        if (!statement.length && rule.negation) {
                             continue; // No statement found and negation is true so the rule is validated
                         }
-                        if (!statement) {
+                        if (!statement.length) {
                             throw new Error(`CSS rule ${rule.css} not found in receipt.`);
                         }
                         if (rule.length && rule.length !== statement.length) {
@@ -309,8 +309,16 @@ export function checkTicketData(data, basic = false) {
                             const ruleFound = [...statement].some((s) =>
                                 s.textContent.includes(rule.text)
                             );
-                            if (ruleFound == rule.negation) {
+                            if (ruleFound === (rule.negation || false)) {
                                 throw new Error(`Rule ${rule.css} not found in printed receipt.`);
+                            }
+                        }
+                        if (rule.empty) {
+                            const isEmpty = [...statement].some((s) => s.textContent.trim() === "");
+                            if (isEmpty === (rule.negation || false)) {
+                                throw new Error(
+                                    `Rule ${rule.css} should be empty in printed receipt.`
+                                );
                             }
                         }
                     }
@@ -321,16 +329,22 @@ export function checkTicketData(data, basic = false) {
         if (data.cssRules) {
             for (const rule of data.cssRules) {
                 const statement = ticket.querySelectorAll(rule.css);
-                if (!statement && rule.negation) {
+                if (!statement.length && rule.negation) {
                     continue; // No statement found and negation is true so the rule is validated
                 }
-                if (!statement) {
+                if (!statement.length) {
                     throw new Error(`CSS rule ${rule.css} not found in receipt.`);
                 }
                 if (rule.text) {
                     const ruleFound = [...statement].some((s) => s.textContent.includes(rule.text));
-                    if (ruleFound == rule.negation) {
+                    if (ruleFound === (rule.negation || false)) {
                         throw new Error(`Rule ${rule.css} not found in printed receipt.`);
+                    }
+                }
+                if (rule.empty) {
+                    const isEmpty = [...statement].some((s) => s.textContent.trim() === "");
+                    if (isEmpty === (rule.negation || false)) {
+                        throw new Error(`Rule ${rule.css} should be empty in printed receipt.`);
                     }
                 }
             }

@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -16,7 +15,6 @@ export class TipScreen extends Component {
     };
     setup() {
         this.pos = usePos();
-        this.posReceiptContainer = useRef("pos-receipt-container");
         this.dialog = useService("dialog");
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.priceIncl;

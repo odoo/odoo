@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
                         name: "Desk Pad",
                         cssRules: [
                             {
-                                css: ".info-list .customer-note",
+                                css: ".lines .line-note",
                                 text: "Test customer note",
                             },
                         ],
