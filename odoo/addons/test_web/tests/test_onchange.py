@@ -254,7 +254,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_onchange_one2many_multi(self):
         """ test the effect of multiple onchange methods on one2many fields """
-        partner1 = self.env['res.partner'].create({'name': 'A partner'})
+        partner1 = self.env['test_orm.partner'].create({'name': 'A partner'})
         multi = self.env['test_orm.multi'].create({'partner': partner1.id})
         line1 = multi.lines.create({'multi': multi.id})
 
@@ -281,7 +281,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         #   -> set 'partner' on all lines
         #   -> recompute 'name'
         #       -> set 'name' on all lines
-        partner2 = self.env['res.partner'].create({'name': 'A second partner'})
+        partner2 = self.env['test_orm.partner'].create({'name': 'A second partner'})
         values = {
             'name': partner1.name,
             'partner': partner2.id,             # this one just changed
@@ -423,10 +423,8 @@ class TestOnchange(SavepointCaseWithUserDemo):
         self.assertEqual(result['value'], {})
 
     def test_onchange_one2many_first(self):
-        partner = self.env['res.partner'].create({
-            'name': 'X',
-            'country_id': self.env.ref('base.be').id,
-        })
+        partner = self.env['test_orm.partner'].create({'name': 'X'})
+
         with Form(self.env['test_orm.multi']) as form:
             form.partner = partner
             self.assertEqual(form.partner, partner)
@@ -845,7 +843,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         fields_spec['lines']['context'] = {'show_email': True}
 
         # create a partner (for a change)
-        partner = self.env['res.partner'].create({
+        partner = self.env['test_orm.partner'].create({
             'name': 'A partner',
             'email': 'foo@example.com',
         })
@@ -875,7 +873,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_one2many_field_with_context_many2many(self):
         """ test relational fields with a context on their one2many container field """
-        partner = self.env['res.partner'].create({'name': 'A partner'})
+        partner = self.env['test_orm.partner'].create({'name': 'A partner'})
         multi = self.env['test_orm.multi'].create({'partner': partner.id})
         line = multi.lines.create({'multi': multi.id})
 

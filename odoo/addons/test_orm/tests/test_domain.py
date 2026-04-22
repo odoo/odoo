@@ -352,12 +352,12 @@ class TestDomainComplement(TransactionExpressionCase):
     def test_inequalities_float(self):
         Model = self.env['test_orm.mixed']
         Model.create([{}])
-        Model.create([{'number2': n} for n in (-5, -3.3, 0.0, 0.1, 3, 4.5)])
-        self._search(Model, [('number2', '>', 2)])
-        self._search(Model, [('number2', '>', -2)])
-        self._search(Model, [('number2', '>', 3)])
-        self._search(Model, [('number2', '<', 1)])
-        self._search(Model, [('number2', '<=', 1)])
+        Model.create([{'float_precision': n} for n in (-5, -3.3, 0.0, 0.1, 3, 4.5)])
+        self._search(Model, [('float_precision', '>', 2)])
+        self._search(Model, [('float_precision', '>', -2)])
+        self._search(Model, [('float_precision', '>', 3)])
+        self._search(Model, [('float_precision', '<', 1)])
+        self._search(Model, [('float_precision', '<=', 1)])
 
     def test_inequalities_char(self):
         Model = self.env['test_orm.empty_char']
@@ -397,7 +397,7 @@ class TestDomainComplement(TransactionExpressionCase):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDomainOptimize(TransactionCase):
-    number_domain = Domain('number', '>', 5)
+    number_domain = Domain('numeric', '>', 5)
 
     def test_bool_optimize(self):
         model = self.env['test_orm.mixed']
@@ -525,7 +525,7 @@ class TestDomainOptimize(TransactionCase):
 
     def test_condition_optimize_any_non_relational(self):
         model = self.env['test_orm.mixed']
-        domain = Domain('number', 'any', Domain('id', '>', 0))
+        domain = Domain('numeric', 'any', Domain('id', '>', 0))
         with self.assertRaises(ValueError):
             domain.optimize(model)
 
@@ -721,7 +721,7 @@ class TestDomainOptimize(TransactionCase):
         self.assertEqual(
             Domain('moment', '>=', '2024-01-01 10:00:00').optimize(model),
             Domain('moment', '>=', datetime(2024, 1, 1, 10)),
-            "Timezone should have no effect on datetime"
+            "Timezone should have no effect on moment"
         )
         self.assertEqual(
             Domain('moment', '>=', '2024-07-02').optimize(model),
@@ -768,11 +768,11 @@ class TestDomainOptimize(TransactionCase):
     def test_condition_optimize_maybe_eq(self):
         model = self.env['test_orm.mixed']
         self.assertEqual(
-            Domain('number', '=?', 5).optimize(model),
-            Domain('number', '=', 5).optimize(model),
+            Domain('numeric', '=?', 5).optimize(model),
+            Domain('numeric', '=', 5).optimize(model),
         )
         self.assertEqual(
-            Domain('number', '=?', 0).optimize(model),
+            Domain('numeric', '=?', 0).optimize(model),
             Domain.TRUE,
         )
 
@@ -792,9 +792,9 @@ class TestDomainOptimize(TransactionCase):
     def test_condition_optimize_access(self):
         model = self.env['test_orm.mixed']
         records = model.create([
-            {'number': 11},
-            {'number': 22},
-            {'number': 23, 'currency_id': self.env.ref('base.USD').id},
+            {'numeric': 11},
+            {'numeric': 22},
+            {'numeric': 23, 'currency_id': self.env.ref('base.USD').id},
         ])
         user_group = self.ref('base.group_user')
         elevated_group = self.ref('base.group_allow_export')
@@ -822,7 +822,7 @@ class TestDomainOptimize(TransactionCase):
         rules.create([{
             'model_id': self.env['ir.model']._get_id(model._name),
             'groups': [user_group],
-            'domain_force': str([('number', '>', 20)]),
+            'domain_force': str([('numeric', '>', 20)]),
         }, {
             'model_id': self.env['ir.model']._get_id(model._name),
             'groups': [elevated_group],
@@ -923,18 +923,18 @@ class TestDomainOptimize(TransactionCase):
         model = self.env['test_orm.mixed']
         self.assertEqual(
             Domain.AND([
-                Domain('number', '=', 5),
+                Domain('numeric', '=', 5),
                 Domain('date', 'like', "2024"),
                 Domain('date', '!=', False),
-                Domain('number', '<', 99),
-                Domain('comment1', 'like', 'ok'),
+                Domain('numeric', '<', 99),
+                Domain('html', 'like', 'ok'),
             ]).optimize(model),
             Domain.AND([
-                Domain('comment1', 'like', 'ok'),
                 Domain('date', 'not in', OrderedSet([False])),
                 Domain('date', 'like', "2024"),
-                Domain('number', 'in', OrderedSet([5])),
-                Domain('number', '<', 99),
+                Domain('html', 'like', 'ok'),
+                Domain('numeric', 'in', OrderedSet([5])),
+                Domain('numeric', '<', 99),
             ]),
             "Optimization sorts by field and operator",
         )
@@ -945,7 +945,7 @@ class TestDomainOptimize(TransactionCase):
         def domain(op, values):
             if not values:
                 return Domain.FALSE if op == 'in' else Domain.TRUE
-            return Domain('number', op, values)
+            return Domain('numeric', op, values)
 
         set123 = OrderedSet([1, 2, 3])
         set345 = OrderedSet([3, 4, 5])
@@ -997,7 +997,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
         self.assertIsInstance(
-            (Domain('number', 'in', [1]) | Domain('number', 'in', [2])).optimize(model).value,
+            (Domain('numeric', 'in', [1]) | Domain('numeric', 'in', [2])).optimize(model).value,
             OrderedSet, "Check we can optimize something else than OrderedSet",
         )
 

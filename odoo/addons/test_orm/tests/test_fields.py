@@ -315,8 +315,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(message2.size, 3)
 
         # special case: computed field without dependency must be computed
-        record = self.env['test_orm.mixed'].create({})
-        self.assertTrue(record.now)
+        record = self.env['test_orm.mixed_computes'].create({})
+        self.assertTrue(record.compute_without_dependency)
 
     def test_10_non_stored_cache_only(self):
         """Test create and write behavior for fields.Char(store=False).
@@ -1043,7 +1043,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_21_float_digits(self):
         """ test field description """
         precision = self.env.ref('test_orm.decimal_orm_number')
-        description = self.env['test_orm.mixed'].fields_get()['number2']
+        description = self.env['test_orm.mixed'].fields_get()['float_precision']
         self.assertEqual(description['digits'], (16, precision.digits))
 
     def check_monetary(self, record, amount, currency, msg=None):
@@ -1058,11 +1058,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(record.currency_id, currency)
 
         # check the value on the record
-        self.assertIn(record.amount, [ramount, samount], msg)
+        self.assertIn(record.monetary, [ramount, samount], msg)
 
         # check the value in the database
         self.env.flush_all()
-        self.cr.execute('SELECT amount FROM test_orm_mixed WHERE id=%s', [record.id])
+        self.cr.execute('SELECT monetary FROM test_orm_mixed WHERE id=%s', [record.id])
         value = self.cr.fetchone()[0]
         self.assertEqual(value, samount, msg)
 
@@ -1082,30 +1082,30 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
                 currency = currency.browse()
 
             # case 1: create with amount and currency
-            record = model.create({'amount': amount, 'currency_id': currency.id})
-            self.check_monetary(record, amount, currency, 'create(amount, currency)')
+            record = model.create({'monetary': amount, 'currency_id': currency.id})
+            self.check_monetary(record, amount, currency, 'create(monetary, currency)')
 
             # case 2: assign amount
-            record.amount = 0
-            record.amount = amount
-            self.check_monetary(record, amount, currency, 'assign(amount)')
+            record.monetary = 0
+            record.monetary = amount
+            self.check_monetary(record, amount, currency, 'assign(monetary)')
 
             # case 3: write with amount and currency
-            record.write({'amount': 0, 'currency_id': False})
-            record.write({'amount': amount, 'currency_id': currency.id})
-            self.check_monetary(record, amount, currency, 'write(amount, currency)')
+            record.write({'monetary': 0, 'currency_id': False})
+            record.write({'monetary': amount, 'currency_id': currency.id})
+            self.check_monetary(record, amount, currency, 'write(monetary, currency)')
 
             # case 4: write with amount only
-            record.write({'amount': 0})
-            record.write({'amount': amount})
-            self.check_monetary(record, amount, currency, 'write(amount)')
+            record.write({'monetary': 0})
+            record.write({'monetary': amount})
+            self.check_monetary(record, amount, currency, 'write(monetary)')
 
             # case 5: write with amount on several records
             records = record + model.create({'currency_id': currency.id})
-            records.write({'amount': 0})
-            records.write({'amount': amount})
+            records.write({'monetary': 0})
+            records.write({'monetary': amount})
             for record in records:
-                self.check_monetary(record, amount, currency, 'multi write(amount)')
+                self.check_monetary(record, amount, currency, 'multi write(monetary)')
 
     def test_20_monetary_related(self):
         """ test value rounding with related currency """
@@ -1140,9 +1140,9 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_20_like_multiline(self):
         """ test filtered_domain() on multiline fields. """
-        record = self.env['test_orm.mixed'].create({'comment1': 'Foo\nBar'})
-        self.assertTrue(record.filtered_domain([('comment1', 'like', 'Bar')]))
-        self.assertTrue(record.filtered_domain([('comment1', 'ilike', 'bar')]))
+        record = self.env['test_orm.mixed'].create({'html_dirty': 'Foo\nBar'})
+        self.assertTrue(record.filtered_domain([('html_dirty', 'like', 'Bar')]))
+        self.assertTrue(record.filtered_domain([('html_dirty', 'ilike', 'bar')]))
 
     def test_21_date(self):
         """ test date fields """
@@ -1236,22 +1236,22 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # the following selection is defined by a callable (method name)
         record_call = self.env['test_orm.mixed'].create({})
-        self.assertIsInstance(record_call._fields['lang'].selection, str)
+        self.assertIsInstance(record_call._fields['selection_str'].selection, str)
 
         # one may assign a value
         record_list.state = 'foo'
-        record_call.lang = self.env['res.lang'].search([], limit=1).code
+        record_call.selection_str = self.env['res.lang'].search([], limit=1).code
 
         # one may assign False or None
         record_list.state = None
         self.assertFalse(record_list.state)
-        record_call.lang = None
-        self.assertFalse(record_call.lang)
+        record_call.selection_str = None
+        self.assertFalse(record_call.selection_str)
 
         # the assigned value is only checked for the list case
         with self.assertRaises(ValueError):
             record_list.state = 'zz_ZZ'
-        record_call.lang = 'zz_ZZ'
+        record_call.selection_str = 'zz_ZZ'
 
     def test_23_relation(self):
         """ test relation fields """
@@ -1508,14 +1508,14 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         null_record.invalidate_recordset()
         null_record_normal.invalidate_recordset()
         field_correspondence = [
-            ('foo', 'foo', ''),
+            ('foo', 'char', ''),
             ('text', 'text', ''),
             ('date', 'date', False),
             ('moment', 'moment', False),
-            ('truth', 'truth', False),
-            ('count', 'count', 0),
-            ('phi', 'number2', 0.0),
-            ('html1', 'comment1', ''),
+            ('truth', 'boolean', False),
+            ('count', 'integer', 0),
+            ('phi', 'float_precision', 0.0),
+            ('html1', 'html_dirty', ''),
         ]
         # Check null values
         for field, normal_field, value_to_write in field_correspondence:
@@ -2512,7 +2512,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_43_new_related(self):
         """ test the behavior of one2many related fields """
-        partner = self.env['res.partner'].create({
+        partner = self.env['test_orm.partner'].create({
             'name': 'Foo',
             'child_ids': [Command.create({'name': 'Bar'})],
         })
@@ -2526,8 +2526,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         defaults = self.env['test_orm.message'].default_get(fields)
         self.assertEqual(defaults, {'author': self.env.uid})
 
-        defaults = self.env['test_orm.mixed'].default_get(['number'])
-        self.assertEqual(defaults, {'number': 3.14})
+        defaults = self.env['test_orm.mixed'].default_get(['float_default'])
+        self.assertEqual(defaults, {'float_default': 3.14})
 
     def test_50_search_many2one(self):
         """ test search through a path of computed fields"""
@@ -3320,10 +3320,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_html_sanitize(self):
         record = self.env['test_orm.mixed'].create({})
         record_value = write_value = "<div>EXTERNAL SUBMISSION - Customer not verified<br>\n<br>\n<p>### TOUR DATA ###</p></div>"
-        record.comment0 = write_value
-        self.assertEqual(record.comment0, record_value)
+        record.html = write_value
+        self.assertEqual(record.html, record_value)
         record.invalidate_recordset()
-        self.assertEqual(record.comment0, record_value)
+        self.assertEqual(record.html, record_value)
 
     def test_related_column_type(self):
         related_float_field = self.env['test_orm.related']._fields['foo_float_id']
@@ -3831,11 +3831,11 @@ class TestHtmlField(TransactionCase):
         self.model = self.env['test_orm.mixed']
 
     def test_00_sanitize(self):
-        self.assertEqual(self.model._fields['comment1'].sanitize, False)
-        self.assertEqual(self.model._fields['comment2'].sanitize_attributes, True)
-        self.assertEqual(self.model._fields['comment2'].strip_classes, False)
-        self.assertEqual(self.model._fields['comment3'].sanitize_attributes, True)
-        self.assertEqual(self.model._fields['comment3'].strip_classes, True)
+        self.assertEqual(self.model._fields['html_dirty'].sanitize, False)
+        self.assertEqual(self.model._fields['html'].sanitize_attributes, True)
+        self.assertEqual(self.model._fields['html'].strip_classes, False)
+        self.assertEqual(self.model._fields['html_strip_classes'].sanitize_attributes, True)
+        self.assertEqual(self.model._fields['html_strip_classes'].strip_classes, True)
 
         some_ugly_html = """<p>Oops this should maybe be sanitized
 % if object.some_field and not object.oriented:
@@ -3855,28 +3855,28 @@ class TestHtmlField(TransactionCase):
 %endif"""
 
         record = self.model.create({
-            'comment1': some_ugly_html,
-            'comment2': some_ugly_html,
-            'comment3': some_ugly_html,
-            'comment4': some_ugly_html,
+            'html_dirty': some_ugly_html,
+            'html': some_ugly_html,
+            'html_strip_classes': some_ugly_html,
+            'html_strip_style': some_ugly_html,
         })
 
-        self.assertEqual(record.comment1, some_ugly_html, 'Error in HTML field: content was sanitized but field has sanitize=False')
+        self.assertEqual(record.html_dirty, some_ugly_html, 'Error in HTML field: content was sanitized but field has sanitize=False')
 
-        self.assertIn('<tr class="', record.comment2)
+        self.assertIn('<tr class="', record.html)
 
         # sanitize should have closed tags left open in the original html
-        self.assertIn('</table>', record.comment3, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
-        self.assertIn('</td>', record.comment3, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
-        self.assertIn('<tr style="', record.comment3, 'Style attr should not have been stripped')
+        self.assertIn('</table>', record.html_strip_classes, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('</td>', record.html_strip_classes, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('<tr style="', record.html_strip_classes, 'Style attr should not have been stripped')
         # sanitize does not keep classes if asked to
-        self.assertNotIn('<tr class="', record.comment3)
+        self.assertNotIn('<tr class="', record.html_strip_classes)
 
-        self.assertNotIn('<tr style="', record.comment4, 'Style attr should have been stripped')
+        self.assertNotIn('<tr style="', record.html_strip_style, 'Style attr should have been stripped')
 
     def test_01_sanitize_groups(self):
-        self.assertEqual(self.model._fields['comment5'].sanitize, True)
-        self.assertEqual(self.model._fields['comment5'].sanitize_overridable, True)
+        self.assertEqual(self.model._fields['html_sanitize_override'].sanitize, True)
+        self.assertEqual(self.model._fields['html_sanitize_override'].sanitize_overridable, True)
 
         internal_user = self.env['res.users'].create({
             'name': 'test internal user',
@@ -3894,28 +3894,28 @@ class TestHtmlField(TransactionCase):
         #    changes
         val = '<blockquote>Something</blockquote>'
         normalized_val = '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">Something</blockquote>'
-        write_vals = {'comment5': val}
+        write_vals = {'html_sanitize_override': val}
 
         record.with_user(internal_user).write(write_vals)
-        self.assertEqual(record.comment5, normalized_val,
+        self.assertEqual(record.html_sanitize_override, normalized_val,
                          "should be normalized (not in groups)")
         record.with_user(bypass_user).write(write_vals)
-        self.assertEqual(record.comment5, val,
+        self.assertEqual(record.html_sanitize_override, val,
                          "should not be normalized (has group)")
         record.with_user(internal_user).write(write_vals)
-        self.assertEqual(record.comment5, normalized_val,
+        self.assertEqual(record.html_sanitize_override, normalized_val,
                          "should be normalized (not in groups) despite admin previous diff")
 
         # 2. Test main use case: prevent restricted user to wipe non restricted
         #    user previous change
         val = '<script></script>'
-        write_vals = {'comment5': val}
+        write_vals = {'html_sanitize_override': val}
 
         record.with_user(internal_user).write(write_vals)
-        self.assertEqual(record.comment5, '',
+        self.assertEqual(record.html_sanitize_override, '',
                          "should be sanitized (not in groups)")
         record.with_user(bypass_user).write(write_vals)
-        self.assertEqual(record.comment5, val,
+        self.assertEqual(record.html_sanitize_override, val,
                          "should not be sanitized (has group)")
         with self.assertRaises(UserError):
             # should crash (not in groups and sanitize would break content of
@@ -3925,7 +3925,7 @@ class TestHtmlField(TransactionCase):
         # 3. Make sure field compare in `_convert` is working as expected with
         #    special content / format
         val = '<span  attr1 ="att1"   attr2=\'attr2\'>é@&nbsp;</span><p><span/></p>'
-        write_vals = {'comment5': val}
+        write_vals = {'html_sanitize_override': val}
         # Once sent through `html_sanitize()` this is becoming:
         # `<span attr1="att1" attr2="attr2">é@\xa0</span><p><span></span></p>`
         # Notice those change:
@@ -3941,25 +3941,25 @@ class TestHtmlField(TransactionCase):
 
         # 4. Ensure our exception handling is fine
         val = '<!-- I am a comment -->'
-        write_vals = {'comment5': val}
+        write_vals = {'html_sanitize_override': val}
         record.with_user(internal_user).write(write_vals)
-        self.assertEqual(record.comment5, '',
+        self.assertEqual(record.html_sanitize_override, '',
                          "should be sanitized (not in groups)")
 
         # extra test with new record having 'record' as origin
         new_record = record.new(origin=record)
-        new_record.with_user(bypass_user).comment5
+        new_record.with_user(bypass_user).html_sanitize_override
 
         # this was causing an infinite recursion (see explanation in fields.py)
         new_record.invalidate_recordset()
-        new_record.with_user(internal_user).comment5
+        new_record.with_user(internal_user).html_sanitize_override
 
     @patch('odoo.orm.fields_textual.html_sanitize', return_value='<p>comment</p>')
     def test_onchange_sanitize(self, patch):
-        self.assertTrue(self.registry['test_orm.mixed'].comment2.sanitize)
+        self.assertTrue(self.registry['test_orm.mixed'].html.sanitize)
 
         record = self.env['test_orm.mixed'].create({
-            'comment2': '<p>comment</p>',
+            'html': '<p>comment</p>',
         })
 
         # the new value is sanitized upon insertion in db,
@@ -3967,7 +3967,7 @@ class TestHtmlField(TransactionCase):
         self.assertEqual(patch.call_count, 1)
 
         # new value sanitized for insertion in cache
-        record.comment2 = '<p>comment</p>'
+        record.html = '<p>comment</p>'
         self.assertEqual(patch.call_count, 2)
 
         # the value in cache is dirty -> convert_to_column_update(..., validate=False),
@@ -3977,12 +3977,12 @@ class TestHtmlField(TransactionCase):
 
         # value coming from db does not need to be sanitized
         record.invalidate_recordset()
-        record.comment2
+        record.html
         self.assertEqual(patch.call_count, 2)
 
         # value coming from db during an onchange does not need to be sanitized
         new_record = record.new(origin=record)
-        new_record.comment2
+        new_record.html
         self.assertEqual(patch.call_count, 2)
 
 
