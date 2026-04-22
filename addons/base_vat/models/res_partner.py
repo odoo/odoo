@@ -11,7 +11,7 @@ from stdnum.exceptions import InvalidChecksum, InvalidFormat
 from stdnum.util import clean
 from stdnum import luhn
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields, _, tools, modules
 from odoo.tools import hash_sign
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError, UserError
@@ -226,10 +226,15 @@ class ResPartner(models.Model):
         Return a couple (identifier, token) that is going to identify this db to IAP such that only
         this one can request updates on a previously asked VIES check.
         If they exist, we simply return them. If they don't, we create them in another cursor to
-        avoid the current transaction to be rolled back after the record has been created on IAP.
+        avoid the current transaction to be rolled back after in case of an uncaucht error while
+        the credentials have been registered on IAP.
         """
         # No existing cron = no way for db to pull updates, thus no need to bother IAP
-        if not self.env.ref('base_vat.vies_iap_check_update', raise_if_not_found=False):
+        if (
+            not self.env.ref('base_vat.vies_iap_check_update', raise_if_not_found=False)
+            or tools.config['test_enable']
+            or modules.module.current_test
+        ):
             return "dummy_identifier", "dummy_token"  # ignored by IAP, same as neutralized
 
         IrConfigParam = self.env['ir.config_parameter'].sudo()
@@ -238,10 +243,16 @@ class ResPartner(models.Model):
         if identifier and token:
             return identifier, token
 
-        identifier = str(uuid.uuid4())
-        token = secrets.token_urlsafe()
         with self.env.registry.cursor() as new_cursor:
             IrConfigParamNewCursor = self.env(cr=new_cursor)['ir.config_parameter'].sudo()
+            identifier = IrConfigParamNewCursor.get_param('iap_vies.client_identifier')
+            token = IrConfigParamNewCursor.get_param('iap_vies.client_token')
+            if identifier and token:  # recheck existence in case concurrent call by other user for instance
+                return identifier, token
+
+            identifier = str(uuid.uuid4())
+            token = secrets.token_urlsafe()
+
             IrConfigParamNewCursor.set_param('iap_vies.client_identifier', identifier)
             IrConfigParamNewCursor.set_param('iap_vies.client_token', token)
 
@@ -257,7 +268,7 @@ class ResPartner(models.Model):
         return endpoint
 
     def _check_vies_iap(self):
-        """Called when VAT is manually edited"""
+        """Called when VAT is manually edited to query IAP for the validity of the VAT"""
         self.ensure_one()
         endpoint = self._get_iap_vies_endpoint()
         client_identifier, client_token = self._get_iap_vies_credentials()
@@ -270,7 +281,7 @@ class ResPartner(models.Model):
                     "client_identifier": client_identifier,
                     "client_token": client_token,
                     "webhook_url": self.get_base_url() + '/base_vat/1/webhook_update_vies',
-                    "webhook_token": hash_sign(self.sudo().env, "vies_check", self.vat, expiration_hours=24),  # See BaseVatWebhookController
+                    "webhook_token": hash_sign(self.sudo().env, "vies_check", self.vat, expiration_hours=24 * 7),  # See BaseVatWebhookController
                 },
                 timeout=20,
             )
@@ -287,11 +298,23 @@ class ResPartner(models.Model):
     @api.model
     def _cron_check_vies_iap(self):
         """Called by cron to check if IAP has any update on a previously requested VAT that was pending"""
-        endpoint = self._get_iap_vies_endpoint()
+        vat_to_status = self._check_vies_update_iap()
+        _logger.info("IAP VIES check response: %s", vat_to_status)
+        vats = list(vat_to_status)
+        grouped_partners = self._read_group(
+            domain=[("vat", "in", vats)],
+            groupby=['vat'],
+            aggregates=['id:recordset']
+        )
+        for vat, partners in grouped_partners:
+            partners._update_vies_status(vat_to_status[vat])
+
+    def _check_vies_update_iap(self):
+        """Calls IAP for an update of a previously requested VAT validity"""
         client_identifier, client_token = self._get_iap_vies_credentials()
         try:
             req = requests.post(
-                endpoint + '/api/vies/1/check_update',
+                self._get_iap_vies_endpoint() + '/api/vies/1/check_update',
                 data={
                     "db_uuid": self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
                     "client_identifier": client_identifier,
@@ -300,14 +323,10 @@ class ResPartner(models.Model):
                 timeout=10,
             )
             req.raise_for_status()
+            return req.json()
         except requests.exceptions.RequestException:
             _logger.exception("Error while contacting IAP VIES")
-            return
-        resp = req.json()
-        _logger.info("IAP VIES check response: %s", resp)
-        for company_vat, company_status in resp.items():
-            partner = self.search([("vat", "=", company_vat)])
-            partner._update_vies_status(company_status)
+        return {}
 
     def _update_vies_status(self, status):
         self.vies_valid = status == "valid"
@@ -318,7 +337,7 @@ class ResPartner(models.Model):
         elif status == "fault":
             msg = _("The VIES check failed. Please check the Tax ID manually.")
         elif status in ("valid", "unassigned"):
-            msg = _("The Intra-Community validity has been updated.")
+            msg = _("The Intra-Community validity has been updated to: %s.", status)
         if msg:
             self._message_log_batch(bodies={p._origin.id: msg for p in self if p._origin.id})
 
