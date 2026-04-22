@@ -8,11 +8,14 @@ from datetime import timedelta
 from threading import Event
 from unittest.mock import patch
 from weakref import WeakSet
-
 from freezegun import freeze_time
+try:
+    import websocket as ws
+except ImportError:
+    ws = None
 
 from odoo.api import Environment
-from odoo.tests import common, new_test_user
+from odoo.tests import new_test_user
 from odoo.tools import mute_logger
 
 from .. import websocket as websocket_module
@@ -29,7 +32,6 @@ from ..websocket import (
 from .common import WebsocketCase
 
 
-@common.tagged('post_install', '-at_install')
 class TestWebsocketCaryall(WebsocketCase):
     def test_lifecycle_hooks(self):
         events = []
@@ -356,3 +358,20 @@ class TestWebsocketCaryall(WebsocketCase):
                 terminate_done_event.wait(timeout=5),
                 'Server should have terminated the connection as it didn\'t receive any response.',
             )
+
+    def test_websocket_check_outdated_subscription(self):
+        self.env['bus.bus']._sendone('channel_A', 'some_notification', None)
+        self.env['bus.bus']._sendone('channel_A', 'some_notification', None)
+        self.trigger_notification_dispatching(["channel_A"])
+        last_id = self.env['bus.bus']._bus_last_id()
+        self._reset_bus()
+        websocket = self.websocket_connect()
+        self.subscribe(websocket, ['channel_A'], last_id, check_outdated=True)
+        message = json.loads(websocket.recv())[0]
+        self.assertEqual(
+            message,
+            {'type': 'bus/subscription_outdated', 'internal': True, 'payload': None},
+        )
+        self.subscribe(websocket, ['channel_A'], last_id, check_outdated=False)
+        with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
+            websocket.recv()

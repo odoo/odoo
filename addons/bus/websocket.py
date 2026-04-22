@@ -228,7 +228,8 @@ _command_uid = count(0)
 
 class ControlCommand(IntEnum):
     CLOSE = 0
-    DISPATCH = 1
+    SEND = 1
+    DISPATCH = 2
 
 
 DATA_OP = {Opcode.TEXT, Opcode.BINARY}
@@ -386,7 +387,7 @@ class Websocket:
         """Notify the socket to initiate closure. The closing handshake
         will start in the subsequent iteration of the event loop.
         """
-        self._send_control_command(ControlCommand.CLOSE, {'code': code, 'reason': reason})
+        self._enqueue_control_command(ControlCommand.CLOSE, {'code': code, 'reason': reason})
 
     @classmethod
     def onopen(cls, func):
@@ -397,6 +398,16 @@ class Websocket:
     def onclose(cls, func):
         cls.__event_callbacks[LifecycleEvent.CLOSE].add(func)
         return func
+
+    def send_worker_internal_message(self, type_, payload=None):
+        """Send a message to the browser worker linked to this WebSocket. The message
+        is delivered only to the current socket instance and is not stored. Used for
+        internal server to worker coordination.
+        """
+        self._enqueue_control_command(
+            ControlCommand.SEND,
+            [{'type': type_, 'internal': True, 'payload': payload}],
+        )
 
     def subscribe(self, channels, last):
         self._min_id_by_channel = {
@@ -416,7 +427,7 @@ class Websocket:
         self._waiting_for_dispatch = True
         # Ignore if the socket was closed in the meantime.
         with suppress(OSError):
-            self._send_control_command(ControlCommand.DISPATCH)
+            self._enqueue_control_command(ControlCommand.DISPATCH)
 
     # ------------------------------------------------------
     # PRIVATE METHODS
@@ -757,8 +768,8 @@ class Websocket:
         with acquire_cursor(session.db) as cr:
             check_session(cr, session)
 
-    def _send_control_command(self, command, data=None):
-        """Send a command to the websocket event loop.
+    def _enqueue_control_command(self, command, data=None):
+        """Enqueue a command to be processed by the websocket event loop.
 
         :param ControlCommand command: The command to be executed.
         :param dict | None data: An optional dictionary of parameters.
@@ -772,6 +783,8 @@ class Websocket:
         :param dict | None data: An optional dictionary of parameters.
         """
         match command:
+            case ControlCommand.SEND:
+                self._send(data)
             case ControlCommand.DISPATCH:
                 self._assert_session_validity()
                 self._dispatch_bus_notifications()
