@@ -1,9 +1,9 @@
 import { signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { makeReactive } from "@web/model/relational_model/datapoint";
 import { Record } from "@web/model/relational_model/record";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
+import { makeReactive } from "@web/owl2/utils";
 
 class ProductCatalogRecord extends Record {
     setup(config, data, options = {}) {
@@ -11,6 +11,7 @@ class ProductCatalogRecord extends Record {
         data = { ...data };
         delete data.productCatalogData;
         super.setup(config, data, options);
+
         makeReactive(this, "productCatalogData", signal.Object);
     }
 }
@@ -44,7 +45,13 @@ export class ProductCatalogKanbanModel extends RelationalModel {
 
             let orderLinesInfo;
             if (!isSample) {
-                orderLinesInfo = await rpc("/product/catalog/order_lines_info", this._getOrderLinesInfoParams(params, records.map((rec) => rec.id)));
+                orderLinesInfo = await rpc(
+                    "/product/catalog/order_lines_info",
+                    this._getOrderLinesInfoParams(
+                        params,
+                        records.map((rec) => rec.id)
+                    )
+                );
             } else {
                 orderLinesInfo = this._getSampleOrderLineInfo();
             }
@@ -61,11 +68,11 @@ export class ProductCatalogKanbanModel extends RelationalModel {
             product_ids: productIds,
             res_model: params.context.product_catalog_order_model,
             child_field: params.context.child_field,
-        }
+        };
     }
 
     _getSampleOrderLineInfo() {
-         // this function only returns data for sample view similar to rpc call ("/product/catalog/order_lines_info) made in _loadData
+        // this function only returns data for sample view similar to rpc call ("/product/catalog/order_lines_info) made in _loadData
         const sampleOrderLineInfo = {};
         const numRecords = 10; // Number of records to generate
         for (let i = 1; i <= numRecords; i++) {
