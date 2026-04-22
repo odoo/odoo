@@ -14,6 +14,7 @@ patch(PaymentBancontact.prototype, {
                     {
                         access_token: this.pos.access_token,
                         payment_method_id: line.payment_method_id.id,
+                        line_uuid: line.uuid,
                         order_uuid: order.uuid,
                     }
                 );

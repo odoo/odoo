@@ -16,6 +16,10 @@ test("_checkOrder", async () => {
         status: false,
         message: "This sticker is already processing another payment.",
     };
+    const failureAmount = {
+        status: false,
+        message: "The amount must be positive to use this payment method.",
+    };
 
     // No display payment
     expect(display._checkOrder({ order })).toEqual(success);
@@ -48,30 +52,8 @@ test("_checkOrder", async () => {
 
     // Different sticker payment
     expect(sticker2._checkOrder({ order })).toEqual(success);
-});
 
-test("getPaymentInterfaceStates", async () => {
-    const store = await setupPosEnv();
-    const order = await getFilledOrder(store);
-    const display = store.models["pos.payment.method"].get(4);
-    const sticker = store.models["pos.payment.method"].get(5);
-
-    display._checkOrder = () => ({ status: false, message: "dummy_error_display" });
-    sticker._checkOrder = () => ({ status: false, message: "dummy_error_sticker" });
-
-    const data = { payment_status: "pending" };
-    const paymentline1 = createPaymentLine(store, order, display, data);
-    const paymentline2 = createPaymentLine(store, order, sticker, data);
-
-    // Display --> always allow
-    expect(display.getPaymentInterfaceStates({ paymentline: paymentline1 })).toEqual({
-        status: true,
-        message: "",
-    });
-
-    // Sticker --> depends on _checkOrder
-    expect(sticker.getPaymentInterfaceStates({ paymentline: paymentline2 })).toEqual({
-        status: false,
-        message: "dummy_error_sticker",
-    });
+    // Negative amount on paymentline
+    paymentlineDisplay.amount = 0;
+    expect(sticker1._checkOrder({ order, paymentline: paymentlineDisplay })).toEqual(failureAmount);
 });

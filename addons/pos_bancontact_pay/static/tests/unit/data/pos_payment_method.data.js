@@ -36,7 +36,6 @@ PosPaymentMethod._records.push(
     {
         id: 4,
         name: "Bancontact Display",
-        bancontact_sticker_size: "S",
         bancontact_usage: "display",
         is_cash_count: false,
         is_online_payment: false,
@@ -54,7 +53,6 @@ PosPaymentMethod._records.push(
     {
         id: 5,
         name: "Bancontact Sticker 1",
-        bancontact_sticker_size: "M",
         bancontact_usage: "sticker",
         is_cash_count: false,
         is_online_payment: false,
@@ -72,7 +70,6 @@ PosPaymentMethod._records.push(
     {
         id: 6,
         name: "Bancontact Sticker 2",
-        bancontact_sticker_size: "L",
         bancontact_usage: "sticker",
         is_cash_count: false,
         is_online_payment: false,
