@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command, SUPERUSER_ID
+from odoo import Command, SUPERUSER_ID, fields
 from odoo.fields import Datetime
 from odoo.tests import Form, new_test_user, tagged
 from odoo.exceptions import UserError
@@ -2073,3 +2073,36 @@ class TestSaleProject(TestSaleProjectCommon):
         })
         sale_order.with_context(default_task_id=default_task.id)._onchange_sale_order_template_id()
         self.assertFalse(sale_order.order_line.mapped('task_id'), "SOL should have no related tasks, because it is a section")
+
+    def test_aal_category_report_and_billable_type_sale_project(self):
+        """ This test ensures that aal are generated with the correct billable type and category report. """
+        lines = self.env['account.analytic.line'].create([{
+            'account_id': self.project_global.account_id.id,
+            'name': 'other revenue',
+            'amount': 500,
+            'unit_amount': 1,
+        }, {
+            'account_id': self.project_global.account_id.id,
+            'name': 'other cost',
+            'amount': -500,
+            'unit_amount': 1,
+        }])
+        self.assertEqual(lines[0].category_report, 'revenues')
+        self.assertEqual(lines[0].billable_type, '11_other_revenues')
+        self.assertEqual(lines[1].category_report, 'costs')
+        self.assertEqual(lines[1].billable_type, '30_other_costs')
+
+        vendor_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': fields.Date.today(),
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'quantity': 1,
+                'price_unit': 10,
+                'analytic_distribution': {self.project_global.account_id.id: 100},
+            })],
+        })
+        vendor_bill.action_post()
+        line_vendor_bill = self.env['account.analytic.line'].search([('account_id', '=', self.project_global.account_id.id), ('category', '=', 'vendor_bill')])
+        self.assertEqual(line_vendor_bill.category_report, 'costs')
+        self.assertEqual(line_vendor_bill.billable_type, '12_vendor_bill')

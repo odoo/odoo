@@ -151,3 +151,45 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
                 'analytic_distribution': {str(analytic_account_2.id): 100.0},
             },
         ])
+
+    def test_aal_category_expense(self):
+        """ This test ensures that when an expense generate an aal, its category and billable type are correctly set. """
+        expensed_product = self.env['product.product'].create({
+            'name': 'test product',
+            'can_be_expensed': True,
+            'type': 'service',
+            'invoice_policy': 'order',
+            'standard_price': 100,
+            'reinvoice_policy': 'cost',
+        })
+
+        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+        account = self.env['account.analytic.account'].create({
+            'plan_id': project_plan.id,
+            'name': 'Project account',
+        })
+        project = self.env['project.project'].sudo().create({'name': 'SO Project', 'account_id': account.id})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': self.product_b.id})],
+            'project_id': project.id,
+        })
+        sale_order.action_confirm()
+        sale_order._create_invoices()
+
+        expense = self.create_expenses({
+            'product_id': expensed_product.id,
+            'quantity': 1000.00,
+            'analytic_distribution': {account.id: 100},
+            'sale_order_id': sale_order.id,
+        })
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
+
+        line = self.env['account.analytic.line'].search([('account_id', '=', account.id)])
+        self.assertEqual('expense', line.category)
+        self.assertEqual('costs', line.category_report)
+        self.assertEqual('13_expense', line.billable_type)
