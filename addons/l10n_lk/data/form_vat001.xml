@@ -6,16 +6,31 @@
         <field name="sequence">10</field>
         <field name="country_id" ref="base.lk" />
         <field name="column_ids">
+            <record id="l10n_lk_vat001_cell_a" model="account.report.column">
+                <field name="name">Cell</field>
+                <field name="expression_label">cell_a</field>
+                <field name="figure_type">string</field>
+            </record>
             <record id="l10n_lk_vat001_balance_a" model="account.report.column">
-                <field name="name">Balance A</field>
+                <field name="name">Balance</field>
                 <field name="expression_label">balance_a</field>
             </record>
+            <record id="l10n_lk_vat001_cell_b" model="account.report.column">
+                <field name="name">Cell</field>
+                <field name="expression_label">cell_b</field>
+                <field name="figure_type">string</field>
+            </record>
             <record id="l10n_lk_vat001_balance_b" model="account.report.column">
-                <field name="name">Balance B</field>
+                <field name="name">Balance</field>
                 <field name="expression_label">balance_b</field>
             </record>
+            <record id="l10n_lk_vat001_cell_c" model="account.report.column">
+                <field name="name">Cell</field>
+                <field name="expression_label">cell_c</field>
+                <field name="figure_type">string</field>
+            </record>
             <record id="l10n_lk_vat001_balance_c" model="account.report.column">
-                <field name="name">Balance C</field>
+                <field name="name">Balance</field>
                 <field name="expression_label">balance_c</field>
             </record>
         </field>
@@ -26,14 +41,24 @@
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_a" model="account.report.line">
-                        <field name="name">A, 0: Taxable Supplies</field>
+                        <field name="name">Taxable Supplies</field>
                         <field name="code">LK_VAT_001E_A</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_a_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">A</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_a_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-VAT_A</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_a_cell_b" model="account.report.expression">
+                                <field name="label">cell_b</field>
+                                <field name="engine">text</field>
+                                <field name="formula">0</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_a_balance_b" model="account.report.expression">
                                 <field name="label">balance_b</field>
@@ -43,14 +68,24 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_a1" model="account.report.line">
-                        <field name="name">A1, 1: Deemed Taxable Supplies (Specified Projects)</field>
+                        <field name="name">Deemed Taxable Supplies (Specified Projects)</field>
                         <field name="code">LK_VAT_001E_A1</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_a1_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">A1</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_a1_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-VAT_A1</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_a1_cell_b" model="account.report.expression">
+                                <field name="label">cell_b</field>
+                                <field name="engine">text</field>
+                                <field name="formula">1</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_a1_balance_b" model="account.report.expression">
                                 <field name="label">balance_b</field>
@@ -60,14 +95,24 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_a2" model="account.report.line">
-                        <field name="name">A2, 1A: Deemed Taxable Supplies (Strategic Development Projects)</field>
+                        <field name="name">Deemed Taxable Supplies (Strategic Development Projects)</field>
                         <field name="code">LK_VAT_001E_A2</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_a2_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">A2</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_a2_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-VAT_A2</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_a2_cell_b" model="account.report.expression">
+                                <field name="label">cell_b</field>
+                                <field name="engine">text</field>
+                                <field name="formula">1A</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_a2_balance_b" model="account.report.expression">
                                 <field name="label">balance_b</field>
@@ -77,14 +122,24 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_b" model="account.report.line">
-                        <field name="name">B, 2: Wholesale and Retail Taxable Supplies</field>
+                        <field name="name">Wholesale and Retail Taxable Supplies</field>
                         <field name="code">LK_VAT_001E_B</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_b_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">B</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_b_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-VAT_B</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_b_cell_b" model="account.report.expression">
+                                <field name="label">cell_b</field>
+                                <field name="engine">text</field>
+                                <field name="formula">2</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_b_balance_b" model="account.report.expression">
                                 <field name="label">balance_b</field>
@@ -94,14 +149,24 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_c" model="account.report.line">
-                        <field name="name">C, 2A: VAT Suspended Taxable Supplies</field>
+                        <field name="name">VAT Suspended Taxable Supplies</field>
                         <field name="code">LK_VAT_001E_C</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_c_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">C</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_c_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-VAT_C</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_c_cell_b" model="account.report.expression">
+                                <field name="label">cell_b</field>
+                                <field name="engine">text</field>
+                                <field name="formula">2A</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_c_balance_b" model="account.report.expression">
                                 <field name="label">balance_b</field>
@@ -111,10 +176,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_tot" model="account.report.line">
-                        <field name="name">3: Total Output Tax (0+1+1A+2+2A)</field>
+                        <field name="name">Total Output Tax (0+1+1A+2+2A)</field>
                         <field name="code">LK_VAT_001E_TOT</field>
                         <field name="hierarchy_level">3</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_tot_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">3</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_tot_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">aggregation</field>
@@ -123,10 +193,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_d" model="account.report.line">
-                        <field name="name">D: Zero Rated Supplies (Goods)</field>
+                        <field name="name">Zero Rated Supplies (Goods)</field>
                         <field name="code">LK_VAT_001E_D</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_d_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">D</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_d_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
@@ -135,10 +210,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_d1" model="account.report.line">
-                        <field name="name">D1: Zero Rated Supplies (Services)</field>
+                        <field name="name">Zero Rated Supplies (Services)</field>
                         <field name="code">LK_VAT_001E_D1</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_d1_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">D1</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_d1_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
@@ -147,10 +227,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_e" model="account.report.line">
-                        <field name="name">E: Exempt Supplies</field>
+                        <field name="name">Exempt Supplies</field>
                         <field name="code">LK_VAT_001E_E</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_e_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">E</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_e_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
@@ -159,10 +244,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_e1" model="account.report.line">
-                        <field name="name">E1: Excluded Supplies</field>
+                        <field name="name">Excluded Supplies</field>
                         <field name="code">LK_VAT_001E_E1</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_e1_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">E1</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_e1_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
@@ -171,15 +261,25 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_f" model="account.report.line">
-                        <field name="name">F, F1: Local Supply of Garments</field>
+                        <field name="name">Local Supply of Garments</field>
                         <field name="code">LK_VAT_001E_F</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_f_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">F</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_f_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
                                 <field name="subformula">editable;rounding=2</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_f_cell_b" model="account.report.expression">
+                                <field name="label">cell_b</field>
+                                <field name="engine">text</field>
+                                <field name="formula">F1</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_f_balance_b" model="account.report.expression">
                                 <field name="label">balance_b</field>
@@ -190,15 +290,25 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_g" model="account.report.line">
-                        <field name="name">G, G1: Local Supply of Fabrics</field>
+                        <field name="name">Local Supply of Fabrics</field>
                         <field name="code">LK_VAT_001E_G</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_g_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">G</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_g_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
                                 <field name="subformula">editable;rounding=2</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_g_cell_b" model="account.report.expression">
+                                <field name="label">cell_b</field>
+                                <field name="engine">text</field>
+                                <field name="formula">G1</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_g_balance_b" model="account.report.expression">
                                 <field name="label">balance_b</field>
@@ -216,19 +326,34 @@
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_h" model="account.report.line">
-                        <field name="name">H, 4, 5: Imports</field>
+                        <field name="name">Imports</field>
                         <field name="code">LK_VAT_001E_H</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_h_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">H</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_h_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT_H</field>
                             </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_h_cell_b" model="account.report.expression">
+                                <field name="label">cell_b</field>
+                                <field name="engine">text</field>
+                                <field name="formula">4</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_h_balance_b" model="account.report.expression">
                                 <field name="label">balance_b</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT_4</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_h_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">5</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_h_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -238,14 +363,24 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_i" model="account.report.line">
-                        <field name="name">I, 6: Local Purchases</field>
+                        <field name="name">Local Purchases</field>
                         <field name="code">LK_VAT_001E_I</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_i_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">I</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_i_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT_I</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_i_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">6</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_i_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -255,10 +390,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_tit" model="account.report.line">
-                        <field name="name">7: Total Input Tax (4+5+6)</field>
+                        <field name="name">Total Input Tax (4+5+6)</field>
                         <field name="code">LK_VAT_001E_TIT</field>
                         <field name="hierarchy_level">3</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_tit_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">7</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_tit_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">aggregation</field>
@@ -267,14 +407,24 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_j" model="account.report.line">
-                        <field name="name">J, K: VAT Suspended Purchases</field>
+                        <field name="name">VAT Suspended Purchases</field>
                         <field name="code">LK_VAT_001E_J</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_j_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">J</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_j_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT_J</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_j_cell_b" model="account.report.expression">
+                                <field name="label">cell_b</field>
+                                <field name="engine">text</field>
+                                <field name="formula">K</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_j_balance_b" model="account.report.expression">
                                 <field name="label">balance_b</field>
@@ -284,14 +434,24 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_j1" model="account.report.line">
-                        <field name="name">J1, K1: Non-Foreign Exchange Purchases</field>
+                        <field name="name">Non-Foreign Exchange Purchases</field>
                         <field name="code">LK_VAT_001E_J1</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_j1_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">J1</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_j1_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT_J1</field>
+                            </record>
+                            <record id="l10n_lk_vat001_lk_vat_001e_j1_cell_b" model="account.report.expression">
+                                <field name="label">cell_b</field>
+                                <field name="engine">text</field>
+                                <field name="formula">K1</field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_j1_balance_b" model="account.report.expression">
                                 <field name="label">balance_b</field>
@@ -301,10 +461,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_j2" model="account.report.line">
-                        <field name="name">J2: Imports on which VAT is not charged</field>
+                        <field name="name">Imports on which VAT is not charged</field>
                         <field name="code">LK_VAT_001E_J2</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_j2_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">J2</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_j2_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
@@ -313,10 +478,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_j3" model="account.report.line">
-                        <field name="name">J3: Local Purchases on which VAT is not charged</field>
+                        <field name="name">Local Purchases on which VAT is not charged</field>
                         <field name="code">LK_VAT_001E_J3</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_j3_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">J3</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_j3_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
@@ -325,10 +495,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_j4" model="account.report.line">
-                        <field name="name">J4: Goods Purchased from Non VAT Registered Persons</field>
+                        <field name="name">Goods Purchased from Non VAT Registered Persons</field>
                         <field name="code">LK_VAT_001E_J4</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_j4_cell_a" model="account.report.expression">
+                                <field name="label">cell_a</field>
+                                <field name="engine">text</field>
+                                <field name="formula">J4</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_j4_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
                                 <field name="engine">tax_tags</field>
@@ -337,10 +512,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_8" model="account.report.line">
-                        <field name="name">8: Disallowable Input Tax on Imports, other Purchases and Adjustments</field>
+                        <field name="name">Disallowable Input Tax on Imports, other Purchases and Adjustments</field>
                         <field name="code">LK_VAT_001E_8</field>
                         <field name="hierarchy_level">3</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_8_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">8</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_8_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">tax_tags</field>
@@ -349,10 +529,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_8a" model="account.report.line">
-                        <field name="name">8A: Disallowable Input Tax on Suspended Purchases</field>
+                        <field name="name">Disallowable Input Tax on Suspended Purchases</field>
                         <field name="code">LK_VAT_001E_8A</field>
                         <field name="hierarchy_level">3</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_8a_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">8A</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_8a_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">tax_tags</field>
@@ -361,10 +546,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_9" model="account.report.line">
-                        <field name="name">9: Allowable Input Tax excluding B/F Amounts (7–8)</field>
+                        <field name="name">Allowable Input Tax excluding B/F Amounts (7–8)</field>
                         <field name="code">LK_VAT_001E_9</field>
                         <field name="hierarchy_level">3</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_9_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">9</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_9_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">aggregation</field>
@@ -373,10 +563,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_10" model="account.report.line">
-                        <field name="name">10: Brought Forward Input Tax</field>
+                        <field name="name">Brought Forward Input Tax</field>
                         <field name="code">LK_VAT_001E_10</field>
                         <field name="hierarchy_level">3</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_10_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">10</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_10_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">external</field>
@@ -393,10 +588,15 @@
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_11" model="account.report.line">
-                        <field name="name">11: Zero Rated Supplies/Suspended Supplies/22(7) {Cage 9*(C+D+D1)/(A+A1+A2+B+C+D+D1)}</field>
+                        <field name="name">Zero Rated Supplies/Suspended Supplies/22(7) {Cage 9*(C+D+D1)/(A+A1+A2+B+C+D+D1)}</field>
                         <field name="code">LK_VAT_001E_11</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_11_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">11</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_11_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">aggregation</field>
@@ -406,10 +606,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_12" model="account.report.line">
-                        <field name="name">12: Not belongs to above {(9+10-11) or 100% of cage 0+1+1A+2 whichever is lower} </field>
+                        <field name="name">Not belongs to above {(9+10-11) or 100% of cage 0+1+1A+2 whichever is lower}</field>
                         <field name="code">LK_VAT_001E_12</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_12_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">12</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_12_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">aggregation</field>
@@ -435,10 +640,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_13" model="account.report.line">
-                        <field name="name">13: Allowable Input (11+12)</field>
+                        <field name="name">Allowable Input (11+12)</field>
                         <field name="code">LK_VAT_001E_13</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_13_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">13</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_13_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">aggregation</field>
@@ -447,10 +657,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_14" model="account.report.line">
-                        <field name="name">14: Unabsorbed Excess Input Tax C/F to next Quarter (9+10-13)</field>
+                        <field name="name">Unabsorbed Excess Input Tax C/F to next Quarter (9+10-13)</field>
                         <field name="code">LK_VAT_001E_14</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_14_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">14</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_14_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">aggregation</field>
@@ -466,10 +681,15 @@
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_15" model="account.report.line">
-                        <field name="name">15: Gross Refund Due if (13-3-8A) &gt; 0</field>
+                        <field name="name">Gross Refund Due if (13-3-8A) &gt; 0</field>
                         <field name="code">LK_VAT_001E_15</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_15_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">15</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_15_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">aggregation</field>
@@ -479,10 +699,15 @@
                         </field>
                         <field name="children_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_l" model="account.report.line">
-                                <field name="name">L: Unabsorbed VAT as at 31/12/2010</field>
+                                <field name="name">Unabsorbed VAT as at 31/12/2010</field>
                                 <field name="code">LK_VAT_001E_L</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
+                                    <record id="l10n_lk_vat001_lk_vat_001e_l_cell_c" model="account.report.expression">
+                                        <field name="label">cell_c</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">L</field>
+                                    </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_l_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
                                         <field name="engine">external</field>
@@ -492,10 +717,15 @@
                                 </field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_m" model="account.report.line">
-                                <field name="name">M: The aggregate Input Tax set off against VAT after 01/01/2011</field>
+                                <field name="name">The aggregate Input Tax set off against VAT after 01/01/2011</field>
                                 <field name="code">LK_VAT_001E_M</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
+                                    <record id="l10n_lk_vat001_lk_vat_001e_m_cell_c" model="account.report.expression">
+                                        <field name="label">cell_c</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">M</field>
+                                    </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_m_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
                                         <field name="engine">external</field>
@@ -505,10 +735,15 @@
                                 </field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_n" model="account.report.line">
-                                <field name="name">N: The aggregate Input Tax set off against other taxes payable to CGIR</field>
+                                <field name="name">The aggregate Input Tax set off against other taxes payable to CGIR</field>
                                 <field name="code">LK_VAT_001E_N</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
+                                    <record id="l10n_lk_vat001_lk_vat_001e_n_cell_c" model="account.report.expression">
+                                        <field name="label">cell_c</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">N</field>
+                                    </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_n_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
                                         <field name="engine">external</field>
@@ -518,10 +753,15 @@
                                 </field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_o" model="account.report.line">
-                                <field name="name">O: The aggregate input Tax set off against taxes payable to DGC</field>
+                                <field name="name">The aggregate input Tax set off against taxes payable to DGC</field>
                                 <field name="code">LK_VAT_001E_O</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
+                                    <record id="l10n_lk_vat001_lk_vat_001e_o_cell_c" model="account.report.expression">
+                                        <field name="label">cell_c</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">O</field>
+                                    </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_o_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
                                         <field name="engine">external</field>
@@ -533,10 +773,15 @@
                         </field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_16" model="account.report.line">
-                        <field name="name">16: Tax Payable if (3-13+8A) &gt; 0</field>
+                        <field name="name">Tax Payable if (3-13+8A) &gt; 0</field>
                         <field name="code">LK_VAT_001E_16</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
+                            <record id="l10n_lk_vat001_lk_vat_001e_16_cell_c" model="account.report.expression">
+                                <field name="label">cell_c</field>
+                                <field name="engine">text</field>
+                                <field name="formula">16</field>
+                            </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_16_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
                                 <field name="engine">aggregation</field>
@@ -546,10 +791,15 @@
                         </field>
                         <field name="children_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_q" model="account.report.line">
-                                <field name="name">Q: Monthly Payment</field>
+                                <field name="name">Monthly Payment</field>
                                 <field name="code">LK_VAT_001E_Q</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
+                                    <record id="l10n_lk_vat001_lk_vat_001e_q_cell_c" model="account.report.expression">
+                                        <field name="label">cell_c</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">Q</field>
+                                    </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_q_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
                                         <field name="engine">external</field>
@@ -559,10 +809,15 @@
                                 </field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_r" model="account.report.line">
-                                <field name="name">R: Deemed Tax Credit (Specified Projects)</field>
+                                <field name="name">Deemed Tax Credit (Specified Projects)</field>
                                 <field name="code">LK_VAT_001E_R</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
+                                    <record id="l10n_lk_vat001_lk_vat_001e_r_cell_c" model="account.report.expression">
+                                        <field name="label">cell_c</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">R</field>
+                                    </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_r_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
                                         <field name="engine">tax_tags</field>
@@ -571,10 +826,15 @@
                                 </field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_r1" model="account.report.line">
-                                <field name="name">R1: Deemed Tax Credit (Strategic Development Project)</field>
+                                <field name="name">Deemed Tax Credit (Strategic Development Project)</field>
                                 <field name="code">LK_VAT_001E_R1</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
+                                    <record id="l10n_lk_vat001_lk_vat_001e_r1_cell_c" model="account.report.expression">
+                                        <field name="label">cell_c</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">R1</field>
+                                    </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_r1_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
                                         <field name="engine">tax_tags</field>
@@ -583,10 +843,15 @@
                                 </field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_r2" model="account.report.line">
-                                <field name="name">R2: Tax Credit based on SVAT Credit Voucher</field>
+                                <field name="name">Tax Credit based on SVAT Credit Voucher</field>
                                 <field name="code">LK_VAT_001E_R2</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
+                                    <record id="l10n_lk_vat001_lk_vat_001e_r2_cell_c" model="account.report.expression">
+                                        <field name="label">cell_c</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">R2</field>
+                                    </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_r2_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
                                         <field name="engine">tax_tags</field>
@@ -595,11 +860,16 @@
                                 </field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_r3" model="account.report.line">
-                                <field name="name">R3: Allowed Deemed Input Credit on Wholesale and Retail R2 R3=(R3B+R3F) = Lesser amount of cage 2 or {Cage 16 – (R+R1+R2}</field>
+                                <field name="name">Allowed Deemed Input Credit on Wholesale and Retail R2 R3=(R3B+R3F) = Lesser amount of cage 2 or {Cage 16 – (R+R1+R2}</field>
                                 <field name="code">LK_VAT_001E_R3</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="foldability" >foldable</field>
                                 <field name="expression_ids">
+                                    <record id="l10n_lk_vat001_lk_vat_001e_r3_cell_c" model="account.report.expression">
+                                        <field name="label">cell_c</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">R3</field>
+                                    </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_r3_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
                                         <field name="engine">aggregation</field>
@@ -642,10 +912,15 @@
                                 </field>
                                 <field name="children_ids">
                                     <record id="l10n_lk_vat001_lk_vat_001e_r3a" model="account.report.line">
-                                        <field name="name">R3A: B/F Credit on Stock</field>
+                                        <field name="name">B/F Credit on Stock</field>
                                         <field name="code">LK_VAT_001E_R3A</field>
                                         <field name="hierarchy_level">5</field>
                                         <field name="expression_ids">
+                                            <record id="l10n_lk_vat001_lk_vat_001e_r3a_cell_c" model="account.report.expression">
+                                                <field name="label">cell_c</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">R3A</field>
+                                            </record>
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3a_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
                                                 <field name="engine">external</field>
@@ -655,10 +930,15 @@
                                         </field>
                                     </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_r3b" model="account.report.line">
-                                        <field name="name">R3B: Claimed Credit on Stock for the Period</field>
+                                        <field name="name">Claimed Credit on Stock for the Period</field>
                                         <field name="code">LK_VAT_001E_R3B</field>
                                         <field name="hierarchy_level">5</field>
                                         <field name="expression_ids">
+                                            <record id="l10n_lk_vat001_lk_vat_001e_r3b_cell_c" model="account.report.expression">
+                                                <field name="label">cell_c</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">R3B</field>
+                                            </record>
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3b_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
                                                 <field name="engine">external</field>
@@ -668,10 +948,15 @@
                                         </field>
                                     </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_r3c" model="account.report.line">
-                                        <field name="name">R3C: C/F Credit on Stock</field>
+                                        <field name="name">C/F Credit on Stock</field>
                                         <field name="code">LK_VAT_001E_R3C</field>
                                         <field name="hierarchy_level">5</field>
                                         <field name="expression_ids">
+                                            <record id="l10n_lk_vat001_lk_vat_001e_r3c_cell_c" model="account.report.expression">
+                                                <field name="label">cell_c</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">R3C</field>
+                                            </record>
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3c_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
                                                 <field name="engine">aggregation</field>
@@ -680,10 +965,15 @@
                                         </field>
                                     </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_r3d" model="account.report.line">
-                                        <field name="name">R3D: B/F Credit on Purchase</field>
+                                        <field name="name">B/F Credit on Purchase</field>
                                         <field name="code">LK_VAT_001E_R3D</field>
                                         <field name="hierarchy_level">5</field>
                                         <field name="expression_ids">
+                                            <record id="l10n_lk_vat001_lk_vat_001e_r3d_cell_c" model="account.report.expression">
+                                                <field name="label">cell_c</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">R3D</field>
+                                            </record>
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3d_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
                                                 <field name="engine">external</field>
@@ -693,10 +983,15 @@
                                         </field>
                                     </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_r3e" model="account.report.line">
-                                        <field name="name">R3E: Credit on purchases for the Period</field>
+                                        <field name="name">Credit on purchases for the Period</field>
                                         <field name="code">LK_VAT_001E_R3E</field>
                                         <field name="hierarchy_level">5</field>
                                         <field name="expression_ids">
+                                            <record id="l10n_lk_vat001_lk_vat_001e_r3e_cell_c" model="account.report.expression">
+                                                <field name="label">cell_c</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">R3E</field>
+                                            </record>
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3e_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
                                                 <field name="engine">external</field>
@@ -706,10 +1001,15 @@
                                         </field>
                                     </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_r3f" model="account.report.line">
-                                        <field name="name">R3F: Claimed Credit on purchases for the Period</field>
+                                        <field name="name">Claimed Credit on purchases for the Period</field>
                                         <field name="code">LK_VAT_001E_R3F</field>
                                         <field name="hierarchy_level">5</field>
                                         <field name="expression_ids">
+                                            <record id="l10n_lk_vat001_lk_vat_001e_r3f_cell_c" model="account.report.expression">
+                                                <field name="label">cell_c</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">R3F</field>
+                                            </record>
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3f_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
                                                 <field name="engine">external</field>
@@ -719,10 +1019,15 @@
                                         </field>
                                     </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_r3g" model="account.report.line">
-                                        <field name="name">R3G: C/F Credit on Purchase</field>
+                                        <field name="name">C/F Credit on Purchase</field>
                                         <field name="code">LK_VAT_001E_R3G</field>
                                         <field name="hierarchy_level">5</field>
                                         <field name="expression_ids">
+                                            <record id="l10n_lk_vat001_lk_vat_001e_r3g_cell_c" model="account.report.expression">
+                                                <field name="label">cell_c</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">R3G</field>
+                                            </record>
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3g_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
                                                 <field name="engine">aggregation</field>
@@ -733,10 +1038,15 @@
                                 </field>
                             </record>
                             <record id="l10n_lk_vat001_lk_vat_001e_s" model="account.report.line">
-                                <field name="name">S: Claim for this Period out of Cage L</field>
+                                <field name="name">Claim for this Period out of Cage L</field>
                                 <field name="code">LK_VAT_001E_S</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
+                                    <record id="l10n_lk_vat001_lk_vat_001e_s_cell_c" model="account.report.expression">
+                                        <field name="label">cell_c</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">S</field>
+                                    </record>
                                     <record id="l10n_lk_vat001_lk_vat_001e_s_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
                                         <field name="engine">aggregation</field>
@@ -766,21 +1076,36 @@
                 </field>
             </record>
             <record id="l10n_lk_vat001_lk_vat_001e_s1" model="account.report.line">
-                <field name="name">S1A, S1B, S1C: The Input tax set off against other taxes payable to CGIR (IT/ESC/NBT)</field>
+                <field name="name">The Input tax set off against other taxes payable to CGIR (IT/ESC/NBT)</field>
                 <field name="code">LK_VAT_001E_S1</field>
                 <field name="hierarchy_level">1</field>
                 <field name="expression_ids">
+                    <record id="l10n_lk_vat001_lk_vat_001e_s1_cell_a" model="account.report.expression">
+                        <field name="label">cell_a</field>
+                        <field name="engine">text</field>
+                        <field name="formula">S1A</field>
+                    </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_s1_balance_a" model="account.report.expression">
                         <field name="label">balance_a</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
                         <field name="subformula">editable;rounding=2</field>
                     </record>
+                    <record id="l10n_lk_vat001_lk_vat_001e_s1_cell_b" model="account.report.expression">
+                        <field name="label">cell_b</field>
+                        <field name="engine">text</field>
+                        <field name="formula">S1B</field>
+                    </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_s1_balance_b" model="account.report.expression">
                         <field name="label">balance_b</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
                         <field name="subformula">editable;rounding=2</field>
+                    </record>
+                    <record id="l10n_lk_vat001_lk_vat_001e_s1_cell_c" model="account.report.expression">
+                        <field name="label">cell_c</field>
+                        <field name="engine">text</field>
+                        <field name="formula">S1C</field>
                     </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_s1_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
@@ -791,10 +1116,15 @@
                 </field>
             </record>
             <record id="l10n_lk_vat001_lk_vat_001e_s2" model="account.report.line">
-                <field name="name">S2: The Input tax set off against taxes payable to DGC</field>
+                <field name="name">The Input tax set off against taxes payable to DGC</field>
                 <field name="code">LK_VAT_001E_S2</field>
                 <field name="hierarchy_level">1</field>
                 <field name="expression_ids">
+                    <record id="l10n_lk_vat001_lk_vat_001e_s2_cell_c" model="account.report.expression">
+                        <field name="label">cell_c</field>
+                        <field name="engine">text</field>
+                        <field name="formula">S2</field>
+                    </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_s2_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
                         <field name="engine">external</field>
@@ -804,10 +1134,15 @@
                 </field>
             </record>
             <record id="l10n_lk_vat001_lk_vat_001e_s3" model="account.report.line">
-                <field name="name">S3: Total claimed from Unabsorbed Input Tax (S+S1A+S1B+S1C+S2)</field>
+                <field name="name">Total claimed from Unabsorbed Input Tax (S+S1A+S1B+S1C+S2)</field>
                 <field name="code">LK_VAT_001E_S3</field>
                 <field name="hierarchy_level">1</field>
                 <field name="expression_ids">
+                    <record id="l10n_lk_vat001_lk_vat_001e_s3_cell_c" model="account.report.expression">
+                        <field name="label">cell_c</field>
+                        <field name="engine">text</field>
+                        <field name="formula">S3</field>
+                    </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_s3_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
                         <field name="engine">aggregation</field>
@@ -816,10 +1151,15 @@
                 </field>
             </record>
             <record id="l10n_lk_vat001_lk_vat_001e_17" model="account.report.line">
-                <field name="name">17: Total Tax Credits (Q+R+R1+R2+R3+S)</field>
+                <field name="name">Total Tax Credits (Q+R+R1+R2+R3+S)</field>
                 <field name="code">LK_VAT_001E_17</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
+                    <record id="l10n_lk_vat001_lk_vat_001e_17_cell_c" model="account.report.expression">
+                        <field name="label">cell_c</field>
+                        <field name="engine">text</field>
+                        <field name="formula">17</field>
+                    </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_17_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
                         <field name="engine">aggregation</field>
@@ -828,10 +1168,15 @@
                 </field>
             </record>
             <record id="l10n_lk_vat001_lk_vat_001e_p" model="account.report.line">
-                <field name="name">P: Unabsorbed balance to be C/F (L-(M+N+O))</field>
+                <field name="name">Unabsorbed balance to be C/F (L-(M+N+O))</field>
                 <field name="code">LK_VAT_001E_P</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
+                    <record id="l10n_lk_vat001_lk_vat_001e_p_cell_c" model="account.report.expression">
+                        <field name="label">cell_c</field>
+                        <field name="engine">text</field>
+                        <field name="formula">P</field>
+                    </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_p_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
                         <field name="engine">aggregation</field>
@@ -840,10 +1185,15 @@
                 </field>
             </record>
             <record id="l10n_lk_vat001_lk_vat_001e_18" model="account.report.line">
-                <field name="name">18: Tax Payable/(Refund Due) (16-17-15)</field>
+                <field name="name">Tax Payable/(Refund Due) (16-17-15)</field>
                 <field name="code">LK_VAT_001E_18</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
+                    <record id="l10n_lk_vat001_lk_vat_001e_18_cell_c" model="account.report.expression">
+                        <field name="label">cell_c</field>
+                        <field name="engine">text</field>
+                        <field name="formula">18</field>
+                    </record>
                     <record id="l10n_lk_vat001_lk_vat_001e_18_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
                         <field name="engine">aggregation</field>
