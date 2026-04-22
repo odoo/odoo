@@ -8,6 +8,14 @@ patch(PosPaymentMethod.prototype, {
             return super._checkOrder(...arguments);
         }
 
+        // Check amount
+        if (paymentline && paymentline.getAmount() <= 0) {
+            return {
+                status: false,
+                message: _t("The amount must be positive to use this payment method."),
+            };
+        }
+
         // Display
         if (this.bancontact_usage === "display") {
             return { status: true, message: "" };
@@ -32,12 +40,5 @@ patch(PosPaymentMethod.prototype, {
 
         // Unknown usage
         return super._checkOrder(...arguments);
-    },
-    getPaymentInterfaceStates({ paymentline } = {}) {
-        if (this.payment_provider === "bancontact_pay" && this.bancontact_usage === "display") {
-            return { status: true, message: "" };
-        }
-
-        return super.getPaymentInterfaceStates(...arguments);
     },
 });

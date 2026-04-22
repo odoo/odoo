@@ -11,7 +11,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'partner_id', 'all_group_ids']
+        return ['id', 'name', 'partner_id', 'all_group_ids', 'lang']
 
     @api.model
     def _load_pos_data_read(self, records, config):
