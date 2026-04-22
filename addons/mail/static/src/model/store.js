@@ -304,13 +304,15 @@ export class Store extends Record {
         let running = false;
         let ready = true;
         proxy = reactive(record);
-        immediateEffect(() => {
-            if (!running) {
-                _observe();
-            } else if (ready) {
-                callback(_observe);
-            }
-        });
+        untrack(() =>
+            immediateEffect(() => {
+                if (!running) {
+                    _observe();
+                } else if (ready) {
+                    callback(_observe);
+                }
+            })
+        );
         running = true;
         return () => {
             ready = false;

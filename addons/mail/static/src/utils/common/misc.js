@@ -102,12 +102,14 @@ export function onChange(target, key, callback) {
     }
     let running = false;
     proxy = reactive(target);
-    immediateEffect(() => {
-        _observe();
-        if (running) {
-            untrack(() => callback());
-        }
-    });
+    untrack(() =>
+        immediateEffect(() => {
+            _observe();
+            if (running) {
+                untrack(() => callback());
+            }
+        })
+    );
     running = true;
     return proxy;
 }
