@@ -10,7 +10,33 @@ import { status, useComponent, useEffect, useState } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { createTextNode } from "@web/core/utils/xml";
+
+/**
+ * @typedef {Object} Option
+ * @property {string} [buttonClass]
+ * @property {string} [classList]
+ * @property {number} [group]
+ * @property {string} [label]
+ * @property {string} [optionTemplate]
+ * @property {string} [title]
+ * @property {boolean} [unselectable]
+ * @property {import("models").ResRole} [role]
+ * @property {import("models").ResPartner} [partner]
+ * @property {import("models").Thread} [thread]
+ * @property {import("models").CannedResponse} [cannedResponse]
+ * @property {import("@web/core/emoji_picker/emoji_picker").Emoji} [emoji]
+ * @property {string} [help]
+ * @property {string} [source]
+ */
+
+/**
+ * @typedef {import("models").ResPartner
+ *   | import("models").ResRole
+ *   | import("models").Thread
+ *   | import("models").CannedResponse
+ *   | import("@web/core/emoji_picker/emoji_picker").Emoji
+ *   | import("@mail/core/common/store_service").SpecialMention} Suggestion
+ */
 
 export const DELAY_FETCH = 250;
 
@@ -210,18 +236,7 @@ export class UseSuggestion {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
         if (this.comp.composerService.htmlEnabled) {
-            let inlineElement;
-            if (option.partner) {
-                inlineElement = generatePartnerMentionElement(option.partner, this.thread);
-            } else if (option.isSpecial) {
-                inlineElement = generateSpecialMentionElement(option.label);
-            } else if (option.role) {
-                inlineElement = generateRoleMentionElement(option.role);
-            } else if (option.thread) {
-                inlineElement = generateThreadMentionElement(option.thread);
-            } else {
-                inlineElement = createTextNode(option.label);
-            }
+            const inlineElement = makeMentionFromOption(option, { thread: this.thread });
             this.comp.editor.shared.dom.insert(inlineElement);
             const [anchorNode, anchorOffset] = rightPos(inlineElement);
             this.comp.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
@@ -295,4 +310,111 @@ export class UseSuggestion {
 
 export function useSuggestion() {
     return new UseSuggestion(useComponent());
+}
+
+/**
+ * Maps raw suggestion records to navigable list option objects for all suggestion types.
+ *
+ * @param {string} type
+ * @param {Suggestion[]} suggestions
+ * @param {Object} [params]
+ * @param {import("models").Thread} [params.thread] The thread where the suggestion is being
+ *   composed. Used e.g. to resolve partner display names in context and stored on the resulting
+ *   Option so that consumers (insertion handlers, mention templates) can access it.
+ * @returns {{ optionTemplate?: string, options: Option[] }}
+ */
+export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
+    const classList = "o-mail-Composer-suggestion";
+    switch (type) {
+        case "Partner":
+            return {
+                optionTemplate: "mail.Composer.suggestionPartner",
+                options: suggestions.map((suggestion) => {
+                    if (suggestion.isSpecial) {
+                        return {
+                            ...suggestion,
+                            group: 1,
+                            optionTemplate: "mail.Composer.suggestionSpecial",
+                            classList,
+                        };
+                    }
+                    if (suggestion?.Model?.getName?.() === "res.role") {
+                        return {
+                            label: suggestion.name,
+                            role: suggestion,
+                            thread,
+                            optionTemplate: "mail.Composer.suggestionRole",
+                            classList,
+                        };
+                    }
+                    return {
+                        label: thread?.getPersonaName(suggestion) ?? suggestion.name,
+                        partner: suggestion,
+                        thread,
+                        classList,
+                    };
+                }),
+            };
+        case "Thread":
+            return {
+                optionTemplate: "mail.Composer.suggestionThread",
+                options: suggestions.map((suggestion) => ({
+                    label: suggestion.fullNameWithParent,
+                    thread: suggestion,
+                    classList,
+                })),
+            };
+        case "ChannelCommand":
+            return {
+                optionTemplate: "mail.Composer.suggestionChannelCommand",
+                options: suggestions.map((suggestion) => ({
+                    label: suggestion.name,
+                    help: suggestion.help,
+                    classList,
+                })),
+            };
+        case "mail.canned.response":
+            return {
+                optionTemplate: "mail.Composer.suggestionCannedResponse",
+                options: suggestions.map((suggestion) => ({
+                    cannedResponse: suggestion,
+                    label: suggestion.substitution,
+                    source: suggestion.source,
+                    title: suggestion.substitution,
+                    classList,
+                })),
+            };
+        case "emoji":
+            return {
+                optionTemplate: "mail.Composer.suggestionEmoji",
+                options: suggestions.map((suggestion) => ({
+                    emoji: suggestion,
+                    label: suggestion.codepoints,
+                })),
+            };
+        default:
+            return { options: [] };
+    }
+}
+
+/**
+ * @param {Option} option
+ * @param {Object} [params]
+ * @param {import("models").Thread} [params.thread] The thread being viewed by the
+ *   user, needed to generate mention links that point back to the right record.
+ */
+export function makeMentionFromOption(option, { thread } = {}) {
+    let inlineElement;
+    if (option.partner) {
+        inlineElement = generatePartnerMentionElement(option.partner, thread);
+    } else if (option.isSpecial) {
+        inlineElement = generateSpecialMentionElement(option.label);
+    } else if (option.role) {
+        inlineElement = generateRoleMentionElement(option.role);
+    } else if (option.thread) {
+        inlineElement = generateThreadMentionElement(option.thread);
+    } else {
+        inlineElement = document.createTextNode(option.label);
+    }
+    return inlineElement;
 }
