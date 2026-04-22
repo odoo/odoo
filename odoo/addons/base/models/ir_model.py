@@ -1369,7 +1369,8 @@ class IrModelFields(models.Model):
                 attrs['strip_style'] = field_data['strip_style']
                 attrs['strip_classes'] = field_data['strip_classes']
         elif field_data['ttype'] in ('selection', 'reference'):
-            attrs['selection'] = self.env['ir.model.fields.selection']._get_selection_data(field_data['id'])
+            if not attrs['related']:
+                attrs['selection'] = self.env['ir.model.fields.selection']._get_selection_data(field_data['id'])
             if field_data['ttype'] == 'selection':
                 attrs['group_expand'] = field_data['group_expand']
         elif field_data['ttype'] == 'many2one':
