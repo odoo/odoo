@@ -1003,6 +1003,9 @@ export class SearchModel extends EventBus {
      */
     toggleSearchItem(searchItemId) {
         const searchItem = this.searchItems[searchItemId];
+        if (searchItem.isInvalid) {
+            return;
+        }
         switch (searchItem.type) {
             case "dateFilter":
             case "dateGroupBy":
@@ -2471,7 +2474,14 @@ export class SearchModel extends EventBus {
     _irFilterToFavorite(irFilter) {
         const userIds = irFilter.user_ids;
         const groupNumber = userIds.length === 1 ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP;
-        const context = evaluateExpr(irFilter.context, user.context);
+        let context;
+        let isInvalid = false;
+        try {
+            context = evaluateExpr(irFilter.context, user.context);
+        } catch {
+            context = {};
+            isInvalid = true;
+        }
         let groupBys = [];
         if (context.group_by) {
             groupBys = context.group_by;
@@ -2480,12 +2490,9 @@ export class SearchModel extends EventBus {
         let sort;
         try {
             sort = JSON.parse(irFilter.sort);
-        } catch (err) {
-            if (err instanceof SyntaxError) {
-                sort = [];
-            } else {
-                throw err;
-            }
+        } catch {
+            isInvalid = true;
+            sort = [];
         }
         const orderBy = sort.map((order) => {
             let fieldName;
@@ -2516,8 +2523,9 @@ export class SearchModel extends EventBus {
             serverSideId: irFilter.id,
             type: "favorite",
             userIds,
+            isInvalid,
         };
-        if (irFilter.is_default) {
+        if (irFilter.is_default && !isInvalid) {
             favorite.isDefault = irFilter.is_default;
         }
         return favorite;
