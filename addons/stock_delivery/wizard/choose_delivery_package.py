@@ -23,7 +23,20 @@ class ChooseDeliveryPackage(models.TransientModel):
     @api.depends('delivery_package_type_id')
     def _compute_shipping_weight(self):
         for rec in self:
+<<<<<<< 79bff4c8b8a042b9295ac2436879a47dd67ab194
             move_line_ids = rec.move_line_ids._to_pack()
+||||||| d1955028bb95eff8d33c1c2b1c211d8520bb33a2
+            move_line_ids = rec.picking_id._package_move_lines(
+                batch_pack=self.env.context.get('batch_pack')
+            )
+=======
+            if sml_ids := self.env.context.get('selected_smls_to_pack', False):
+                move_line_ids = self.env['stock.move.line'].browse(sml_ids)
+            else:
+                move_line_ids = rec.picking_id._package_move_lines(
+                    batch_pack=self.env.context.get('batch_pack')
+                )
+>>>>>>> 38f8f0c2d931aa3490f12cc7b55e546f5ada8ddf
             # Add package weights to shipping weight, package base weight is defined in package.type
             total_weight = rec.delivery_package_type_id.base_weight or 0.0
             for ml in move_line_ids:

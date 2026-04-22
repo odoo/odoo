@@ -996,6 +996,7 @@ class StockMoveLine(models.Model):
             'res_id': self.id,
         }
 
+<<<<<<< 79bff4c8b8a042b9295ac2436879a47dd67ab194
     def _pre_put_in_pack_hook(self, **kwargs):
         return self._check_destinations()
 
@@ -1077,6 +1078,17 @@ class StockMoveLine(models.Model):
                 return move_lines_to_pack._post_put_in_pack_hook(package, **kwargs)
             return res
         raise UserError(_("There is nothing eligible to put in a pack. Either there are no quantities to put in a pack or all products are already in a pack."))
+||||||| d1955028bb95eff8d33c1c2b1c211d8520bb33a2
+    def action_put_in_pack(self):
+        if len(self.picking_id) > 1:
+            raise UserError(_("You cannot directly pack quantities from different transfers into the same package through this view. Try adding them to a batch picking and pack it there."))
+        return self.picking_id.action_put_in_pack(move_lines_to_pack=self)
+=======
+    def action_put_in_pack(self):
+        if len(self.picking_id) > 1:
+            raise UserError(_("You cannot directly pack quantities from different transfers into the same package through this view. Try adding them to a batch picking and pack it there."))
+        return self.with_context(selected_smls_to_pack=self.ids).picking_id.action_put_in_pack(move_lines_to_pack=self)
+>>>>>>> 38f8f0c2d931aa3490f12cc7b55e546f5ada8ddf
 
     def _get_revert_inventory_move_values(self):
         self.ensure_one()

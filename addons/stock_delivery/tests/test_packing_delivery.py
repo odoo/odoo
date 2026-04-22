@@ -326,9 +326,19 @@ class TestPacking(TestPackingCommon):
         pack_action_model = pack_action['res_model']
         # Ensure the correct wizard action is returned
         self.assertEqual(pack_action_model, 'choose.delivery.package')
+<<<<<<< 79bff4c8b8a042b9295ac2436879a47dd67ab194
         pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
+||||||| d1955028bb95eff8d33c1c2b1c211d8520bb33a2
+
+        pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
+=======
+
+        pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx, active_ids=move_line_1.ids).create({})
+        self.assertEqual(pack_wiz.shipping_weight, 12)
+>>>>>>> 38f8f0c2d931aa3490f12cc7b55e546f5ada8ddf
         pack_wiz.action_put_in_pack()
         self.assertTrue(move_line_1.result_package_id, 'A package should have been created for the selected move line')
+        self.assertEqual(move_line_1.result_package_id.shipping_weight, 12)
         self.assertFalse(move_line_2.result_package_id, 'The other move line should not be packed')
 
     def test_delivery_shipping_weight_with_package_before_validation(self):
