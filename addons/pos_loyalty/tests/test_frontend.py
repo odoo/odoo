@@ -3431,7 +3431,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(loyalty_card.points, 90)
 
     def test_customer_display_loyalty_points(self):
-        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'test_customer_display_loyalty_points', login="pos_user")
+        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}?access_token={self.main_pos_config.access_token}", 'test_customer_display_loyalty_points', login="pos_user")
 
     def test_confirm_coupon_programs_one_by_one(self):
         """
