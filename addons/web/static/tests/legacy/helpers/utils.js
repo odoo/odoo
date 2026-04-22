@@ -1133,5 +1133,5 @@ export async function addRow(target, selector) {
 }
 
 export async function removeRow(target, index) {
-    await click(target.querySelectorAll(".o_list_record_remove")[index]);
+    await click(target.querySelectorAll(".o_list_record_remove button")[index]);
 }

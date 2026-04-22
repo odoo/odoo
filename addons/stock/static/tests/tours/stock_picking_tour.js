@@ -353,7 +353,7 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         {
             content: "Remove the newly created line",
             trigger:
-                ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH/Stock - LOT001)):has(.o_field_float[name=quantity] input:value(0.00)) .o_list_record_remove",
+                ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH/Stock - LOT001)):has(.o_field_float[name=quantity] input:value(0.00)) .o_list_record_remove button",
             run: "click",
         },
         {
@@ -473,7 +473,7 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         {
             content: "Remove the LOT001 line with a quantity of 8.00",
             trigger:
-                ".o_data_row:has(.o_data_cell[name=quantity]:contains(8.00)) .o_list_record_remove",
+                ".o_data_row:has(.o_data_cell[name=quantity]:contains(8.00)) .o_list_record_remove button",
             run: "click",
         },
         {

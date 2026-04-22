@@ -291,11 +291,11 @@
         trigger: '.o_field_widget[name="message_concat"] textarea:value([test_trigger] Marc Demo:e)',
     }, { // remove
         content: "remove b",
-        trigger: '.o_field_widget[name=messages] .o_data_row:has(.o_data_cell:text(bbb)) .o_list_record_remove',
+        trigger: '.o_field_widget[name=messages] .o_data_row:has(.o_data_cell:text(bbb)) .o_list_record_remove button',
         run: "click",
     }, {
         content: "remove e",
-        trigger: '.o_field_widget[name=messages] .o_data_row:has(.o_data_cell:text(e)) .o_list_record_remove',
+        trigger: '.o_field_widget[name=messages] .o_data_row:has(.o_data_cell:text(e)) .o_list_record_remove button',
         run: "click",
     },
     {

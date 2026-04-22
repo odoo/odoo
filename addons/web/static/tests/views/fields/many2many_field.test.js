@@ -758,7 +758,7 @@ test("many2many list (editable): edition", async () => {
     expect(".o_list_renderer td.o_list_number").toHaveCount(3);
 
     // remove subrecords
-    await contains(".o_list_record_remove:eq(1)").click();
+    await contains(".o_list_record_remove button:eq(1)").click();
     expect(".o_list_renderer td.o_list_number").toHaveCount(2);
     expect(".o_list_renderer tbody .o_data_row td:eq(0)").toHaveText("new name", {
         message: "the updated row still has the correct values",
@@ -890,7 +890,7 @@ test("fieldmany2many list comodel not writable", async () => {
     await clickSave();
 
     expect(".o_field_many2many .o_data_row .o_list_record_remove").toHaveCount(1);
-    await contains(".o_field_many2many .o_data_row .o_list_record_remove").click();
+    await contains(".o_field_many2many .o_data_row .o_list_record_remove button").click();
     await clickSave();
 });
 
@@ -1308,8 +1308,8 @@ test("many2many list (editable): edition concurrence", async () => {
         resId: 1,
     });
 
-    queryFirst(".o_list_record_remove").click();
-    queryFirst(".o_list_record_remove").click();
+    queryFirst(".o_list_record_remove button").click();
+    queryFirst(".o_list_record_remove button").click();
     await clickSave();
     expect.verifySteps(["get_views", "web_read", "web_save"]);
 });
@@ -1457,8 +1457,8 @@ test("many2many concurrency edition", async () => {
         resId: 1,
     });
     expect(".o_data_row").toHaveCount(4);
-    await contains(".o_data_row .o_list_record_remove").click();
-    await contains(".o_data_row .o_list_record_remove").click();
+    await contains(".o_data_row .o_list_record_remove button").click();
+    await contains(".o_data_row .o_list_record_remove button").click();
     await contains(".o_field_x2many_list_row_add a").click();
     await contains(".modal .o_data_row td.o_data_cell:eq(0)").click();
     def.resolve();
@@ -1742,7 +1742,7 @@ test("many2many list add *many* records, remove, re-add", async () => {
 
     // Secound round: remove one record
     await contains(
-        ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_list_record_remove:eq(0)"
+        ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_list_record_remove button:eq(0)"
     ).click();
     expect(
         ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_pager_limit"

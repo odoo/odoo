@@ -18305,7 +18305,7 @@ test(`list: remove a record from sorted recordlist`, async () => {
     expect(queryAllTexts`.o_data_cell[name="name"]`).toEqual(["f", "e"]);
 
     // remove second record
-    await contains(`.o_list_record_remove:eq(1)`).click();
+    await contains(`.o_list_record_remove button:eq(1)`).click();
     expect(queryAllTexts`.o_data_cell[name="name"]`).toEqual(["f", "d"]);
     expect(`.o_list_view .o_pager_counter`).toHaveText("1-2 / 5");
 });

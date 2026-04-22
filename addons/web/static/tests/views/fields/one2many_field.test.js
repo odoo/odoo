@@ -948,7 +948,7 @@ test("delete all records in last page (in field o2m inline list view)", async ()
     expect(".o_x2m_control_panel .o_pager").toHaveText("1-2 / 3");
     await contains(".o_x2m_control_panel .o_pager_next").click();
     expect(".o_data_row").toHaveCount(1);
-    await contains(".o_list_record_remove").click();
+    await contains(".o_list_record_remove button").click();
     expect(".o_x2m_control_panel .o_pager").toHaveCount(0);
     expect(".o_data_row").toHaveCount(2);
     await contains(".o_form_button_cancel").click();
@@ -972,7 +972,7 @@ test("delete all records then repopulate", async () => {
         resId: 1,
     });
     expect(".o_data_row").toHaveCount(1);
-    await contains(".o_list_record_remove").click();
+    await contains(".o_list_record_remove button").click();
     expect(".o_data_row").toHaveCount(0);
     await contains(".o_field_x2many_list_row_add a").click();
     await contains(".o_field_one2many .o_list_renderer tbody input").edit("value 1", {
@@ -3824,7 +3824,7 @@ test("one2many list (non editable): edition", async () => {
     expect(nbWrite).toBe(0, { message: "should not have write anything in DB" });
 
     // remove second record
-    contains(".o_list_record_remove:eq(1)").click();
+    contains(".o_list_record_remove button:eq(1)").click();
     await animationFrame();
     expect("td.o_list_number").toHaveCount(1);
     expect(".o_list_renderer tbody td:eq(0)").toHaveText("new name");
@@ -3973,7 +3973,7 @@ test("one2many list (editable): edition, part 5", async () => {
     await contains(".o_field_x2many_list_row_add a").click();
     await contains(".o_field_widget[name=turtle_foo] input").edit("aaa", { confirm: "false" });
     expect("tr.o_data_row").toHaveCount(2);
-    await contains(".o_list_record_remove:eq(1)").click();
+    await contains(".o_list_record_remove button:eq(1)").click();
     expect("tr.o_data_row").toHaveCount(1);
 
     // cancel the edition
@@ -4586,7 +4586,7 @@ test("editable o2m with onchange and required field: delete an invalid line", as
     await contains(".o_field_widget[name=product_id] input").clear();
     // no onchange should be done as line is invalid
     expect.verifySteps([]);
-    await contains(".o_list_record_remove").click();
+    await contains(".o_list_record_remove button").click();
     // onchange should have been done
     expect.verifySteps(["onchange"]);
 });
@@ -6089,10 +6089,10 @@ test("many2manytag in one2many, onchange, some modifiers, and more than one page
     });
     expect(".o_data_row").toHaveCount(2);
 
-    await contains(".o_list_record_remove").click();
+    await contains(".o_list_record_remove button").click();
     expect(".o_data_row").toHaveCount(2);
 
-    await contains(".o_list_record_remove").click();
+    await contains(".o_list_record_remove button").click();
     expect(".o_data_row").toHaveCount(1);
 
     expect.verifySteps([
@@ -10768,7 +10768,7 @@ test("delete a record while adding another one in a multipage", async () => {
     await contains(".o_field_x2many_list_row_add a").click();
     await contains(".o_field_widget[name=turtle_foo] input").edit("pi", { confirm: false });
     // delete the line above it
-    await contains(".o_list_record_remove").click();
+    await contains(".o_list_record_remove button").click();
     // the next line should be displayed below the newly added one
     expect(".o_data_row").toHaveCount(2);
     expect(queryAllTexts(".o_data_cell")).toEqual(["pi", "", "kawa", ""], {
@@ -12384,7 +12384,7 @@ test("existing record: receive more create commands than limit", async () => {
         "Record 4",
     ]);
 
-    await contains(".o_data_row :text('Record 3') ~ .o_list_record_remove").click();
+    await contains(".o_data_row :text('Record 3') ~ .o_list_record_remove button").click();
 
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual([
         "Initial Record 1",
@@ -13487,7 +13487,7 @@ test("onchange on x2many add and delete x2m record, returning to initial state",
 
     await contains(".o_field_x2many_list_row_add a").click();
     expect(".o_field_widget[name=turtles] .o_data_row").toHaveCount(2);
-    await contains(".o_list_record_remove:eq(1)").click();
+    await contains(".o_list_record_remove button:eq(1)").click();
     expect(".o_field_widget[name=turtles] .o_data_row").toHaveCount(1);
 
     await clickSave();

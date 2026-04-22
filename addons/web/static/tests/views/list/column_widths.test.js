@@ -1279,7 +1279,7 @@ test(`freeze widths: x2many, remove last record`, async () => {
     });
 
     const initialWidths = getColumnWidths();
-    await contains(".o_data_row .o_list_record_remove").click();
+    await contains(".o_data_row .o_list_record_remove button").click();
     expect(getColumnWidths()).toEqual(initialWidths);
 });
 

@@ -22,7 +22,7 @@ const openProductAttribute = (product_attribute) => [
 const deletePAV = (product_attribute_value, message) => [
     {
         content: 'Click delete button',
-        trigger: `.o_data_cell[data-tooltip=${product_attribute_value}] ~ .o_list_record_remove`,
+        trigger: `.o_data_cell[data-tooltip=${product_attribute_value}] ~ .o_list_record_remove button`,
         run: "click",
     },
     {
