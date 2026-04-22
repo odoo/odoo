@@ -283,47 +283,91 @@
             <field name="report_template_ids" eval="[]"/>
             <field name="auto_delete" eval="True"/>
         </record>
+
+        <record id="email_template_back_in_stock" model="mail.template">
+            <field name="name">Product: Back in Stock Email</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="subject">{{ object.name or 'Product' }} is back in stock</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="False"/>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
+            <field name="body_html" type="html">
+                <t t-set="website" t-value="object.website_id or object.website_id.get_current_website()"/>
+                <div style="margin: 0px; padding: 0px;">
+                    <t
+                        t-if="website"
+                        t-set="logo_src"
+                        t-value="website.image_url(website, 'logo')"
+                    />
+                    <t
+                        t-else=""
+                        t-set="logo_src"
+                        t-valuef="/logo.png?company=#{object.company_id.id}"
+                    />
+                    <img
+                        t-att-src="logo_src"
+                        style="display:block; height:50px; margin:0 0 16px;"
+                        alt="Logo"
+                    />
+                    <p>
+                        Hello <t t-out="ctx.get('customer_name')">Customer</t>,
+                    </p>
+                    <p>The product you were waiting for is now back in stock!</p>
+                    <div
+                        t-if="not is_html_empty(user.signature)"
+                        style="font-size: 14px; margin: 0 0 16px;"
+                    >
+                        <t t-out="user.signature or ''">Mitchell Admin</t>
+                    </div>
+                    <div t-attf-style="margin-bottom: 22px; font-size: 14px;">
+                        <a
+                            t-att-href="object.website_url"
+                            t-attf-style="background-color: {{website.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-size:14px;"
+                        >
+                            Order Now
+                        </a>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <table
+                            role="presentation"
+                            width="100%"
+                            style="max-width: 590px; border-collapse: collapse; font-size: 14px;"
+                        >
+                            <tr>
+                                <td
+                                    width="24%"
+                                    style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;"
+                                >
+                                    <img
+                                        t-att-src="website.image_url(object, 'image_1920')"
+                                        style="width: 100px; height: 100px; object-fit: contain;"
+                                        alt="Product image"
+                                    />
+                                </td>
+                                <td style="padding-bottom: 8px; vertical-align: top;">
+                                    <h2 t-att-style="'margin:0; font-size:14px; color:%s;' % ((website and website.company_id.email_secondary_color) or '#875A7B')">
+                                        <strong t-out="object.name or ''">Desk Combination</strong>
+                                    </h2>
+                                    <p
+                                        t-if="object.product_template_attribute_value_ids"
+                                        style="margin: 4px 0;"
+                                    >
+                                        ( <t t-out="', '.join(object.product_template_attribute_value_ids.mapped('name'))">Wood</t> )
+                                    </p>
+                                    <t t-out="object.description_ecommerce or ''">Desk Description</t>
+                                </td>
+                                <td
+                                    width="19%"
+                                    align="right"
+                                    style="max-width: 100%; vertical-align: top;"
+                                >
+                                    <t t-out="format_amount(object.list_price, object.currency_id)">$ 450</t>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </field>
+        </record>
     </data>
-    <template id="availability_email_body">
-        <t t-set="partner" t-value="object"/>
-        <t t-set="website" t-value="env['website'].get_current_website()"/>
-        <div id="body">
-            <img t-att-src="website.image_url(website, 'logo')" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
-            <p>Hello <t t-out="partner.name"/>,</p>
-            <p>The product you were waiting for is now back in stock!</p>
-            <t t-if="not is_html_empty(user.signature)">
-                <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="user.signature or ''">Mitchell Admin</t></div>
-            </t>
-            <div t-attf-style="margin-bottom: 22px; font-size: 14px;">
-                <a t-attf-href="#{product.website_url}" t-attf-style="background-color: {{product.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{product.website_id.get_current_website().company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-size:14px;">
-                    Order Now
-                </a>
-            </div>
-            <div style="margin-bottom: 12px;">
-                <table width="100%" style="max-width: 590px; border-collapse: collapse; font-size: 14px;" role="presentation">
-                    <tr>
-                        <td width="24%" style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;">
-                            <img t-att-src="website.image_url(product, 'image_1920')" style="width: 100px; height: 100px; object-fit: contain;" alt="Product image"/>
-                        </td>
-                        <td style="padding-bottom: 8px; vertical-align: top;">
-                            <h2 t-attf-style="mso-line-height-rule: exactly; margin: 0; font-size: 14px; color: {{
-                                website.company_id.email_secondary_color or '#875A7B'
-                            }};">
-                                <strong t-out="product.name or ''">Desk Combination</strong>
-                            </h2>
-                            <p t-if="product.product_template_attribute_value_ids" style="margin-left: 4px 0;">
-                                (<t
-                                t-out="', '.join(product.product_template_attribute_value_ids.mapped('name'))"
-                                />)
-                            </p>
-                            <t t-out="product.description_ecommerce"/>
-                        </td>
-                        <td width="19%" align="right" style="max-width: 100%; vertical-align: top;">
-                            <t t-out="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </template>
 </odoo>

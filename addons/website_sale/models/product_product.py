@@ -337,7 +337,11 @@ class ProductProduct(models.Model):
             lambda p: not p._is_sold_out()
         )
         self.env["ir.cron"]._commit_progress(remaining=len(products.stock_notification_partner_ids))
-
+        email_template = self.env.ref(
+            "website_sale.email_template_back_in_stock", raise_if_not_found=False
+        )
+        if not email_template:
+            return
         website = self.env["website"].get_current_website()
         for product_id in products.ids:
             product = self.env["product.product"].browse(product_id)
@@ -346,35 +350,16 @@ class ProductProduct(models.Model):
                 prefetch_fields=False
             ).stock_notification_partner_ids.ids:
                 partner = self.env["res.partner"].browse(partner_id)
-                self_ctxt = self.with_context(lang=partner.lang).with_user(website.salesperson_id)
-                product_ctxt = product.with_context(lang=partner.lang)
-                body_html = self_ctxt.env["mail.render.mixin"]._render_template(
-                    "website_sale.availability_email_body",
-                    "res.partner",
-                    partner.ids,
-                    engine="qweb_view",
-                    add_context={"product": product_ctxt},
-                    options={"post_process": True},
-                )[partner.id]
-                full_mail = product_ctxt.env["mail.render.mixin"]._render_encapsulate(
-                    "mail.mail_notification_light",
-                    body_html,
-                    add_context={"model_description": self_ctxt.env._("Product")},
-                    context_record=product_ctxt,
+                email_template.with_user(website.salesperson_id).with_context(
+                    customer_name=partner.name, lang=partner.lang
+                ).send_mail(
+                    product.id,
+                    force_send=True,
+                    email_values={
+                        "email_to": partner.email_formatted,
+                        "email_from": website.company_id.partner_id.email_formatted,
+                    },
                 )
-                mail_values = {
-                    "subject": self_ctxt.env._(
-                        "%(product_name)s is back in stock", product_name=product_ctxt.name
-                    ),
-                    "email_from": (
-                        website.company_id.partner_id.email_formatted
-                        or website.salesperson_id.email_formatted
-                    ),
-                    "email_to": partner.email_formatted,
-                    "body_html": full_mail,
-                }
-                mail = self_ctxt.env["mail.mail"].sudo().create(mail_values)
-                mail.send(raise_exception=False)
 
                 product.stock_notification_partner_ids -= partner
                 self.env["ir.cron"]._commit_progress(1)
