@@ -179,7 +179,7 @@ export function isWhitespace(value) {
 }
 
 // eslint-disable-next-line no-control-regex
-const visibleCharRegex = /[^\s\u200b]|[\u00A0\u0009]$/; // contains at least a char that is always visible (TODO: 0009 shouldn't be included)
+const visibleCharRegex = /[^\s\u200b]|[\u00A0\u0009]/; // contains at least a char that is always visible (TODO: 0009 shouldn't be included)
 export function isVisibleTextNode(testedNode) {
     if (!testedNode || !testedNode.length || testedNode.nodeType !== Node.TEXT_NODE) {
         return false;
