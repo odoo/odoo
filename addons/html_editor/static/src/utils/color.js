@@ -1,5 +1,5 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { isColorGradient } from "@web/core/utils/colors";
+import { isColorGradient, RGBA_REGEX, rgbaToHex } from "@web/core/utils/colors";
 import { isElement } from "./dom_info";
 
 export const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = [
@@ -15,6 +15,8 @@ export const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = [
     "warning",
     "danger",
 ];
+
+export const RGBA_OPACITY = 0.6;
 
 /**
  * Colors of the default palette, used for substitution in shapes/illustrations.
@@ -157,4 +159,28 @@ export function getTextColorOrClass(node) {
         return { type: "class", value: textColorClass };
     }
     return null;
+}
+
+export function computeBackgroundColorForElement(el) {
+    const elStyle = getComputedStyle(el);
+    const backgroundImage = elStyle.backgroundImage;
+    const hasGradient = isColorGradient(backgroundImage);
+    const hasTextGradientClass = el.classList.contains("text-gradient");
+
+    let backgroundColor = elStyle.backgroundColor;
+    const activeTab = document
+        .querySelector(".o_font_color_selector button.active")
+        ?.innerHTML.trim();
+    if (backgroundColor.startsWith("rgba") && (!activeTab || activeTab === "Solid")) {
+        // Buttons in the solid tab of color selector have no
+        // opacity, hence to match selected color correctly,
+        // we need to remove applied 0.6 opacity.
+        const values = backgroundColor.match(RGBA_REGEX) || [];
+        const alpha = parseFloat(values.pop()); // Extract alpha value
+        if (alpha === RGBA_OPACITY) {
+            backgroundColor = `rgb(${values.slice(0, 3).join(", ")})`; // Remove alpha
+        }
+    }
+
+    return hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor);
 }
