@@ -34,9 +34,9 @@ import {
  *
  * @typedef {[string, ArgumentType]} Label
  *
- * @typedef {"expected" | "group" | "received" | "technical"} MarkupType
+ * @typedef {string | RegExp | number | { new(): any }} LooseMatcherType
  *
- * @typedef {string | RegExp | { new(): any }} Matcher
+ * @typedef {"expected" | "group" | "received" | "technical"} MarkupType
  *
  * @typedef {QueryRegExp | QueryExactString | QueryPartialString} QueryPart
  */
@@ -1284,7 +1284,7 @@ export function makeLabelIcon(className) {
  * Returns whether one of the given `matchers` matches the given `value`.
  *
  * @param {unknown} value
- * @param {...Matcher} matchers
+ * @param {...LooseMatcherType} matchers
  * @returns {boolean}
  */
 export function match(value, ...matchers) {
