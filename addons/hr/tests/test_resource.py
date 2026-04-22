@@ -213,3 +213,25 @@ class TestResource(TestHrCommon):
         self.employee.resource_id.write({'calendar_id': self.calendar_40h})
         self.assertEqual(self.employee.resource_calendar_id, self.employee.resource_id.calendar_id)
         self.assertEqual(self.employee.version_id.resource_calendar_id, self.employee.resource_id.calendar_id)
+
+    def test_calendar_validity_with_new_version_same_contract(self):
+        """ Test that when a new version is created for the same contract with a different
+            working schedule, the calendar validity is correctly split at the version
+            boundary.
+        """
+        self.employee_niv.version_id.write({
+            'contract_date_start': date(2026, 3, 1),
+            'resource_calendar_id': self.calendar_40h.id,
+        })
+        self.employee_niv.create_version({
+            'date_version': date(2026, 4, 12),
+            'resource_calendar_id': self.calendar_35h.id,
+        })
+
+        tz = timezone(self.employee_niv.tz)
+        # Query the week of April 13-17 (Mon-Fri), entirely after the new version date
+        start = tz.localize(datetime(2026, 4, 13, 0, 0, 0))
+        end = tz.localize(datetime(2026, 4, 17, 23, 59, 59))
+        work_intervals, _ = self.employee_niv.resource_id._get_valid_work_intervals(start, end)
+        total_hours = sum_intervals(work_intervals[self.employee_niv.resource_id.id])
+        self.assertEqual(total_hours, 35.0)
