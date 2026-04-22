@@ -1,5 +1,6 @@
 import { Domain } from "@web/core/domain";
-import { DataPoint } from "./datapoint";
+import { DataPoint, makeReactive } from "./datapoint";
+import { signal } from "@odoo/owl";
 
 /**
  * @typedef Params
@@ -37,6 +38,8 @@ export class Group extends DataPoint {
             config.record.context = { ...config.record.context, ...config.context };
             this.record = new this.model.constructor.Record(this.model, config.record, data.values);
         }
+
+        makeReactive(this, "count", signal);
     }
 
     // -------------------------------------------------------------------------

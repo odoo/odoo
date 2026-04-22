@@ -7,7 +7,6 @@ import {
     queryAllTexts,
     queryFirst,
     queryOne,
-    queryText,
     scroll,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
@@ -668,9 +667,12 @@ test("column progressbars on archiving records update counter", async () => {
     await contains(".modal-footer .btn-primary").click();
 
     expect(getKanbanCounters()).toEqual(["-4", "0"]);
-    expect(queryAll(".progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(0, {
-        message: "the counter progressbars should have been correctly updated",
-    });
+    expect(queryAll(".progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
+        0,
+        {
+            message: "the counter progressbars should have been correctly updated",
+        }
+    );
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -761,7 +763,9 @@ test("kanban with progressbars: slow read_progress_bar", async () => {
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:nth-child(2) .o_column_progress").toHaveCount(1);
-    expect(".o_kanban_group:nth-child(2) .o_column_progress .progress-bar.o_bar_has_records").toHaveCount(3);
+    expect(
+        ".o_kanban_group:nth-child(2) .o_column_progress .progress-bar.o_bar_has_records"
+    ).toHaveCount(3);
     expect(".o_kanban_group:nth-child(2) .o_kanban_header").toHaveText("Yes\n36");
 });
 
@@ -1897,7 +1901,9 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
 
     expect(".o_kanban_group:nth-child(1) .progress-bar.o_bar_has_records").toHaveCount(2);
     expect(
-        queryAll(".o_kanban_group:nth-child(1) .progress-bar.o_bar_has_records").map((el) => el.dataset.tooltip)
+        queryAll(".o_kanban_group:nth-child(1) .progress-bar.o_bar_has_records").map(
+            (el) => el.dataset.tooltip
+        )
     ).toEqual(["1 blip", "1 Other"]);
     expect(".o_kanban_group:nth-child(2) .progress-bar").toHaveCount(4);
     expect(
@@ -1962,9 +1968,9 @@ test("update field on which progress bars are computed", async () => {
     // Initial state: 2 columns, the "Yes" column contains 2 records "abc", 1 "def" and 1 "ghi"
     expect(getKanbanCounters()).toEqual(["1", "4"]);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(4);
-    expect(queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
-        3
-    );
+    expect(
+        queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })
+    ).toHaveCount(3);
     expect(getKanbanProgressBars(1)[0].style.width).toBe("50%"); // abc: 2
     expect(getKanbanProgressBars(1)[1].style.width).toBe("25%"); // def: 1
     expect(getKanbanProgressBars(1)[2].style.width).toBe("25%"); // ghi: 1
@@ -1974,9 +1980,9 @@ test("update field on which progress bars are computed", async () => {
 
     expect(getKanbanCounters()).toEqual(["1", "2"]);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
-    expect(queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
-        3
-    );
+    expect(
+        queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })
+    ).toHaveCount(3);
     expect(getKanbanProgressBars(1)[0].style.width).toBe("50%"); // abc: 2
     expect(getKanbanProgressBars(1)[1].style.width).toBe("25%"); // def: 1
     expect(getKanbanProgressBars(1)[2].style.width).toBe("25%"); // ghi: 1
@@ -1990,9 +1996,9 @@ test("update field on which progress bars are computed", async () => {
 
     expect(getKanbanCounters()).toEqual(["1", "1"]);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
-    expect(queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
-        3
-    );
+    expect(
+        queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })
+    ).toHaveCount(3);
     expect(getKanbanProgressBars(1)[0].style.width).toBe("25%"); // abc: 1
     expect(getKanbanProgressBars(1)[1].style.width).toBe("50%"); // def: 2
     expect(getKanbanProgressBars(1)[2].style.width).toBe("25%"); // ghi: 1
@@ -2163,15 +2169,15 @@ test("drag record to folded column, with progressbars", async () => {
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryText(getKanbanColumn(1))).toBe("Yes\n(2)");
+    expect(getKanbanColumn(1)).toHaveText("Yes\n(2)");
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         ".o_kanban_group:nth-child(2)"
     );
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
-    expect(queryText(getKanbanColumn(1))).toBe("Yes\n(3)");
-    expect(getKanbanProgressBars(0).map((pb) => pb.style.width)).toEqual(["100%"]);
+    expect(getKanbanColumn(1)).toHaveText("Yes\n(3)");
+    expect(getKanbanProgressBars(0)).toHaveStyle({ width: "100%" }, { inline: true });
     expect(getKanbanCounters()).toEqual(["-4"]);
     expect.verifySteps([
         "/web/webclient/translations",
