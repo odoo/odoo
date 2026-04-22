@@ -610,6 +610,10 @@ class AccountTax(models.Model):
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
+        if self.env.context.get('from_account_tax_creation') is True:
+            # we're creating a new tax, skip usage consistency check as there
+            # could not be any usage prior to its creation.
+            return
         for company, taxes in groupby(self, lambda tax: tax.company_id):
             if self.env['account.move.line'].search_count([
                 '|',
@@ -656,11 +660,13 @@ class AccountTax(models.Model):
     def create(self, vals_list):
         context = clean_context(self.env.context)
         context.update({
-            'mail_create_nosubscribe': True, # At create or message_post, do not subscribe the current user to the record thread
-            'mail_auto_subscribe_no_notify': True, # Do no notify users set as followers of the mail thread
-            'mail_create_nolog': True, # At create, do not log the automatic ‘<Document> created’ message
+            'mail_create_nosubscribe': True,  # At create or message_post, do not subscribe the current user to the record thread
+            'mail_auto_subscribe_no_notify': True,  # Do no notify users set as followers of the mail thread
+            'mail_create_nolog': True,  # At create, do not log the automatic "<Document> created" message
+            'from_account_tax_creation': True,  # At create, skip some usage consistency checks
         })
-        return super(AccountTax, self.with_context(context)).create([self._sanitize_vals(vals) for vals in vals_list])
+        taxes = super(AccountTax, self.with_context(context)).create([self._sanitize_vals(vals) for vals in vals_list])
+        return taxes.with_context(self.env.context)
 
     def write(self, vals):
         return super().write(self._sanitize_vals(vals))
