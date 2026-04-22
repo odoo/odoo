@@ -177,6 +177,15 @@ test("should not add a character in the link if start of paragraph", async () =>
     });
 });
 
+test("should not show hint for link with only &nbsp;", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="http://test.test/">&nbsp;[]</a></p>',
+        contentAfterEdit:
+            '<p>\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff&nbsp;[]\ufeff</a>\ufeff</p>',
+        contentAfter: '<p><a href="http://test.test/">&nbsp;[]</a></p>',
+    });
+});
+
 // test.todo('should select and replace all text and add the next char in bold', async () => {
 //     await testEditor({
 //         contentBefore: '<div><p>[]123</p><p><a href="#">abc</a></p></div>',

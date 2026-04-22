@@ -138,3 +138,15 @@ test("should open toolbar for mixed selection and apply formatting outside inlin
         `<p>abc\ufeff<code class="o_inline_code">\ufefft[est\ufeff</code>\ufeff<span class="display-1-fs"><font style="color: rgb(0, 0, 255);"><strong>de]</strong></font></span>f</p>`
     );
 });
+
+test("hint should not be visible if inline code has a space", async () => {
+    const { el, editor } = await setupEditor(`<p><code class="o_inline_code"> a[]</code></p>`);
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<code class="o_inline_code">\ufeff a[]\ufeff</code>\ufeff</p>`
+    );
+    deleteBackward(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<code class="o_inline_code">\ufeff&nbsp;[]\ufeff</code>\ufeff<br></p>`
+    );
+});
