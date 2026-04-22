@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_journal_dashboard_kanban_view_inherited_l10n_es_edi_sii" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.kanban.inherited.l10n_es_edi_sii</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//div[@t-if='dashboard.number_draft']" position="before">
+
+                    <div t-if="dashboard.l10n_es_sii_to_send_count" class="row">
+                        <div class="col overflow-hidden text-start">
+                            <a type="object" name="action_open_l10n_es_sii_to_send" t-attf-class="text-{{ dashboard.l10n_es_sii_state_color }} text-truncate">
+                                <t t-out="dashboard.l10n_es_sii_to_send_count"/> to send SII
+                            </a>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

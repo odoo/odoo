@@ -84,7 +84,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='amount_residual_signed']" position="after">
                     <field name="l10n_es_edi_sii_state"
-                           string="Electronic invoicing"
+                           string="SII Sent Status"
                            optional="show"
                            widget="badge"
                            decoration-success="l10n_es_edi_sii_state == 'sent'"
@@ -92,7 +92,7 @@
                            decoration-danger="l10n_es_edi_sii_state == 'cancelled'"/>
 
                     <field name="l10n_es_edi_sii_error"
-                           string="Edi Blocking Level"
+                           string="SII Error Status"
                            optional="show"/>
                 </xpath>
             </field>

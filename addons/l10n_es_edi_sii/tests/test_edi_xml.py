@@ -1,40 +1,229 @@
-from .common import TestEsEdiCommon
-
 import json
-
 from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests import tagged
 
+from .common import TestEsEdiCommon
+
+
+class AttrDict(dict):
+    def __getattr__(self, key):
+        return self.get(key)
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestEdiXmls(TestEsEdiCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.other_currency = cls.setup_other_currency('USD')
-
-        cls.certificate.write({
-            'date_start': '2019-01-01 01:00:00',
-            'date_end': '2021-01-01 01:00:00',
-        })
-
-    def _send_sii_and_get_json(self, invoice):
-        invoice.action_post()
-        invoice._send_l10n_es_sii_document()
-
-        doc = invoice.l10n_es_edi_sii_document_ids[:1]
-        self.assertTrue(doc, "SII Document was not created")
-
-        attachment = doc.attachment_id
-        self.assertTrue(attachment, "SII JSON attachment was not created")
-
-        return json.loads(attachment.raw.content)['Cuerpo'][0]
-
     def _mock_sii_webservice(self, document_instance, header, info_list):
         return True, {'csv': 'MOCK_CSV', 'response_message': 'Correcto'}
+
+    def _mock_sii_webservice_batch(self, document_instance, header, info_list):
+        self.assertEqual(len(document_instance), 2)
+        self.assertEqual(len(info_list), 2)
+        return {
+            document: (True, {'csv': 'MOCK_CSV', 'response_message': 'Correcto'})
+            for document in document_instance
+        }
+
+    def _mock_sii_webservice_single_document(self, document_instance, header, info_list):
+        self.assertEqual(len(document_instance), 1)
+        self.assertEqual(len(info_list), 1)
+        return True, {'csv': 'MOCK_CSV', 'response_message': 'Correcto'}
+
+    def test_sii_multi_document_response_matching(self):
+        invoice_1 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
+            }],
+        )
+        invoice_2 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
+            }],
+        )
+        (invoice_1 | invoice_2).action_post()
+        documents = self.env['l10n_es_edi_sii.document'].sudo().create([
+            {'move_id': invoice_1.id},
+            {'move_id': invoice_2.id},
+        ])
+        response = AttrDict({
+            'EstadoEnvio': 'ParcialmenteCorrecto',
+            'CSV': 'MOCK_CSV',
+            'RespuestaLinea': [
+                AttrDict({
+                    'IDFactura': AttrDict({'NumSerieFacturaEmisor': invoice_1.name}),
+                    'EstadoRegistro': 'Correcto',
+                }),
+                AttrDict({
+                    'IDFactura': AttrDict({'NumSerieFacturaEmisor': invoice_2.name}),
+                    'EstadoRegistro': 'Correcto',
+                }),
+            ],
+        })
+        results = documents._process_response(response)
+        results_by_document_id = {document.id: result for document, result in results.items()}
+        self.assertEqual(set(results_by_document_id), set(documents.ids))
+        for success, response_data in results_by_document_id.values():
+            self.assertTrue(success)
+            self.assertEqual(response_data['csv'], 'MOCK_CSV')
+
+    def test_sii_send_batches_multiple_documents(self):
+        invoice_1 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
+            }],
+        )
+        invoice_2 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
+            }],
+        )
+        invoices = invoice_1 | invoice_2
+        invoices.action_post()
+        with patch(
+            'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+            autospec=True,
+            side_effect=self._mock_sii_webservice_batch,
+        ) as mock_post_to_agency:
+            invoices._send_l10n_es_sii_document()
+        self.assertEqual(mock_post_to_agency.call_count, 1)
+        self.assertEqual(invoices.mapped('l10n_es_edi_sii_state'), ['sent', 'sent'])
+        self.assertEqual(len(invoices.l10n_es_edi_sii_document_ids.attachment_id), 1)
+
+    def test_sii_send_batches_invoice_and_refund(self):
+        invoice = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
+            }],
+        )
+        refund = self._create_invoice_es(
+            move_type='out_refund',
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
+            }],
+        )
+        moves = invoice | refund
+        moves.action_post()
+        with patch(
+            'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+            autospec=True,
+            side_effect=self._mock_sii_webservice_batch,
+        ) as mock_post_to_agency:
+            moves._send_l10n_es_sii_document()
+        self.assertEqual(mock_post_to_agency.call_count, 1)
+        self.assertEqual(moves.mapped('l10n_es_edi_sii_state'), ['sent', 'sent'])
+
+    def test_sii_send_batches_multiple_vendor_bills(self):
+        bill_1 = self._create_invoice_es(
+            move_type='in_invoice',
+            ref='BILL-1',
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
+            }],
+        )
+        bill_2 = self._create_invoice_es(
+            move_type='in_invoice',
+            ref='BILL-2',
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
+            }],
+        )
+        bills = bill_1 | bill_2
+        bills.action_post()
+        with patch(
+            'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+            autospec=True,
+            side_effect=self._mock_sii_webservice_batch,
+        ) as mock_post_to_agency:
+            bills._send_l10n_es_sii_document()
+        self.assertEqual(mock_post_to_agency.call_count, 1)
+        self.assertEqual(bills.mapped('l10n_es_edi_sii_state'), ['sent', 'sent'])
+        self.assertEqual(len(bills.l10n_es_edi_sii_document_ids.attachment_id), 1)
+
+    def test_sii_send_server_action_multiple_vendor_bills(self):
+        bill_1 = self._create_invoice_es(
+            move_type='in_invoice',
+            ref='BILL-1',
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
+            }],
+        )
+        bill_2 = self._create_invoice_es(
+            move_type='in_invoice',
+            ref='BILL-2',
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
+            }],
+        )
+        bills = bill_1 | bill_2
+        bills.action_post()
+        with patch(
+            'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+            autospec=True,
+            side_effect=self._mock_sii_webservice_batch,
+        ) as mock_post_to_agency:
+            self.env.ref('l10n_es_edi_sii.action_send_to_sii_batch').with_context(
+                active_model='account.move',
+                active_ids=bills.ids,
+            ).run()
+        self.assertEqual(mock_post_to_agency.call_count, 1)
+        self.assertEqual(bills.mapped('l10n_es_edi_sii_state'), ['sent', 'sent'])
+        self.assertEqual(len(bills.l10n_es_edi_sii_document_ids.attachment_id), 1)
+
+    def test_sii_send_server_action_splits_batches(self):
+        invoice_1 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
+            }],
+        )
+        invoice_2 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
+            }],
+        )
+        invoices = invoice_1 | invoice_2
+        invoices.action_post()
+        with patch(
+            'odoo.addons.l10n_es_edi_sii.models.account_move.L10N_ES_SII_MAX_BATCH_SIZE',
+            1,
+        ), patch(
+            'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+            autospec=True,
+            side_effect=self._mock_sii_webservice_single_document,
+        ) as mock_post_to_agency:
+            self.env.ref('l10n_es_edi_sii.action_send_to_sii_batch').with_context(
+                active_model='account.move',
+                active_ids=invoices.ids,
+            ).run()
+        self.assertEqual(mock_post_to_agency.call_count, 2)
+        self.assertEqual(invoices.mapped('l10n_es_edi_sii_state'), ['sent', 'sent'])
+
+    def test_sii_vendor_bill_requires_reference(self):
+        bill = self._create_invoice_es(
+            move_type='in_invoice',
+            ref=False,
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
+            }],
+        )
+        bill.action_post()
+        bill._send_l10n_es_sii_document()
+        self.assertEqual(bill.l10n_es_edi_sii_state, 'to_send')
+        self.assertIn("You should put a vendor reference on this vendor bill.", bill.l10n_es_edi_sii_error)
 
     def test_010_out_invoice_s_iva10b_s_iva21s(self):
         """ Invoice with goods and services as they need to be reported in different sections for customer invoices. """
