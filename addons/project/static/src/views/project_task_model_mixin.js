@@ -12,16 +12,10 @@ export const ProjectTaskModelMixin = (T) => class ProjectTaskModelMixin extends 
             ]).toList({});
         }
         if (this.env.searchModel.context?.render_task_templates) {
-            domain = Domain.removeDomainLeaves(domain, [
-                "has_template_ancestor",
-                "has_project_template",
-                "project_id.is_template",
-            ]);
-            const templateTaskDomain = Domain.or([[["has_template_ancestor", "=", true]],
-                "default_project_id" in this.env.searchModel.globalContext ?
-                        Domain.TRUE :
-                        [["project_id.is_template", "=", true]]]);
-            domain = Domain.and([domain, templateTaskDomain]).toList({});
+            domain = Domain.and([
+                Domain.removeDomainLeaves(domain, ["has_template_ancestor"]).toList(),
+                [["has_template_ancestor", "=", true]],
+            ]).toList({});
         }
         return domain;
     }
