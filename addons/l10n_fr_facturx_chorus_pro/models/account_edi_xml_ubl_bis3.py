@@ -58,7 +58,13 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         if commercial_partner.country_code == 'FR' and commercial_partner._get_additional_identifier('FR_SIRET'):
             nodes.append({
                 'cbc:ID': {
+<<<<<<< e0603055bfa3f241923434afea193792a862bcc2
                     '_text': commercial_partner._get_additional_identifier('FR_SIRET'),
+||||||| 6068b82b2934b44bee765f4e758697e6816a41de
+                    '_text': commercial_partner.company_registry,
+=======
+                    '_text': commercial_partner.company_registry.replace(" ", ""),
+>>>>>>> 3e54481343ec33f9be5410e157db1f3ca377edee
                     'schemeID': '0009',
                 },
             })
@@ -87,7 +93,13 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             vals['party_node']['cac:PartyLegalEntity'] = [{
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {
+<<<<<<< e0603055bfa3f241923434afea193792a862bcc2
                     '_text': commercial_partner._get_additional_identifier('FR_SIRET'),
+||||||| 6068b82b2934b44bee765f4e758697e6816a41de
+                    '_text': commercial_partner.company_registry,
+=======
+                    '_text': commercial_partner.company_registry.replace(" ", ""),
+>>>>>>> 3e54481343ec33f9be5410e157db1f3ca377edee
                     'schemeID': '0009',
                 },
             }]
