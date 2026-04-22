@@ -220,6 +220,7 @@ test("chatter: drop attachments", async () => {
     const text3 = new File(["hello, world"], "text3.txt", { type: "text/plain" });
     await start();
     await openFormView("res.partner", partnerId);
+    await contains("button[aria-label='Attach files']:enabled");
     const files = [text, text2];
     await dragenterFiles(".o-mail-Chatter", files);
     await contains(".o-Dropzone");
@@ -249,6 +250,7 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
                 <chatter reload_on_post="True" reload_on_attachment="True"/>
             </form>`,
     });
+    await contains("button[aria-label='Attach files']:enabled");
     await dragenterFiles(".o-mail-Chatter", [textPdf]);
     await dropFiles(".o-Dropzone", [textPdf]);
     await contains(".o-mail-Attachment iframe", { count: 1 });
