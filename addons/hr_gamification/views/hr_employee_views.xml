@@ -10,18 +10,14 @@
             <xpath expr="//page[@name='hr_settings']" position="before">
                 <page string="Badges" name="received_badges" invisible="not user_id">
                     <field name="has_badges" invisible="1"/>
-                    <div class="o_field_nocontent" invisible="has_badges">
+                    <div class="o_view_nocontent position-relative" invisible="has_badges">
                         <div class="o_nocontent_help">
-                            <p class="o_view_nocontent_neutral_face"></p>
-                            <p>
-                                There are no badges for this employee.<br/>
-                                It's time to allow the first one.
-                            </p>
+                            <p class="o_view_nocontent_empty_folder fs-4 fw-normal">No Badges granted.</p>
                         </div>
                     </div>
                     <div class="mt-2">
                         <field name="badge_ids" mode="kanban" />
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center" invisible="user_id == uid">
                             <button class="mt-2 grant_badge_btn o_kanban_renderer o_kanban_record o-kanban-button-new btn btn-link py-3" string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
                         </div>
                     </div>
@@ -39,18 +35,14 @@
             <page name="resume" position="after">
                 <page string="Badges" name="received_badges" invisible="not user_id">
                     <field name="has_badges" invisible="1"/>
-                    <div class="o_field_nocontent" invisible="has_badges">
+                    <div class="o_view_nocontent position-relative" invisible="has_badges">
                         <div class="o_nocontent_help">
-                            <p class="o_view_nocontent_neutral_face"></p>
-                            <p>
-                                There are no badges for this employee.<br/>
-                                It's time to allow the first one.
-                            </p>
+                            <p class="o_view_nocontent_empty_folder fs-4 fw-normal">No Badges granted.</p>
                         </div>
                     </div>
                     <div class="mt-2">
                         <field name="badge_ids" mode="kanban" widget="many2many"/>
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center" invisible="user_id == uid">
                             <button class=" mt-2 grant_badge_btn o_kanban_renderer o_kanban_record o-kanban-button-new btn btn-link py-3" string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
                         </div>
                     </div>

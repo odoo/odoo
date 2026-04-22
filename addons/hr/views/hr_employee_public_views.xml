@@ -58,7 +58,7 @@
                         <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                             <div class="o_employee_avatar ms-2 p-0 h-100">
                                 <field name="hr_icon_display" invisible="not show_hr_icon_display or not id or not active" widget="hr_presence_status"/>
-                                <field name="image_1920" widget="image" class="m-0" options="{'size': [128,158], 'zoom': true, 'preview_image':'avatar_128', 'img_class': 'border rounded h-100 object-fit-contain'}"/>
+                                <field name="image_1920" widget="image" class="m-0" options="{'size': [140,140], 'zoom': true, 'preview_image':'avatar_128', 'img_class': 'border rounded h-100 object-fit-contain'}"/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
                             <group class="d-flex flex-column gap-md-0 w-100">
@@ -69,19 +69,19 @@
                                 </h1>
                                 <label for="work_email" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-block fa fa-envelope" title="Work Email"/>
+                                    <i class="d-none d-md-block fa fa-envelope" title="Work Email" invisible="not work_email"/>
                                     <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email"/>
                                 </div>
                                 <label for="work_phone" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-block fa fa-phone" title="Work Phone"/>
+                                    <i class="d-none d-md-block fa fa-phone" title="Work Phone" invisible="not work_phone"/>
                                     <field name="work_phone_sanitized" invisible="1"/>
                                     <field name="work_phone_formatted" invisible="1"/>
                                     <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
                                 </div>
                                 <label for="mobile_phone" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-block fa fa-mobile" title="Work Mobile"/>
+                                    <i class="d-none d-md-block fa fa-mobile" title="Work Mobile" invisible="not mobile_phone"/>
                                     <field name="mobile_phone_sanitized" invisible="1"/>
                                     <field name="mobile_phone_formatted" invisible="1"/>
                                     <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
@@ -188,7 +188,7 @@
                             <main class="ms-2">
                                 <div>
                                     <div t-if="record.show_hr_icon_display.raw_value" class="float-end">
-                                        <field name="hr_icon_display" class=" align-items-center" widget="hr_presence_status" />
+                                        <field name="hr_icon_display" class="align-items-center mt-1" widget="hr_presence_status" />
                                     </div>
                                     <field class="fw-bolder" name="name" placeholder="Employee's Name"/>
                                 </div>
@@ -207,7 +207,6 @@
                                         <i class="fa fa-fw me-2 fa-birthday-cake text-primary" title="Birthday"/>
                                         <field name="birthday_public_display_string"/>
                                     </div>
-                                    <field name="user_id" widget="many2one_avatar_user" readonly="1" class="ms-auto"/>
                                 </div>
                             </main>
                         </t>
