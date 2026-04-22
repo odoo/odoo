@@ -15,8 +15,9 @@
         <t t-else="">
             <div class="o-EmojiPicker-search d-flex align-items-center mx-2 mt-2 rounded">
                 <span class="o-EmojiPicker-searchContour d-flex mx-1 w-100 rounded o-active align-items-center justify-content-center border border-secondary bg-view">
-                    <t t-call="web.EmojiPicker.searchInput" localState="this.props.state ? this.props.state : this.state"/>
                     <i class="oi oi-search px-2 py-1 fs-7 rounded-start-0 rounded-3 o-active opacity-50" title="Search..." role="img" aria-label="Search..."/>
+                    <t t-call="web.EmojiPicker.searchInput" localState="this.props.state ? this.props.state : this.state"/>
+                    <i t-if="this.searchTerm" class="fa fa-times-circle px-2 opacity-50 cursor-pointer" title="Clear search" role="img" aria-label="Clear search" t-on-click="this.clearSearch" />
                 </span>
             </div>
             <t t-set="itemIndex" t-value="0"/>

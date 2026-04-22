@@ -876,6 +876,9 @@ export class Composer extends Component {
         await this.processMessage(async (value) => {
             await this._sendMessage(value, this.postData, this.extraData);
         });
+        if (this.isMobileOS) {
+            this.ref.el?.blur();
+        }
     }
 
     get postData() {
