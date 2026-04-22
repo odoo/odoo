@@ -18,7 +18,7 @@ from odoo.tools.date_utils import float_to_time, sum_intervals
 from odoo.fields import Command, Date, Domain
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 from odoo.tools.intervals import Intervals
-from odoo.tools.misc import clean_context, format_date
+from odoo.tools.misc import clean_context, format_date, format_duration
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -936,6 +936,18 @@ class HrLeave(models.Model):
             date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
             date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
             time_off_type_display = leave.work_entry_type_id.display_code or leave.work_entry_type_id.name
+            if leave.work_entry_type_request_unit == "hour":
+                base_duration = format_duration(leave.number_of_hours)
+                hours_str, minutes_str = base_duration.split(":")
+                hours = int(hours_str)
+                minutes = int(minutes_str)
+                if minutes > 0:
+                    custom_duration = self.env._("%(hours)dh%(minutes)02d", hours=hours, minutes=minutes)
+                else:
+                    custom_duration = self.env._("%(hours)dh", hours=hours)
+            else:
+                days = float_round(leave.number_of_days, precision_digits=2)
+                custom_duration = self.env._("%(days)gd", days=days)
             if self.env.context.get('short_name'):
                 short_leave_name = leave.name or time_off_type_display or _('Time Off')
                 leave.display_name = _("%(name)s: %(duration)s", name=short_leave_name, duration=leave.duration_display)
@@ -948,10 +960,9 @@ class HrLeave(models.Model):
                     )
                 if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                     if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-                        leave.display_name = self.env._("%(work_entry_type)s: %(duration)s (%(start)s)",
+                        leave.display_name = self.env._("%(work_entry_type)s %(duration)s",
                             work_entry_type=time_off_type_display,
-                            duration=leave.duration_display,
-                            start=display_date,
+                            duration=custom_duration,
                         )
                     else:
                         leave.display_name = self.env._("%(duration)s (%(start)s)",
