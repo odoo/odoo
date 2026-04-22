@@ -2,6 +2,7 @@
 
 import json
 import logging
+from urllib.parse import urlsplit
 
 import psycopg2
 
@@ -12,11 +13,13 @@ from odoo.http.router import db_list
 from odoo.http.session import authenticate, check, touch, update_session_token
 from odoo.tools import LazyTranslate, _, config, hmac
 from odoo.tools.cloc import Cloc
+from odoo.tools.urls import urljoin
 
 from .utils import (
     _get_login_redirect_url,
     ensure_db,
     is_user_internal,
+    og_title_from_path,
 )
 
 _lt = LazyTranslate(__name__)
@@ -150,6 +153,18 @@ class Home(Controller):
 
         if not odoo.tools.config['list_db']:
             values['disable_database_manager'] = True
+
+        safe_redirect = redirect if (redirect and redirect.startswith('/') and not redirect.startswith('//')) else None
+        values['disable_opengraph'] = bool(safe_redirect and safe_redirect.startswith('/odoo'))
+        if values['disable_opengraph']:
+            url_root = request.httprequest.url_root
+            try:
+                values['og_url'] = urljoin(url_root, safe_redirect)
+            except ValueError:
+                values['og_url'] = request.httprequest.url
+            values['og_title'] = og_title_from_path(request.env, safe_redirect)
+            values['og_image_url'] = urljoin(url_root, '/web/static/img/og_image.png')
+            values['og_domain'] = urlsplit(url_root).hostname
 
         response = request.render('web.login', values)
         response.headers['Cache-Control'] = 'no-cache'

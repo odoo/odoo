@@ -138,7 +138,7 @@
             and seo_object.sudo().website_meta_keywords or website_meta_keywords"/>
         <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
         <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
-        <t t-if="seo_object">
+        <t t-if="seo_object and not disable_opengraph">
         <meta name="default_description" t-att-content="website_meta_description or website_meta.get('meta_description')" groups="website.group_website_designer"/>
             <!-- OpenGraph tags for Facebook sharing -->
             <t t-set="opengraph_meta" t-value="website_meta.get('opengraph_meta')"/>
@@ -396,6 +396,7 @@
 <template id="auth_pages_meta_robots" inherit_id="web.login_layout" name="Auth Pages - No Index">
     <xpath expr="t[@t-call]" position="before">
         <t t-set="head">
+            <t t-out="head"/>
             <meta name="robots" content="noindex, nofollow"/>
         </t>
     </xpath>
@@ -1713,7 +1714,7 @@
 <!-- Features template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t[@t-call]" position="replace">
-        <t t-call="website.layout">
+        <t t-call="website.layout" head="head" disable_opengraph="disable_opengraph">
             <div class="oe_website_login_container" t-out="0"/>
         </t>
     </xpath>
