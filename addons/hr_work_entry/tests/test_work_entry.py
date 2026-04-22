@@ -1,10 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from datetime import date, datetime, UTC
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
+from lxml import etree
 
+from odoo.fields import Date
 from odoo.tests.common import tagged
 from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
 
@@ -41,6 +45,113 @@ class TestWorkEntry(TestWorkEntryBase):
             'wage': 1000,
         })
 
+<<<<<<< a9fd514405be59791c056ef116f7f7c734fbf6ea
+||||||| a2a5b3cc49a1f25908f2de38378979624bee42c5
+    def test_no_duplicate(self):
+        self.richard_emp.generate_work_entries(self.start, self.end)
+        pou1 = self.env['hr.work.entry'].search_count([])
+        self.richard_emp.generate_work_entries(self.start, self.end)
+        pou2 = self.env['hr.work.entry'].search_count([])
+        self.assertEqual(pou1, pou2, "Work entries should not be duplicated")
+
+    def test_work_entry(self):
+        self.richard_emp.generate_work_entries(self.start, self.end)
+        attendance_nb = len(self.resource_calendar_id._attendance_intervals_batch(self.start.replace(tzinfo=UTC), self.end.replace(tzinfo=UTC))[False])
+        work_entry_nb = self.env['hr.work.entry'].search_count([
+            ('employee_id', '=', self.richard_emp.id),
+            ('date', '>=', self.start),
+            ('date', '<=', self.end)])
+        self.assertEqual(attendance_nb / 2, work_entry_nb, "One work_entry should be generated for each pair of calendar attendance per day")
+
+    def test_validate_undefined_work_entry(self):
+        work_entry1 = self.env['hr.work.entry'].create({
+            'name': '1',
+            'employee_id': self.richard_emp.id,
+            'version_id': self.richard_emp.version_id.id,
+            'date': self.start.date(),
+            'duration': 4,
+        })
+        work_entry1.work_entry_type_id = False
+        self.assertFalse(work_entry1.action_validate(), "It should not validate work_entries without a type")
+        self.assertEqual(work_entry1.state, 'conflict', "It should change to conflict state")
+        work_entry1.work_entry_type_id = self.work_entry_type
+        self.assertTrue(work_entry1.action_validate(), "It should validate work_entries")
+
+    def test_outside_calendar(self):
+        """ Test leave work entries outside schedule are conflicting """
+        work_entries = self.create_work_entries([
+            # Outside but not a leave
+            (datetime(2018, 10, 13, 3, 0), datetime(2018, 10, 13, 4, 0)),
+            # Outside and a leave
+            (datetime(2018, 10, 13, 1, 0), datetime(2018, 10, 13, 2, 0), self.work_entry_type_leave),
+        ])
+        work_entries._mark_leaves_outside_schedule()
+        self.assertEqual(len(work_entries), 1, "The second work entry should not be generated. As it is a leave outside of the working schedule")
+        self.assertNotEqual(work_entries.state, 'conflict', "It should not conflict")
+
+=======
+    @freeze_time('2026-04-15')
+    def test_current_month_filter_tz_boundary(self):
+        """Test that the "Current Month" filter keeps the month boundaries in a
+        positive-offset timezone (Europe/Brussels, set by the base fixture),
+        instead of shifting the window one day earlier."""
+        node = etree.fromstring(self.env.ref('hr_work_entry.hr_work_entry_view_search').arch)
+        domain = ast.literal_eval(node.xpath("//filter[@name='current_month']")[0].get('domain'))
+        entries = self.env['hr.work.entry'].create([
+            {
+                'name': name,
+                'employee_id': self.richard_emp.id,
+                'version_id': self.richard_emp.version_ids[0].id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'date': Date.to_date(day),
+            }
+            for name, day in [('prev month', '2026-03-31'), ('current month', '2026-04-30')]
+        ])
+        self.assertEqual(entries.filtered_domain(domain), entries[1])
+
+    def test_no_duplicate(self):
+        self.richard_emp.generate_work_entries(self.start, self.end)
+        pou1 = self.env['hr.work.entry'].search_count([])
+        self.richard_emp.generate_work_entries(self.start, self.end)
+        pou2 = self.env['hr.work.entry'].search_count([])
+        self.assertEqual(pou1, pou2, "Work entries should not be duplicated")
+
+    def test_work_entry(self):
+        self.richard_emp.generate_work_entries(self.start, self.end)
+        attendance_nb = len(self.resource_calendar_id._attendance_intervals_batch(self.start.replace(tzinfo=UTC), self.end.replace(tzinfo=UTC))[False])
+        work_entry_nb = self.env['hr.work.entry'].search_count([
+            ('employee_id', '=', self.richard_emp.id),
+            ('date', '>=', self.start),
+            ('date', '<=', self.end)])
+        self.assertEqual(attendance_nb / 2, work_entry_nb, "One work_entry should be generated for each pair of calendar attendance per day")
+
+    def test_validate_undefined_work_entry(self):
+        work_entry1 = self.env['hr.work.entry'].create({
+            'name': '1',
+            'employee_id': self.richard_emp.id,
+            'version_id': self.richard_emp.version_id.id,
+            'date': self.start.date(),
+            'duration': 4,
+        })
+        work_entry1.work_entry_type_id = False
+        self.assertFalse(work_entry1.action_validate(), "It should not validate work_entries without a type")
+        self.assertEqual(work_entry1.state, 'conflict', "It should change to conflict state")
+        work_entry1.work_entry_type_id = self.work_entry_type
+        self.assertTrue(work_entry1.action_validate(), "It should validate work_entries")
+
+    def test_outside_calendar(self):
+        """ Test leave work entries outside schedule are conflicting """
+        work_entries = self.create_work_entries([
+            # Outside but not a leave
+            (datetime(2018, 10, 13, 3, 0), datetime(2018, 10, 13, 4, 0)),
+            # Outside and a leave
+            (datetime(2018, 10, 13, 1, 0), datetime(2018, 10, 13, 2, 0), self.work_entry_type_leave),
+        ])
+        work_entries._mark_leaves_outside_schedule()
+        self.assertEqual(len(work_entries), 1, "The second work entry should not be generated. As it is a leave outside of the working schedule")
+        self.assertNotEqual(work_entries.state, 'conflict', "It should not conflict")
+
+>>>>>>> 8f45e8e032f91d72c669d325777c30db94eb21ef
     def test_work_entry_timezone(self):
         """ Test work entries with different timezone """
         hk_resource_calendar_id = self.env['resource.calendar'].create({
