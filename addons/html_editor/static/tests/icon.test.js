@@ -146,6 +146,46 @@ test("Can resize an icon", async () => {
     expect("span.fa-glass.fa-5x").toHaveCount(0);
 });
 
+test("Can resize an oi icon", async () => {
+    const { el } = await setupEditor(
+        `<p><span class="oi oi-pastafarianism" contenteditable="false"></span></p>`
+    );
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<span class="oi oi-pastafarianism" contenteditable="false">\u200b</span>\ufeff</p>`
+    );
+    // Selection normalization include U+FEFF, moving the cursor outside the
+    // icon and triggering the normal toolbar. To prevent this, we exclude
+    // U+FEFF from selection.
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="oi oi-pastafarianism" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
+    await waitFor(".o-we-toolbar");
+    await click("button[name='icon_size_2']");
+    expect("span.oi-pastafarianism.oi-2x").toHaveCount(1);
+    await expectElementCount("button[name='icon_size_2'].active", 1);
+    await click("button[name='icon_size_3']");
+    expect("span.oi-pastafarianism.oi-2x").toHaveCount(0);
+    expect("span.oi-pastafarianism.oi-3x").toHaveCount(1);
+    await expectElementCount("button[name='icon_size_3'].active", 1);
+    await click("button[name='icon_size_4']");
+    expect("span.oi-pastafarianism.oi-3x").toHaveCount(0);
+    expect("span.oi-pastafarianism.oi-4x").toHaveCount(1);
+    await expectElementCount("button[name='icon_size_4'].active", 1);
+    await click("button[name='icon_size_5']");
+    expect("span.oi-pastafarianism.oi-4x").toHaveCount(0);
+    expect("span.oi-pastafarianism.oi-5x").toHaveCount(1);
+    await expectElementCount("button[name='icon_size_5'].active", 1);
+    await click("button[name='icon_size_1']");
+    expect("span.oi-pastafarianism.oi-5x").toHaveCount(0);
+    await expectElementCount("button[name='icon_size_5'].active", 0);
+});
+
 test("Can spin an icon", async () => {
     const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
     expect(getContent(el)).toBe(
@@ -471,6 +511,17 @@ test("should wrap icons in feff when under list item", async () => {
 
 test("should not allow to edit label if selection contain icon", async () => {
     await setupEditor(`<p>[ab<span class="fa fa-glass" contenteditable="false"></span>]</p>`);
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    await click('.o-we-toolbar button[name="link"]');
+    await waitFor('[name="o_linkpopover_url_img"]');
+    expect('[name="o_linkpopover_url_img"]').toHaveCount(1);
+});
+
+test("should not allow to edit label if selection contain oi icon", async () => {
+    await setupEditor(
+        `<p>[ab<span class="oi oi-pastafarianism" contenteditable="false"></span>]</p>`
+    );
     await waitFor(".o-we-toolbar");
     await expandToolbar();
     await click('.o-we-toolbar button[name="link"]');

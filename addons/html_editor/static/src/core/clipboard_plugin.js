@@ -3,6 +3,7 @@ import {
     isParagraphRelatedElement,
     isEmptyBlock,
     isContentEditable,
+    iconClasses,
 } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
@@ -69,7 +70,7 @@ export const CLIPBOARD_WHITELISTS = {
         "IMG",
         "BR",
         "A",
-        ".fa",
+        ...iconClasses.map((cls) => `.${cls}`),
     ],
     classes: [
         // Media
@@ -95,7 +96,7 @@ export const CLIPBOARD_WHITELISTS = {
         "oe-nested",
         // Miscellaneous
         /^btn/,
-        /^fa/,
+        ...iconClasses.map((cls) => new RegExp(`^${cls}`)),
     ],
     attributes: ["class", "href", "src", "target", "colspan", "rowspan"],
     styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD", "COL", "TR", "TH"],

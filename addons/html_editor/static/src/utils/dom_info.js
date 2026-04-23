@@ -350,6 +350,8 @@ export const MEDIA_SELECTOR = `${ICON_SELECTOR}, .media_iframe_video, .o_file_bo
 
 export const EDITABLE_MEDIA_CLASS = "o_editable_media";
 
+export const ICON_SIZE_CLASS_REGEX = new RegExp(`^(${iconClasses.join("|")})-[2-5]x$`);
+
 /**
  * Indicates if the given node is an icon element.
  *
@@ -363,6 +365,22 @@ export function isIconElement(node) {
         iconTags.includes(node.nodeName) &&
         iconClasses.some((cls) => node.classList.contains(cls))
     );
+}
+/**
+ * Returns the icon type (base class) of a given element.
+ * @param {Element} el
+ * @returns {string|null} The detected icon type, or null if the element
+ * is not an icon or no known type is found.
+ */
+export function getIconType(el) {
+    if (!isIconElement(el)) {
+        return null;
+    }
+    for (const type of iconClasses) {
+        if (el.classList.contains(type)) {
+            return type;
+        }
+    }
 }
 // @todo @phoenix: move the specific part in a proper plugin.
 export function isMediaElement(node) {
