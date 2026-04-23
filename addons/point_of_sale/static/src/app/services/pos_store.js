@@ -2867,11 +2867,12 @@ export class PosStore extends WithLazyGetterTrap {
         return matchingCombos;
     }
     async createComboFromLines(productTmpl, combinations) {
+        const order = this.selectedOrder;
         const concernedLinesQty = {};
         combinations.forEach((items) => {
             for (const combo of Object.values(items)) {
                 for (const uuid of Object.keys(combo)) {
-                    const line = this.selectedOrder.lines.find((l) => l.uuid === uuid);
+                    const line = order.lines.find((l) => l.uuid === uuid);
                     if (!line) {
                         continue;
                     }
@@ -2896,7 +2897,7 @@ export class PosStore extends WithLazyGetterTrap {
             const comboPrices = computeComboItems(
                 productTmpl.product_variant_ids[0],
                 payload[0],
-                this.selectedOrder.pricelist_id,
+                order.pricelist_id,
                 this.data.models["decimal.precision"].getAll(),
                 this.data.models["product.template.attribute.value"].getAllBy("id"),
                 payload[1],
@@ -2914,7 +2915,7 @@ export class PosStore extends WithLazyGetterTrap {
                 linkOldNewLines[cl.uuid] = 0;
             });
 
-            const oldLines = this.selectedOrder.lines.filter((l) =>
+            const oldLines = order.lines.filter((l) =>
                 Object.keys(concernedLinesQty).includes(l.uuid)
             );
 
@@ -2926,8 +2927,8 @@ export class PosStore extends WithLazyGetterTrap {
                     }
                     if (link.qty >= concernedLinesQty[oldLine.uuid]) {
                         this.handlePreparationHistory(
-                            this.selectedOrder.last_order_preparation_change.lines,
-                            this.selectedOrder.last_order_preparation_change.lines,
+                            order.last_order_preparation_change.lines,
+                            order.last_order_preparation_change.lines,
                             oldLine,
                             link,
                             concernedLinesQty[oldLine.uuid]
@@ -2937,8 +2938,8 @@ export class PosStore extends WithLazyGetterTrap {
                         break;
                     } else {
                         this.handlePreparationHistory(
-                            this.selectedOrder.last_order_preparation_change.lines,
-                            this.selectedOrder.last_order_preparation_change.lines,
+                            order.last_order_preparation_change.lines,
+                            order.last_order_preparation_change.lines,
                             oldLine,
                             link,
                             link.qty
@@ -2952,25 +2953,31 @@ export class PosStore extends WithLazyGetterTrap {
             // make orderline ignored by preparation printers if at least one child orderline has already been sent to the kitchen
             if (
                 comboLine.combo_line_ids.some(
-                    (cl) =>
-                        this.selectedOrder.last_order_preparation_change.lines[cl.preparationKey]
+                    (cl) => order.last_order_preparation_change.lines[cl.preparationKey]
                 )
             ) {
-                this.selectedOrder.last_order_preparation_change[comboLine.preparationKey] = {
+                order.last_order_preparation_change[comboLine.preparationKey] = {
                     ignoreQty: comboLine.qty,
                 };
             }
         }
+        let needsSync = false;
         for (const [lineUuid, newQty] of Object.entries(concernedLinesQty)) {
             const line = this.models["pos.order.line"].getBy("uuid", lineUuid);
+            if (Number.isInteger(line.id)) {
+                needsSync = true;
+            }
             if (newQty > 0) {
                 line.setQuantity(newQty);
             } else {
                 line.order_id.removeOrderline(line);
             }
         }
+        if (needsSync) {
+            await this.syncAllOrders({ orders: [order] });
+        }
         if (comboLine) {
-            this.selectedOrder.selectOrderline(comboLine);
+            order.selectOrderline(comboLine);
         }
         return;
     }
