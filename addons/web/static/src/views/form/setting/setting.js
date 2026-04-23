@@ -1,4 +1,5 @@
 import { Component } from "@odoo/owl";
+import { exprToBoolean } from "@web/core/utils/strings";
 import { FormLabel } from "../form_label";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 import { user } from "@web/core/user";
@@ -15,24 +16,35 @@ export class Setting extends Component {
         title: { type: String, optional: true },
         fieldId: { type: String, optional: true },
         help: { type: String, optional: true },
-        fieldName: { type: String, optional: true },
         fieldInfo: { type: Object, optional: true },
         class: { type: String, optional: true },
         record: { type: Object, optional: true },
         documentation: { type: String, optional: true },
         string: { type: String, optional: true },
-        addLabel: { type: Boolean },
+        addLabel: { type: Boolean, optional: true },
         companyDependent: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
     };
 
     setup() {
-        if (this.props.fieldName) {
-            this.fieldType = this.props.record.fields[this.props.fieldName].type;
-            if (this.props.fieldInfo.readonly === "True") {
+        if (this.fieldName) {
+            this.fieldType = this.props.record.fields[this.fieldName].type;
+            if (this.props.fieldInfo?.readonly === "True") {
                 this.notMuttedLabel = true;
             }
         }
+    }
+
+    get fieldName() {
+        return this.props.fieldInfo?.name || null;
+    }
+
+    get addLabel() {
+        if (this.props.addLabel !== undefined) {
+            return this.props.addLabel;
+        }
+        const nolabel = this.props.fieldInfo?.attrs?.nolabel;
+        return nolabel ? !exprToBoolean(nolabel) : true;
     }
 
     get classNames() {
@@ -55,10 +67,6 @@ export class Setting extends Component {
         if (this.props.string) {
             return this.props.string;
         }
-        const label =
-            this.props.record &&
-            this.props.record.fields[this.props.fieldName] &&
-            this.props.record.fields[this.props.fieldName].string;
-        return label || "";
+        return this.props.fieldInfo?.string || "";
     }
 }

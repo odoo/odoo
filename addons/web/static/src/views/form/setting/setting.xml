@@ -3,13 +3,13 @@
     <t t-name="web.Setting">
         <div t-att-class="this.classNames" t-att-id="this.props.id">
             <div class="o_setting_left_pane" t-att-data-tooltip="this.props.title" data-tooltip-delay="800">
-                <t t-if="this.props.fieldName and this.fieldType==='boolean'">
+                <t t-if="this.fieldName and this.fieldType==='boolean'">
                     <t t-slot="fieldSlot"/>
                 </t>
             </div>
             <div class="o_setting_right_pane" t-att-data-tooltip="this.props.title" data-tooltip-delay="800">
-                <FormLabel t-if="this.props.fieldName and this.props.addLabel" notMuttedLabel="this.notMuttedLabel" fieldName="this.props.fieldName" id="this.props.fieldId" string="this.labelString" record="this.props.record" fieldInfo="this.props.fieldInfo"/>
-                <t t-if="this.labelString and !this.props.fieldName and this.props.addLabel">
+                <FormLabel t-if="this.fieldName and this.addLabel" notMuttedLabel="this.notMuttedLabel" fieldName="this.fieldName" id="this.props.fieldId" string="this.labelString" record="this.props.record" fieldInfo="this.props.fieldInfo"/>
+                <t t-if="this.labelString and !this.fieldName and this.addLabel">
                     <span class="o_form_label"><t t-out="this.labelString"/></span>
                 </t>
                 <t t-if="this.labelString and this.props.info">
@@ -25,7 +25,7 @@
                     <div class="text-muted"><t t-out="this.props.help"/></div>
                 </t>
                 <div class="mt16">
-                    <t t-if="this.props.fieldName and this.fieldType!=='boolean'">
+                    <t t-if="this.fieldName and this.fieldType!=='boolean'">
                         <t t-slot="fieldSlot"/>
                     </t>
                     <t t-slot="default"/>

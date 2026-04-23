@@ -328,7 +328,8 @@ test("properly compile settings", () => {
         <form>
             <setting help="this is bar"
                      documentation="/applications/technical/web/settings/this_is_a_test.html"
-                     company_dependent="1">
+                     company_dependent="1"
+                     setting_field_id="bar">
                 <field field_id="bar" name="bar"/>
                 <label>label with content</label>
             </setting>
@@ -343,11 +344,9 @@ test("properly compile settings", () => {
                         companyDependent="true"
                         documentation="\`/applications/technical/web/settings/this_is_a_test.html\`"
                         record="__comp__.props.record"
-                        fieldInfo="__comp__.props.archInfo.fieldNodes['bar']"
-                        fieldName="\`bar\`"
-                        fieldId="\`bar\`"
                         string="\`\`"
-                        addLabel="true">
+                        fieldId="\`bar\`"
+                        fieldInfo="__comp__.props.archInfo.fieldNodes['bar']">
                     <t t-set-slot="fieldSlot">
                         <Field id="'bar'"
                             name="'bar'"
