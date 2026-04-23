@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -20,6 +20,7 @@ export class CashMoveListPopup extends Component {
         this.pos = usePos();
         this.ui = useService("ui");
         this.dialog = useService("dialog");
+        this.cashMoves = signal(this.props.cashMoves);
         this.callbacks = this.props.cashMoves.reduce(
             (acc, cm) => ({
                 ...acc,
@@ -46,7 +47,7 @@ export class CashMoveListPopup extends Component {
                 {},
                 true
             );
-            this.props.cashMoves = this.props.cashMoves.filter((cashMove) => cashMove.id !== cm.id);
+            this.cashMoves.set(this.cashMoves().filter((cashMove) => cashMove.id !== cm.id));
             this.props.onDelete(cm.id);
         } catch (error) {
             this.dialog.add(AlertDialog, {
