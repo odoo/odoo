@@ -89,7 +89,7 @@ describe("Differences between pie & non-pie charts", () => {
         });
         expect(
             ".options-container table [data-action-id=updateDatasetValue]:first input"
-        ).toHaveAttribute("style", "");
+        ).not.toHaveAttribute("style");
     });
     test("Bar chart => border color set as fallback for border on header input", async () => {
         const type = "bar";
@@ -117,7 +117,7 @@ describe("Differences between pie & non-pie charts", () => {
         });
         expect(
             ".options-container table [data-action-id=updateDatasetValue]:first input"
-        ).toHaveAttribute("style", "");
+        ).not.toHaveAttribute("style");
     });
     test("Pie chart => background color set as border on individual data inputs", async () => {
         const type = "pie";
@@ -140,7 +140,7 @@ describe("Differences between pie & non-pie charts", () => {
         });
         expect(
             ".options-container table th:nth-child(3) [data-action-id=updateDatasetLabel]:first input"
-        ).toHaveAttribute("style", "");
+        ).not.toHaveAttribute("style");
     });
     test("Pie chart => border color set as fallback for border on individual data inputs", async () => {
         const type = "pie";
@@ -168,7 +168,7 @@ describe("Differences between pie & non-pie charts", () => {
         });
         expect(
             ".options-container table th:nth-child(2) [data-action-id=updateDatasetLabel]:first input"
-        ).toHaveAttribute("style", "");
+        ).not.toHaveAttribute("style");
     });
 });
 
