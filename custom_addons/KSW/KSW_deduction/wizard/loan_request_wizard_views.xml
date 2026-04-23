@@ -10,37 +10,96 @@
         <field name="arch" type="xml">
             <form string="Request a Loan">
                 <sheet>
-                    <div class="alert alert-info" role="status">
-                        <strong>📝 Submit a new loan request</strong><br/>
-                        Fill the details below and click <b>Submit</b>.
-                        Your direct manager will be notified first, then
-                        HR, Accounting and the GM will review in turn.
-                        You can track the status under <b>My Loans</b>.
+                    <!-- Intro banner: explains the 4-step approval chain -->
+                    <div class="alert alert-info d-flex align-items-start"
+                         role="status">
+                        <i class="fa fa-info-circle fa-lg me-2 mt-1"
+                           title="Info" role="img" aria-label="Info"/>
+                        <div>
+                            <strong>Submit a new loan request</strong>
+                            <div class="mt-1">
+                                Your request will be reviewed in four steps:
+                                <span class="badge text-bg-secondary mx-1">1. DM</span>
+                                <i class="fa fa-angle-right mx-1"
+                                   title="then" role="img" aria-hidden="true"/>
+                                <span class="badge text-bg-secondary mx-1">2. HR</span>
+                                <i class="fa fa-angle-right mx-1"
+                                   title="then" role="img" aria-hidden="true"/>
+                                <span class="badge text-bg-secondary mx-1">3. Accounting</span>
+                                <i class="fa fa-angle-right mx-1"
+                                   title="then" role="img" aria-hidden="true"/>
+                                <span class="badge text-bg-secondary mx-1">4. GM</span>.
+                                Track progress under <b>My Loans</b>.
+                            </div>
+                        </div>
                     </div>
 
-                    <group>
-                        <group string="Loan Details">
-                            <field name="employee_id" invisible="1"/>
-                            <field name="type_id"
-                                   options="{'no_create': True, 'no_open': True}"/>
-                            <field name="amount"/>
-                            <field name="installments"/>
-                            <field name="start_month"/>
-                            <field name="currency_id" invisible="1"/>
-                        </group>
-                    </group>
-                    <group>
-                        <field name="reason"
-                               placeholder="Why do you need this loan? (required)"/>
-                        <field name="description"
-                               placeholder="Additional notes, repayment preferences..."/>
-                    </group>
-                    <separator string="Supporting Documents"/>
-                    <field name="attachment_ids" widget="many2many_binary"/>
+                    <field name="employee_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+
+                    <!-- Step 1: Loan details -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Step 1 — Loan Details</strong>
+                        </div>
+                        <div class="card-body">
+                            <group>
+                                <group>
+                                    <field name="type_id"
+                                           options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="amount"/>
+                                    <field name="installments"/>
+                                </group>
+                                <group>
+                                    <field name="start_month"/>
+                                    <field name="installment_amount"
+                                           widget="monetary" readonly="1"/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Justification + documents -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Step 2 — Justification &amp; Documents</strong>
+                        </div>
+                        <div class="card-body">
+                            <group>
+                                <field name="reason" nolabel="1"
+                                       placeholder="Why do you need this loan? (required)"/>
+                            </group>
+                            <group>
+                                <field name="description" nolabel="1"
+                                       placeholder="Additional notes, repayment preferences..."/>
+                            </group>
+                            <separator string="Supporting Documents"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </div>
+                    </div>
+
+                    <!-- Live summary recap -->
+                    <div class="alert alert-secondary" role="status"
+                         invisible="not amount or not installments">
+                        <strong>Summary</strong>
+                        <div class="mt-1">
+                            You are requesting
+                            <b><field name="amount" widget="monetary"
+                                      class="oe_inline"/></b>
+                            over
+                            <b><field name="installments" class="oe_inline"/></b>
+                            month(s) —
+                            approximately
+                            <b><field name="installment_amount"
+                                      widget="monetary" class="oe_inline"/></b>
+                            per month starting
+                            <b><field name="start_month" class="oe_inline"/></b>.
+                        </div>
+                    </div>
                 </sheet>
                 <footer>
                     <button name="action_submit" type="object"
-                            string="Submit" class="btn-primary"/>
+                            string="Submit Request" class="btn-primary"/>
                     <button special="cancel" string="Cancel" class="btn-secondary"/>
                 </footer>
             </form>
@@ -50,12 +109,6 @@
     <!-- =============================================================== -->
     <!-- Action: Request a Loan                                            -->
     <!-- =============================================================== -->
-    <!--
-        Opens the wizard as a modal dialog. Available to every internal
-        user (no `groups` filter) because requesting a loan is a
-        self-service action — the wizard itself enforces that the user
-        can only create a loan for their own employee record.
-    -->
     <record id="action_ksw_loan_request" model="ir.actions.act_window">
         <field name="name">Request a Loan</field>
         <field name="res_model">ksw.loan.request.wizard</field>
@@ -67,15 +120,6 @@
     <!-- =============================================================== -->
     <!-- Action: My Loans (read-only list for the requester)               -->
     <!-- =============================================================== -->
-    <!--
-        Filters ksw.deduction to loan records linked to the current
-        user's employee. Any internal user can open this menu and see
-        only their own loans (the existing user record rule narrows
-        reads to `employee.user_id = uid OR employee.parent_id.user_id
-        = uid`, so subordinates also show up for line managers — which
-        is actually useful: a line manager sees both their own loans
-        AND pending requests from their direct reports).
-    -->
     <record id="action_ksw_my_loans" model="ir.actions.act_window">
         <field name="name">My Loans</field>
         <field name="res_model">ksw.deduction</field>

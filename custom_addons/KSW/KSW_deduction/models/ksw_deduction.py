@@ -476,15 +476,52 @@ class KswDeduction(models.Model):
             self.installments = self.type_id.default_installments
 
     # ==================================================================
+    # UI helpers (smart buttons)
+    # ==================================================================
+
+    def action_view_installments(self):
+        """Smart-button target. Re-opens the record on the same form
+        (scrolls back to the Installments page via `default_tab`).
+        Used for the summary stat buttons in the header — clicking
+        them simply returns the user to the form, which is the
+        expected no-op behaviour of an info-only pill.
+        """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    # ==================================================================
     # CRUD
     # ==================================================================
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Category-scoped reference:
+        #   loans                   -> LO00001  (code 'ksw.deduction.loan')
+        #   company-paid (penalty)  -> PE00001  (code 'ksw.deduction.penalty')
+        #   borrowed non-loan       -> DE00001  (code 'ksw.deduction.regular')
+        # Falls back to the legacy 'ksw.deduction' sequence only if
+        # type_id is missing at create-time (UI always requires it).
+        Seq = self.env['ir.sequence']
+        DeductionType = self.env['ksw.deduction.type']
         for vals in vals_list:
             if not vals.get('name') or vals.get('name') == 'New':
-                vals['name'] = self.env['ir.sequence'].next_by_code(
-                    'ksw.deduction') or 'New'
+                code = 'ksw.deduction'
+                type_id = vals.get('type_id')
+                if type_id:
+                    ded_type = DeductionType.browse(type_id)
+                    if ded_type.is_loan:
+                        code = 'ksw.deduction.loan'
+                    elif ded_type.category == 'company_paid':
+                        code = 'ksw.deduction.penalty'
+                    else:
+                        code = 'ksw.deduction.regular'
+                vals['name'] = Seq.next_by_code(code) or 'New'
         records = super().create(vals_list)
         return records
 
@@ -952,7 +989,76 @@ class KswDeduction(models.Model):
                 for rec in self:
                     rec.gm_original_amount = rec.amount
                     rec.gm_original_installments = rec.installments
-        return super().write(vals)
+
+        # ------------------------------------------------------------------
+        # Defer the installment-total-consistency check when O2M commands
+        # are present in `vals`. Odoo dispatches each (1, id, vals)
+        # update as an individual `ksw.deduction.line.write`, and the
+        # @api.constrains on the line fires after every one of those
+        # calls. If the user balances a decrease on one line with an
+        # increase on another (e.g. #5: 200→150, #6: 200→250), the
+        # per-line constraint would reject the first write before the
+        # compensating second write is applied. We mute the line-level
+        # check via `_skip_installment_total_check` in the context and
+        # run ONE authoritative check on the fully-updated parent after
+        # super().write() returns.
+        # ------------------------------------------------------------------
+        has_line_commands = bool(vals.get('line_ids'))
+        self_for_write = (
+            self.with_context(_skip_installment_total_check=True)
+            if has_line_commands else self
+        )
+        res = super(KswDeduction, self_for_write).write(vals)
+        if has_line_commands:
+            # Run on the originals (without the skip-flag) so any
+            # validation errors are raised in the caller's context.
+            self._validate_installments_total()
+        return res
+
+    # ------------------------------------------------------------------
+    # Installment total consistency (shared entry point)
+    # ------------------------------------------------------------------
+    def _validate_installments_total(self):
+        """Assert that the sum of non-skipped installments equals the
+        deduction's total `amount`.
+
+        Invoked from two places:
+          1. `ksw.deduction.line._check_total_matches_deduction_amount`
+             — the @api.constrains that fires on direct line writes
+             (outside a parent save).
+          2. `ksw.deduction.write()` — the deferred post-batch hook
+             that runs ONCE after all O2M line writes have settled,
+             bypassing the per-line fire-too-early problem.
+
+        Only 'active' and 'completed' deductions are checked. 'draft'
+        has no lines yet, and 'cancelled' lines are marked 'skipped'
+        (explicitly excluded from the sum).
+        """
+        for ded in self:
+            if ded.state not in ('active', 'completed'):
+                continue
+            relevant = ded.line_ids.filtered(
+                lambda l: l.state in ('pending', 'paid'))
+            total = sum(relevant.mapped('amount'))
+            # Use the deduction's currency for float comparison so
+            # sub-cent rounding noise does not trigger a false
+            # positive.
+            if ded.currency_id.compare_amounts(total, ded.amount) != 0:
+                diff = ded.amount - total
+                raise ValidationError(_(
+                    "The sum of the installments on loan %(name)s no "
+                    "longer matches the total loan amount.\n\n"
+                    "  • Total loan amount : %(amt).2f %(cur)s\n"
+                    "  • Sum of installments: %(tot).2f %(cur)s\n"
+                    "  • Difference        : %(diff).2f %(cur)s\n\n"
+                    "Adjust one or more of the other pending "
+                    "installments so the totals match, then save again.",
+                    name=ded.name or '',
+                    amt=ded.amount,
+                    tot=total,
+                    diff=diff,
+                    cur=ded.currency_id.name or '',
+                ))
 
     # ==================================================================
     # Decision Support helpers
@@ -1091,7 +1197,12 @@ class KswDeduction(models.Model):
                 'month': period.month,
                 'amount': line_amount,
             }))
-        self.write({'line_ids': lines})
+        # `_ksw_auto_generating` tells `ksw.deduction.line.create()`
+        # that these are schedule lines, not manual entries — so it
+        # skips the manual-entry guards (privilege check, forced
+        # is_manual/state=paid stamping, audit post).
+        self.with_context(_ksw_auto_generating=True).write(
+            {'line_ids': lines})
 
     # ==================================================================
     # Mark lines paid / unpaid (called by hr.payslip state transitions)

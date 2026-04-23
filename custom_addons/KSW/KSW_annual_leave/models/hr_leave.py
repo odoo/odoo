@@ -222,7 +222,10 @@ class HrLeave(models.Model):
     # Duration computation (annual-leave calendar-day counting)
     # ==================================================================
 
-    @api.depends('holiday_status_id', 'x_is_full_clearance', 'x_excess_days_accepted')
+    @api.depends('holiday_status_id', 'x_is_full_clearance', 'x_excess_days_accepted',
+                 'request_date_from', 'request_date_to',
+                 'date_from', 'date_to',
+                 'employee_id', 'resource_calendar_id')
     def _compute_duration(self):
         annual = self.filtered(self._is_annual_leave)
         remaining = self - annual
@@ -467,12 +470,28 @@ class HrLeave(models.Model):
     # ==================================================================
 
     def write(self, vals):
-        """Re-trigger allocation validity when annual-leave toggles change.
+        """Re-trigger allocation validity on save for annual leaves.
 
-        The base write() only calls _check_validity() for date/employee/
-        state/leave-type changes.  Toggling x_excess_days_accepted or
-        x_is_full_clearance changes number_of_days via _compute_duration
-        but would NOT re-check allocations without this override.
+        Two gaps we plug here:
+
+        1. Base hr.leave.write() only calls _check_validity() when
+           ``request_date_from`` (or date_from/to, holiday_status_id,
+           employee_id, state) is in vals.  The base list has a typo —
+           ``'request_date_from'`` appears twice and ``'request_date_to'``
+           is missing — so modifying only the end date silently skips
+           the check.  We explicitly cover all four date keys for
+           annual leaves.
+
+        2. Toggling x_excess_days_accepted or x_is_full_clearance
+           changes number_of_days via _compute_duration but base does
+           not re-check allocations on those field changes.
+
+        Important UX choice: validation is **not** raised eagerly when
+        the user only toggles a checkbox back-and-forth mid-edit.  Base
+        already raises ValidationError at save-time when date/state/
+        employee/type/toggle keys are in vals (covered below).  We also
+        re-check at the start of each action_*_approve so advancing the
+        multi-step chain never lets an out-of-balance leave through.
 
         The _skip_toggle_validity context flag is set by _compute_duration
         when auto-clearing stale toggles — those internal clears should
@@ -480,10 +499,18 @@ class HrLeave(models.Model):
         """
         result = super().write(vals)
 
-        toggle_fields = {'x_excess_days_accepted', 'x_is_full_clearance'}
-        if (toggle_fields & vals.keys()
-                and not self.env.context.get('_skip_toggle_validity')):
-            # Only validate annual leaves that require allocation
+        if self.env.context.get('_skip_toggle_validity'):
+            return result
+
+        # Keys that must re-trigger _check_validity for annual leaves.
+        # Covers the base typo (missing request_date_to) + toggle
+        # changes that alter number_of_days through _compute_duration.
+        revalidate_keys = {
+            'request_date_from', 'request_date_to',
+            'date_from', 'date_to',
+            'x_excess_days_accepted', 'x_is_full_clearance',
+        }
+        if revalidate_keys & vals.keys():
             annual_to_check = self.filtered(
                 lambda l: self._is_annual_leave(l)
                 and l.holiday_status_id.requires_allocation
@@ -533,8 +560,26 @@ class HrLeave(models.Model):
     # Multi-Step Approval: Step-by-step action methods
     # ==================================================================
 
+    def _check_annual_approval_can_advance(self):
+        """Validate that an annual leave is fit to move to the next step.
+
+        Re-runs the allocation check because the multi-step chain writes
+        only ``x_annual_approval_state`` (not ``state``), so base
+        hr.leave's state-change validation never fires.  Without this
+        guard, an employee whose dates were edited to exceed the
+        balance (with all toggles cleared) could still be approved.
+        """
+        annual_to_check = self.filtered(
+            lambda l: self._is_annual_leave(l)
+            and l.holiday_status_id.requires_allocation
+            and l.state not in ('cancel', 'refuse')
+        )
+        if annual_to_check:
+            annual_to_check._check_validity()
+
     def action_dm_approve(self):
         """Step 1: Direct Manager approves the initial request."""
+        self._check_annual_approval_can_advance()
         for leave in self:
             if leave.x_annual_approval_state != 'pending_dm':
                 raise UserError(
@@ -543,9 +588,9 @@ class HrLeave(models.Model):
             if (leave.employee_id.leave_manager_id
                     and leave.employee_id.leave_manager_id != self.env.user
                     and not self.env.user.has_group(
-                        'hr_holidays.group_hr_holidays_user')):
+                        'KSW_annual_leave.group_annual_leave_hr')):
                 raise UserError(
-                    'Only %s (the leave manager) or an HR officer '
+                    'Only %s (the leave manager) or an HR Approver '
                     'can approve this step.'
                     % leave.employee_id.leave_manager_id.name
                 )
@@ -574,9 +619,10 @@ class HrLeave(models.Model):
     def action_hr_approve(self):
         """Step 2: HR approves and fills penalty + iqama renewal."""
         self._check_group(
-            'hr_holidays.group_hr_holidays_user',
-            'Only HR officers can approve this step.',
+            'KSW_annual_leave.group_annual_leave_hr',
+            'Only HR Approvers can approve this step.',
         )
+        self._check_annual_approval_can_advance()
         for leave in self:
             if leave.x_annual_approval_state != 'pending_hr':
                 raise UserError(
@@ -624,6 +670,7 @@ class HrLeave(models.Model):
             'KSW_annual_leave.group_annual_leave_gm',
             'Only the General Manager can approve this step.',
         )
+        self._check_annual_approval_can_advance()
         for leave in self:
             if leave.x_annual_approval_state != 'pending_gm_initial':
                 raise UserError(
@@ -648,6 +695,7 @@ class HrLeave(models.Model):
             'KSW_annual_leave.group_annual_leave_acc',
             'Only Accounting Approvers can approve this step.',
         )
+        self._check_annual_approval_can_advance()
         for leave in self:
             if leave.x_annual_approval_state != 'pending_acc':
                 raise UserError(
@@ -694,6 +742,7 @@ class HrLeave(models.Model):
             'KSW_annual_leave.group_annual_leave_gm',
             'Only the General Manager can give final approval.',
         )
+        self._check_annual_approval_can_advance()
         for leave in self:
             if leave.x_annual_approval_state != 'pending_gm_final':
                 raise UserError(

@@ -2,41 +2,344 @@
 <odoo>
 
     <!-- ============================================================ -->
-    <!-- 3-Layer Security Hierarchy: Category → Privilege → Group     -->
+    <!-- Layer 1: Module Category                                      -->
     <!-- ============================================================ -->
+    <!--
+        "KSW Leaves" groups every leave-related privilege under a
+        single row in the user form, mirroring the "KSW Deductions"
+        layout: creation / viewing / modification / deletion tiers
+        (Self → Supervisor → Officer) plus a single "Annual Leave
+        Approval" dropdown for the HR/Accounting/GM approver roles.
 
-    <!-- Layer 1: Module Category -->
-    <record id="module_category_annual_leave_approval" model="ir.module.category">
-        <field name="name">Annual Leave Approval</field>
-        <field name="sequence">200</field>
+        The three-tier C/V/U/D privileges use
+        `employee.parent_id.user_id` as the subordinate relation —
+        NOT Odoo's `leave_manager_id` — for consistency with
+        KSW_deduction's record rules.
+    -->
+    <record id="module_category_ksw_leaves" model="ir.module.category">
+        <field name="name">KSW Leaves</field>
+        <field name="sequence">205</field>
     </record>
 
-    <!-- Layer 2: Privileges (one per role → separate dropdowns) -->
-    <record id="privilege_annual_leave_gm" model="res.groups.privilege">
-        <field name="name">General Manager Approval</field>
+    <!-- ============================================================ -->
+    <!-- Layer 2: Privileges                                           -->
+    <!-- ============================================================ -->
+    <record id="privilege_leave_creation" model="res.groups.privilege">
+        <field name="name">Leave Creation</field>
         <field name="sequence">10</field>
-        <field name="category_id" ref="module_category_annual_leave_approval"/>
+        <field name="category_id" ref="module_category_ksw_leaves"/>
     </record>
 
-    <record id="privilege_annual_leave_acc" model="res.groups.privilege">
-        <field name="name">Accounting Approval</field>
+    <record id="privilege_leave_viewing" model="res.groups.privilege">
+        <field name="name">Leave Viewing</field>
         <field name="sequence">20</field>
-        <field name="category_id" ref="module_category_annual_leave_approval"/>
+        <field name="category_id" ref="module_category_ksw_leaves"/>
     </record>
 
-    <!-- Layer 3: Groups (linked to privileges) -->
-    <record id="group_annual_leave_gm" model="res.groups">
-        <field name="name">General Manager</field>
-        <field name="privilege_id" ref="privilege_annual_leave_gm"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-        <field name="comment">Can perform Initial and Final approval of annual leave requests.</field>
+    <record id="privilege_leave_modification" model="res.groups.privilege">
+        <field name="name">Leave Modification</field>
+        <field name="sequence">30</field>
+        <field name="category_id" ref="module_category_ksw_leaves"/>
+    </record>
+
+    <record id="privilege_leave_deletion" model="res.groups.privilege">
+        <field name="name">Leave Deletion</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="module_category_ksw_leaves"/>
+    </record>
+
+    <!--
+        Annual Leave Approval: single dropdown merging the HR /
+        Accounting / GM approver roles. The DM (Direct Manager)
+        step is NOT a role here — it is derived dynamically from
+        `hr.employee.parent_id.user_id` in `action_dm_approve`,
+        matching the KSW_deduction pattern.
+    -->
+    <record id="privilege_annual_leave_approval" model="res.groups.privilege">
+        <field name="name">Annual Leave Approval</field>
+        <field name="sequence">50</field>
+        <field name="category_id" ref="module_category_ksw_leaves"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Leave Creation (tiered)                     -->
+    <!-- ============================================================ -->
+    <!--
+        Self: baseline. Every internal user is implicitly
+        `group_leave_create_self` (see the <function> block below
+        making `base.group_user` imply every *_self group) — this
+        removes the blank "No" choice from the privilege dropdown
+        and keeps the user-form tidy.
+    -->
+    <record id="group_leave_create_self" model="res.groups">
+        <field name="name">Self</field>
+        <field name="privilege_id" ref="privilege_leave_creation"/>
+        <field name="comment">Create leave requests only for oneself.</field>
+    </record>
+
+    <record id="group_leave_create_supervisor" model="res.groups">
+        <field name="name">Supervisor</field>
+        <field name="privilege_id" ref="privilege_leave_creation"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_create_self')),
+            (4, ref('hr_holidays.group_hr_holidays_responsible')),
+        ]"/>
+        <field name="comment">Create leave requests for oneself and for direct subordinates. Implies "Time Off Responsible" so the Approvals menu is visible without granting full Officer scope.</field>
+    </record>
+
+    <record id="group_leave_create_officer" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="privilege_id" ref="privilege_leave_creation"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_create_supervisor')),
+            (4, ref('hr_holidays.group_hr_holidays_user')),
+        ]"/>
+        <field name="comment">Create leave requests on behalf of any employee. Implies "Time Off Officer" for full menu/record access.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Leave Viewing (tiered)                      -->
+    <!-- ============================================================ -->
+    <record id="group_leave_view_self" model="res.groups">
+        <field name="name">Self</field>
+        <field name="privilege_id" ref="privilege_leave_viewing"/>
+        <field name="comment">See only own leave requests.</field>
+    </record>
+
+    <record id="group_leave_view_supervisor" model="res.groups">
+        <field name="name">Supervisor</field>
+        <field name="privilege_id" ref="privilege_leave_viewing"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_view_self')),
+            (4, ref('hr_holidays.group_hr_holidays_responsible')),
+        ]"/>
+        <field name="comment">See own leave requests and those of direct subordinates. Implies "Time Off Responsible" so the Approvals menu is visible.</field>
+    </record>
+
+    <record id="group_leave_view_officer" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="privilege_id" ref="privilege_leave_viewing"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_view_supervisor')),
+            (4, ref('hr_holidays.group_hr_holidays_user')),
+        ]"/>
+        <field name="comment">See every leave request company-wide. Implies "Time Off Officer" for full menu access.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Leave Modification (tiered)                 -->
+    <!-- ============================================================ -->
+    <record id="group_leave_modify_self" model="res.groups">
+        <field name="name">Self</field>
+        <field name="privilege_id" ref="privilege_leave_modification"/>
+        <field name="comment">Edit own leave requests (subject to Odoo's state guards).</field>
+    </record>
+
+    <record id="group_leave_modify_supervisor" model="res.groups">
+        <field name="name">Supervisor</field>
+        <field name="privilege_id" ref="privilege_leave_modification"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_modify_self')),
+            (4, ref('hr_holidays.group_hr_holidays_responsible')),
+        ]"/>
+        <field name="comment">Edit own leave requests and those of direct subordinates.</field>
+    </record>
+
+    <record id="group_leave_modify_officer" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="privilege_id" ref="privilege_leave_modification"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_modify_supervisor')),
+            (4, ref('hr_holidays.group_hr_holidays_user')),
+        ]"/>
+        <field name="comment">Edit any leave request company-wide.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Leave Deletion (tiered)                     -->
+    <!-- ============================================================ -->
+    <record id="group_leave_delete_self" model="res.groups">
+        <field name="name">Self</field>
+        <field name="privilege_id" ref="privilege_leave_deletion"/>
+        <field name="comment">Delete own leave requests (Odoo already restricts this to pre-validated states).</field>
+    </record>
+
+    <record id="group_leave_delete_supervisor" model="res.groups">
+        <field name="name">Supervisor</field>
+        <field name="privilege_id" ref="privilege_leave_deletion"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_delete_self')),
+            (4, ref('hr_holidays.group_hr_holidays_responsible')),
+        ]"/>
+        <field name="comment">Delete own leave requests and those of direct subordinates.</field>
+    </record>
+
+    <record id="group_leave_delete_officer" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="privilege_id" ref="privilege_leave_deletion"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_delete_supervisor')),
+            (4, ref('hr_holidays.group_hr_holidays_user')),
+        ]"/>
+        <field name="comment">Delete any leave request company-wide.</field>
+    </record>
+
+    <!--
+        Every internal user is implicitly "Self" across the four
+        tier privileges. Uses <function> (not <record>) because
+        updating `base.group_user.implied_ids` via <record> can
+        stomp existing implications on upgrade. This runs on every
+        install/upgrade and is additive via the (4, id) command.
+    -->
+    <function model="res.groups" name="write">
+        <value eval="[ref('base.group_user')]"/>
+        <value eval="{'implied_ids': [
+            (4, ref('group_leave_create_self')),
+            (4, ref('group_leave_view_self')),
+            (4, ref('group_leave_modify_self')),
+            (4, ref('group_leave_delete_self')),
+        ]}"/>
+    </function>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Annual Leave Approval                       -->
+    <!-- ============================================================ -->
+    <!--
+        Three parallel approver roles under one privilege dropdown.
+        Each approver group also implies the Officer-tier view group
+        so the approver can actually see every leave pending their
+        step (otherwise a Self-only viewer who got e.g. GM Approver
+        would be unable to see the leaves they need to approve).
+    -->
+    <record id="group_annual_leave_hr" model="res.groups">
+        <field name="name">HR Approver</field>
+        <field name="privilege_id" ref="privilege_annual_leave_approval"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('group_leave_view_officer'))]"/>
+        <field name="comment">Can perform the HR step of annual leave approval (penalty / iqama renewal / flight ticket).</field>
     </record>
 
     <record id="group_annual_leave_acc" model="res.groups">
         <field name="name">Accounting Approver</field>
-        <field name="privilege_id" ref="privilege_annual_leave_acc"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-        <field name="comment">Can approve annual leave requests at the accounting step (fills flight ticket).</field>
+        <field name="privilege_id" ref="privilege_annual_leave_approval"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('group_leave_view_officer'))]"/>
+        <field name="comment">Can approve annual leave requests at the accounting step (additional commissions, remaining loans).</field>
+    </record>
+
+    <record id="group_annual_leave_gm" model="res.groups">
+        <field name="name">GM Approver</field>
+        <field name="privilege_id" ref="privilege_annual_leave_approval"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('group_leave_view_officer'))]"/>
+        <field name="comment">Can perform Initial and Final approval of annual leave requests.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Record Rules — hr.leave (tier scopes)                         -->
+    <!-- ============================================================ -->
+    <!--
+        Notes on rule semantics:
+          * Odoo's built-in rules for `base.group_user` (see
+            hr_holidays/security/hr_holidays_security.xml) already
+            cover "own leave + leave_manager_id subordinate". Our
+            tier rules are OR'd on top for users in extra groups.
+          * "Subordinate" in KSW Leaves = employee.parent_id.user_id,
+            matching KSW_deduction. This is deliberately distinct
+            from Odoo's `leave_manager_id`.
+          * Each rule uses perm_* flags so it only widens the
+            relevant CRUD verb. This keeps the four privileges
+            orthogonal — e.g. a user can be a "View Officer" but
+            only a "Modify Self".
+    -->
+
+    <!-- ===== Viewing ===== -->
+    <record id="hr_leave_rule_view_supervisor" model="ir.rule">
+        <field name="name">KSW Leave: view supervisor (subordinates)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_supervisor'))]"/>
+        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_leave_rule_view_officer" model="ir.rule">
+        <field name="name">KSW Leave: view officer (all)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- ===== Creation ===== -->
+    <record id="hr_leave_rule_create_supervisor" model="ir.rule">
+        <field name="name">KSW Leave: create supervisor (subordinates)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_create_supervisor'))]"/>
+        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_leave_rule_create_officer" model="ir.rule">
+        <field name="name">KSW Leave: create officer (all)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_create_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- ===== Modification ===== -->
+    <record id="hr_leave_rule_modify_supervisor" model="ir.rule">
+        <field name="name">KSW Leave: modify supervisor (subordinates)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_modify_supervisor'))]"/>
+        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_leave_rule_modify_officer" model="ir.rule">
+        <field name="name">KSW Leave: modify officer (all)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_modify_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- ===== Deletion ===== -->
+    <record id="hr_leave_rule_delete_supervisor" model="ir.rule">
+        <field name="name">KSW Leave: delete supervisor (subordinates)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_delete_supervisor'))]"/>
+        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="hr_leave_rule_delete_officer" model="ir.rule">
+        <field name="name">KSW Leave: delete officer (all)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_delete_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="True"/>
     </record>
 
 </odoo>

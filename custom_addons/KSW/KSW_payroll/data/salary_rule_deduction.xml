@@ -10,7 +10,7 @@
 
         <record id="om_hr_payroll.hr_rule_hra" model="hr.salary.rule">
             <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.hra)</field>
+            <field name="condition_python">result = bool(contract.hra) and not payslip.x_leave_id</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
 prior = inputs.PRIOR_HRA.amount if inputs.PRIOR_HRA else 0.0
@@ -141,7 +141,7 @@ hr.attendance records during the payslip period.</field>
             <field name="code">GOSI</field>
             <field name="category_id" ref="om_hr_payroll.DED"/>
             <field name="condition_select">python</field>
-            <field name="condition_python">result = employee.country_id.code == 'SA'</field>
+            <field name="condition_python">result = employee.country_id.code == 'SA' and not payslip.x_leave_id</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
 rate_pct = float(payslip.env['ir.config_parameter'].sudo().get_param('ksw_payroll.gosi_rate', '9.75'))

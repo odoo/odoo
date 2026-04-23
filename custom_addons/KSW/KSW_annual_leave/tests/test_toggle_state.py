@@ -62,6 +62,7 @@ class TestToggleState(TransactionCase):
             'group_ids': [(6, 0, [
                 cls.env.ref('base.group_user').id,
                 cls.env.ref('hr_holidays.group_hr_holidays_user').id,
+                cls.env.ref('KSW_annual_leave.group_annual_leave_hr').id,
             ])],
         })
         cls.emp_hr = cls.env['hr.employee'].create({

@@ -71,6 +71,21 @@ class KswLoanRequestWizard(models.TransientModel):
         required=True,
     )
 
+    # Live summary recap — shown read-only on the wizard so the user
+    # can sanity-check their request before clicking Submit.
+    installment_amount = fields.Monetary(
+        compute='_compute_installment_amount',
+        help='Estimated amount deducted each month '
+             '(loan amount / number of installments).',
+    )
+
+    @api.depends('amount', 'installments')
+    def _compute_installment_amount(self):
+        for w in self:
+            w.installment_amount = (
+                w.amount / w.installments if w.installments else 0.0
+            )
+
     # ------------------------------------------------------------------
     # Default setup
     # ------------------------------------------------------------------

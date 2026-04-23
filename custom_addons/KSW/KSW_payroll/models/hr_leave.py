@@ -224,22 +224,46 @@ class HrLeave(models.Model):
                 'amount': visa_recovery,
             })
 
-        # 8. Multi-month HRA pre-payment
-        extra_months = self._vacation_month_count(leave) - 1
-        if extra_months > 0:
+        # 8. Multi-month HRA advance — PAID vacation months only.
+        #
+        # The vacation payslip pays HRA up front for every paid
+        # vacation month (including the month the vacation payslip
+        # itself covers). The regular HRA salary rule is suppressed
+        # on vacation payslips (see data/salary_rule_deduction.xml)
+        # so the vac month is not double-paid.
+        #
+        # For combined annual + unpaid leaves (x_excess_days_accepted)
+        # and full-balance-clearance leaves, months that fall entirely
+        # within the *unpaid* portion do NOT receive HRA.
+        #
+        # leave.number_of_days already equals the paid-portion duration
+        # in every branch of _compute_duration:
+        #   - full clearance          → x_clearance_balance
+        #   - excess accepted (combo) → x_annual_portion_days
+        #   - simple annual           → calendar days of the leave
+        paid_months = self._paid_months_count(leave)
+        if paid_months > 0:
             version = payslip.version_id or employee.current_version_id
             hra = version.hra or 0.0
             if hra > 0:
                 vals_list.append({
                     'payslip_id': payslip.id,
                     'version_id': version_id,
-                    'name': 'HRA for %d extra vacation month(s)' % extra_months,
+                    'name': 'Advance HRA for %d paid vacation month(s)' % paid_months,
                     'code': 'VACATION_HRA',
-                    'amount': hra * extra_months,
+                    'amount': hra * paid_months,
                 })
 
-            # 9. Multi-month GOSI pre-deduction
+        # 9. Multi-month GOSI advance — ALL vacation months (paid +
+        # unpaid).  GOSI is a statutory contribution that the company
+        # and employee must pay every month regardless of whether the
+        # employee is on paid or unpaid leave, so the unpaid portion
+        # of a combined leave still accrues GOSI.
+        gosi_months = self._all_vacation_months_count(leave)
+        if gosi_months > 0:
+            version = payslip.version_id or employee.current_version_id
             wage = version.wage or 0.0
+            hra = version.hra or 0.0
             if employee.country_id and employee.country_id.code == 'SA' and (wage + hra) > 0:
                 gosi_rate = float(
                     self.env['ir.config_parameter'].sudo().get_param(
@@ -249,12 +273,71 @@ class HrLeave(models.Model):
                     vals_list.append({
                         'payslip_id': payslip.id,
                         'version_id': version_id,
-                        'name': 'GOSI for %d extra vacation month(s)' % extra_months,
+                        'name': 'Advance GOSI for %d vacation month(s)' % gosi_months,
                         'code': 'VACATION_GOSI',
-                        'amount': gosi_per_month * extra_months,
+                        'amount': gosi_per_month * gosi_months,
                     })
 
         return vals_list
+
+    @staticmethod
+    def _paid_months_count(leave):
+        """Number of distinct calendar months spanned by the PAID portion
+        of ``leave``.
+
+        Unpaid-portion months (from x_excess_days_accepted) contribute
+        nothing — those months must not receive HRA on the vacation
+        payslip.
+
+        Examples (Apr 15 start):
+          * 8-paid-month annual leave (Apr 15 → Nov 30) → 8 months
+            (Apr, May, Jun, Jul, Aug, Sep, Oct, Nov).
+          * 60-day combined leave, 20 paid days (Apr 15 → May 4) →
+            2 months (Apr, May); the 40 unpaid days are ignored.
+          * 20-day full-clearance fitting inside Apr → 1 month.
+        """
+        paid_days = int(round(leave.number_of_days or 0))
+        if paid_days <= 0 or not leave.request_date_from:
+            return 0
+
+        paid_start = leave.request_date_from
+        paid_end = paid_start + timedelta(days=paid_days - 1)
+        return HrLeave._month_span(paid_start, paid_end)
+
+    @staticmethod
+    def _all_vacation_months_count(leave):
+        """Number of distinct calendar months spanned by the ENTIRE
+        vacation (paid portion + any unpaid excess portion).
+
+        Used for GOSI advance, which must cover every month the
+        employee is on leave — GOSI is owed by law regardless of
+        whether the month is paid or unpaid.
+
+        Examples (Apr 15 start):
+          * 60-day combined leave (Apr 15 → Jun 13), 20 paid + 40
+            unpaid → 3 months (Apr, May, Jun).
+          * 20-day full-clearance (Apr 15 → May 4) → 2 months.
+        """
+        d_from = leave.request_date_from
+        d_to = leave.request_date_to
+        if not d_from or not d_to:
+            return 0
+        return HrLeave._month_span(d_from, d_to)
+
+    @staticmethod
+    def _month_span(d_from, d_to):
+        """Count distinct (year, month) tuples in the inclusive range."""
+        if not d_from or not d_to or d_from > d_to:
+            return 0
+        months = set()
+        cursor = d_from.replace(day=1)
+        while cursor <= d_to:
+            months.add((cursor.year, cursor.month))
+            if cursor.month == 12:
+                cursor = cursor.replace(year=cursor.year + 1, month=1)
+            else:
+                cursor = cursor.replace(month=cursor.month + 1)
+        return len(months)
 
     # ------------------------------------------------------------------
     # Cancel vacation payslip on refuse / reset-to-draft
@@ -302,3 +385,25 @@ class HrLeave(models.Model):
         if annual_multi:
             annual_multi._cancel_vacation_payslips()
         return result
+
+    def action_open_vacation_payslips(self):
+        """Open the vacation payslip(s) linked to this leave."""
+        self.ensure_one()
+        payslip_ids = self.x_vacation_payslip_ids.ids
+        if len(payslip_ids) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'hr.payslip',
+                'view_mode': 'form',
+                'res_id': payslip_ids[0],
+                'target': 'current',
+            }
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Vacation Payslips',
+            'res_model': 'hr.payslip',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', payslip_ids)],
+            'target': 'current',
+        }
+

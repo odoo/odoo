@@ -38,11 +38,16 @@
     </record>
 
     <!--
-        Privilege: Loan Modification
+        Privilege: Loan Request Modification (pre-confirmation)
         Controls who can EDIT amount / installments and DELETE deduction
-        records after creation. Four levels (rendered as a single
-        privilege dropdown in the user form, directly under "Deduction
-        Management" and "Loan Approval" in the KSW Deductions row):
+        records DURING the approval chain (i.e. before the loan is
+        confirmed/active). Once the loan is active, any further change
+        to an individual installment (date / amount) is governed by the
+        separate "Loan Installment Modification" privilege below.
+
+        Four levels (rendered as a single privilege dropdown in the
+        user form, directly under "Deduction Management" and "Loan
+        Approval" in the KSW Deductions row):
 
             (blank)          – No: user cannot edit amount/installments
                                after draft and cannot delete records.
@@ -60,8 +65,35 @@
         but be refused edit rights by leaving this privilege blank.
     -->
     <record id="privilege_loan_modification" model="res.groups.privilege">
-        <field name="name">Loan Modification</field>
+        <field name="name">Loan Request Modification (pre-confirmation)</field>
         <field name="sequence">30</field>
+        <field name="category_id" ref="module_category_ksw_deduction"/>
+    </record>
+
+    <!--
+        Privilege: Loan Installment Modification (post-confirmation)
+        Controls who can edit an individual installment (date / amount)
+        on a loan that has ALREADY been confirmed and is in the
+        'active' state. Typical use-case: an employee contacts the
+        accountant explaining they cannot pay this month's installment
+        and requests that it be postponed or reduced.
+
+        Only one level for now — "Edit". Blank = no access.
+
+            (blank)      – Cannot edit installments on active loans.
+            Edit         – May change the year/month and amount of
+                           pending installments on an active loan.
+                           Changing the date pushes all subsequent
+                           pending installments forward by the same
+                           month-delta (handled in ksw.deduction.line
+                           write()).
+
+        Not implied by any other role (not even Deduction Manager) —
+        must be granted explicitly, typically to accounting staff.
+    -->
+    <record id="privilege_loan_installment_modification" model="res.groups.privilege">
+        <field name="name">Loan Installment Modification (post-confirmation)</field>
+        <field name="sequence">40</field>
         <field name="category_id" ref="module_category_ksw_deduction"/>
     </record>
 
@@ -153,6 +185,21 @@
         <field name="privilege_id" ref="privilege_loan_modification"/>
         <field name="implied_ids" eval="[(4, ref('group_loan_edit')), (4, ref('group_loan_delete'))]"/>
         <field name="comment">Full modification rights — edit and delete loan records. NOT auto-granted to Deduction Managers; must be set explicitly so an HR/Admin can be a Deduction Manager without inheriting loan modification rights.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Loan Installment Modification                -->
+    <!-- ============================================================ -->
+    <!--
+        Single group behind the "Loan Installment Modification"
+        privilege dropdown. Blank = no access, "Edit" = may modify the
+        year/month and amount of pending installments on an active loan.
+        Not implied by any other role.
+    -->
+    <record id="group_installment_edit" model="res.groups">
+        <field name="name">Edit</field>
+        <field name="privilege_id" ref="privilege_loan_installment_modification"/>
+        <field name="comment">May change the date (year/month) and amount of pending installments on a confirmed/active loan. Changing an installment's date to a later month automatically pushes all subsequent pending installments forward by the same month-delta.</field>
     </record>
 
     <!-- ============================================================ -->

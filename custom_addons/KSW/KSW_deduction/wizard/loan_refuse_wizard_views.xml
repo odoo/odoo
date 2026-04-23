@@ -10,28 +10,44 @@
         <field name="arch" type="xml">
             <form string="Refuse Loan Request">
                 <sheet>
-                    <div class="alert alert-warning" role="status">
-                        <strong>⛔ Refuse Loan Request</strong><br/>
-                        You are about to refuse this loan request. The
-                        reason you provide below will be recorded and
-                        shown to the employee.
+                    <div class="alert alert-danger d-flex align-items-start"
+                         role="alert">
+                        <i class="fa fa-ban fa-lg me-2 mt-1"
+                           title="Refuse" role="img" aria-label="Refuse"/>
+                        <div>
+                            <strong>You are about to refuse this loan request.</strong>
+                            <div class="mt-1">
+                                The reason you provide below
+                                <b>will be shown to the employee</b>
+                                and recorded permanently in the approval
+                                history. Please be clear and respectful.
+                            </div>
+                        </div>
                     </div>
-                    <group>
-                        <group>
-                            <field name="deduction_id" readonly="1"/>
-                            <field name="employee_id" readonly="1"/>
-                            <field name="step" readonly="1"/>
-                        </group>
-                        <group>
-                            <field name="amount" readonly="1"/>
-                            <field name="installments" readonly="1"/>
-                            <field name="currency_id" invisible="1"/>
-                        </group>
-                    </group>
-                    <group>
-                        <field name="reason" required="1" nolabel="1"
-                               placeholder="Explain clearly why this loan request is being refused. The employee will see this reason."/>
-                    </group>
+
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Request under review</strong>
+                        </div>
+                        <div class="card-body">
+                            <group>
+                                <group>
+                                    <field name="deduction_id" readonly="1"/>
+                                    <field name="employee_id" readonly="1"/>
+                                    <field name="step" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="amount" readonly="1"/>
+                                    <field name="installments" readonly="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
+
+                    <separator string="Reason for refusal"/>
+                    <field name="reason" required="1" nolabel="1"
+                           placeholder="Explain clearly why this loan request is being refused. The employee will see this reason."/>
                 </sheet>
                 <footer>
                     <button name="action_confirm" type="object"
