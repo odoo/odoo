@@ -256,7 +256,7 @@ describe("powerbox", () => {
 });
 
 test.tags("desktop");
-test.debug("Table column control should always be displayed on top of the table", async () => {
+test("Table column control should always be displayed on top of the table", async () => {
     const top = (el) => el.getBoundingClientRect().top;
     const bottom = (el) => el.getBoundingClientRect().bottom;
 
