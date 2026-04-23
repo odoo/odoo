@@ -306,7 +306,7 @@ describe("Range collapsed", () => {
                     '<p><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></p>',
                 stepFunction: toggleCheckList,
                 contentAfter:
-                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0); font-size: 18px;">[abc]</li></ul>',
+                    '<ul class="o_checklist" style="padding-inline-start: 34px;"><li style="color: rgb(255, 0, 0); font-size: 18px;">[abc]</li></ul>',
             });
         });
 
@@ -316,7 +316,7 @@ describe("Range collapsed", () => {
                     '<p><b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></i></b></p>',
                 stepFunction: toggleCheckList,
                 contentAfter:
-                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0); font-size: 18px;"><b><i>[abc]</i></b></li></ul>',
+                    '<ul class="o_checklist" style="padding-inline-start: 34px;"><li style="color: rgb(255, 0, 0); font-size: 18px;"><b><i>[abc]</i></b></li></ul>',
             });
         });
 
@@ -346,7 +346,7 @@ describe("Range collapsed", () => {
                     '<p><font style="color: rgb(255, 0, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></font></p>',
                 stepFunction: toggleCheckList,
                 contentAfter:
-                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></li></ul>',
+                    '<ul class="o_checklist" style="padding-inline-start: 34px;"><li style="color: rgb(255, 0, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></li></ul>',
             });
         });
 

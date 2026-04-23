@@ -1038,13 +1038,18 @@ export class ListPlugin extends Plugin {
      * @param {HTMLLIElement} li - LI element inside a checklist.
      */
     isPointerInsideCheckbox(li, pointerOffsetX, pointerOffsetY) {
+        const liStyle = this.window.getComputedStyle(li);
         const beforeStyle = this.window.getComputedStyle(li, ":before");
+
+        const checkboxSize = parseInt(beforeStyle.height);
+        const lineHeight = parseInt(liStyle.height);
+
         const checkboxPosition = {
-            left: parseInt(beforeStyle.left),
-            top: parseInt(beforeStyle.top),
+            left: -checkboxSize - 10,
+            top: (lineHeight - checkboxSize) / 2,
+            right: -10,
+            bottom: (lineHeight + checkboxSize) / 2,
         };
-        checkboxPosition.right = checkboxPosition.left + parseInt(beforeStyle.width);
-        checkboxPosition.bottom = checkboxPosition.top + parseInt(beforeStyle.height);
 
         return (
             pointerOffsetX >= checkboxPosition.left &&
@@ -1126,18 +1131,30 @@ export class ListPlugin extends Plugin {
             return;
         }
         list.style.removeProperty("padding-inline-start");
+        let largestMarkerPadding = null;
         if (list.classList.contains("o_checklist")) {
-            return;
+            const largestCheckbox = list.children[Symbol.iterator]()
+                .map((li) => {
+                    const markerWidth = parseFloat(
+                        this.window.getComputedStyle(li, "::before").width
+                    );
+                    return isNaN(markerWidth) ? 0 : markerWidth;
+                })
+                .reduce(Math.max);
+            // For `UL` with large font size the marker width is so big that more padding is needed.
+            largestMarkerPadding = Math.round(largestCheckbox) * 1.25;
+        } else {
+            const largestMarker = list.children[Symbol.iterator]()
+                .map((li) => {
+                    const markerWidth = parseFloat(
+                        this.window.getComputedStyle(li, "::marker").width
+                    );
+                    return isNaN(markerWidth) ? 0 : markerWidth;
+                })
+                .reduce(Math.max);
+            // For `UL` with large font size the marker width is so big that more padding is needed.
+            largestMarkerPadding = Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
         }
-
-        const largestMarker = list.children[Symbol.iterator]()
-            .map((li) => {
-                const markerWidth = parseFloat(this.window.getComputedStyle(li, "::marker").width);
-                return isNaN(markerWidth) ? 0 : markerWidth;
-            })
-            .reduce(Math.max);
-        // For `UL` with large font size the marker width is so big that more padding is needed.
-        const largestMarkerPadding = Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
 
         // bootstrap sets ul { padding-left: 2rem; }
         const defaultPadding = parseFloat(getHtmlStyle(this.document).fontSize) * 2;

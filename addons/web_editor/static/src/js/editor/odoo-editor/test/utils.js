@@ -459,6 +459,10 @@ export async function click(el, options) {
     await nextTickFrame();
 }
 
+export async function clickCheckbox(editor) {
+    editor.execCommand('clickCheckbox');
+}
+
 export async function deleteForward(editor) {
     const selection = document.getSelection();
     if (selection.isCollapsed) {
