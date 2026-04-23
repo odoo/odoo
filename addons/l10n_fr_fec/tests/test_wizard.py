@@ -5,12 +5,12 @@ from datetime import timedelta
 from freezegun import freeze_time
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 from odoo import fields, Command
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestAccountFrFec(AccountTestInvoicingCommon):
+class TestAccountFrFec(AccountTestInvoicingCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='fr'):
@@ -157,9 +157,10 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
             f"INV|Customer Invoices|INV/2021/00005|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00005| 000000000000400,00|0,00|||20210502| 000000000000400,00|EUR"
         )
 
-        data_generator = self.wizard.with_context(fec_test_mode=True)._get_fec_stream()
-        content_bytes = b''.join(list(data_generator))
-        content = content_bytes.decode('utf-8')
+        self.authenticate(self.env.user.login, self.env.user.login)
+        url_to_call = self.wizard.generate_fec()
+        res = self.url_open(url_to_call['url'])
+        content = res.content.decode('utf-8')
         self.assertEqual(expected_content, content)
 
         # Select only parent company
@@ -174,7 +175,7 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
             f"INV|Customer Invoices|INV/2021/00002|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00002| 000000000000100,00|0,00|||20210502| 000000000000100,00|EUR"
         )
 
-        data_generator = self.wizard.with_context(fec_test_mode=True)._get_fec_stream()
-        content_bytes = b''.join(list(data_generator))
-        content = content_bytes.decode('utf-8')
+        url_to_call = self.wizard.generate_fec()
+        res = self.url_open(url_to_call['url'])
+        content = res.content.decode('utf-8')
         self.assertEqual(expected_content, content)
