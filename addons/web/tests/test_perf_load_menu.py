@@ -91,8 +91,8 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_visible_menu_ids(self):
         # cold ormcache:
         # - Only web 16
-        # - All modules: 27
-        with self.assertQueryCount(27):
+        # - All modules: 28
+        with self.assertQueryCount(28):
             self.env['ir.ui.menu']._visible_menu_ids()
 
         # cold fields cache - warm orm cache (only web: 0, all module: 0)

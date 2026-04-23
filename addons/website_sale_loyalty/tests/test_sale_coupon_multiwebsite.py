@@ -13,7 +13,7 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env.ref('website.default_website')
+        cls.website = cls.env.ref('base.default_website')
         cls.website2 = cls.env['website'].create({'name': 'website 2'})
 
     def test_01_multiwebsite_checks(self):

@@ -357,7 +357,7 @@ class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
             )
 
         with self.with_user(self.user_portal.login), MockRequest(
-            self.env, website=self.env.ref('website.default_website')
+            self.env, website=self.env.ref('base.default_website')
         ) as mock_request:
             mock_request.render = render_function
             WebsiteAccount().portal_my_opportunities(filterby="today")
@@ -391,7 +391,7 @@ class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
             self.assertIn(non_mexican_partner, values['partners'], "Non-Mexican Partner is not present when rendering partners from Mexico; fallback protection (protecting from no results) didn't work.")
             return 'rendered'
 
-        with MockRequest(self.env, website=self.env.ref('website.default_website')) as mock_request:
+        with MockRequest(self.env, website=self.env.ref('base.default_website')) as mock_request:
             mock_request.render = render_function
             res = WebsiteCrmPartnerAssign().partners()
             self.assertEqual([b'rendered'], res.response, "render_function wasn't called")

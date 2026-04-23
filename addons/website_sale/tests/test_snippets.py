@@ -92,7 +92,7 @@ class TestSnippets(HttpCase):
         category = self.env["product.public.category"].create({"name": "Test Category"})
 
         self.env.company.website_id = False
-        website = self.env.ref("website.default_website")
+        website = self.env.ref("base.default_website")
         website.update({"domain": "http://www.example.com", "company_id": self.env.company.id})
 
         # Simulate a request with correct context

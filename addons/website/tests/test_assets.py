@@ -20,10 +20,10 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         # the test useless
         domain_1 = f"http://127.0.0.1:{self.http_port()}"
         domain_2 = f"http://localhost:{self.http_port()}"
-        self.env.ref('website.default_website').domain = domain_1
+        self.env.ref('base.default_website').domain = domain_1
 
         self.authenticate('admin', 'admin')
-        self.env['website.assets'].with_context(website_id=self.ref('website.default_website')).make_scss_customization(
+        self.env['website.assets'].with_context(website_id=self.ref('base.default_website')).make_scss_customization(
             '/website/static/src/scss/options/colors/user_color_palette.scss',
             {"o-cc1-bg": "'400'"},
         )
@@ -159,7 +159,7 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
 
     def test_binary_asset_website(self):
         # Make website 1's CSS distinct from base one
-        website_id = self.ref('website.default_website')
+        website_id = self.ref('base.default_website')
         self.env['website.assets'].with_context(website_id=website_id).make_scss_customization(
             '/website/static/src/scss/options/colors/user_color_palette.scss',
             {"o-cc1-bg": "'400'"},

@@ -18,7 +18,7 @@ class TestWebsiteSequence(BaseCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.website = cls.env.ref("website.default_website")
+        cls.website = cls.env.ref("base.default_website")
         cls.public_user = cls.env.ref("base.public_user")
 
         ProductTemplate = cls.env["product.template"]

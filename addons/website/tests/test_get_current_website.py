@@ -15,7 +15,7 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env.ref('website.default_website')
+        cls.website = cls.env.ref('base.default_website')
 
     def test_01_get_website_id_from_domain(self):
         """Make sure `_get_website_id_from_domain works`."""

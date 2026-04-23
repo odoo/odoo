@@ -155,9 +155,10 @@ class IrAsset(models.Model):
         See `_get_asset_paths` for more information.
 
         :param bundle: name of the bundle from which to fetch the file paths
-        :param addons: list of addon names as strings
         :param asset_paths: the AssetPath object to fill
         :param seen: a list of bundles already checked to avoid circularity
+        :param addons: list of addon names as strings
+        :param installed: installed addons list
         :param assets_params: Keyword arguments:
 
             * css: bool: whether or not to include style files

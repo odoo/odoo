@@ -581,18 +581,12 @@
           <field name="url">/default-main-menu</field>
         </record>
         <record id="menu_home" model="website.menu">
+            <field name="website_id" eval="False"/>
             <field name="name">Home</field>
             <field name="url">/</field>
             <field name="page_id" ref="website.homepage_page"/>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
-        </record>
-
-        <!-- Default Website -->
-        <record id="default_website" model="website">
-            <field name="name">My Website</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="user_id" ref="base.public_user"/>
         </record>
     </data>
 </odoo>

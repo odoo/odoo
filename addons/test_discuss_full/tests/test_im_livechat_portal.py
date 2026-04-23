@@ -47,7 +47,7 @@ class TestImLivechatPortal(TestLivechatChatbotUI):
                 ],
             }
         )
-        default_website = self.env.ref("website.default_website")
+        default_website = self.env.ref("base.default_website")
         default_website.channel_id = livechat_channel.id
-        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.env.ref("base.default_website").channel_id = livechat_channel.id
         self.start_tour("/contactus", "chatbot_redirect_to_portal")

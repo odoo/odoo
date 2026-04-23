@@ -53,7 +53,7 @@ class TestFuzzy(TransactionCase):
                             words.add(word.lower())
         _logger.info("%s words in target dictionary", len(words))
 
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
 
         typos = {}
 
@@ -110,7 +110,7 @@ class TestAutoComplete(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env.ref('website.default_website')
+        cls.website = cls.env.ref('base.default_website')
         cls.WebsiteController = Website()
         cls.options = {}
         cls.expectedParts = {

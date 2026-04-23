@@ -34,7 +34,7 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
             "mail_mobile.disable_redirect_firebase_dynamic_link", True
         )
 
-        main_website = self.env.ref("website.default_website")
+        main_website = self.env.ref("base.default_website")
         other_websites = self.env["website"].search([]) - main_website
 
         # We change the domain of the website to test that the email that

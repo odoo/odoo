@@ -34,18 +34,18 @@ class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
             'name': 'The basic channel',
             'user_ids': [(6, 0, [self.operator.id])]
         })
-        self.env.ref("website.default_website").channel_id = self.livechat_channel.id
+        self.env.ref("base.default_website").channel_id = self.livechat_channel.id
 
         self.max_sessions_per_operator = 5
         visitor_vals = {
             'lang_id': self.env.ref('base.lang_en').id,
             'country_id': self.env.ref('base.be').id,
-            'website_id': self.env.ref('website.default_website').id,
+            'website_id': self.env.ref('base.default_website').id,
         }
         self.visitors = self.env['website.visitor'].create([{
             'lang_id': self.env.ref('base.lang_en').id,
             'country_id': self.env.ref('base.de').id,
-            'website_id': self.env.ref('website.default_website').id,
+            'website_id': self.env.ref('base.default_website').id,
             'partner_id': self.partner_demo.id,
             'access_token': self.user_demo.partner_id.id,
         }] + [
@@ -59,13 +59,13 @@ class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
                     "name": "Test Page 1",
                     "type": "qweb",
                     "url": "/page_1",
-                    "website_id": self.env.ref("website.default_website").id,
+                    "website_id": self.env.ref("base.default_website").id,
                 },
                 {
                     "name": "Test Page 2",
                     "type": "qweb",
                     "url": "/page_2",
-                    "website_id": self.env.ref("website.default_website").id,
+                    "website_id": self.env.ref("base.default_website").id,
                 },
             ],
         )
