@@ -76,6 +76,15 @@ class TestLotSerial(TestStockCommon):
         self.StockQuantObj._unlink_zero_quants()
         self.assertEqual(self.lot_p_a.location_id, self.locationC)
 
+        # testing having a lot in a single internal location
+        self.StockQuantObj.create({
+            'product_id': self.productA.id,
+            'location_id': self.customer_location.id,
+            'quantity': 10.0,
+            'lot_id': self.lot_p_a.id
+        })
+        self.assertEqual(self.lot_p_a.location_id, self.locationC)
+
     def test_import_lots(self):
         vals = self.MoveObj.action_generate_lot_line_vals({
             'default_tracking': 'lot',
