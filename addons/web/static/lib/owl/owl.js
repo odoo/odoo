@@ -44,6 +44,7 @@ var owl = (() => {
     getScope: () => getScope,
     globalTemplates: () => globalTemplates,
     htmlEscape: () => htmlEscape,
+    immediateEffect: () => immediateEffect,
     markRaw: () => markRaw,
     markup: () => markup,
     mount: () => mount2,
@@ -701,6 +702,27 @@ var owl = (() => {
     getCurrentComputation()?.observers.add(computation);
     updateComputation(computation);
     return function cleanupEffect2() {
+      const previousComputation = getCurrentComputation();
+      setComputation(void 0);
+      unsubscribeEffect(computation);
+      setComputation(previousComputation);
+    };
+  }
+  function immediateEffect(fn) {
+    const computation = createComputation(
+      () => {
+        setComputation(void 0);
+        unsubscribeEffect(computation);
+        setComputation(computation);
+        return fn();
+      },
+      false,
+      1,
+      true
+    );
+    getCurrentComputation()?.observers.add(computation);
+    updateComputation(computation);
+    return function cleanupImmediateEffect() {
       const previousComputation = getCurrentComputation();
       setComputation(void 0);
       unsubscribeEffect(computation);
@@ -1553,17 +1575,48 @@ ${issueStrings}`);
     CSS_PROP_CACHE[prop2] = result;
     return result;
   }
+  var IMPORTANT_RE = /\s*!\s*important\s*$/i;
+  function setStyleProp(style, prop2, value) {
+    if (IMPORTANT_RE.test(value)) {
+      style.setProperty(prop2, value.replace(IMPORTANT_RE, ""), "important");
+    } else {
+      style.setProperty(prop2, value);
+    }
+  }
   function toStyleObj(expr) {
     const result = {};
     switch (typeof expr) {
       case "string": {
-        const str = trim.call(expr);
-        if (!str) {
-          return {};
-        }
-        const parts = str.split(";");
-        for (let part of parts) {
-          part = trim.call(part);
+        const str = expr;
+        const len = str.length;
+        let i = 0;
+        while (i < len) {
+          const start = i;
+          let depth = 0;
+          let quote = 0;
+          while (i < len) {
+            const c = str.charCodeAt(i);
+            if (quote) {
+              if (c === 92) {
+                i += 2;
+                continue;
+              }
+              if (c === quote) {
+                quote = 0;
+              }
+            } else if (c === 34 || c === 39) {
+              quote = c;
+            } else if (c === 40) {
+              depth++;
+            } else if (c === 41) {
+              if (depth > 0) depth--;
+            } else if (c === 59 && depth === 0) {
+              break;
+            }
+            i++;
+          }
+          const part = trim.call(str.slice(start, i));
+          i++;
           if (!part) {
             continue;
           }
@@ -1615,7 +1668,7 @@ ${issueStrings}`);
     val = val === "" ? {} : toStyleObj(val);
     const style = this.style;
     for (let prop2 in val) {
-      style.setProperty(prop2, val[prop2]);
+      setStyleProp(style, prop2, val[prop2]);
     }
   }
   function updateStyle(val, oldVal) {
@@ -1629,7 +1682,7 @@ ${issueStrings}`);
     }
     for (let prop2 in val) {
       if (val[prop2] !== oldVal[prop2]) {
-        style.setProperty(prop2, val[prop2]);
+        setStyleProp(style, prop2, val[prop2]);
       }
     }
     if (!style.cssText) {
@@ -4334,8 +4387,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-04-22T14:48:17.624Z",
-    hash: "4ddb5890",
+    date: "2026-04-23T07:25:02.494Z",
+    hash: "ca2e2b8f",
     url: "https://github.com/odoo/owl"
   };
 
