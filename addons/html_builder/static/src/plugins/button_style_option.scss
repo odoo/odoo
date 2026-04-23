@@ -1,8 +1,27 @@
 .o-hb-button-style-preview {
+    @extend %o-preview-alpha-background;
+    --PreviewAlphaBg-background-size: 35px;
+
     height: 30px;
+    width: 50px;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    // Never preview border-width, because a big width could disrupt the look
+    // of the editor sidebar
+    border-width: 2px !important;
+
+    // Mitigate a subpixel leakage of the preview-alpha background that
+    // happens on the rounded borders
+    overflow: hidden;
+    &::before, &::after {
+        border-radius: 0px;
+    }
+    &:not(.o-has-alpha)::before {
+        background-image: none;
+    }
 }
 
 .o-hb-button-style-btn-edit {

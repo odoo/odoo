@@ -18,8 +18,6 @@ test("fill color preview shows the hover fill color in outline mode", async () =
     // Set a background color
     await contains("[data-label=Fill] .o_we_color_preview").click();
     await contains(".o_color_button[data-color='#0000FF']").click();
-    // Necessary because of the requestAnimationFrame in ButtonStyleOption.getButtonStyle
-    await animationFrame();
 
     expect(":iframe p > a").toHaveStyle(
         "background-color: rgba(0, 0, 0, 0); background-image: none",
@@ -40,8 +38,6 @@ test("fill color preview shows the hover fill color in outline mode", async () =
     const gradientButton = queryFirst(".o_gradient_color_button");
     const gradient = gradientButton.dataset.color;
     await contains(gradientButton).click();
-    // Necessary because of the requestAnimationFrame in ButtonStyleOption.getButtonStyle
-    await animationFrame();
 
     expect(":iframe p > a").toHaveStyle(
         "background-color: rgba(0, 0, 0, 0); background-image: none",
@@ -91,16 +87,16 @@ test("should preview button styles in dropdown", async () => {
 
     await contains(":iframe p > a.test-target").click();
     // primary count=2 because it's shown both in dropdown list and trigger
-    expect(".o-hb-button-style-preview-primary").toHaveCount(2);
-    expect(".o-hb-button-style-preview-secondary").toHaveCount(1);
-    expect(".o-hb-button-style-preview-custom").toHaveCount(1);
+    expect(".o-hb-button-style-preview.btn-primary").toHaveCount(2);
+    expect(".o-hb-button-style-preview.btn-secondary").toHaveCount(1);
+    expect(".o-hb-button-style-preview.btn-custom").toHaveCount(1);
 
     const primaryStyle = getComputedStyle(queryOne(":iframe .btn-primary.test-target"));
     const secondaryStyle = getComputedStyle(queryOne(":iframe .btn-secondary.test-target"));
     const previewVariables = [
         "background-color",
-        "border",
-        "border-radius",
+        "border-color",
+        "border-style",
         "color",
         "font-family",
         "font-weight",
@@ -108,21 +104,48 @@ test("should preview button styles in dropdown", async () => {
     ];
 
     previewVariables.forEach((v) => {
-        expect(".o-hb-button-style-preview-primary").toHaveStyle(`${v}: ${primaryStyle[v]}`);
-        expect(".o-hb-button-style-preview-secondary").toHaveStyle(`${v}: ${secondaryStyle[v]}`);
+        expect(".o-hb-button-style-preview.btn-primary").toHaveStyle(`${v}: ${primaryStyle[v]}`);
+        expect(".o-hb-button-style-preview.btn-secondary").toHaveStyle(
+            `${v}: ${secondaryStyle[v]}`
+        );
     });
 });
 
 test("should have a button linking to theme tab", async () => {
+    await setupWebsiteBuilder('<p><a href="#" class="btn btn-primary test-target">clickme</a></p>');
+
+    await contains(":iframe p > a.test-target").click();
+    await contains("a.o-hb-button-style-btn-edit").click();
+    await animationFrame();
+    expect("button[data-name='theme']").toHaveClass("active");
+});
+
+test("button border width is not previewed", async () => {
     await setupWebsiteBuilder(
-        '<p><a href="#" class="btn btn-primary test-target">clickme</a></p>',
+        `<p>
+            <a href="#" class="btn btn-custom test-target">clickme</a>
+        </p>`,
         {
             loadIframeBundles: true,
         }
     );
 
     await contains(":iframe p > a.test-target").click();
-    await contains("a.o-hb-button-style-btn-edit").click();
-    await animationFrame();
-    expect("button[data-name='theme']").toHaveClass("active");
+    await contains("[data-label='Border'] .o_we_color_preview").click();
+    await contains("button[data-color='#000000']").click();
+    await contains(".options-container [data-label=Border] input").edit("3", {
+        confirm: "enter",
+    });
+    // If border width is > 0, previewed width is fixed to 2 px
+    expect(".options-container .o-hb-select-toggle .o-hb-button-style-preview").toHaveStyle({
+        "border-width": "2px",
+    });
+
+    await contains(".options-container [data-label=Border] input").edit("0", {
+        confirm: "enter",
+    });
+    // If border width is 0, previewed width is 0
+    expect(".options-container .o-hb-select-toggle .o-hb-button-style-preview").toHaveStyle({
+        "border-color": "rgba(0, 0, 0, 0)",
+    });
 });
