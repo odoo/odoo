@@ -5,7 +5,7 @@ from freezegun import freeze_time
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUblImportBis3InvoiceBECashRounding(TestUblImportBis3InvoiceBE):
+class TestUblImportBis3InvoiceBEPayableRoundingAmount(TestUblImportBis3InvoiceBE):
 
     @freeze_time('2020-01-01')
     def test_import_cash_rounding_add_invoice_line(self):
@@ -73,37 +73,27 @@ class TestUblImportBis3InvoiceBECashRounding(TestUblImportBis3InvoiceBE):
         )
 
     @freeze_time('2020-01-01')
-    def test_import_cash_rounding_multiple_tax_subtotal(self):
-        """
-        Multiple tax subtotals are technically not allowed in BIS3, but some PINT rules based on
-        BIS 3 allow them for displaying tax subtotals in different currencies. This causes
-        miscalculation in tax subtotal rounding in `_correct_invoice_tax_amount` if not filtered out
-        based on the document currency.
-        """
+    def test_import_payable_rounding_amount_not_being_cash_rounding(self):
         tax_21 = self.percent_tax(21.0)
-
         invoice = self._import_invoice_as_attachment_on(
-            test_name='test_import_cash_rounding_multiple_tax_subtotal',
+            test_name='test_import_payable_rounding_amount_not_being_cash_rounding',
             journal=self.company_data['default_journal_sale'],
         )
 
         self.assertRecordValues(
             invoice.invoice_line_ids,
             [
-                {
-                    'quantity': 1.0,
-                    'price_unit': 899.99,
-                    'tax_ids': tax_21.ids,
-                },
+                {'price_unit': 100.025, 'tax_ids': tax_21.ids},
+                {'price_unit': 100.025, 'tax_ids': tax_21.ids},
             ],
         )
         self.assertRecordValues(
             invoice,
             [
                 {
-                    'amount_untaxed': 899.99,
-                    'amount_tax': 189.01,
-                    'amount_total': 1089.0,
+                    'amount_untaxed': 200.05,
+                    'amount_tax': 42.01,
+                    'amount_total': 242.06,
                 },
             ],
         )
