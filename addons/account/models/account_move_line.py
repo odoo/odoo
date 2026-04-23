@@ -1138,28 +1138,32 @@ class AccountMoveLine(models.Model):
             if line.display_type in ('line_section', 'line_subsection', 'line_note', 'payment_term') or line.is_imported:
                 continue
             # /!\ Don't remove existing taxes if there is no explicit taxes set on the account.
-            if line.product_id or (line.display_type != 'discount' and (line.account_id.tax_ids or not line.tax_ids)):
+            account_taxes = line.account_id.sudo().tax_ids
+            if line.product_id or (line.display_type != 'discount' and (account_taxes or not line.tax_ids)):
                 line.tax_ids = line._get_computed_taxes()
 
     def _get_computed_taxes(self):
         self.ensure_one()
 
         company_domain = self.env['account.tax']._check_company_domain(self.move_id.company_id)
+        all_account_taxes = self.account_id.sudo().tax_ids
         if self.move_id.is_sale_document(include_receipts=True):
             # Out invoice.
-            filtered_taxes_id = self.product_id.taxes_id.filtered_domain(company_domain)
-            tax_ids = filtered_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
+            filtered_taxes_id = self.product_id.sudo().taxes_id.filtered_domain(company_domain)
+            account_taxes = all_account_taxes.filtered(lambda tax: tax.type_tax_use == 'sale')
+            tax_ids = filtered_taxes_id or account_taxes
 
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
-            filtered_supplier_taxes_id = self.product_id.supplier_taxes_id.filtered_domain(company_domain)
-            tax_ids = filtered_supplier_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
+            filtered_supplier_taxes_id = self.product_id.sudo().supplier_taxes_id.filtered_domain(company_domain)
+            account_taxes = all_account_taxes.filtered(lambda tax: tax.type_tax_use == 'purchase')
+            tax_ids = filtered_supplier_taxes_id or account_taxes
 
         elif self.env.context.get('account_default_taxes'):
-            tax_ids = self.account_id.tax_ids
+            tax_ids = all_account_taxes
 
         else:
-            tax_ids = False if self.env.context.get('skip_computed_taxes') or self.move_id.is_entry() else self.account_id.tax_ids
+            tax_ids = False if self.env.context.get('skip_computed_taxes') or self.move_id.is_entry() else all_account_taxes
 
         if self.company_id and tax_ids:
             tax_ids = tax_ids._filter_taxes_by_company(self.company_id)
@@ -1167,7 +1171,7 @@ class AccountMoveLine(models.Model):
         if tax_ids and self.move_id.fiscal_position_id:
             tax_ids = self.move_id.fiscal_position_id.map_tax(tax_ids)
 
-        return tax_ids
+        return tax_ids.with_env(self.env) if tax_ids else tax_ids
 
     @api.depends('account_id', 'company_id')
     def _compute_discount_allocation_key(self):
@@ -1628,8 +1632,8 @@ class AccountMoveLine(models.Model):
     def _inverse_account_id(self):
         self._inverse_analytic_distribution()
         self._conditional_add_to_compute('tax_ids', lambda line: (
-            line.account_id.tax_ids
-            and not line.product_id.taxes_id.filtered(lambda tax: tax.company_id == line.company_id)
+            line.account_id.sudo().tax_ids.filtered(lambda tax: tax.company_id == line.company_id)
+            and not line.product_id.sudo().taxes_id.filtered(lambda tax: tax.company_id == line.company_id)
         ))
 
     def _inverse_reconciled_lines_ids(self):
