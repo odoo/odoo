@@ -46,18 +46,18 @@
             <div class="modal-content mt-lg-5 o_colored_level o_cc o_cc2 border-0">
                 <form method="get"
                       class="o_searchbar_form s_searchbar_input"
-                      t-att-action="action"
+                      t-att-action="this.action"
                       data-snippet="s_searchbar_input">
                     <div role="search" class="o_search_input_group input-group">
                         <input
                             type="search"
                             name="search"
                             class="oe_search_box search-query form-control border-0 p-3 text-bg-light"
-                            t-att-placeholder="placeholder"
-                            t-att-data-limit="limit"
-                            t-att-data-order-by="order"
-                            t-att-data-search-type="searchType"
-                            t-att-autocomplete="autocomplete"/>
+                            t-att-placeholder="this.placeholder"
+                            t-att-data-limit="this.limit"
+                            t-att-data-order-by="this.order"
+                            t-att-data-search-type="this.searchType"
+                            t-att-autocomplete="this.autocomplete"/>
                         <button type="submit"
                                 class="oe_search_button btn btn-light border-start px-3"
                                 aria-label="Search"
