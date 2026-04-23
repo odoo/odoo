@@ -236,9 +236,9 @@ export function formatFloat(value, options = {}) {
         precision = 2;
     }
     const intDigitsCount = (value !== 0) ? Math.floor(Math.log10(Math.abs(value))) + 1 : 1;
-    // We estimate the maximum decimal digits we can display without showing rounding errors,
-    // by substracting the number of integer digits to 15, as floats have 15-16 digits precision.
-    const maxDecDigits = Math.max(15 - intDigitsCount, 0);
+    // Within 15 digits, we have a float with no parasite digits.
+    // 14 is chosen here, as roundPrecision will add a digit when performing its computations.
+    const maxDecDigits = Math.max(14 - intDigitsCount, 0);
     // We display maximum 6 digits or the number of significant digits (if it's lower)
     precision = Math.min(precision, maxDecDigits);
 
