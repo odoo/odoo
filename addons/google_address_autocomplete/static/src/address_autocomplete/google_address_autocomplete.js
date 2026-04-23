@@ -93,6 +93,10 @@ export class AddressAutoComplete extends CharField {
         ];
     }
 
+    get value() {
+        return this.props.record.data[this.props.name] || "";
+    }
+
     async selectAddressProposition(option) {
         const address = await googlePlacesSession.getAddressDetails({
             address: option.formatted_address,
