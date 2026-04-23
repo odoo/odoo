@@ -121,20 +121,28 @@ class ProjectProject(models.Model):
 
     @api.depends('pricing_type', 'allow_timesheets', 'allow_billable', 'sale_line_employee_ids', 'sale_line_employee_ids.employee_id')
     def _compute_warning_employee_rate(self):
+        self.warning_employee_rate = False
         projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.pricing_type == 'employee_rate')
-        employees = self.env['account.analytic.line']._read_group(
-            [('task_id', 'in', projects.task_ids.ids), ('employee_id', '!=', False)],
-            ['project_id'],
-            ['employee_id:array_agg'],
-        )
-        dict_project_employee = {project.id: employee_ids for project, employee_ids in employees}
-        for project in projects:
-            project.warning_employee_rate = any(
-                x not in project.sale_line_employee_ids.employee_id.ids
-                for x in dict_project_employee.get(project.id, ())
-            )
 
-        (self - projects).warning_employee_rate = False
+        if not projects:
+            return
+
+        missing_mapping_project_ids = self.env.execute_query(SQL("""
+            SELECT DISTINCT aal.project_id
+              FROM account_analytic_line AS aal
+            WHERE aal.project_id = ANY (%s)
+              AND aal.employee_id IS NOT NULL
+              AND NOT EXISTS (
+                     SELECT 1
+                       FROM project_sale_line_employee_map AS map
+                      WHERE map.project_id = aal.project_id
+                        AND map.employee_id = aal.employee_id
+                        AND map.sale_line_id IS NOT NULL
+               )
+        """, projects.ids))
+
+        if missing_mapping_project_ids:
+            self.env['project.project'].browse(missing_mapping_project_ids).warning_employee_rate = True
 
     @api.depends('sale_line_employee_ids.sale_line_id', 'sale_line_id')
     def _compute_partner_id(self):
