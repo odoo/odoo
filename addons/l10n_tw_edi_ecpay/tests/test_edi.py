@@ -30,6 +30,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
             'phone': '+886 123 456 781',
         })
         cls.partner_a.write({
+            'mobile': '+886 987 654 321',
             'phone': '+886 123 456 789',
             'street': 'street七美',
             'city': '中正區',
@@ -69,13 +70,42 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         self.assertEqual(json_data.get("MerchantID"), "1234")
         self.assertEqual(json_data.get("CustomerName"), "partner_a")
         self.assertEqual(json_data.get("CustomerEmail"), "partner_a@tsointsoin")
-        self.assertEqual(json_data.get("CustomerPhone"), "0123456789")
+        self.assertEqual(json_data.get("CustomerPhone"), "0987654321")  # mobile
         self.assertEqual(json_data.get("SalesAmount"), 1050.0)
         self.assertEqual(json_data.get("CustomerAddr"), "street七美, 中正區 TPC, Taiwan")
 
         self.basic_invoice.write({'ref': 'Test Reference'})
         json_data_with_ref = self.basic_invoice._l10n_tw_edi_generate_invoice_json()
         self.assertEqual(json_data_with_ref.get("InvoiceRemark"), "Test Reference")
+
+        # B2C has both phone and mobile (mobile is prioritized)
+        mobile_and_phone_json_data = self.init_invoice(
+            "out_invoice", partner=self.partner_a, products=self.product_a,
+        )._l10n_tw_edi_generate_invoice_json()
+        self.assertEqual(mobile_and_phone_json_data.get("CustomerPhone"), "0987654321")
+
+        # B2C has no 'mobile' but has 'phone'
+        self.partner_a.mobile = ""
+        no_mobile_json_data = self.init_invoice(
+            "out_invoice", partner=self.partner_a, products=self.product_a,
+        )._l10n_tw_edi_generate_invoice_json()
+        self.assertEqual(no_mobile_json_data.get("CustomerPhone"), "0123456789")
+
+        # B2B uses 'phone' and not mobile
+        self.partner_b.mobile = "+886 987 654 321"
+        b2b_json_data = self.init_invoice(
+            "out_invoice", partner=self.partner_b, products=self.product_b,
+        )._l10n_tw_edi_generate_invoice_json()
+        self.assertEqual(b2b_json_data.get("CustomerPhone"), "0123456789")
+
+        # B2B only has mobile field
+        self.partner_b.mobile = "+886 987 654 321"
+        self.partner_b.email = ""
+        self.partner_b.phone = ""
+        with self.assertRaises(UserError):
+            b2b_json_data = self.init_invoice(
+                "out_invoice", partner=self.partner_b, products=self.product_b,
+            )._l10n_tw_edi_generate_invoice_json()
 
     @freeze_time("2025-01-06 15:00:00")
     def test_02_basic_submission(self):
