@@ -19,6 +19,7 @@ import {
     extractInfoFromGroupData,
     getAggregateSpecifications,
     getBasicEvalContext,
+    getDefaultValues,
     getFieldsSpec,
     getGroupServerValue,
     getId,
@@ -112,6 +113,8 @@ rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
         rpcBus.trigger("CLEAR-CACHES", ["web_read", "web_search_read", "web_read_group"]);
     }
 });
+
+const DEFAULT_PREFIX = "default_";
 
 export class RelationalModel extends Model {
     static services = ["action", "dialog", "notification", "orm", "offline"];
@@ -782,6 +785,31 @@ export class RelationalModel extends Model {
         }
     }
 
+    async _applyValuesOffline(values, fields) {
+        const result = {};
+        for (const [fieldName, value] of Object.entries(values)) {
+            if (fields[fieldName]?.type === "many2one") {
+                const id = Number.isInteger(value) ? value : value.id;
+                if (id) {
+                    const recordValues = await this.offline.readMany2XRecords(
+                        fields[fieldName].relation,
+                        [id]
+                    );
+                    result[fieldName] = recordValues[0];
+                }
+            } else if (fields[fieldName]?.type === "many2many") {
+                const recordValues = await this.offline.readMany2XRecords(
+                    fields[fieldName].relation,
+                    Array.isArray(value[0]) ? value[0] : value
+                );
+                result[fieldName] = recordValues.map((r) => [4, r.id, r]);
+            } else {
+                result[fieldName] = value;
+            }
+        }
+        return result;
+    }
+
     /**
      * @param {RelationalModelConfig} config
      * @param {OnChangeParams} params
@@ -806,6 +834,32 @@ export class RelationalModel extends Model {
             const orm = cache ? this.orm.cache(cache) : this.orm;
             response = await orm.call(resModel, "onchange", args, { context });
         } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                const defaultsInContext = Object.fromEntries(
+                    Object.entries(context)
+                        .filter(([key]) => key.startsWith(DEFAULT_PREFIX))
+                        .map(([key, value]) => [key.slice(DEFAULT_PREFIX.length), value])
+                );
+                const fieldNames = Object.keys(activeFields).filter(
+                    (fieldName) => !fields[fieldName].relatedPropertyField
+                );
+
+                const defaultsValues = getDefaultValues(fieldNames, fields);
+
+                const values = await this._applyValuesOffline(
+                    {
+                        ...defaultsInContext,
+                        ...changes,
+                    },
+                    fields
+                );
+
+                return {
+                    ...defaultsValues,
+                    active: true, // Avoid having the "Archive" banner !
+                    ...values,
+                };
+            }
             if (onError) {
                 return void onError(e);
             }

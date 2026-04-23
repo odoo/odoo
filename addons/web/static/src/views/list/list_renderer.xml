@@ -167,6 +167,7 @@
                             t-att-tabindex="this.props.list.editedRecord ? '-1' : '0'"
                             t-att-data-hotkey="control.hotkey || false"
                             t-on-click.stop.prevent="() => this.add({ context: control.context })"
+                            data-available-offline=""
                         >
                             <t t-out="control.string"/>
                         </button>
@@ -399,6 +400,7 @@
                             name="delete"
                             aria-label="Delete row"
                             tabindex="-1"
+                            data-available-offline=""
                         />
                     </td>
                 </t>

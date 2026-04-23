@@ -108,7 +108,7 @@
                 </t>
             </t>
             <t t-else="">
-                <button t-if="this.props.addLabel" class="o_kanban_record o-kanban-button-new btn btn-link d-print-none py-4" accesskey="shift+c" t-on-click.stop.prevent="() => this.props.onAdd()">
+                <button t-if="this.props.addLabel" class="o_kanban_record o-kanban-button-new btn btn-link d-print-none py-4" accesskey="shift+c" t-on-click.stop.prevent="() => this.props.onAdd()" data-available-offline="">
                     <t t-out="this.props.addLabel" />
                 </button>
                 <!-- kanban ghost cards are used to properly space last elements. -->
