@@ -465,6 +465,8 @@
                 <tree string="Journal Entries" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="made_sequence_hole" column_invisible="True"/>
+                    <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>  <!-- Necessary for journal_id's check_company-->
+                    <field name="suitable_journal_ids" column_invisible="True"/>  <!-- Necessary for journal_id's domain-->
                     <field name="invoice_date" string="Invoice Date" optional="hide" readonly="state != 'draft'"/>
                     <field name="date" readonly="state in ['cancel', 'posted']"/>
                     <field name="name" decoration-danger="made_sequence_hole"/>
