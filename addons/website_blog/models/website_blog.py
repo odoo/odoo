@@ -171,8 +171,6 @@ class BlogPost(models.Model):
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser', translate=True)
     teaser_manual = fields.Text(string='Teaser Content', translate=True)
 
-    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment')])
-
     # creation / update stuff
     create_date = fields.Datetime('Created on', readonly=True)
     create_uid = fields.Many2one('res.users', 'Created by', readonly=True)
@@ -336,3 +334,6 @@ class BlogPost(models.Model):
             data['tag_ids'] = post.tag_ids.read(['name'])
             data['image_url'] = post._get_image_url()
         return results_data
+
+    def _get_customer_portal_message_types(self):
+        return ["comment", "email"]

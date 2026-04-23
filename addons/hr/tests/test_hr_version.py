@@ -674,7 +674,6 @@ class TestHrVersion(TestHrCommon):
             "rating_ids",
             "template_warning",
             "tz",
-            "website_message_ids",
             "work_location_name",
             "work_location_type",
             "write_date",

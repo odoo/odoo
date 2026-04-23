@@ -10,6 +10,7 @@ import werkzeug
 
 from odoo import fields, http, tools, _
 from odoo.addons.base.models.ir_qweb import keep_query
+from odoo.addons.portal.controllers.thread import PortalWebClientController
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
@@ -135,7 +136,9 @@ class WebsiteSlides(WebsiteProfile):
             'next_slide': next_slide,
             'category_data': category_data,
             # rating and comments
-            'comments': slide.website_message_ids or [],
+            'comments': request.env["mail.message"].search(
+                PortalWebClientController._get_portal_message_fetch_domain(slide)
+            ),
         })
 
         # allow rating and comments
