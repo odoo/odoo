@@ -222,3 +222,64 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
         so = so_form.save()
         so.action_confirm()
         self.assertEqual(so.order_line.purchase_price, 30)
+
+    def test_dropshipped_kit_margin(self):
+        """Test cost price computation for dropshipped kits after receipt validation.
+
+        Case 1: Dropshipped kits without BOM-line cost share.
+        Case 2: Dropshipped kits with BOM-line cost share.
+
+        In both cases, supplier purchase prices should be used since dropshipped
+        kit components are exploded into individual PO lines.
+        """
+        try:
+            dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+        except ValueError:
+            self.skipTest('This test requires the following module: stock_dropshipping')
+
+        categ_goods = self.env.ref('product.product_category_goods')
+        kit_1_components = self.kit_1.bom_ids.bom_line_ids.product_id  # components_{a,b,c}
+        kit_3_components = self.kit_3.bom_ids.bom_line_ids.product_id  # components_{f,g}
+        categ_goods.property_cost_method = 'fifo'
+        (self.kit_1 | self.kit_3 | kit_1_components | kit_3_components).write({
+            'categ_id': categ_goods.id,
+            'route_ids': [Command.link(dropship_route.id)],
+        })
+        (self.kit_1 | kit_1_components).write({
+            'seller_ids': [Command.create({'partner_id': self.partner_b.id, 'price': 30})],
+            'standard_price': 10,
+        })
+        kit_3_components.write({
+            'seller_ids': [Command.create({'partner_id': self.partner_b.id, 'price': 80})],
+        })
+        self.kit_1.button_bom_cost()
+        self.kit_3.standard_price = 100
+        self.kit_3.bom_ids.bom_line_ids[0].cost_share = 80
+        self.kit_3.bom_ids.bom_line_ids[1].cost_share = 20
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.kit_1.id, 'product_uom_qty': 1.0}),
+                Command.create({'product_id': self.kit_3.id, 'product_uom_qty': 1.0}),
+            ],
+        })
+        so.action_confirm()
+        po = so.order_line.purchase_line_ids.order_id
+        po.button_confirm()
+        self.assertEqual((self.kit_1.standard_price, self.kit_3.standard_price), (60, 100))
+        self.assertRecordValues(so.order_line, [
+            {'product_id': self.kit_1.id, 'purchase_price': 60},
+            {'product_id': self.kit_3.id, 'purchase_price': 100},
+        ])
+        so.picking_ids.button_validate()
+        self.assertRecordValues(po.order_line, [
+            {'product_id': self.component_a.id, 'product_uom_qty': 2, 'price_unit': 30.0},
+            {'product_id': self.component_b.id, 'product_uom_qty': 1, 'price_unit': 30.0},
+            {'product_id': self.component_c.id, 'product_uom_qty': 3, 'price_unit': 30.0},
+            {'product_id': self.component_f.id, 'product_uom_qty': 1, 'price_unit': 80.0},
+            {'product_id': self.component_g.id, 'product_uom_qty': 2, 'price_unit': 80.0},
+        ])
+        self.assertRecordValues(so.order_line, [
+            {'product_id': self.kit_1.id, 'purchase_price': 180},
+            {'product_id': self.kit_3.id, 'purchase_price': 240},
+        ])

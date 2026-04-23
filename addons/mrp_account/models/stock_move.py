@@ -38,7 +38,10 @@ class StockMove(models.Model):
         for line in exploded_lines:
             component_qty_per_kit[line[0].product_id] += line[0].product_uom_id._compute_quantity(line[1]['qty'], line[0].product_id.uom_id, round=False)
         for component, valuated_moves in self.grouped('product_id').items():
-            price_unit = super(StockMove, valuated_moves)._get_price_unit()
+            if any(m._is_dropshipped() for m in valuated_moves):
+                price_unit = valuated_moves.with_context(component_valuation=True)._get_price_unit_delivery()
+            else:
+                price_unit = super(StockMove, valuated_moves)._get_price_unit()
             qty_per_kit = component_qty_per_kit[component] / kit_bom.product_qty
             total_price_unit += price_unit * qty_per_kit
         return total_price_unit / valuated_quantity if not product.uom_id.is_zero(valuated_quantity) else 0
