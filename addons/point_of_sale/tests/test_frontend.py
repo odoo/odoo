@@ -645,7 +645,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 @tagged('post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
-        self.start_pos_tour('pos_pricelist')
+        self.start_pos_tour('pos_pricelist', debug=True)
 
     def test_pos_basic_order_02_decimal_order_quantity(self):
         self.start_pos_tour('pos_basic_order_02_decimal_order_quantity')
