@@ -638,7 +638,7 @@ class StockPicking(models.Model):
     package_history_ids = fields.Many2many('stock.package.history', string='Transfered Packages', copy=False)
     show_check_availability = fields.Boolean(
         compute='_compute_show_check_availability',
-        help='Technical field used to compute whether the button "Check Availability" should be displayed.')
+        help='Technical field used to compute whether the button "Reserve" should be displayed.')
     show_allocation = fields.Boolean(
         compute='_compute_show_allocation',
         help='Technical Field used to decide whether the button "Allocation" should be displayed.')
@@ -976,7 +976,7 @@ class StockPicking(models.Model):
 
     @api.depends('state', 'move_ids.product_uom_qty', 'picking_type_code')
     def _compute_show_check_availability(self):
-        """ According to `picking.show_check_availability`, the "check availability" button will be
+        """ According to `picking.show_check_availability`, the "Reserve" button will be
         displayed in the form view of a picking.
         """
         for picking in self:
@@ -1236,7 +1236,7 @@ class StockPicking(models.Model):
             key=lambda move: (-int(move.priority), not bool(move.date_deadline), move.date_deadline, move.date, move.id)
         )
         if not moves:
-            raise UserError(_('Nothing to check the availability for.'))
+            raise UserError(self.env._('There is nothing to reserve.'))
         moves._action_assign()
         return True
 

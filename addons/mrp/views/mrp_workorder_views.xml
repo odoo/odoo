@@ -12,6 +12,7 @@
                 <filter string="Blocked" name="blocked" domain="[('state','=','blocked')]"/>
                 <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
                 <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
+                <filter string="Cancelled" name="cancel" domain="[('state', '=', 'cancel')]"/>
                 <filter string="Late" name="late" domain="[('date_start', '&lt;=', 'today')]"/>
                 <separator/>
                 <filter string="Start Date" name="date_start_filter" date="date_start"/>
@@ -581,6 +582,15 @@
         <field name="binding_view_types">list,kanban,form</field>
         <field name="state">code</field>
         <field name="code">records.action_unplan()</field>
+    </record>
+
+    <record id="action_mark_as_done_workorders" model="ir.actions.server">
+        <field name="name">Mark as Done</field>
+        <field name="model_id" ref="mrp.model_mrp_workorder"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_workorder"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_mark_as_done()</field>
     </record>
 
 </odoo>

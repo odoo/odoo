@@ -725,7 +725,7 @@ class TestPacking(TestPackingCommon):
         # Update quantity on hand: 100 units in package
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
 
-        # Check Availability
+        # Reserve
         picking.action_assign()
 
         self.assertEqual(picking.state, "assigned")
@@ -743,7 +743,7 @@ class TestPacking(TestPackingCommon):
         new_package = self.env["stock.package"].create({"name": "New Pack"})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20, package_id=new_package)
 
-        # Check Availability
+        # Reserve
         picking.action_assign()
 
         # Check that result package is not changed on first line

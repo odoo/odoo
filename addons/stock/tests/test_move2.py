@@ -1292,9 +1292,9 @@ class TestSinglePicking(TestStockCommon):
             self.assertNotEqual(move.quantity, move.product_uom_qty, 'Initial demand shouldn\'t be modified')
 
     def test_recheck_availability_1(self):
-        """ Check the good behavior of check availability. I create a DO for 2 unit with
-        only one in stock. After the first check availability, I should have 1 reserved
-        product with one move line. After adding a second unit in stock and recheck availability.
+        """ Check the good behavior of the 'Reserve' button. I create a DO for 2 unit with
+        only one in stock. After the first reservation, I should have 1 reserved
+        product with one move line. After adding a second unit in stock and re-reserve.
         The DO should have 2 reserved unit, be in available state and have only one move line.
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0)
@@ -2094,7 +2094,7 @@ class TestSinglePicking(TestStockCommon):
 
     def test_additional_move_1(self):
         """ On a planned trasfer, add a stock move when the picking is already ready. Check that
-        the check availability button appears and work.
+        the reserve button appears and works.
         """
         # Make some stock for productA and productB.
         receipt = self.env['stock.picking'].create({
@@ -2167,7 +2167,7 @@ class TestSinglePicking(TestStockCommon):
 
     def test_additional_move_2(self):
         """ On an immediate trasfer, add a stock move when the picking is already ready. Check that
-        the check availability button doest not appear.
+        the reserve button does not appear.
         """
         # Create a delivery for 1 productA, check the picking is ready
         delivery_order = self.env['stock.picking'].create({

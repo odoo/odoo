@@ -1528,7 +1528,7 @@ class TestStockFlow(TestStockCommon):
         # receive one product in stock
         inventory_quant.inventory_quantity = 2
         inventory_quant.action_apply_inventory()
-        # recheck availability of the delivery order, it should be assigned
+        # re-reserve the delivery order, it should be assigned
         picking_out.action_assign()
         self.assertEqual(len(picking_out.move_ids), 1.0)
         self.assertEqual(picking_out.move_ids.product_qty, 2.0)
@@ -1610,7 +1610,7 @@ class TestStockFlow(TestStockCommon):
         inventory_quant.inventory_quantity = 2
         inventory_quant.action_apply_inventory()
 
-        # recheck availability of the delivery order, it should be assigned
+        # re-reserve the delivery order, it should be assigned
         picking_out.action_assign()
         self.assertEqual(picking_out.state, "assigned")
 

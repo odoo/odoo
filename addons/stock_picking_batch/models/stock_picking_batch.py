@@ -29,7 +29,7 @@ class StockPickingBatch(models.Model):
         help='List of transfers associated to this batch')
     show_check_availability = fields.Boolean(
         compute='_compute_show_check_availability',
-        string='Show Check Availability')
+        string='Show Reserve Button')
     show_allocation = fields.Boolean(
         compute='_compute_show_allocation',
         string='Show Allocation Button')

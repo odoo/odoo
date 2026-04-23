@@ -6016,7 +6016,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.customer_location.id})
         # confirm
         picking_out.action_confirm()
-        # check availability
+        # reserve
         picking_out.action_assign()
         # check reserved_availabity expressed in move uom
         self.assertEqual(move.quantity, 2)
