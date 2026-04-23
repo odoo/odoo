@@ -8,7 +8,10 @@ class FecDownloadController(Controller):
         company_id = int(company_id)
         if company_id not in request.env.user.company_ids.ids:
             raise AccessDenied()
-        wizard = request.env['account.fr.fec'].with_company(company_id).browse(wizard_id)
+        wizard = request.env['account.fr.fec']\
+            .with_context({'allowed_company_ids': request.env.companies.ids})\
+            .with_company(company_id)\
+            .browse(wizard_id)
         return Response(
             wizard._get_fec_stream(),
             headers=[
