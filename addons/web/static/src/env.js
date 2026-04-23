@@ -231,6 +231,7 @@ export async function mountComponent(component, target, appConfig = {}) {
         await startServices(env);
     }
     const app = new App({
+        env,
         getTemplate,
         dev: env.debug || session.test_mode,
         warnIfNoStaticProps: !session.test_mode,
