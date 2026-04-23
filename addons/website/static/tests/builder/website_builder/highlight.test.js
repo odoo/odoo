@@ -58,7 +58,7 @@ test("Check no highlight color is displayed in colorpicker when text with multip
     await expandToolbar();
     expect(".o-select-highlight").toHaveCount(1);
     await contains(".o-we-toolbar .o-select-highlight").click();
-    expect("#colorButton").toHaveAttribute("style", "background-color:");
+    expect("#colorButton").not.toHaveAttribute("style");
 });
 
 test("Can set a color to a highlight", async () => {
@@ -75,7 +75,7 @@ test("Can set a color to a highlight", async () => {
     await animationFrame();
     await click("#colorButton");
     await animationFrame();
-    await click("button[style='background-color: var(--hb-cp-o-color-2)']");
+    await click("button[style*='background-color: var(--hb-cp-o-color-2)']");
     await animationFrame();
     const color = getComputedStyle(document.documentElement).getPropertyValue("--o-color-2");
     expect("span.o_text_highlight_freehand_2").toHaveStyle({

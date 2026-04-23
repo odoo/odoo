@@ -132,19 +132,19 @@ test("Should change the shape color of an image", async () => {
 
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveAttribute(
         "style",
-        `background-color: #714B67`
+        `background-color: rgb(113, 75, 103);`
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(2)`).toHaveAttribute(
         "style",
-        `background-color: #F0CDA8`
+        `background-color: rgb(240, 205, 168);`
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(3)`).toHaveAttribute(
         "style",
-        `background-color: #F6F5F4`
+        `background-color: rgb(246, 245, 244);`
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(4)`).toHaveAttribute(
         "style",
-        `background-color: #1B1319`
+        `background-color: rgb(27, 19, 25);`
     );
 
     expect(`:iframe .test-options-target img`).toHaveAttribute(
@@ -163,7 +163,7 @@ test("Should change the shape color of an image", async () => {
 
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveAttribute(
         "style",
-        `background-color: #FF0000`
+        `background-color: rgb(255, 0, 0);`
     );
     expect(`:iframe .test-options-target img`).toHaveAttribute(
         "data-shape-colors",
@@ -189,19 +189,19 @@ test("Should change the shape color of an image with a class color", async () =>
 
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveAttribute(
         "style",
-        `background-color: #714B67`
+        `background-color: rgb(113, 75, 103);`
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(2)`).toHaveAttribute(
         "style",
-        `background-color: #F0CDA8`
+        `background-color: rgb(240, 205, 168);`
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(3)`).toHaveAttribute(
         "style",
-        `background-color: #F6F5F4`
+        `background-color: rgb(246, 245, 244);`
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(4)`).toHaveAttribute(
         "style",
-        `background-color: #1B1319`
+        `background-color: rgb(27, 19, 25);`
     );
 
     expect(`:iframe .test-options-target img`).toHaveAttribute(
@@ -220,7 +220,7 @@ test("Should change the shape color of an image with a class color", async () =>
 
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveAttribute(
         "style",
-        `background-color: #F0CDA8`
+        `background-color: rgb(240, 205, 168);`
     );
     expect(`:iframe .test-options-target img`).toHaveAttribute(
         "data-shape-colors",
