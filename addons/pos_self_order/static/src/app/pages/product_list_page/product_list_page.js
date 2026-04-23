@@ -63,7 +63,7 @@ export class ProductListPage extends Component {
         useHorizontalScrollShadow(this.categoryListRef, useRef("category_container"));
         useDraggableScroll(this.subCategoryListRef);
         Object.defineProperty(this.state, "quantityByProductTmplId", {
-            get: computed(() => {
+            get: computed(() =>
                 this.selfOrder.currentOrder.lines
                     .filter((line) => !line.combo_parent_id)
                     .reduce((acc, { product_id, changes: { qty } }) => {
@@ -72,8 +72,8 @@ export class ProductListPage extends Component {
                             acc[tmplId] = (acc[tmplId] || 0) + qty;
                         }
                         return acc;
-                    }, {});
-            }),
+                    }, {})
+            ),
         });
 
         onMounted(() => {

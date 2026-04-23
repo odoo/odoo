@@ -15,21 +15,21 @@
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Name"
-                        t-custom-model="state.name"/>
+                        t-custom-model="this.state.name"/>
                     <input t-if="this.preset.needsEmail || this.preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Email"
-                        t-custom-model="state.email"/>
+                        t-custom-model="this.state.email"/>
                     <t t-if="this.preset.needsName || this.preset.needsPartner">
                         <input type="text"
                             class="form-control form-control-lg"
                             placeholder="Phone"
-                            t-custom-model="state.phone"/>
+                            t-custom-model="this.state.phone"/>
                         <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number starting with the country code (e.g. +32)</p>
                     </t>
                     <t t-if="this.preset.needsPartner">
-                        <select class="partner-select form-select form-select-lg" t-custom-model="state.countryId">
+                        <select class="partner-select form-select form-select-lg" t-custom-model="this.state.countryId">
                             <option value="">Select a country</option>
                             <t t-foreach="this.countries" t-as="country" t-key="country.id">
                                 <option t-att-value="country.id" t-out="country.name" />
@@ -39,16 +39,16 @@
                             <input type="text"
                                 class="form-control form-control-lg w-75"
                                 placeholder="Street and Number"
-                                t-custom-model="state.street"/>
+                                t-custom-model="this.state.street"/>
                             <input
                                 type="text"
                                 class="form-control form-control-lg w-25"
                                 placeholder="Zip"
-                                t-custom-model="state.zip"/>
+                                t-custom-model="this.state.zip"/>
                         </div>
                         <div class="d-flex gap-3">
                             <t t-set="availableState" t-value="this.states" />
-                            <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-custom-model="state.stateId">
+                            <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-custom-model="this.state.stateId">
                                 <option value="">Select a state</option>
                                 <t t-foreach="availableState" t-as="state" t-key="state.id">
                                     <option t-att-value="state.id" t-out="state.name" />
@@ -57,7 +57,7 @@
                             <input type="text"
                                 class="form-control form-control-lg"
                                 placeholder="City"
-                                t-custom-model="state.city"/>
+                                t-custom-model="this.state.city"/>
                         </div>
                     </t>
                 </div>
