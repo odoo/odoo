@@ -31,7 +31,7 @@ class TestLivechatChatbotUICommon(TestGetOperatorCommon, TestWebsiteLivechatComm
             })]
         })
 
-        self.env.ref('website.default_website').channel_id = self.livechat_channel.id
+        self.env.ref('base.default_website').channel_id = self.livechat_channel.id
 
     def chatbot_redirect_tour(self):
         chatbot_redirect_script = self.env["chatbot.script"].create(
@@ -70,9 +70,9 @@ class TestLivechatChatbotUICommon(TestGetOperatorCommon, TestWebsiteLivechatComm
                 'chatbot_script_id': chatbot_redirect_script.id,
             })]
         })
-        default_website = self.env.ref("website.default_website")
+        default_website = self.env.ref("base.default_website")
         default_website.channel_id = livechat_channel.id
-        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.env.ref("base.default_website").channel_id = livechat_channel.id
         self.start_tour("/contactus", "website_livechat.chatbot_redirect")
 
 
@@ -245,15 +245,15 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
                 'chatbot_script_id': chatbot_trigger_selection.id,
             })]
         })
-        default_website = self.env.ref("website.default_website")
+        default_website = self.env.ref("base.default_website")
         default_website.channel_id = livechat_channel.id
-        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.env.ref("base.default_website").channel_id = livechat_channel.id
         self.start_tour("/contactus", "website_livechat.chatbot_trigger_selection")
 
     def test_chatbot_fw_operator_matching_lang(self):
         fr_op = self._create_operator(lang_code="fr_FR")
         en_op = self._create_operator(lang_code="en_US")
-        self.env.ref("website.default_website").language_ids = self.env["res.lang"].search(
+        self.env.ref("base.default_website").language_ids = self.env["res.lang"].search(
             [("code", "in", ("fr_FR", "en_US"))]
         )
         self.livechat_channel.user_ids = fr_op + en_op
@@ -353,7 +353,7 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
                 ],
             }
         )
-        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.env.ref("base.default_website").channel_id = livechat_channel.id
         self.start_tour("/", "website_livechat.chatbot_continue_tour")
 
     def test_chatbot_user_input_saved_on_last_step(self):

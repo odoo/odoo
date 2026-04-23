@@ -7,7 +7,7 @@ from odoo.tools import mute_logger
 class WithContext(HttpCase):
     def test_01_homepage_url(self):
         # Setup
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         website.write({
             'name': 'Test Website',
             'domain': self.base_url(),

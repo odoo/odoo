@@ -26,7 +26,7 @@ class WebsiteSaleSEO(HttpCase, WebsiteSaleCommon):
         self.assertTrue(res["can_edit_seo"])
 
     def test_website_sale_product_canonical_multilang(self):
-        website = self.env.ref("website.default_website")
+        website = self.env.ref("base.default_website")
         lang_fr = self.env["res.lang"]._activate_lang("fr_FR")
         website.language_ids = self.env.ref("base.lang_en") + lang_fr
 

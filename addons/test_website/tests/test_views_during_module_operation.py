@@ -55,7 +55,7 @@ def test_01_cow_views_unlink_on_module_update(env):
     })
 
     # Trigger COW on child view
-    update_module_child_view.with_context(website_id=env.ref('website.default_website').id).write({'name': 'Child View (W1)'})
+    update_module_child_view.with_context(website_id=env.ref('base.default_website').id).write({'name': 'Child View (W1)'})
 
     # Ensure views are correctly setup
     msg = "View '%s' does not exist!"
@@ -114,7 +114,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
     ThemeView = env['theme.ir.ui.view']
     Imd = env['ir.model.data']
 
-    website_1 = env.ref('website.default_website')
+    website_1 = env.ref('base.default_website')
     website_2 = website_1.search([('id', '>', website_1.id)], order='id', limit=1).ensure_one()
     theme_default = env.ref('base.module_theme_default')
 
@@ -188,7 +188,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
     ThemeView = env['theme.ir.ui.view']
     Imd = env['ir.model.data']
 
-    website_1 = env.ref('website.default_website')
+    website_1 = env.ref('base.default_website')
     website_2 = website_1.search([('id', '>', website_1.id)], order='id', limit=1).ensure_one()
     theme_default = env.ref('base.module_theme_default')
 

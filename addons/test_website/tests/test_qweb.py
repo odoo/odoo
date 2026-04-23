@@ -19,7 +19,7 @@ class TestQweb(TransactionCaseWithUserDemo):
     def test_qweb_cdn(self):
         self._load('test_website', 'tests/template_qweb_test.xml')
 
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         website.write({
             "cdn_activated": True,
             "cdn_url": "http://test.cdn"

@@ -489,7 +489,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
 def simulate_frontend_context(self, website_id=None):
     if website_id is None:
-        website_id = self.env.ref("website.default_website").id
+        website_id = self.env.ref("base.default_website").id
 
     # Mock this method will be enough to simulate frontend context in most methods
     def get_request_website():
@@ -861,7 +861,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         self.demo_user.company_ids += self.company2
         # Set company2 as current company for demo user
         Website = self.env["website"]
-        self.website = self.env.ref("website.default_website")
+        self.website = self.env.ref("base.default_website")
         self.website.company_id = self.company2
         self.website2 = Website.create({"name": "Website 2", "company_id": self.company1.id})
 
@@ -967,7 +967,7 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
         self.env.user.write({
             "group_ids": [Command.link(self.env.ref("product.group_product_pricelist").id)]
         })
-        website = self.env.ref("website.default_website")
+        website = self.env.ref("base.default_website")
         test_user = self.env["res.users"].create({
             "name": "Toto",
             "login": "toto",

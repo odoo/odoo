@@ -27,7 +27,7 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
         Page = self.env['website.page']
         Website = self.env['website']
 
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         generic_page = Page.create({
             'name': 'Test Diverged',
             'type': 'qweb',
@@ -67,7 +67,7 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
             'view_id': test_view.id,
             'url': '/test-duplicate',
             'name': 'Test Duplicate',
-            'website_id': self.ref('website.default_website'),
+            'website_id': self.ref('base.default_website'),
         })
 
         pages = Page.search([('name', 'like', 'Test Duplicate')])

@@ -20,7 +20,7 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
 
         cls.website = cls.env.company.website_id
         if not cls.website:
-            cls.website = cls.env.ref("website.default_website")
+            cls.website = cls.env.ref("base.default_website")
             cls.website.company_id = cls.env.company
 
     @mute_logger("odoo.http")

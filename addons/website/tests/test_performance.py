@@ -150,7 +150,7 @@ class TestStandardPerformance(UtilPerf):
 
     @mute_logger('odoo.http')
     def test_20_perf_sql_img_controller_bis(self):
-        website_id = self.ref('website.default_website')
+        website_id = self.ref('base.default_website')
         url = f'/web/image/website/{website_id}/favicon'
         select_tables_perf = {
             'website': 1,
@@ -176,7 +176,7 @@ class TestWebsitePerformanceCommon(UtilPerf):
 
     def _create_page_with_menu(self, url):
         name = url[1:]
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         page = self.env['website.page'].create({
             'url': url,
             'name': name,
@@ -231,7 +231,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website_menu': 1,
                     'ir_ui_view': 1,
                 }
-                expected_query_count = 6
+                expected_query_count = 5
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
                 self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
 
@@ -281,7 +281,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # layout
                     'ir_ui_view': 1,
                 }
-                expected_query_count = 5
+                expected_query_count = 4
                 insert_tables_perf = {}
                 self._check_url_hot_query('/', expected_query_count, select_tables_perf, insert_tables_perf, nocache=True)
                 self.assertEqual(self._get_url_hot_query('/', nocache=True), expected_query_count)

@@ -301,6 +301,15 @@ class Environment(Mapping[str, "BaseModel"]):
         return self['res.company'].browse(user_company_ids)
 
     @functools.cached_property
+    def website(self) -> BaseModel:
+        """Return the current website (as an instance).
+
+        :returns: current website (possibly empty) - sudoed
+        :rtype: :class:`website record<~odoo.addons.base.models.website.Website>`
+        """
+        return self(su=True)['website'].browse(self.context.get('website_id'))
+
+    @functools.cached_property
     def tz(self) -> tzinfo:
         """Return the current timezone info, defaults to UTC."""
         timezone = self.context.get('tz') or self.user.tz

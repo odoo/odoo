@@ -96,39 +96,9 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
 
 
 class Website(models.CachedModel):
-    _name = 'website'
+    _inherit = 'website'
     _description = "Website"
     _order = "sequence, id"
-
-    # ir.http:_match is called by ir.http:_serve_db at a time when the
-    # environment hasn't been completely initialized (i.e. before the method
-    # ir.http:_authenticate is called by ir.http:_serve_ir_http), and its
-    # context language hasn't been checked against activated languages yet.
-    #
-    # Inside ir.http:_match, the http_routing module is trying to retrieve the
-    # default language via _get_default_lang, which is overridden by the
-    # website module and accesses website.default_lang_id.
-    #
-    # Here, we cache the needed fields only to avoid prefetching any
-    # translatable field, such as contact_us_link_url by website_sale, as
-    # translating to an invalid language would result in an error.
-    _clear_cache_name = 'default'
-
-    @property
-    def _cached_data_fields(self):
-        return [
-            f.name
-            for f in self._fields.values()
-            if f.name != 'id'
-            if f.prefetch is True
-            if not f.groups
-        ]
-
-    @tools.ormcache(cache='default')
-    def _cached_data(self):
-        # method is overridden to use cache 'default' instead of 'stable'
-        # hack: retrieve the original method to skip the ormcache wrapper
-        return super()._cached_data.__cache__.method(self)
 
     def website_domain(self):
         return Domain('website_id', 'in', [False, *self.ids])
@@ -141,15 +111,6 @@ class Website(models.CachedModel):
         def_lang_id = self.env['res.lang']._get_data(code=lang_code).id
         return def_lang_id or self._active_languages()[0]
 
-    name = fields.Char('Website Name', required=True)
-    sequence = fields.Integer(default=10)
-    domain = fields.Char('Website Domain', help='E.g. https://www.mydomain.com')
-    domain_punycode = fields.Char(
-        string="Punycode Domain",
-        compute="_compute_domain_punycode",
-        store=False,
-        readonly=True)
-    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company, required=True)
     language_ids = fields.Many2many(
         'res.lang', 'website_lang_rel', 'website_id', 'lang_id', string="Languages",
         default=_active_languages, required=True)
@@ -191,7 +152,6 @@ class Website(models.CachedModel):
     plausible_shared_key = fields.Char()
     plausible_site = fields.Char()
 
-    user_id = fields.Many2one('res.users', string='Public User', required=True)  # TODO to rename user_id into public_user_id
     cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
     cdn_url = fields.Char('CDN Base URL', default='')
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
@@ -216,28 +176,11 @@ class Website(models.CachedModel):
         ('b2c', 'Free sign up'),
     ], string='Customer Account', default='b2b')
 
-    _domain_unique = models.Constraint(
-        'unique(domain)',
-        'Website Domain should be unique.',
-    )
-
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
         language_ids = self.language_ids._origin
         if language_ids and self.default_lang_id not in language_ids:
             self.default_lang_id = language_ids[0]
-
-    @api.depends('domain')
-    def _compute_domain_punycode(self):
-        """Compute the punycode (ASCII-safe) version of the domain."""
-        for website in self:
-            website_domain = website.domain or ''
-            hostname = urlparse(website_domain).hostname or ''
-            try:
-                punycode_hostname = hostname.encode('idna').decode('ascii')
-                website.domain_punycode = website_domain.replace(hostname, punycode_hostname)
-            except UnicodeError:
-                website.domain_punycode = website_domain
 
     @api.depends('social_default_image')
     def _compute_has_social_default_image(self):
@@ -317,6 +260,8 @@ class Website(models.CachedModel):
         for vals in vals_list:
             self._handle_create_write(vals)
 
+            if 'default_lang_id' not in vals:
+                vals['default_lang_id'] = self._default_language()
             if 'user_id' not in vals:
                 company = self.env['res.company'].browse(vals.get('company_id'))
                 vals['user_id'] = company._get_public_user().id if company else self.env.ref('base.public_user').id
@@ -437,7 +382,7 @@ class Website(models.CachedModel):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_website(self):
-        default_website = self.env.ref('website.default_website', raise_if_not_found=False)
+        default_website = self.env.ref('base.default_website', raise_if_not_found=False)
         if default_website and default_website in self:
             raise UserError(_("You cannot delete default website %s. Try to change its settings instead", default_website.name))
 
@@ -2038,7 +1983,7 @@ class Website(models.CachedModel):
         Builds a search domain AND-combining a base domain with partial matches of each term in
         the search expression in any of the fields.
 
-        :param domain: base domain combined in the search expression
+        :param domain_list: base domain combined in the search expression
         :param search: search expression string
         :param fields: list of field names to match the terms of the search expression with
         :param extra: function that returns an additional subdomain for a search term
@@ -2083,8 +2028,7 @@ class Website(models.CachedModel):
         return result
 
     def _search_with_fuzzy(self, search_type, search, offset, limit, order, options):
-        """
-        Performs a search with a search text or with a resembling word
+        """ Performs a search with a search text or with a resembling word
 
         :param search_type: indicates what to search within, 'all' matches all available types
         :param search: text against which to match results
@@ -2092,14 +2036,16 @@ class Website(models.CachedModel):
         :param limit: maximum number of results per model type involved in the result
         :param order: order on which to sort results within a model type
         :param options: search options from the submitted form containing:
+
             - allowFuzzy: boolean indicating whether the fuzzy matching must be done
             - other options used by `_search_get_details()`
 
         :return: tuple containing:
+
             - count: total number of results across all involved models
             - results: list of results per model (see _search_exact)
             - fuzzy_term: similar word against which results were obtained, indicates there were
-                no results for the initially requested search
+              no results for the initially requested search
         """
         fuzzy_term = False
         search_details = self._search_get_details(search_type, order, options)
@@ -2124,6 +2070,7 @@ class Website(models.CachedModel):
         :param order: order on which to sort results within a model type
 
         :return: tuple containing:
+
             - total number of results across all involved models
             - list of results per model made of:
                 - initial search_detail for the model

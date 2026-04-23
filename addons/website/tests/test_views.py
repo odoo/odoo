@@ -99,7 +99,7 @@ class TestCustomizeView(common.HttpCase):
         self.assertEqual(self.url_open(page.url).text, '<div><span>Default</span></div>')
 
     def test_disabled_optional_template_xpath(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         View = self.env['ir.ui.view']
         template = View.create({
             'name': 'test_root',
@@ -239,7 +239,7 @@ class TestViewSaving(TestViewSavingCommon):
             'key': 'website.test_view',
             'arch': ET.tostring(self.arch, encoding='unicode')
         })
-        self.website_ctx = {'website_id': self.ref('website.default_website')}
+        self.website_ctx = {'website_id': self.ref('base.default_website')}
 
     def test_embedded_extraction(self):
         fields = self.env['ir.ui.view'].extract_embedded_fields(self.arch)
@@ -344,10 +344,10 @@ class TestViewSaving(TestViewSavingCommon):
             )
         ), encoding='unicode')
 
-        self.view_id.with_context(website_id=self.ref('website.default_website')).save(value=replacement, xpath='/div/div[2]')
+        self.view_id.with_context(website_id=self.ref('base.default_website')).save(value=replacement, xpath='/div/div[2]')
         self.assertFalse(imd.noupdate, "view's xml_id shouldn't be set to 'noupdate' in a website context as `save` method will COW")
         # remove newly created COW view so next `save()`` wont be redirected to COW view
-        self.env['website'].with_context(website_id=self.ref('website.default_website')).viewref(self.view_id.key).unlink()
+        self.env['website'].with_context(website_id=self.ref('base.default_website')).viewref(self.view_id.key).unlink()
 
         self.view_id.save(value=replacement, xpath='/div/div[2]')
 
@@ -561,7 +561,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
             'key': 'website.extension_view',
         })
         self.headers = {"Content-Type": "application/json"}
-        self.website_ctx = {'website_id': self.ref('website.default_website')}
+        self.website_ctx = {'website_id': self.ref('base.default_website')}
         self.website_domain = [('website_id', '=', self.website_ctx['website_id'])]
 
     def test_cow_on_base_after_extension(self):
@@ -572,7 +572,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         v3 = View.search([*self.website_domain, ('name', '=', 'Extension Specific')])
         v4 = self.inherit_view.copy({'name': 'Second Extension'})
         v5 = self.inherit_view.copy({'name': 'Third Extension (Specific)'})
-        v5.write({'website_id': self.ref('website.default_website')})
+        v5.write({'website_id': self.ref('base.default_website')})
 
         # id | name                        | website_id | inherit  | key
         # ------------------------------------------------------------------------
@@ -669,7 +669,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
 
         inherit_views = View.search([('key', '=', 'website.extension_view')])
         self.assertEqual(len(inherit_views), 2)
-        self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == self.ref('website.default_website'))), 1)
+        self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == self.ref('base.default_website'))), 1)
 
         arch = generic_base_view.with_context(load_all_views=True).get_combined_arch()
         self.assertEqual(arch, '<div>modified base content, extended content</div>')
@@ -1178,14 +1178,14 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         """
         View = self.env['ir.ui.view']
 
-        self.inherit_view.website_id = self.ref('website.default_website')
+        self.inherit_view.website_id = self.ref('base.default_website')
         inherit_view_2 = View.create({
             'name': 'Extension 2',
             'mode': 'extension',
             'inherit_id': self.inherit_view.id,
             'arch': '<div position="inside">, extended content 2</div>',
             'key': 'website.extension_view_2',
-            'website_id': self.ref('website.default_website'),
+            'website_id': self.ref('base.default_website'),
         })
 
         total_views = View.search_count([])
@@ -1298,7 +1298,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         fr_BE = self.env['res.lang']._activate_lang('fr_BE')
         self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
         self.assertFalse(self.base_view.website_id)
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         website.default_lang_id = fr_BE
         self.base_view.with_context(**self.website_ctx).write({'active': True})
         specific_view = self.base_view._get_specific_views() - self.base_view

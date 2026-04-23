@@ -13,7 +13,7 @@ class TestHttpEndPoint(HttpCase):
         This test ensures that the rendering still works, even in this case.
         """
         homepage_view = self.env['ir.ui.view'].search([
-            ('website_id', '=', self.env.ref('website.default_website').id),
+            ('website_id', '=', self.env.ref('base.default_website').id),
             ('key', '=', 'website.homepage'),
         ])
         self.env['ir.ui.view'].create({

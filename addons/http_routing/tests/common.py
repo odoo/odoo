@@ -31,7 +31,7 @@ def MockRequest(
         if website:
             env_context['website_id'] = website.id
         else:
-            env_context['fallback_website_id'] = env.ref('website.default_website').id
+            env_context['host_id'] = env.ref('base.default_website').id
 
     env = env(context=env_context)
 

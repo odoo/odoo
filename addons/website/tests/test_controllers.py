@@ -213,7 +213,7 @@ class TestControllers(tests.HttpCase):
         })
         models = [{"model": "ir.ui.view", "id": test_view.id, "field": "arch"}]
 
-        with MockRequest(self.env, website=self.env.ref('website.default_website')):
+        with MockRequest(self.env, website=self.env.ref('base.default_website')):
             result = Website().get_alt_images(models)
             parsed_result = json.loads(result)
 
