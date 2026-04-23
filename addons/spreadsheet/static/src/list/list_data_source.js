@@ -47,7 +47,9 @@ export class ListDataSource extends OdooViewsDataSource {
         this.data = [];
         this.fieldPathsToFetch = new Set(["id"]);
         this.fieldPathDefinitionsToFetch = new Set(params.columns.map((col) => col.name));
-        this.definitionColumns = params.columns.map((col) => col.name);
+        this.definitionColumns = params.columns
+            .filter((col) => !col.computedBy)
+            .map((col) => col.name);
         this.alreadyFetchedFieldPaths = new Set();
         this.fieldService = services.env.services.field;
         this.fieldPathsToFieldMap = {};
@@ -71,7 +73,9 @@ export class ListDataSource extends OdooViewsDataSource {
             this._customDomain = this._initialSearchParams.domain;
             shouldReload = true;
         }
-        const columns = nextDefinition.columns.map((col) => col.name);
+        const columns = nextDefinition.columns
+            .filter((col) => !col.computedBy)
+            .map((col) => col.name);
         if (!deepEquals([...this.definitionColumns].sort(), [...columns].sort())) {
             this.definitionColumns = columns;
             columns.forEach((col) => this.fieldPathDefinitionsToFetch.add(col));

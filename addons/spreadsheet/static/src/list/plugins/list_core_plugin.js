@@ -1,14 +1,16 @@
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
-import { helpers } from "@odoo/o-spreadsheet";
+import { helpers, CompiledFormula, registries } from "@odoo/o-spreadsheet";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
-const { getMaxObjectId, deepEquals, deepCopy } = helpers;
+const { getMaxObjectId, deepEquals, deepCopy, getCanonicalSymbolName } = helpers;
+const { specificRangeTransformRegistry } = registries;
 
 /**
  * @typedef {Object} ListColumn
  * @property {string} name The technical field path of the column
  * @property {string} [string] Optional explicit header label. When absent, the
  *   header falls back to the translated field display name.
+ * @property {{formula: string, sheetId:string}} [computedBy] The formula to compute the column
  * @property {boolean} [hidden] Whether the column is hidden or not
  */
 
@@ -23,6 +25,43 @@ const { getMaxObjectId, deepEquals, deepCopy } = helpers;
  * @property {string} actionXmlId
  */
 
+/**
+ * @typedef {Object} ComputeState
+ * @property {CompiledFormula} formula
+ * @property {import("@odoo/o-spreadsheet").Range[]} dependencies
+ */
+
+function updateOdooListCommandAdaptRange(cmd, { adaptFormulaString }) {
+    cmd = deepCopy(cmd);
+    for (const columnName in cmd.list.columns) {
+        const column = cmd.list.columns[columnName];
+        if (!column.computedBy) {
+            continue;
+        }
+        column.computedBy.formula = adaptFormulaString(
+            column.computedBy.sheetId,
+            column.computedBy.formula
+        );
+    }
+    return cmd;
+}
+specificRangeTransformRegistry.add("UPDATE_ODOO_LIST", updateOdooListCommandAdaptRange);
+function insertOdooListCommandAdaptRange(cmd, { adaptFormulaString }) {
+    cmd = deepCopy(cmd);
+    for (const columnName in cmd.definition.columns) {
+        const column = cmd.definition.columns[columnName];
+        if (!column.computedBy) {
+            continue;
+        }
+        column.computedBy.formula = adaptFormulaString(
+            column.computedBy.sheetId,
+            column.computedBy.formula
+        );
+    }
+    return cmd;
+}
+specificRangeTransformRegistry.add("INSERT_ODOO_LIST", insertOdooListCommandAdaptRange);
+
 export class ListCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
         "getListDisplayName",
@@ -31,6 +70,8 @@ export class ListCorePlugin extends OdooCorePlugin {
         "getListName",
         "getNextListId",
         "isExistingList",
+        "getListCompiledColumnFormula",
+        "getListCompiledColumnDependencies",
     ]);
     constructor(config) {
         super(config);
@@ -38,6 +79,8 @@ export class ListCorePlugin extends OdooCorePlugin {
         this.nextId = 1;
         /** @type {Object.<string, ListDefinition>} */
         this.lists = {};
+        /** @type {Object.<string, Object.<string, ComputeState>>} */
+        this.compiledColumnFormulas = {};
     }
 
     /**
@@ -131,7 +174,42 @@ export class ListCorePlugin extends OdooCorePlugin {
             }
             case "UPDATE_ODOO_LIST": {
                 this.history.update("lists", cmd.listId, cmd.list);
+                this._compileCalculatedColumns(cmd.listId, cmd.list);
                 break;
+            }
+        }
+    }
+
+    adaptRanges(adapters) {
+        for (const listId in this.compiledColumnFormulas) {
+            for (const columnName in this.compiledColumnFormulas[listId]) {
+                const compiledFormula = this.compiledColumnFormulas[listId][columnName].formula;
+                if (!compiledFormula) {
+                    continue;
+                }
+                const newCompiledFormula = adapters.adaptCompiledFormula(compiledFormula);
+                if (newCompiledFormula !== compiledFormula) {
+                    this.history.update(
+                        "compiledColumnFormulas",
+                        listId,
+                        columnName,
+                        "formula",
+                        newCompiledFormula
+                    );
+                    const newFormulaString = newCompiledFormula.toFormulaString(this.getters);
+                    const columnIndex = this.lists[listId].columns.findIndex(
+                        (c) => c.name === columnName
+                    );
+                    this.history.update(
+                        "lists",
+                        listId,
+                        "columns",
+                        columnIndex,
+                        "computedBy",
+                        "formula",
+                        newFormulaString
+                    );
+                }
             }
         }
     }
@@ -193,13 +271,79 @@ export class ListCorePlugin extends OdooCorePlugin {
         return id in this.lists;
     }
 
+    getListCompiledColumnFormula(listId, columnName) {
+        return this.compiledColumnFormulas[listId]?.[columnName]?.formula;
+    }
+
+    getListCompiledColumnDependencies(listId, columnName) {
+        return this.compiledColumnFormulas[listId]?.[columnName]?.dependencies;
+    }
+
     // ---------------------------------------------------------------------
     // Private
     // ---------------------------------------------------------------------
 
     _addList(id, definition) {
         this.history.update("lists", id, definition);
+        this._compileCalculatedColumns(id, definition);
         this.history.update("nextId", parseInt(id, 10) + 1);
+    }
+
+    _compileCalculatedColumns(listId, definition) {
+        const computedColumns = definition.columns.filter((col) => col.computedBy);
+        for (const column of computedColumns) {
+            const compiledFormula = CompiledFormula.Compile(
+                column.computedBy.formula,
+                column.computedBy.sheetId,
+                this.getters
+            );
+            this.history.update(
+                "compiledColumnFormulas",
+                listId,
+                column.name,
+                "formula",
+                compiledFormula
+            );
+        }
+        for (const column of computedColumns) {
+            const dependencies = this._computeColumnFullDependencies(listId, definition, column);
+            this.history.update(
+                "compiledColumnFormulas",
+                listId,
+                column.name,
+                "dependencies",
+                dependencies
+            );
+        }
+    }
+
+    _computeColumnFullDependencies(listId, definition, column, exploredCols = new Set()) {
+        const rangeDependencies = [];
+        const formula = this.compiledColumnFormulas[listId]?.[column.name]?.formula;
+        if (!formula) {
+            return [];
+        }
+        exploredCols.add(column.name);
+        for (const usedSymbols of formula.symbols) {
+            const otherCol = definition.columns.find(
+                (columnCandidate) =>
+                    getCanonicalSymbolName(columnCandidate.name) === usedSymbols &&
+                    column.name !== columnCandidate.name
+            );
+
+            if (!otherCol || !otherCol.computedBy || exploredCols.has(otherCol.name)) {
+                continue;
+            }
+
+            rangeDependencies.push(
+                ...this._computeColumnFullDependencies(listId, definition, otherCol, exploredCols)
+            );
+        }
+        rangeDependencies.push(...formula.rangeDependencies.filter((range) => !range.invalidXc));
+        rangeDependencies.push(
+            ...formula.getNamedRangesInFormula(this.getters).map((namedRange) => namedRange.range)
+        );
+        return rangeDependencies;
     }
 
     /**
