@@ -75,8 +75,7 @@ var owl = (() => {
     xml: () => xml
   });
 
-  // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.29";
+  // ../owl-core/dist/owl-core.es.js
   var OwlError = class extends Error {
     cause;
   };
@@ -191,8 +190,8 @@ var owl = (() => {
   function removeSources(computation) {
     const sources = computation.sources;
     for (const source of sources) {
-      const observers22 = source.observers;
-      observers22.delete(computation);
+      const observers2 = source.observers;
+      observers2.delete(computation);
     }
     sources.clear();
   }
@@ -456,10 +455,10 @@ var owl = (() => {
     } else {
       handler = basicProxyHandler(atom);
     }
-    const proxy22 = new Proxy(target, handler);
-    proxyCache.set(target, proxy22);
-    targets.set(proxy22, target);
-    return proxy22;
+    const proxy2 = new Proxy(target, handler);
+    proxyCache.set(target, proxy2);
+    targets.set(proxy2, target);
+    return proxy2;
   }
   function proxy(target) {
     return proxifyTarget(target, null);
@@ -641,11 +640,11 @@ var owl = (() => {
     };
     return readSignal;
   }
-  function triggerSignal(signal22) {
-    if (typeof signal22 !== "function" || signal22[atomSymbol]?.type !== "signal") {
-      throw new OwlError(`Value is not a signal (${signal22})`);
+  function triggerSignal(signal2) {
+    if (typeof signal2 !== "function" || signal2[atomSymbol]?.type !== "signal") {
+      throw new OwlError(`Value is not a signal (${signal2})`);
     }
-    onWriteAtom(signal22[atomSymbol]);
+    onWriteAtom(signal2[atomSymbol]);
   }
   function signalArray(initialValue) {
     return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
@@ -1292,6 +1291,9 @@ ${issueStrings}`);
       );
     }
   }
+
+  // ../owl-runtime/dist/owl-runtime.es.js
+  var version = "3.0.0-alpha.29";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -1347,12 +1349,7 @@ ${issueStrings}`);
         app.destroy();
       } catch (e) {
       }
-      if (error instanceof OwlError) {
-        return error;
-      }
-      return Object.assign(new OwlError(`[Owl] Unhandled error. Destroying the root component`), {
-        cause: error
-      });
+      return error;
     };
     const result = invokeErrorHandlers(node, error, finalize, true);
     if (!result.handled) {
@@ -4398,406 +4395,12 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-04-23T11:26:50.262Z",
-    hash: "33ce43bd",
+    date: "2026-04-23T14:41:10.930Z",
+    hash: "f4319859",
     url: "https://github.com/odoo/owl"
   };
 
   // ../owl-compiler/dist/owl-compiler.es.js
-  var OwlError2 = class extends Error {
-    cause;
-  };
-  function batched2(callback) {
-    let scheduled = false;
-    return function batchedCall(...args) {
-      if (!scheduled) {
-        scheduled = true;
-        Promise.resolve().then(() => {
-          scheduled = false;
-          callback(...args);
-        });
-      }
-    };
-  }
-  var atomSymbol2 = /* @__PURE__ */ Symbol("Atom");
-  var observers2 = [];
-  var immediateObservers2 = [];
-  var currentComputation2;
-  function onReadAtom2(atom) {
-    if (!currentComputation2) {
-      return;
-    }
-    currentComputation2.sources.add(atom);
-    atom.observers.add(currentComputation2);
-  }
-  function onWriteAtom2(atom) {
-    for (const ctx of atom.observers) {
-      if (ctx.state === 0) {
-        if (ctx.isDerived) {
-          markDownstream2(ctx);
-        } else if (ctx.immediate) {
-          immediateObservers2.push(ctx);
-        } else {
-          observers2.push(ctx);
-        }
-      }
-      ctx.state = 1;
-    }
-    if (immediateObservers2.length) {
-      const toRun = immediateObservers2;
-      immediateObservers2 = [];
-      for (const ctx of toRun) {
-        updateComputation2(ctx);
-      }
-    }
-    batchProcessEffects2();
-  }
-  var batchProcessEffects2 = batched2(processEffects2);
-  function processEffects2() {
-    for (let i = 0; i < observers2.length; i++) {
-      updateComputation2(observers2[i]);
-    }
-    observers2.length = 0;
-  }
-  function updateComputation2(computation) {
-    const state = computation.state;
-    if (state === 0) {
-      return;
-    }
-    if (state === 2) {
-      for (const source of computation.sources) {
-        if (!("compute" in source)) {
-          continue;
-        }
-        updateComputation2(source);
-      }
-      if (computation.state !== 1) {
-        computation.state = 0;
-        return;
-      }
-    }
-    removeSources2(computation);
-    const previousComputation = currentComputation2;
-    currentComputation2 = computation;
-    computation.value = computation.compute();
-    computation.state = 0;
-    currentComputation2 = previousComputation;
-  }
-  function removeSources2(computation) {
-    const sources = computation.sources;
-    for (const source of sources) {
-      const observers22 = source.observers;
-      observers22.delete(computation);
-    }
-    sources.clear();
-  }
-  function markDownstream2(computation) {
-    const stack = [computation];
-    let current;
-    while (current = stack.pop()) {
-      for (const observer of current.observers) {
-        if (observer.state) {
-          continue;
-        }
-        observer.state = 2;
-        if (observer.isDerived) {
-          stack.push(observer);
-        } else {
-          observers2.push(observer);
-        }
-      }
-    }
-  }
-  var KEYCHANGES2 = /* @__PURE__ */ Symbol("Key changes");
-  var objectToString2 = Object.prototype.toString;
-  var objectHasOwnProperty2 = Object.prototype.hasOwnProperty;
-  function canBeMadeReactive2(value) {
-    if (typeof value !== "object" || value === null) {
-      return false;
-    }
-    const raw = toRaw2(value);
-    if (Array.isArray(raw) || raw instanceof Set || raw instanceof Map || raw instanceof WeakMap) {
-      return true;
-    }
-    return objectToString2.call(raw) === "[object Object]";
-  }
-  function possiblyReactive2(val, atom) {
-    return !atom && canBeMadeReactive2(val) ? proxy2(val) : val;
-  }
-  var skipped2 = /* @__PURE__ */ new WeakSet();
-  function toRaw2(value) {
-    return targets2.has(value) ? targets2.get(value) : value;
-  }
-  var targetToKeysToAtomItem2 = /* @__PURE__ */ new WeakMap();
-  function getTargetKeyAtom2(target, key) {
-    let keyToAtomItem = targetToKeysToAtomItem2.get(target);
-    if (!keyToAtomItem) {
-      keyToAtomItem = /* @__PURE__ */ new Map();
-      targetToKeysToAtomItem2.set(target, keyToAtomItem);
-    }
-    let atom = keyToAtomItem.get(key);
-    if (!atom) {
-      atom = {
-        value: void 0,
-        observers: /* @__PURE__ */ new Set()
-      };
-      keyToAtomItem.set(key, atom);
-    }
-    return atom;
-  }
-  function onReadTargetKey2(target, key, atom) {
-    onReadAtom2(atom ?? getTargetKeyAtom2(target, key));
-  }
-  function onWriteTargetKey2(target, key, atom) {
-    if (!atom) {
-      const keyToAtomItem = targetToKeysToAtomItem2.get(target);
-      if (!keyToAtomItem) {
-        return;
-      }
-      if (!keyToAtomItem.has(key)) {
-        return;
-      }
-      atom = keyToAtomItem.get(key);
-    }
-    onWriteAtom2(atom);
-  }
-  var targets2 = /* @__PURE__ */ new WeakMap();
-  var proxyCache2 = /* @__PURE__ */ new WeakMap();
-  function proxifyTarget2(target, atom) {
-    if (!canBeMadeReactive2(target)) {
-      throw new OwlError2(`Cannot make the given value reactive`);
-    }
-    if (skipped2.has(target)) {
-      return target;
-    }
-    if (targets2.has(target)) {
-      return target;
-    }
-    const reactive = proxyCache2.get(target);
-    if (reactive) {
-      return reactive;
-    }
-    let handler;
-    if (target instanceof Map) {
-      handler = collectionsProxyHandler2(target, "Map", atom);
-    } else if (target instanceof Set) {
-      handler = collectionsProxyHandler2(target, "Set", atom);
-    } else if (target instanceof WeakMap) {
-      handler = collectionsProxyHandler2(target, "WeakMap", atom);
-    } else {
-      handler = basicProxyHandler2(atom);
-    }
-    const proxy22 = new Proxy(target, handler);
-    proxyCache2.set(target, proxy22);
-    targets2.set(proxy22, target);
-    return proxy22;
-  }
-  function proxy2(target) {
-    return proxifyTarget2(target, null);
-  }
-  function basicProxyHandler2(atom) {
-    return {
-      get(target, key, receiver) {
-        onReadTargetKey2(target, key, atom);
-        const value = Reflect.get(target, key, receiver);
-        if (atom || typeof value !== "object" || value === null) {
-          return value;
-        }
-        if (!canBeMadeReactive2(value)) {
-          return value;
-        }
-        const desc = Object.getOwnPropertyDescriptor(target, key);
-        if (desc && !desc.writable && !desc.configurable) {
-          return value;
-        }
-        return proxifyTarget2(value, null);
-      },
-      set(target, key, value, receiver) {
-        const hadKey = objectHasOwnProperty2.call(target, key);
-        const originalValue = Reflect.get(target, key, receiver);
-        const ret = Reflect.set(target, key, toRaw2(value), receiver);
-        if (!hadKey && objectHasOwnProperty2.call(target, key)) {
-          onWriteTargetKey2(target, KEYCHANGES2, atom);
-        }
-        if (originalValue !== Reflect.get(target, key, receiver) || key === "length" && Array.isArray(target)) {
-          onWriteTargetKey2(target, key, atom);
-        }
-        return ret;
-      },
-      deleteProperty(target, key) {
-        const ret = Reflect.deleteProperty(target, key);
-        onWriteTargetKey2(target, KEYCHANGES2, atom);
-        onWriteTargetKey2(target, key, atom);
-        return ret;
-      },
-      ownKeys(target) {
-        onReadTargetKey2(target, KEYCHANGES2, atom);
-        return Reflect.ownKeys(target);
-      },
-      has(target, key) {
-        onReadTargetKey2(target, KEYCHANGES2, atom);
-        return Reflect.has(target, key);
-      }
-    };
-  }
-  function makeKeyObserver2(methodName, target, atom) {
-    return (key) => {
-      key = toRaw2(key);
-      onReadTargetKey2(target, key, atom);
-      return possiblyReactive2(target[methodName](key), atom);
-    };
-  }
-  function makeIteratorObserver2(methodName, target, atom) {
-    return function* () {
-      onReadTargetKey2(target, KEYCHANGES2, atom);
-      const keys = target.keys();
-      for (const item of target[methodName]()) {
-        const key = keys.next().value;
-        onReadTargetKey2(target, key, atom);
-        yield possiblyReactive2(item, atom);
-      }
-    };
-  }
-  function makeForEachObserver2(target, atom) {
-    return function forEach(forEachCb, thisArg) {
-      onReadTargetKey2(target, KEYCHANGES2, atom);
-      target.forEach(function(val, key, targetObj) {
-        onReadTargetKey2(target, key, atom);
-        forEachCb.call(
-          thisArg,
-          possiblyReactive2(val, atom),
-          possiblyReactive2(key, atom),
-          possiblyReactive2(targetObj, atom)
-        );
-      }, thisArg);
-    };
-  }
-  function delegateAndNotify2(setterName, getterName, target, atom) {
-    return (key, value) => {
-      key = toRaw2(key);
-      const hadKey = target.has(key);
-      const originalValue = target[getterName](key);
-      const ret = target[setterName](key, value);
-      const hasKey = target.has(key);
-      if (hadKey !== hasKey) {
-        onWriteTargetKey2(target, KEYCHANGES2, atom);
-      }
-      if (originalValue !== target[getterName](key)) {
-        onWriteTargetKey2(target, key, atom);
-      }
-      return ret;
-    };
-  }
-  function makeClearNotifier2(target, atom) {
-    return () => {
-      const allKeys = [...target.keys()];
-      target.clear();
-      onWriteTargetKey2(target, KEYCHANGES2, atom);
-      for (const key of allKeys) {
-        onWriteTargetKey2(target, key, atom);
-      }
-    };
-  }
-  var rawTypeToFuncHandlers2 = {
-    Set: (target, atom) => ({
-      has: makeKeyObserver2("has", target, atom),
-      add: delegateAndNotify2("add", "has", target, atom),
-      delete: delegateAndNotify2("delete", "has", target, atom),
-      keys: makeIteratorObserver2("keys", target, atom),
-      values: makeIteratorObserver2("values", target, atom),
-      entries: makeIteratorObserver2("entries", target, atom),
-      [Symbol.iterator]: makeIteratorObserver2(Symbol.iterator, target, atom),
-      forEach: makeForEachObserver2(target, atom),
-      clear: makeClearNotifier2(target, atom),
-      get size() {
-        onReadTargetKey2(target, KEYCHANGES2, atom);
-        return target.size;
-      }
-    }),
-    Map: (target, atom) => ({
-      has: makeKeyObserver2("has", target, atom),
-      get: makeKeyObserver2("get", target, atom),
-      set: delegateAndNotify2("set", "get", target, atom),
-      delete: delegateAndNotify2("delete", "has", target, atom),
-      keys: makeIteratorObserver2("keys", target, atom),
-      values: makeIteratorObserver2("values", target, atom),
-      entries: makeIteratorObserver2("entries", target, atom),
-      [Symbol.iterator]: makeIteratorObserver2(Symbol.iterator, target, atom),
-      forEach: makeForEachObserver2(target, atom),
-      clear: makeClearNotifier2(target, atom),
-      get size() {
-        onReadTargetKey2(target, KEYCHANGES2, atom);
-        return target.size;
-      }
-    }),
-    WeakMap: (target, atom) => ({
-      has: makeKeyObserver2("has", target, atom),
-      get: makeKeyObserver2("get", target, atom),
-      set: delegateAndNotify2("set", "get", target, atom),
-      delete: delegateAndNotify2("delete", "has", target, atom)
-    })
-  };
-  function collectionsProxyHandler2(target, targetRawType, atom) {
-    const specialHandlers = rawTypeToFuncHandlers2[targetRawType](target, atom);
-    return Object.assign(basicProxyHandler2(atom), {
-      // FIXME: probably broken when part of prototype chain since we ignore the receiver
-      get(target2, key) {
-        if (objectHasOwnProperty2.call(specialHandlers, key)) {
-          return specialHandlers[key];
-        }
-        onReadTargetKey2(target2, key, atom);
-        return possiblyReactive2(target2[key], atom);
-      }
-    });
-  }
-  function buildSignal2(value, set) {
-    const atom = {
-      type: "signal",
-      value,
-      observers: /* @__PURE__ */ new Set()
-    };
-    let readValue = set(atom);
-    const readSignal = () => {
-      onReadAtom2(atom);
-      return readValue;
-    };
-    readSignal[atomSymbol2] = atom;
-    readSignal.set = function writeSignal(newValue) {
-      if (Object.is(atom.value, newValue)) {
-        return;
-      }
-      atom.value = newValue;
-      readValue = set(atom);
-      onWriteAtom2(atom);
-    };
-    return readSignal;
-  }
-  function triggerSignal2(signal22) {
-    if (typeof signal22 !== "function" || signal22[atomSymbol2]?.type !== "signal") {
-      throw new OwlError2(`Value is not a signal (${signal22})`);
-    }
-    onWriteAtom2(signal22[atomSymbol2]);
-  }
-  function signalArray2(initialValue) {
-    return buildSignal2(initialValue, (atom) => proxifyTarget2(atom.value, atom));
-  }
-  function signalObject2(initialValue) {
-    return buildSignal2(initialValue, (atom) => proxifyTarget2(atom.value, atom));
-  }
-  function signalMap2(initialValue) {
-    return buildSignal2(initialValue, (atom) => proxifyTarget2(atom.value, atom));
-  }
-  function signalSet2(initialValue) {
-    return buildSignal2(initialValue, (atom) => proxifyTarget2(atom.value, atom));
-  }
-  function signal2(value) {
-    return buildSignal2(value, (atom) => atom.value);
-  }
-  signal2.trigger = triggerSignal2;
-  signal2.Array = signalArray2;
-  signal2.Map = signalMap2;
-  signal2.Object = signalObject2;
-  signal2.Set = signalSet2;
   var RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,eval,void,Math,RegExp,Array,Object,Date,__globals__".split(
     ","
   );
@@ -4835,14 +4438,14 @@ ${issueStrings}`);
         i++;
         cur = expr[i];
         if (!cur) {
-          throw new OwlError2("Invalid expression");
+          throw new OwlError("Invalid expression");
         }
         s += cur;
       }
       i++;
     }
     if (expr[i] !== start) {
-      throw new OwlError2("Invalid expression");
+      throw new OwlError("Invalid expression");
     }
     s += start;
     if (start === "`") {
@@ -4934,7 +4537,7 @@ ${issueStrings}`);
       error = e;
     }
     if (current.length || error) {
-      throw new OwlError2(`Tokenizer error: could not tokenize \`${expr}\``);
+      throw new OwlError(`Tokenizer error: could not tokenize \`${expr}\``);
     }
     return result;
   }
@@ -5073,7 +4676,7 @@ ${"-".repeat(columnIndex - 1)}^`;
           }
         }
       }
-      throw new OwlError2(msg);
+      throw new OwlError(msg);
     }
     return doc;
   }
@@ -5152,13 +4755,13 @@ ${"-".repeat(columnIndex - 1)}^`;
     const nodeAttrsNames = node.getAttributeNames();
     for (let attr of nodeAttrsNames) {
       if (attr === "t-custom" || attr === "t-custom-") {
-        throw new OwlError2("Missing custom directive name with t-custom directive");
+        throw new OwlError("Missing custom directive name with t-custom directive");
       }
       if (attr.startsWith("t-custom-")) {
         const directiveName = attr.split(".")[0].slice(9);
         const customDirective = ctx.customDirectives[directiveName];
         if (!customDirective) {
-          throw new OwlError2(`Custom directive "${directiveName}" is not defined`);
+          throw new OwlError(`Custom directive "${directiveName}" is not defined`);
         }
         const value = node.getAttribute(attr);
         const modifiers = attr.split(".").slice(1);
@@ -5166,7 +4769,7 @@ ${"-".repeat(columnIndex - 1)}^`;
         try {
           customDirective(node, value, modifiers);
         } catch (error) {
-          throw new OwlError2(
+          throw new OwlError(
             `Custom directive "${directiveName}" throw the following error: ${error}`
           );
         }
@@ -5213,7 +4816,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       return null;
     }
     if (tagName.startsWith("block-")) {
-      throw new OwlError2(`Invalid tag name: '${tagName}'`);
+      throw new OwlError(`Invalid tag name: '${tagName}'`);
     }
     ctx = Object.assign({}, ctx);
     if (tagName === "pre") {
@@ -5230,14 +4833,14 @@ ${"-".repeat(columnIndex - 1)}^`;
     for (let attr of nodeAttrsNames) {
       const value = node.getAttribute(attr);
       if (attr === "t-on" || attr === "t-on-") {
-        throw new OwlError2("Missing event name with t-on directive");
+        throw new OwlError("Missing event name with t-on directive");
       }
       if (attr.startsWith("t-on-")) {
         on = on || {};
         on[attr.slice(5)] = value;
       } else if (attr.startsWith("t-model")) {
         if (!["input", "select", "textarea"].includes(tagName)) {
-          throw new OwlError2(
+          throw new OwlError(
             "The t-model directive only works with <input>, <textarea> and <select>"
           );
         }
@@ -5266,7 +4869,7 @@ ${"-".repeat(columnIndex - 1)}^`;
           ctx.tModelInfo = model;
         }
       } else if (attr.startsWith("block-")) {
-        throw new OwlError2(`Invalid attribute: '${attr}'`);
+        throw new OwlError(`Invalid attribute: '${attr}'`);
       } else if (attr === "xmlns") {
         ns = value;
       } else if (attr.startsWith("t-translation-context-")) {
@@ -5275,7 +4878,7 @@ ${"-".repeat(columnIndex - 1)}^`;
         attrsTranslationCtx[attrName] = value;
       } else if (attr !== "t-name") {
         if (attr.startsWith("t-") && !attr.startsWith("t-att")) {
-          throw new OwlError2(`Unknown QWeb directive: '${attr}'`);
+          throw new OwlError(`Unknown QWeb directive: '${attr}'`);
         }
         const tModel = ctx.tModelInfo;
         if (tModel && ["t-att-value", "t-attf-value"].includes(attr)) {
@@ -5342,7 +4945,7 @@ ${"-".repeat(columnIndex - 1)}^`;
     node.removeAttribute("t-as");
     const key = node.getAttribute("t-key");
     if (!key) {
-      throw new OwlError2(
+      throw new OwlError(
         `"Directive t-foreach should always be used with a t-key!" (expression: t-foreach="${collection}" t-as="${elem}")`
       );
     }
@@ -5391,7 +4994,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       return null;
     }
     if (node.tagName !== "t") {
-      throw new OwlError2(
+      throw new OwlError(
         `Directive 't-call' can only be used on <t> nodes (used on a <${node.tagName}>)`
       );
     }
@@ -5495,7 +5098,7 @@ ${"-".repeat(columnIndex - 1)}^`;
     const firstLetter = name[0];
     let isDynamic = node.hasAttribute("t-component");
     if (isDynamic && name !== "t") {
-      throw new OwlError2(
+      throw new OwlError(
         `Directive 't-component' can only be used on <t> nodes (used on a <${name}>)`
       );
     }
@@ -5525,7 +5128,7 @@ ${"-".repeat(columnIndex - 1)}^`;
           on[name2.slice(5)] = value;
         } else {
           const message = directiveErrorMap.get(name2.split("-").slice(0, 2).join("-"));
-          throw new OwlError2(message || `unsupported directive on Component: ${name2}`);
+          throw new OwlError(message || `unsupported directive on Component: ${name2}`);
         }
       } else {
         props2 = props2 || {};
@@ -5538,7 +5141,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       const slotNodes = Array.from(clone.querySelectorAll("[t-set-slot]"));
       for (let slotNode of slotNodes) {
         if (slotNode.tagName !== "t") {
-          throw new OwlError2(
+          throw new OwlError(
             `Directive 't-set-slot' can only be used on <t> nodes (used on a <${slotNode.tagName}>)`
           );
         }
@@ -5725,24 +5328,24 @@ ${"-".repeat(columnIndex - 1)}^`;
       let nattr = (name) => +!!node.getAttribute(name);
       if (prevElem && (pattr("t-if") || pattr("t-elif"))) {
         if (pattr("t-foreach")) {
-          throw new OwlError2(
+          throw new OwlError(
             "t-if cannot stay at the same level as t-foreach when using t-elif or t-else"
           );
         }
         if (["t-if", "t-elif", "t-else"].map(nattr).reduce(function(a, b) {
           return a + b;
         }) > 1) {
-          throw new OwlError2("Only one conditional branching directive is allowed per node");
+          throw new OwlError("Only one conditional branching directive is allowed per node");
         }
         let textNode;
         while ((textNode = node.previousSibling) !== prevElem) {
           if (textNode.nodeValue.trim().length && textNode.nodeType !== 8) {
-            throw new OwlError2("text is not allowed between branching directives");
+            throw new OwlError("text is not allowed between branching directives");
           }
           textNode.remove();
         }
       } else {
-        throw new OwlError2(
+        throw new OwlError(
           "t-elif and t-else directives must be preceded by a t-if or t-elif directive"
         );
       }
@@ -5754,7 +5357,7 @@ ${"-".repeat(columnIndex - 1)}^`;
     );
     for (const el2 of elements) {
       if (el2.childNodes.length) {
-        throw new OwlError2(`Cannot have t-out on a component that already has content`);
+        throw new OwlError(`Cannot have t-out on a component that already has content`);
       }
       const value = el2.getAttribute("t-out");
       el2.removeAttribute("t-out");
@@ -6161,7 +5764,7 @@ ${code}`;
     generateHandlerCode(rawEvent, handler) {
       const modifiers = rawEvent.split(".").slice(1).map((m) => {
         if (!MODS.has(m)) {
-          throw new OwlError2(`Unknown event modifier: '${m}'`);
+          throw new OwlError(`Unknown event modifier: '${m}'`);
         }
         return `"${m}"`;
       });
@@ -6713,7 +6316,7 @@ ${code}`;
           case "translate":
             break;
           default:
-            throw new OwlError2(`Invalid prop suffix: ${suffix}`);
+            throw new OwlError(`Invalid prop suffix: ${suffix}`);
         }
       }
       name = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
@@ -6929,7 +6532,7 @@ ${code}`;
     } catch (originalError) {
       const { name } = options;
       const nameStr = name ? `template "${name}"` : "anonymous template";
-      const err = new OwlError2(
+      const err = new OwlError(
         `Failed to compile ${nameStr}: ${originalError.message}
 
 generated code:
