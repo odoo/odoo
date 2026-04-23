@@ -601,6 +601,7 @@ export class StaticList extends DataPoint {
         // the end, we filter once this.records and this._currentIds to remove them.
         let removedIds = {};
         let recordsToLoad = [];
+        const currentIdsSet = new Set(this._currentIds);
         let nextRecords = [...this.records];
         let nextCurrentIds = [...this.currentIds];
         const initialTmpIncreaseLimit = this._tmpIncreaseLimit;
@@ -701,7 +702,7 @@ export class StaticList extends DataPoint {
                     } else {
                         record = this._createRecordDatapoint({ ...command[2], id: command[1] });
                     }
-                    if (nextCurrentIds.includes(record.resId) && !removedIds[record.resId]) {
+                    if (currentIdsSet.has(record.resId) && !removedIds[record.resId]) {
                         break;
                     }
                     if (!this.limit || nextRecords.length < this.limit || canAddOverLimit) {
@@ -714,6 +715,7 @@ export class StaticList extends DataPoint {
                         }
                     }
                     nextCurrentIds.push(record.resId);
+                    currentIdsSet.add(record.resId);
                     addOwnCommand([command[0], command[1]]);
                     break;
                 }
