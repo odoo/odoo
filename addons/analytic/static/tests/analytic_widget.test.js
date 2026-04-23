@@ -7,6 +7,7 @@ defineAnalyticModels()
 beforeEach(async () => {
     const { env } = await makeMockServer();
     const plan = env['account.analytic.plan'].create({ name: "State", root_id: 1 });
+    const plan2 = env['account.analytic.plan'].create({ name: "Country", root_id: 2 });
     const accounts = env['account.analytic.account'].create([
         { plan_id: plan, name: "Brussels" },
         { plan_id: plan, name: "Antwerpen" },
@@ -14,6 +15,9 @@ beforeEach(async () => {
         { plan_id: plan, name: "Marseille" },
         { plan_id: plan, name: "New York" },
         { plan_id: plan, name: "Los Angeles" },
+    ])
+    env['account.analytic.account'].create([
+        { plan_id: plan2, name: "Belgium" },
     ])
     env["account.analytic.line"].create([
         { x_plan1_id: accounts[0], analytic_distribution: {[accounts[0]]: 100}, amount: 1 },
@@ -38,6 +42,7 @@ test("Analytic single-edit no dynamic", async () => {
             <list multi_edit="1" default_order="id DESC">
                 <field name="account_id"/>
                 <field name="x_plan1_id"/>
+                <field name="x_plan2_id"/>
                 <field name="analytic_distribution" widget="analytic_distribution" options="{'multi_edit': False}"/>
             </list>`,
     });
@@ -50,7 +55,7 @@ test("Analytic single-edit no dynamic", async () => {
     await animationFrame();
     expect(".analytic_distribution_popup").toHaveCount(1);
     // all the fields should be displayed
-    expect(".analytic_distribution_popup tbody tr:first .o_field_many2one").toHaveCount(1);
+    expect(".analytic_distribution_popup tbody tr:first .o_field_many2one").toHaveCount(2);
     // we shouldn't display the button-links to hide/display the fields
     expect(".analytic_distribution_popup .o_list_table thead th:first a").toHaveCount(0);
     await contains(".o_list_renderer").click();
@@ -60,8 +65,15 @@ test("Analytic single-edit no dynamic", async () => {
 test.tags("desktop");
 test("Analytic dynamic multi-edit", async () => {
     let to_update;
-    onRpc("account.analytic.line", "write", (params) => {
+    let write_step = null;
+    onRpc("account.analytic.line", "web_save", (params) => {
         expect(params.args[1].analytic_distribution.__update__).toEqual(to_update);
+        if (write_step === 1) {
+            params.args[1].analytic_distribution = {"1,7": 100};
+        }
+        if (write_step === 2) {
+            delete params.args[1].analytic_distribution;
+        }
     });
     await mountView({
         type: "list",
@@ -70,6 +82,7 @@ test("Analytic dynamic multi-edit", async () => {
             <list multi_edit="1" default_order="id DESC">
                 <field name="account_id"/>
                 <field name="x_plan1_id"/>
+                <field name="x_plan2_id"/>
                 <field name="analytic_distribution" widget="analytic_distribution" options="{'multi_edit': True}"/>
             </list>`,
     });
@@ -88,6 +101,10 @@ test("Analytic dynamic multi-edit", async () => {
     expect(".analytic_distribution_popup tbody tr:first .o_field_many2one").toHaveCount(0);
     await contains(".o_list_renderer").click();  // close the widget
     await contains(".modal-footer .btn-secondary").click();  // cancel confirmation
+
+    // select the first 2 lines to be able to edit again
+    await contains(".o_list_table tbody tr:nth-child(1) .o_list_record_selector input").click();
+    await contains(".o_list_table tbody tr:nth-child(2) .o_list_record_selector input").click();
 
     // update the right columns when ticked
     to_update = ["x_plan1_id"];
@@ -108,12 +125,45 @@ test("Analytic dynamic multi-edit", async () => {
     expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag_badge_text").toHaveText("Brussels");
     expect(".o_list_table tbody tr:nth-child(2) .o_field_analytic_distribution .o_tag_badge_text").toHaveText("Brussels");
 
+    // select the first 2 lines to be able to edit again
+    await contains(".o_list_table tbody tr:nth-child(1) .o_list_record_selector input").click();
+    await contains(".o_list_table tbody tr:nth-child(2) .o_list_record_selector input").click();
+
+    // make sure both unchanged and changed plans are both visible after confirmation
+    to_update = ["x_plan2_id"];
+    write_step = 1;
+    await contains(".o_list_table tbody tr:first .o_field_analytic_distribution").click();
+    await animationFrame();
+    await contains(".analytic_distribution_popup .o_list_table thead th:nth-child(2) a").click();
+    expect(".analytic_distribution_popup tbody tr:first .o_field_many2one").toHaveCount(1);
+    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one").click();
+    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one input").edit("Belgium", { confirm: false });
+    await runAllTimers();
+    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one .o_input_dropdown a").click();
+    await contains(".o_list_renderer").click();  // close the widget
+    await contains(".modal-footer .btn-primary").click();  // validate confirmation
+    await runAllTimers();
+    expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag:nth-child(1) .o_tag_badge_text").toHaveText("Brussels");
+    expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag:nth-child(2) .o_tag_badge_text").toHaveText("Belgium");
+    expect(".o_list_table tbody tr:nth-child(2) .o_field_analytic_distribution .o_tag:nth-child(1) .o_tag_badge_text").toHaveText("Brussels");
+    expect(".o_list_table tbody tr:nth-child(2) .o_field_analytic_distribution .o_tag:nth-child(2) .o_tag_badge_text").toHaveText("Belgium");
+
+    // select the first 2 lines to be able to edit again
+    await contains(".o_list_table tbody tr:nth-child(1) .o_list_record_selector input").click();
+    await contains(".o_list_table tbody tr:nth-child(2) .o_list_record_selector input").click();
+
     // everything should be back to like the first time we opened it
     to_update = [];
+    write_step = 2;
     await contains(".o_list_table tbody tr:first .o_field_analytic_distribution").click();
     await animationFrame();
     expect(".analytic_distribution_popup").toHaveCount(1);
     expect(".analytic_distribution_popup tbody tr:first .o_field_many2one").toHaveCount(0);
     await contains(".o_list_renderer").click();  // close the widget
     await contains(".modal-footer .btn-primary").click();  // validate confirmation
+    await runAllTimers();
+    expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag:nth-child(1) .o_tag_badge_text").toHaveText("Brussels");
+    expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag:nth-child(2) .o_tag_badge_text").toHaveText("Belgium");
+    expect(".o_list_table tbody tr:nth-child(2) .o_field_analytic_distribution .o_tag:nth-child(1) .o_tag_badge_text").toHaveText("Brussels");
+    expect(".o_list_table tbody tr:nth-child(2) .o_field_analytic_distribution .o_tag:nth-child(2) .o_tag_badge_text").toHaveText("Belgium");
 })
