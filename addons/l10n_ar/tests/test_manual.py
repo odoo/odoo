@@ -339,12 +339,14 @@ class TestArManual(common.TestArCommon):
         self.assertAlmostEqual(l10n_ar_values['price_subtotal'], 124716.0)
         self.assertAlmostEqual(l10n_ar_values['price_net'], 5196.5)
 
-    def test_l10n_ar_vat_with_non_numeric_value(self):
-        with self.assertRaises(ValidationError) as e:
-            with Form(self.partner) as partner_form:
-                partner_form.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_dni")
-                partner_form.vat = "test"
-        self.assertIn('Only numbers allowed for "DNI"', str(e.exception))
+    def test_l10n_ar_dni_with_non_numeric_value(self):
+        """ Tests that a non-numeric DNI value must be rejected by its format validation."""
+        partner = self.env['res.partner'].create({
+            'name': 'AR DNI partner',
+            'country_id': self.env.ref('base.ar').id,
+        })
+        with self.assertRaisesRegex(ValidationError, 'Invalid identifier: DNI'):
+            partner.additional_identifiers = {'AR_DNI': 'test'}
 
     def test_l10n_ar_get_invoice_totals_for_report_refund_with_same_code(self):
         """Test _l10n_ar_get_invoice_totals_for_report for refund invoices with ARCA codes that can be used for both invoice and refund"""

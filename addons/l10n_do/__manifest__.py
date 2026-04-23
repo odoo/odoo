@@ -82,7 +82,6 @@ en Odoo):
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
-        'data/l10n_latam_identification_type_data.xml',
         'data/l10n_latam_document_type_data.xml',
     ],
     'demo': [

@@ -6,6 +6,8 @@ from odoo.exceptions import ValidationError
 from odoo.tools import float_repr
 from odoo.tools.mail import email_normalize
 
+from odoo.addons.account.tools.partner_identifiers import validate_identifier
+
 
 class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
@@ -40,7 +42,9 @@ class ResPartnerBank(models.Model):
                 raise ValidationError(_("%s is not a valid email.", value))
 
             if bank.proxy_type == "br_cpf_cnpj" and (
-                not value or not self.partner_id.check_vat_br(value) or any(not char.isdecimal() for char in value)
+                not value
+                or not (validate_identifier('BR_CN', value)['valid'] or validate_identifier('BR_TIN', value)['valid'])
+                or any(not char.isdecimal() for char in value)
             ):
                 raise ValidationError(_("%s is not a valid CPF or CNPJ (don't include periods or dashes).", value))
 

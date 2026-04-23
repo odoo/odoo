@@ -196,8 +196,9 @@
                     <strong>VAT Cond: </strong><span t-field="o.partner_id.l10n_ar_afip_responsibility_type_id"/>
 
                     <!-- (17) CUIT -->
-                    <t t-if="o.partner_id.vat and o.partner_id.l10n_latam_identification_type_id and o.partner_id.l10n_latam_identification_type_id.l10n_ar_afip_code != '99'">
-                        <br/><strong><t t-out="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:</strong> <span t-out="o.partner_id.l10n_ar_formatted_vat if o.partner_id.l10n_ar_vat else o.partner_id.vat"/>
+                    <t t-if="(o.partner_id.vat or o.partner_id.additional_identifiers) and o.partner_id._l10n_ar_get_afip_code() != '99'">
+                        <t t-set="ar_doc_label" t-value="o.partner_id._get_preferred_legal_entity_identifier_vals().get('label') or o.company_id.account_fiscal_country_id.vat_label"/>
+                        <br/><strong><t t-out="ar_doc_label" id="inv_tax_id_label"/>:</strong> <span t-out="o.partner_id.l10n_ar_formatted_vat if o.partner_id.l10n_ar_vat else o.partner_id._get_preferred_legal_entity_identifier_vals().get('value', '')"/>
                     </t>
 
                 </div>

@@ -9,5 +9,5 @@ class PosSession(models.Model):
     def _load_pos_data_models(self, config):
         data = super()._load_pos_data_models(config)
         if self.env.company.country_id.code == "PE":
-            data += ['l10n_pe.res.city.district', 'l10n_latam.identification.type', 'res.city']
+            data += ['l10n_pe.res.city.district', 'res.city']
         return data

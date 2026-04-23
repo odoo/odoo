@@ -2,10 +2,10 @@
 
 from odoo.http import request, route
 
-from odoo.addons.l10n_latam_base.controllers.portal import L10nLatamBasePortalAccount
+from odoo.addons.portal.controllers.portal import CustomerPortal
 
 
-class L10nPEPortalAccount(L10nLatamBasePortalAccount):
+class L10nPEPortalAccount(CustomerPortal):
 
     def _is_peru_company(self):
         return request.env.company.country_code == 'PE'
@@ -20,11 +20,11 @@ class L10nPEPortalAccount(L10nLatamBasePortalAccount):
             })
         return rendering_values
 
-    def _l10n_get_default_identification_type_id(self):
-        return (
-            (self.env.company.country_code == 'PE' and request.env.ref('l10n_pe.it_DNI'))
-            or super()._l10n_get_default_identification_type_id()
-        )
+    def _get_mandatory_address_fields(self, country_sudo):
+        mandatory_fields = super()._get_mandatory_address_fields(country_sudo)
+        if self._is_peru_company() and country_sudo.code == 'PE':
+            mandatory_fields.add('l10n_pe_district')
+        return mandatory_fields
 
     @route(
         '/portal/city_infos/<model("res.city"):city>',

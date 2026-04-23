@@ -3,7 +3,7 @@
 
     <record model='res.partner' id='par_cfa'>
         <field name='name'>Consumidor Final Anónimo</field>
-        <field name='l10n_latam_identification_type_id' ref='l10n_ar.it_Sigd'/>
+        <field name='additional_identifiers' eval="{'AR_SIGD': '0'}"/>
         <field name='l10n_ar_afip_responsibility_type_id' ref="res_CF"/>
     </record>
 
@@ -13,7 +13,7 @@
 
     <record id="partner_afip" model="res.partner">
         <field name="name">ARCA</field>
-        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='country_id' ref='base.ar'/>
         <field name='vat'>33693450239</field>
         <field name='l10n_ar_afip_responsibility_type_id' ref="res_IVA_NO_ALC"/>
     </record>

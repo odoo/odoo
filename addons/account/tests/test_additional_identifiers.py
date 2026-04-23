@@ -116,6 +116,30 @@ class TestAdditionalIdentifiers(AccountTestInvoicingCommon):
             'U12345675',
         )
 
+    def test_individual_and_company_identifier_conflict(self):
+        """A partner cannot carry both an individual (CN) and a company (EN) identifier."""
+        partner = self.env['res.partner'].create({
+            'name': 'PE Partner',
+            'country_id': self.env.ref('base.pe').id,
+        })
+        # Individual citizen number (PE_DNI, category CN) alone is fine.
+        partner.additional_identifiers = {'PE_DNI': '40000004'}
+        # Adding a company enterprise number (PE_CUI, category EN) on top must fail.
+        with self.assertRaisesRegex(ValidationError, "company identifier"):
+            partner.additional_identifiers = {'PE_DNI': '40000004', 'PE_CUI': '101174102'}
+
+    def test_individual_identifier_with_vat_conflict(self):
+        """The country tax number on `vat` is a company identifier too, so it cannot
+        coexist with an individual (CN) identifier."""
+        partner = self.env['res.partner'].create({
+            'name': 'PE Person',
+            'country_id': self.env.ref('base.pe').id,
+            'additional_identifiers': {'PE_DNI': '40000004'},
+        })
+        # Setting the country tax number (RUC, on `vat`) conflicts with the citizen number.
+        with self.assertRaisesRegex(ValidationError, "company identifier"):
+            partner.vat = '20100066603'
+
     def test_unknown_key_dropped(self):
         """Unknown identifier keys should be dropped on save with a logger warning."""
         with self.assertLogs('odoo.addons.account.models.partner', level='WARNING') as logger:

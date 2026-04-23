@@ -3,25 +3,39 @@ from stdnum import (
     lei,
 )
 
+from stdnum.ar import cuit as ar_cuit, dni as ar_dni
 from stdnum.at import uid as at_en
 from stdnum.au import acn as au_acn
 from stdnum.be import vat as be_vat
-from stdnum.br import cpf as br_cn
+from stdnum.br import cnpj as br_cnpj, cpf as br_cn
 from stdnum.ch import uid as ch_uid
+from stdnum.cl import rut as cl_rut
 from stdnum.dk import cvr as dk_cvr
+from stdnum.do import cedula as do_cedula, rnc as do_rnc
+from stdnum.ec import ci as ec_ci, ruc as ec_ruc
 from stdnum.ee import registrikood as ee_en
 from stdnum.eu import vat as eu_vat
 from stdnum.fi import ytunnus as fi_en
 from stdnum.fr import nir as fr_cn, siret as fr_siret, siren as fr_siren
+from stdnum.gt import nit as gt_nit
 from stdnum.jp import cn as jp_en
 from stdnum.lv import pvn as lv_en
 from stdnum.ma import ice as ma_ice
 from stdnum.no import orgnr as no_en
+from stdnum.pe import cui as pe_cui, ruc as pe_ruc
 from stdnum.se import orgnr as se_en
 from stdnum.sg import uen as sg_en
+from stdnum.uy import rut as uy_rut
 
 from odoo.tools.translate import LazyTranslate
-from odoo.addons.account.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, th_branch_code_validate
+from odoo.addons.account.tools.partner_identifier_validation import (
+    gt_cui_validate,
+    nl_kvk_validate,
+    nl_oin_validate,
+    uy_ci_validate,
+    uy_nie_validate,
+    th_branch_code_validate
+)
 from odoo.addons.account.tools.country_groups import FR_AND_DOM_TOM, SEPA_COUNTRIES
 
 
@@ -46,6 +60,8 @@ GLN_SHARED_VALS = {
 SHADOWS_GLN = ['HR_EN', 'HU_EN', 'NZ_EN']
 
 TIN_CATEGORIES = ['TIN', 'VAT', 'GST']
+INDIVIDUAL_CATEGORIES = ['CN']  # citizen numbers — identify natural persons
+COMPANY_CATEGORIES = [*TIN_CATEGORIES, 'EN']  # tax numbers (VAT/TIN/GST) and enterprise numbers — identify legal entities (companies)
 
 IDENTIFIERS_METADATA = {
     'AD_VAT': {  # NRT
@@ -66,9 +82,106 @@ IDENTIFIERS_METADATA = {
         'category': 'TIN',
         'countries': ['AL'],
     },
+    'AR_AN': {
+        'sequence': 11,
+        'label': _lt('AN'),
+        'help': _lt('Birth certificate / Acta de nacimiento.'),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
+    'AR_CDI': {
+        'sequence': 9,
+        'label': _lt('CDI'),
+        'help': _lt('Identification Code.'),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
+    'AR_CDM': {
+        'sequence': 13,
+        'label': _lt('CdM'),
+        'help': _lt('Migration Certificate / Certificado de migración.'),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
+    'AR_CI': {
+        'sequence': 6,
+        'label': _lt('CI'),
+        'help': _lt("Provincial ID card (Cédula de Identidad); the AFIP document type is derived from the partner's province."),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
+    'AR_CIBAR': {
+        'sequence': 12,
+        'label': _lt('CIBAR'),
+        'help': _lt('CI Bs. As. RNP.'),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
+    'AR_CPF': {
+        'sequence': 5,
+        'label': _lt('CPF'),
+        'help': _lt('CI Federal Police.'),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
+    'AR_CUIL': {
+        'sequence': 3,
+        'label': _lt('CUIL'),
+        'help': _lt('Unique Labor Identification Code (Código Único de Identificación Laboral).'),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
     'AR_CUIT': {
+        'sequence': 1,
+        'label': _lt('CUIT'),
+        'help': _lt('Unique Tax Identification Code (Código Único de Identificación Tributaria).'),
         'placeholder': '20055361682',
         'category': 'TIN',
+        'validation_function': ar_cuit.validate,
+        'countries': ['AR'],
+    },
+    'AR_DNI': {
+        'sequence': 2,
+        'label': _lt('DNI'),
+        'help': _lt('National Identity Card (Documento Nacional de Identidad).'),
+        'placeholder': '34586675',
+        'category': 'CN',
+        'validation_function': ar_dni.validate,
+        'countries': ['AR'],
+    },
+    'AR_ET': {
+        'sequence': 10,
+        'label': _lt('ET'),
+        'help': _lt('Pending (en trámite).'),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
+    'AR_LC': {
+        'sequence': 8,
+        'label': _lt('LC'),
+        'help': _lt('Libreta cívica.'),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
+    'AR_LE': {
+        'sequence': 7,
+        'label': _lt('LE'),
+        'help': _lt('Libreta de enrolamiento.'),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
+    'AR_SIGD': {
+        'sequence': 4,
+        'label': _lt('SIGD'),
+        'help': _lt('Unidentified / global daily sales (Sin identificar / venta global diaria).'),
+        'category': 'CN',
+        'countries': ['AR'],
+    },
+    'AR_UPAPP': {
+        'sequence': 14,
+        'label': _lt('UpApP'),
+        'help': _lt('Used by Anses for Padrón.'),
+        'category': 'CN',
         'countries': ['AR'],
     },
     'AT_EN': {
@@ -138,16 +251,19 @@ IDENTIFIERS_METADATA = {
         'countries': ['BG'],
     },
     'BR_TIN': {  # CNPJ
+        'label': _lt('CNPJ'),
         'placeholder': _lt('16.727.230/0001-97'),
         'help': _lt('Brazilian company identification number. 14 digits.'),
         'category': 'TIN',
+        'validation_function': br_cnpj.validate,
         'countries': ['BR'],
     },
     'BR_CN': {  # CPF
-        'sequence': 10,
+        'sequence': 1,
         'label': _lt('CPF'),
         'placeholder': _lt('390.533.447-05'),
         'help': _lt('Brazilian individual identification number.'),
+        'category': 'CN',
         'validation_function': br_cn.validate,
         'countries': ['BR'],
     },
@@ -167,14 +283,86 @@ IDENTIFIERS_METADATA = {
         'category': 'VAT',
         'countries': ['CH'],
     },
+    'CL_RUN': {
+        'sequence': 2,
+        'label': _lt('RUN'),
+        'help': _lt('Registration.'),
+        'placeholder': '12345678-5',
+        'category': 'CN',
+        'validation_function': cl_rut.validate,
+        'countries': ['CL'],
+    },
     'CL_RUT': {
+        'sequence': 1,
+        'label': _lt('RUT'),
+        'help': _lt('RUT'),
         'placeholder': '76086428-5',
         'category': 'TIN',
+        'validation_function': cl_rut.validate,
         'countries': ['CL'],
     },
     'CO_NIT': {
+        'sequence': 1,
+        'label': _lt('NIT'),
+        'help': _lt('Número de Identificación Tributaria (Colombian company tax ID).'),
         'placeholder': '213123432-1',
         'category': 'TIN',
+        'countries': ['CO'],
+    },
+    'CO_CC': {
+        'sequence': 2,
+        'label': _lt('Cédula de ciudadanía'),
+        'help': _lt('Colombian citizenship ID card (Cédula de ciudadanía).'),
+        'category': 'CN',
+        'countries': ['CO'],
+    },
+    'CO_RC': {
+        'sequence': 3,
+        'label': _lt('Registro Civil'),
+        'help': _lt('Colombian civil registration document (Registro Civil).'),
+        'category': 'CN',
+        'countries': ['CO'],
+    },
+    'CO_TI': {
+        'sequence': 4,
+        'label': _lt('Tarjeta de Identidad'),
+        'help': _lt('Colombian identity card for minors (Tarjeta de Identidad).'),
+        'category': 'CN',
+        'countries': ['CO'],
+    },
+    'CO_TE': {
+        'sequence': 5,
+        'label': _lt('Tarjeta de extranjería'),
+        'help': _lt('Colombian foreigner card (Tarjeta de extranjería).'),
+        'category': 'CN',
+        'countries': ['CO'],
+    },
+    'CO_CE': {
+        'sequence': 6,
+        'label': _lt('Cédula de extranjería'),
+        'help': _lt('Colombian foreigner ID card (Cédula de extranjería).'),
+        'category': 'CN',
+        'countries': ['CO'],
+    },
+    'CO_NIUP': {
+        'sequence': 7,
+        'label': _lt('NIUP'),
+        'help': _lt('Número de Identificación Único Personal.'),
+        'category': 'CN',
+        'countries': ['CO'],
+    },
+    'CO_PEP': {
+        'sequence': 8,
+        'label': _lt('PEP'),
+        'help': _lt('Permiso Especial de Permanencia.'),
+        'category': 'CN',
+        'countries': ['CO'],
+    },
+    'CO_PPT': {
+        'sequence': 9,
+        'label': _lt('PPT'),
+        'help': _lt('Permiso por Protección Temporal.'),
+        'category': 'CN',
         'countries': ['CO'],
     },
     'CR_CPJ': {
@@ -246,14 +434,40 @@ IDENTIFIERS_METADATA = {
         'category': 'VAT',
         'countries': ['DK'],
     },
-    'DO_RNC': {
-        'placeholder': _lt('1-01-85004-3 or 101850043'),
-        'category': 'TIN',
+    'DO_CEDULA': {
+        'sequence': 2,
+        'label': _lt('Cédula'),
+        'help': _lt('Dominican Republic national identification number.'),
+        'placeholder': '00113918205',
+        'category': 'CN',
+        'validation_function': do_cedula.validate,
         'countries': ['DO'],
     },
+    'DO_RNC': {
+        'sequence': 1,
+        'label': _lt('RNC'),
+        'help': _lt('Registro Nacional del Contribuyente.'),
+        'placeholder': _lt('1-01-85004-3 or 101850043'),
+        'category': 'TIN',
+        'validation_function': do_rnc.validate,
+        'countries': ['DO'],
+    },
+    'EC_DNI': {
+        'sequence': 2,
+        'label': _lt('Cédula'),
+        'help': _lt('Citizenship card or Identity Card.'),
+        'placeholder': '1714616123',
+        'category': 'CN',
+        'validation_function': ec_ci.validate,
+        'countries': ['EC'],
+    },
     'EC_RUC': {
+        'sequence': 1,
+        'label': _lt('RUC'),
+        'help': _lt('Single Taxpayer Registration.'),
         'placeholder': _lt('1792060346001 or 1792060346'),
         'category': 'TIN',
+        'validation_function': ec_ruc.validate,
         'countries': ['EC'],
     },
     'EE_EN': {
@@ -349,9 +563,22 @@ IDENTIFIERS_METADATA = {
         'category': 'VAT',
         'countries': ['GR'],
     },
+    'GT_CUI': {
+        'sequence': 1,
+        'label': _lt('CUI'),
+        'help': _lt('Guatemalan unique identification code.'),
+        'placeholder': '1234567890101',
+        'category': 'CN',
+        'validation_function': gt_cui_validate,
+        'countries': ['GT'],
+    },
     'GT_NIT': {
+        'sequence': 2,
+        'label': _lt('NIT'),
+        'help': _lt('Número de Identificación Tributaria'),
         'placeholder': '576937K',
         'category': 'TIN',
+        'validation_function': gt_nit.validate,
         'countries': ['GT'],
     },
     'HR_EN': {
@@ -607,16 +834,92 @@ IDENTIFIERS_METADATA = {
         'category': 'GST',
         'countries': ['NZ'],
     },
+    'PE_CPP': {
+        'sequence': 12,
+        'label': _lt('License Permit Temp. Perman.'),
+        'help': _lt('Carné Permiso Temp. Perman.'),
+        'category': 'CN',
+        'countries': ['PE'],
+    },
     'PE_CUI': {  # CUI <-> RUT : to_ruc/to_dni
-        'sequence': 10,
+        'sequence': 1,
         'label': _lt('Company registry'),
         'help': _lt('Peruvian unique taxpayer registry number (RUC).'),
         'placeholder': '101174102',
+        'category': 'EN',
+        'countries': ['PE'],
+    },
+    'PE_DIC': {
+        'sequence': 5,
+        'label': _lt('Diplomatic Identity Card'),
+        'help': _lt('Cédula Diplomática de identidad.'),
+        'category': 'CN',
+        'countries': ['PE'],
+    },
+    'PE_DNI': {
+        'sequence': 3,
+        'label': _lt('DNI'),
+        'help': _lt('National Identity Document.'),
+        'placeholder': '40000004',
+        'category': 'CN',
+        'validation_function': pe_cui.validate,
+        'countries': ['PE'],
+    },
+    'PE_IDCR': {
+        'sequence': 6,
+        'label': _lt('Identity document of the country of residence'),
+        'category': 'CN',
+        'countries': ['PE'],
+    },
+    'PE_IN': {
+        'sequence': 8,
+        'label': _lt('Identification Number'),
+        'help': _lt('IN - Doc Trib PP. JJ.'),
+        'category': 'CN',
+        'countries': ['PE'],
+    },
+    'PE_NDTD': {
+        'sequence': 4,
+        'label': _lt('Non-Domiciled Tax Document'),
+        'help': _lt('Document without RUC from another country.'),
+        'category': 'CN',
+        'countries': ['PE'],
+    },
+    'PE_PTP': {
+        'sequence': 10,
+        'label': _lt('PTP'),
+        'help': _lt('Temporary Residence Permit (Permiso de residencia temporal).'),
+        'category': 'CN',
         'countries': ['PE'],
     },
     'PE_RUC': {
+        'sequence': 2,
+        'label': _lt('RUC'),
+        'help': _lt('Taxpayer Identification Number.'),
         'placeholder': _lt('10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY'),
         'category': 'TIN',
+        'validation_function': pe_ruc.validate,
+        'countries': ['PE'],
+    },
+    'PE_SP': {
+        'sequence': 11,
+        'label': _lt('Safe Passage'),
+        'help': _lt('Salvoconducto.'),
+        'category': 'CN',
+        'countries': ['PE'],
+    },
+    'PE_TAM': {
+        'sequence': 9,
+        'label': _lt('TAM'),
+        'help': _lt('Andean Immigration Card.'),
+        'category': 'CN',
+        'countries': ['PE'],
+    },
+    'PE_TIN': {
+        'sequence': 7,
+        'label': _lt('Tax Identification Number'),
+        'help': _lt('TIN – Doc Trib PP.NN.'),
+        'category': 'CN',
         'countries': ['PE'],
     },
     'PH_TIN': {
@@ -748,9 +1051,52 @@ IDENTIFIERS_METADATA = {
         'category': 'TIN',
         'countries': ['US'],
     },
+    'UY_CI': {
+        'sequence': 3,
+        'label': _lt('CI'),
+        'help': _lt('Cédula de Identidad (Uruguayan ID card).'),
+        'placeholder': '3:402.010-1',
+        'category': 'CN',
+        'validation_function': uy_ci_validate,
+        'countries': ['UY'],
+    },
+    'UY_DNI': {
+        'sequence': 5,
+        'label': _lt('DNI'),
+        'help': _lt('Documento Nacional de Identidad (AR, BR, CL or PY).'),
+        'category': 'CN',
+        'countries': ['UY'],
+    },
+    'UY_NIE': {
+        'sequence': 1,
+        'label': _lt('NIE'),
+        'help': _lt('Foreigner Identity Number.'),
+        'placeholder': '93:402.010-1',
+        'category': 'CN',
+        'validation_function': uy_nie_validate,
+        'countries': ['UY'],
+    },
+    'UY_NIFE': {
+        'sequence': 6,
+        'label': _lt('NIFE'),
+        'help': _lt('Foreign tax identification number.'),
+        'category': 'CN',
+        'countries': ['UY'],
+    },
+    'UY_OTR': {
+        'sequence': 4,
+        'label': _lt('Otros'),
+        'help': _lt('Other identification document.'),
+        'category': 'CN',
+        'countries': ['UY'],
+    },
     'UY_RUT': {
+        'sequence': 2,
+        'label': _lt('RUT'),
+        'help': _lt('Registro Único Tributario / Registro Único de Contribuyente.'),
         'placeholder': _lt("211003420017"),
         'category': 'TIN',
+        'validation_function': uy_rut.validate,
         'countries': ['UY'],
     },
     'VA_VAT': {
@@ -776,6 +1122,13 @@ IDENTIFIERS_METADATA = {
         'help': _lt('Dun & Bradstreet unique 9-digit business identifier.'),
         'placeholder': '372441183',
         'countries': False,
+    },
+    'PASSPORT': {
+        'sequence': 95,
+        'label': _lt('Passport'),
+        'help': _lt('Passport number.'),
+        'category': 'CN',
+        'countries': ['AR', 'PE', 'CO', 'UY', 'EC'],
     },
     'EAN_GLN': {
         **GLN_SHARED_VALS,
@@ -826,17 +1179,28 @@ def is_tin(identifier_type):
     return identifier_type in TIN_METADATA
 
 
+def is_individual_identifier(identifier_type):
+    """ Whether the identifier represents an individual (e.g. a citizen number). """
+    return get_identifier_metadata(identifier_type).get('category') in INDIVIDUAL_CATEGORIES
+
+
+def is_company_identifier(identifier_type):
+    """ Whether the identifier represents a company (a tax number or an enterprise number). """
+    return get_identifier_metadata(identifier_type).get('category') in COMPANY_CATEGORIES
+
+
 def get_identifier_metadata(identifier_type):
     """Metadata dict for `identifier_type`."""
     return IDENTIFIERS_METADATA.get(identifier_type) or {}
 
 
-def select_preferred_identifier(identifiers, filter_func=None, sort_key=None):
+def pick_preferred_identifier(identifiers, filter_func=None, sort_key=None):
     """ Pick the best identifier from a candidates dict.
 
     :param identifiers: dict {identifier_type: value} as from `_get_all_identifiers()`
     :param filter_func: optional (key, value, metadata) -> bool
     :param sort_key: optional (key, value, metadata) -> comparable
+    :return: dict `{'key': ..., 'value': ..., **metadata}` of the winner, or empty dict if no candidate.
     """
     candidates = []
     for key, value in identifiers.items():
@@ -845,10 +1209,11 @@ def select_preferred_identifier(identifiers, filter_func=None, sort_key=None):
             continue
         candidates.append((key, value, meta))
     if not candidates:
-        return (None, None)
+        return {}
     if sort_key:
         candidates.sort(key=lambda c: sort_key(*c))
-    return (candidates[0][0], candidates[0][1])
+    winner_key, winner_value, winner_meta = candidates[0]
+    return {'key': winner_key, 'value': winner_value, **winner_meta}
 
 
 def get_tin_metadata_of_country(country_code):
@@ -873,14 +1238,16 @@ def get_additional_identifiers_metadata_of_country(country_code, include_interna
     """ Identifiers that should be offered for `country_code`, optionally narrowed by the
     `sequence`.
     """
-    return {
-        key: metadata
-        for key, metadata in ADDITIONAL_IDENTIFIERS_METADATA.items()
-        if seq_min <= metadata.get('sequence', 100) <= seq_max and (
-            country_code in (metadata.get('countries') or [])
-            or (include_international and not metadata.get('countries'))
-        )
-    }
+    result = {}
+    for key, metadata in ADDITIONAL_IDENTIFIERS_METADATA.items():
+        if not seq_min <= metadata.get('sequence', 100) <= seq_max:
+            continue
+        if country_code not in (metadata.get('countries') or []) and not (
+            include_international and not metadata.get('countries')
+        ):
+            continue
+        result[key] = metadata
+    return result
 
 
 def get_identifier_label(identifier_type):

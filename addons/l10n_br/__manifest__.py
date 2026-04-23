@@ -65,7 +65,6 @@ Create electronic sales invoices with Avatax.
         'data/res_country_data.xml',
         'data/res.city.csv',
         'data/l10n_br.zip.range.csv',
-        'data/l10n_latam.identification.type.csv',
         'data/l10n_latam.document.type.csv',
         'views/account_view.xml',
         'views/account_fiscal_position_views.xml',

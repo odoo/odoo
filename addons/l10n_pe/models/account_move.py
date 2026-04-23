@@ -25,7 +25,7 @@ class AccountMove(models.Model):
                     result.append(("id", "in", doc_subtype_group_ids))
                     break
         result.append(("code", "in", ("01", "03", "07", "08", "20", "40")))
-        if self.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code != '6' and self.move_type == 'out_invoice':
+        if self.partner_id.l10n_pe_sunat_code != '6' and self.move_type == 'out_invoice':
             result.append(('id', 'in', (
                 self.env.ref('l10n_pe.document_type08b')
                 | self.env.ref('l10n_pe.document_type02')

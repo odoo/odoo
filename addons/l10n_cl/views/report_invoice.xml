@@ -89,11 +89,12 @@
                 <span t-out="o.partner_id.commercial_partner_id.name or o.partner_id.name"/>
                 <br/>
 
-                <t t-if="o.partner_id.vat and o.partner_id.l10n_latam_identification_type_id">
+                <t t-set="cl_doc_number" t-value="o.partner_id._get_preferred_legal_entity_identifier_vals().get('value', '')"/>
+                <t t-if="cl_doc_number">
                     <strong>
-                        <t t-out="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:
+                        <t t-out="o.partner_id._get_preferred_legal_entity_identifier_vals().get('label') or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:
                     </strong>
-                    <span t-out="o.partner_id.vat"/>
+                    <span t-out="cl_doc_number"/>
                     <br/>
                 </t>
                 <strong>Address:</strong>

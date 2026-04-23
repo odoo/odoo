@@ -4,14 +4,14 @@
     <record id="base_view_partner_form" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="l10n_latam_base.view_partner_latam_form"/>
+        <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']/.." position="after">
+            <div id="vat_div" position="after">
                 <field name="l10n_ar_afip_responsibility_type_id"
                        invisible="'AR' not in fiscal_country_codes"
                        options="{'no_open': True, 'no_create': True}"
                        readonly="parent_id"/>
-            </xpath>
+            </div>
         </field>
     </record>
 
