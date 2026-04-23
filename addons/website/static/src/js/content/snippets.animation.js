@@ -44,6 +44,8 @@ if (!window.performance || !window.performance.now) {
     };
 }
 
+const DEBOUNCE_DELAY = 250;
+
 /**
  * Add the notion of edit mode to public widgets.
  */
@@ -499,12 +501,23 @@ registry.slider = publicWidget.Widget.extend({
                 controlEl.addEventListener("mousedown", this.__onControlClick);
             });
         }
+
+        // Monitor carousel size changes to update maxHeight
+        this.resizeObserver = new ResizeObserver(
+            debounce(() => {
+                this._computeHeights();
+            }, DEBOUNCE_DELAY)
+        );
+        this.resizeObserver.observe(this.el);
+
         return this._super.apply(this, arguments);
     },
     /**
      * @override
      */
     destroy: function () {
+        this.resizeObserver?.disconnect();
+
         this._super.apply(this, arguments);
 
         window.Carousel.getOrCreateInstance(this.el).dispose();
