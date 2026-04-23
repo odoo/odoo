@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+
 from . import common
 from odoo import Command
 from odoo.tests import Form, tagged
 from odoo.tools.float_utils import float_split_str
+from odoo.tools.misc import formatLang
 from odoo.exceptions import ValidationError
 
 
@@ -371,3 +374,86 @@ class TestArManual(common.TestArCommon):
         })
         debit_note_wizard.create_debit()
         self.assertTrue(invoice.reversal_move_ids.debit_note_ids)
+
+    def test_invoice_pdf_sections_totals(self):
+        def assert_pdf_sections(invoice):
+            html = etree.fromstring(self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0])
+
+            section_rows = html.xpath("//tr[hasclass('o_line_section') or hasclass('o_line_subsection')]")
+            invoice_sections = invoice.invoice_line_ids.filtered(lambda line: line.display_type in ('line_section', 'line_subsection'))
+            self.assertEqual(len(section_rows), len(invoice_sections))
+
+            total_key = 'price_total' if invoice._l10n_ar_include_vat() else 'price_subtotal'
+            for i, row in enumerate(section_rows):
+                value = invoice.currency_id.round(invoice_sections[i]._get_child_lines()[0][total_key])
+                self.assertEqual(row.xpath('string(.//span[@class="oe_currency_value"])'), formatLang(self.env, value))
+
+        # Vat included
+        invoice_b = self._create_invoice_ar(
+            partner_id=self.partner_cf,
+            company_id=self.company_ri,
+            invoice_date="2021-03-20",
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=0.0, name='Section 1', display_type='line_section'),
+                self._prepare_invoice_line(product_id=self.service_iva_21, price_unit=124.3, quantity=3, name='Support Services 8', tax_ids=self.tax_21 + self.tax_perc_iibb),
+                self._prepare_invoice_line(product_id=self.service_iva_27, price_unit=2250.0, tax_ids=self.tax_27 + self.tax_national),
+                self._prepare_invoice_line(price_unit=0.0, name='Section 2', display_type='line_section'),
+                self._prepare_invoice_line(product_id=self.product_iva_105_perc, price_unit=1740.0, tax_ids=self.tax_10_5 + self.tax_internal),
+                self._prepare_invoice_line(product_id=self.product_iva_105_perc, price_unit=10000.0, tax_ids=self.tax_0 + self.tax_other),
+            ],
+            post=True,
+        )
+        self.assertEqual(invoice_b.l10n_latam_document_type_id, self.document_type['invoice_b'], 'selected document type should be Factura B')
+        assert_pdf_sections(invoice_b)
+
+        invoice_b_subsections = self._create_invoice_ar(
+            partner_id=self.partner_cf,
+            company_id=self.company_ri,
+            invoice_date="2021-03-20",
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=0.0, name='Section 1', display_type='line_section'),
+                self._prepare_invoice_line(product_id=self.service_iva_21, price_unit=124.3, quantity=3, name='Support Services 8', tax_ids=self.tax_21 + self.tax_perc_iibb),
+                self._prepare_invoice_line(product_id=self.service_iva_27, price_unit=2250.0, tax_ids=self.tax_27 + self.tax_national),
+                self._prepare_invoice_line(price_unit=0.0, name='Subsection 1', display_type='line_subsection'),
+                self._prepare_invoice_line(product_id=self.service_iva_21, price_unit=124.3, quantity=3, name='Support Services 8', tax_ids=self.tax_21 + self.tax_perc_iibb),
+                self._prepare_invoice_line(product_id=self.service_iva_27, price_unit=2250.0, tax_ids=self.tax_27 + self.tax_national),
+                self._prepare_invoice_line(price_unit=0.0, name='Section 2', display_type='line_section'),
+                self._prepare_invoice_line(product_id=self.product_iva_105_perc, price_unit=1740.0, tax_ids=self.tax_10_5 + self.tax_internal),
+                self._prepare_invoice_line(product_id=self.product_iva_105_perc, price_unit=10000.0, tax_ids=self.tax_0 + self.tax_other),
+            ],
+            post=True,
+        )
+        self.assertEqual(invoice_b_subsections.l10n_latam_document_type_id, self.document_type['invoice_b'], 'selected document type should be Factura B')
+        assert_pdf_sections(invoice_b_subsections)
+
+        # Vat excluded
+        invoice_a = self._create_invoice_ar(
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=0.0, name='Section 1', display_type='line_section'),
+                self._prepare_invoice_line(product_id=self.service_iva_21, price_unit=124.3, quantity=3, name='Support Services 8', tax_ids=self.tax_21 + self.tax_perc_iibb),
+                self._prepare_invoice_line(product_id=self.service_iva_27, price_unit=2250.0, tax_ids=self.tax_27 + self.tax_national),
+                self._prepare_invoice_line(price_unit=0.0, name='Section 2', display_type='line_section'),
+                self._prepare_invoice_line(price_unit=100, product_id=self.product_iva_21),
+                self._prepare_invoice_line(price_unit=678.5, product_id=self.product_iva_21),
+            ],
+            post=True,
+        )
+        self.assertEqual(invoice_a.l10n_latam_document_type_id, self.document_type['invoice_a'], 'selected document type should be Factura A')
+        assert_pdf_sections(invoice_a)
+
+        invoice_a_subsections = self._create_invoice_ar(
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=0.0, name='Section 1', display_type='line_section'),
+                self._prepare_invoice_line(product_id=self.service_iva_21, price_unit=124.3, quantity=3, name='Support Services 8', tax_ids=self.tax_21 + self.tax_perc_iibb),
+                self._prepare_invoice_line(product_id=self.service_iva_27, price_unit=2250.0, tax_ids=self.tax_27 + self.tax_national),
+                self._prepare_invoice_line(price_unit=0.0, name='Section 2', display_type='line_section'),
+                self._prepare_invoice_line(price_unit=100, product_id=self.product_iva_21),
+                self._prepare_invoice_line(price_unit=678.5, product_id=self.product_iva_21),
+                self._prepare_invoice_line(price_unit=0.0, name='Subsection 1', display_type='line_subsection'),
+                self._prepare_invoice_line(price_unit=100, product_id=self.product_iva_21),
+                self._prepare_invoice_line(price_unit=678.5, product_id=self.product_iva_21),
+            ],
+            post=True,
+        )
+        self.assertEqual(invoice_a_subsections.l10n_latam_document_type_id, self.document_type['invoice_a'], 'selected document type should be Factura A')
+        assert_pdf_sections(invoice_a_subsections)

@@ -134,7 +134,7 @@
         </xpath>
         <!-- if b2c we still wants the latam subtotal -->
         <t t-set="section_subtotal" t-value="line.get_section_subtotal()" position="attributes">
-            <attribute name="t-value">line.get_section_subtotal() + l10n_ar_values['price_subtotal']</attribute>
+            <attribute name="t-value">l10n_ar_values['section_price']</attribute>
         </t>
         <xpath expr="//t/tr/t[@t-set='line_colspan']" position="attributes">
             <attribute name="t-value">3 + (1 if display_discount else 0) + (1 if not line.tax_ids and not o._l10n_ar_include_vat() else 0)</attribute>
