@@ -92,11 +92,6 @@
 	</cac:TaxTotal>
 	<cac:TaxTotal>
 		<cbc:TaxAmount currencyID="USD">220.91</cbc:TaxAmount>
-		<!-- Technically, multiple tax subtotals are not allowed in BIS3, but some PINT rule that
-		is baed on BIS 3 invoice document allows it for displaying tax subtotals in different
-		currencies. This causes miscalculation in tax subtotal rounding in
-		`_correct_invoice_tax_amount` if not filtered out based on the document currency.
-		-->
 		<cac:TaxSubtotal>
 			<cbc:TaxableAmount currencyID="USD">1051.97</cbc:TaxableAmount>
 			<cbc:TaxAmount currencyID="USD">220.91</cbc:TaxAmount>
