@@ -52,17 +52,20 @@
                         disabled="!this.pos.getOrder()?.getOrderlines()?.length"
                         onClick="this.clickPrintBill"/>
                 </t>
-                <!-- Pricelist Button -->
-                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton" name="o_pricelist_button">
-                    <t t-set="iconClasses" t-value="'fa fa-th-list'"/>
-                    <t t-set="btnText">Pricelist</t>
-                    <t t-set="btnClasses" t-value="'o_pricelist_button btn-secondary '"/>
-                    <t t-set="onClick" t-value="() => this.clickPricelist()"/>
-                    <t t-set="subText">
-                        <t t-if="this.currentOrder?.pricelist_id">
-                            <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>  
-                        </t>
+                <t t-set="subText">
+                    <t t-if="this.currentOrder?.pricelist_id">
+                        <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>  
                     </t>
+                </t>
+                <!-- Pricelist Button -->
+                <t t-if="this.pos.cashier._role != 'minimal'"
+                    t-call="point_of_sale.controlButton" 
+                    name="o_pricelist_button" 
+                    iconClasses="fa fa-th-list"
+                    btnText="Pricelist"
+                    btnClasses="o_pricelist_button btn-secondary"
+                    onClick="() => this.clickPricelist()"
+                >
                 </t>
                 <!-- Tax Button -->
                 <t t-set="subText">
