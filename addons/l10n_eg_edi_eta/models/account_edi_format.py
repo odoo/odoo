@@ -187,7 +187,7 @@ class AccountEdiFormat(models.Model):
         }
         if document_summary.get('doc_data') and return_dict.get(document_summary['doc_data'][0].get('status')):
             return return_dict.get(document_summary['doc_data'][0]['status'])
-        return {'error': _('an Unknown error has occured'), 'blocking_level': 'warning'}
+        return {'error': _('an Unknown error has occurred'), 'blocking_level': 'warning'}
 
     def _l10n_eg_eta_get_access_token(self, invoice):
         user = invoice.company_id.sudo().l10n_eg_client_identifier
@@ -440,7 +440,7 @@ class AccountEdiFormat(models.Model):
         if not invoice.l10n_eg_eta_json_doc_file:
             return {
                 invoice: {
-                    'error':  _("An error occured in created the ETA invoice, please retry signing"),
+                    'error':  _("An error occurred in created the ETA invoice, please retry signing"),
                     'blocking_level': 'error'
                 }
             }

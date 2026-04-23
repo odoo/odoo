@@ -167,7 +167,7 @@ export const errorService = {
                 }
                 traceback =
                     `Uncaught unknown Error\n` +
-                    `An unknown error occured. This may be due to a Chrome extension meddling with Odoo.\n` +
+                    `An unknown error occurred. This may be due to a Chrome extension meddling with Odoo.\n` +
                     `(Opening your browser console might give you a hint on the error.)`;
             }
             const uncaughtError = new UncaughtPromiseError();

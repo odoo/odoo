@@ -419,7 +419,7 @@ class CardCampaign(models.Model):
         # Tests also do not render by default, in that case ignore.
         if image_bytes is None and not modules.module.current_test:
             raise exceptions.UserError(_(
-                'An error occured while rendering a card for %(record_name)s. '
+                'An error occurred while rendering a card for %(record_name)s. '
                 'Try again or check the server logs for more details.',
                 record_name=record.display_name
             ))

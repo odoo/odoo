@@ -161,7 +161,7 @@ export class DebugWidget extends Component {
                 const jsonData = JSON.parse(await file.text());
                 await this.pos.data.getLocalDataFromIndexedDB(jsonData);
             } catch (error) {
-                console.warn("An error occured during import", error);
+                console.warn("An error occurred during import", error);
             }
         }
     }

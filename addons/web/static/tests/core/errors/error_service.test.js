@@ -44,7 +44,7 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
     expect.errors(1);
     const error = new RPCError();
     error.code = 701;
-    error.message = "Some strange error occured";
+    error.message = "Some strange error occurred";
     error.data = { debug: "somewhere" };
     error.subType = "strange_error";
     error.model = "some model";
@@ -60,18 +60,18 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
                     debug: "somewhere",
                 },
                 subType: "strange_error",
-                message: "Some strange error occured",
+                message: "Some strange error occurred",
                 exceptionName: null,
                 model: "some model",
             });
             expect(props.traceback).toMatch(/RPC_ERROR/);
-            expect(props.traceback).toMatch(/Some strange error occured/);
+            expect(props.traceback).toMatch(/Some strange error occurred/);
         },
     });
     await makeMockEnv();
     Promise.reject(error);
     await animationFrame();
-    expect.verifyErrors(["RPC_ERROR: Some strange error occured"]);
+    expect.verifyErrors(["RPC_ERROR: Some strange error occurred"]);
 });
 
 test("handle custom RPC_ERROR of type='server' and associated custom dialog class", async () => {
@@ -84,7 +84,7 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
     }
     const error = new RPCError();
     error.code = 701;
-    error.message = "Some strange error occured";
+    error.message = "Some strange error occurred";
     error.model = "some model";
     const errorData = {
         context: { exception_class: "strange_error" },
@@ -101,19 +101,19 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
                 code: 701,
                 data: errorData,
                 subType: null,
-                message: "Some strange error occured",
+                message: "Some strange error occurred",
                 exceptionName: null,
                 model: "some model",
             });
             expect(props.traceback).toMatch(/RPC_ERROR/);
-            expect(props.traceback).toMatch(/Some strange error occured/);
+            expect(props.traceback).toMatch(/Some strange error occurred/);
         },
     });
     await makeMockEnv();
     errorDialogRegistry.add("strange_error", CustomDialog);
     Promise.reject(error);
     await animationFrame();
-    expect.verifyErrors(["RPC_ERROR: Some strange error occured"]);
+    expect.verifyErrors(["RPC_ERROR: Some strange error occurred"]);
 });
 
 test("handle normal RPC_ERROR of type='server' and associated custom dialog class", async () => {
@@ -131,7 +131,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     }
     const error = new RPCError();
     error.code = 701;
-    error.message = "A normal error occured";
+    error.message = "A normal error occurred";
     const errorData = {
         context: { exception_class: "strange_error" },
     };
@@ -147,12 +147,12 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
                 code: 701,
                 data: errorData,
                 subType: null,
-                message: "A normal error occured",
+                message: "A normal error occurred",
                 exceptionName: "normal_error",
                 model: "some model",
             });
             expect(props.traceback).toMatch(/RPC_ERROR/);
-            expect(props.traceback).toMatch(/A normal error occured/);
+            expect(props.traceback).toMatch(/A normal error occurred/);
         },
     });
     await makeMockEnv();
@@ -160,7 +160,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     errorDialogRegistry.add("normal_error", NormalDialog);
     Promise.reject(error);
     await animationFrame();
-    expect.verifyErrors(["RPC_ERROR: A normal error occured"]);
+    expect.verifyErrors(["RPC_ERROR: A normal error occurred"]);
 });
 
 test("will let handlers from the registry handle errors first", async () => {
@@ -220,7 +220,7 @@ test("originalError is the root cause of the error chain", async () => {
     mountWithCleanup(ErrHandler, { props: { comp: ThrowInSetup } });
     await prom;
     expect.verifyErrors([
-        `Error: An error occured in the owl lifecycle (see this Error's "cause" property)`,
+        `Error: An error occurred in the owl lifecycle (see this Error's "cause" property)`,
     ]);
     expect.verifySteps(["in handler"]);
 

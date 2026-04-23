@@ -372,7 +372,7 @@ class IrCron(models.Model):
         except psycopg2.extensions.TransactionRollbackError:
             # A serialization error can occur when another cron worker
             # commits the new `nextcall` value of a cron it just ran and
-            # that commit occured just before this query. The error is
+            # that commit occurred just before this query. The error is
             # genuine and the job should be skipped in this cron worker.
             raise
         except Exception as exc:

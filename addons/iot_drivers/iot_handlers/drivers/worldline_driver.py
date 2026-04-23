@@ -93,7 +93,7 @@ class WorldlineDriver(CtypesTerminalDriver):
         except OSError:
             _logger.exception("Failed to perform Worldline transaction. Check for potential segmentation faults")
             return self.send_status(
-                error="An error has occured. Check the transaction result manually with the payment provider",
+                error="An error has occurred. Check the transaction result manually with the payment provider",
                 request_data=transaction,
             )
 
@@ -119,6 +119,6 @@ class WorldlineDriver(CtypesTerminalDriver):
             _logger.exception("Failed to cancel Worldline transaction. Check for potential segmentation faults.")
             self.send_status(
                 stage='Cancel',
-                error="An error has occured when cancelling Worldline transaction. Check the transaction result manually with the payment provider",
+                error="An error has occurred when cancelling Worldline transaction. Check the transaction result manually with the payment provider",
                 request_data=transaction,
             )

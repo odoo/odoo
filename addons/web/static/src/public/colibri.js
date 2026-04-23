@@ -399,7 +399,7 @@ export class Colibri {
         if (errors.length) {
             const { attribute, error } = errors[0];
             throw Error(
-                `An error occured while updating dynamic attribute '${attribute}' (in interaction '${this.interaction.constructor.name}')`,
+                `An error occurred while updating dynamic attribute '${attribute}' (in interaction '${this.interaction.constructor.name}')`,
                 { cause: error }
             );
         }

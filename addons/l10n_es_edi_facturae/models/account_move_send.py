@@ -98,7 +98,7 @@ class AccountMoveSend(models.AbstractModel):
             except UserError as e:
                 if self.env.context.get('forced_invoice'):
                     _logger.warning(
-                        'An error occured during generation of Facturae EDI of %s: %s',
+                        'An error occurred during generation of Facturae EDI of %s: %s',
                         invoice.name,
                         e.args[0]
                     )

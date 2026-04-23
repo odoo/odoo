@@ -123,7 +123,7 @@ export const fileUploadService = {
             }
 
             function onError(error) {
-                const defaultErrorMessage = _t("An error occured while uploading.");
+                const defaultErrorMessage = _t("An error occurred while uploading.");
                 delete uploads[upload.id];
                 upload.state = "error";
                 const displayError = params.displayErrorNotification ?? true;

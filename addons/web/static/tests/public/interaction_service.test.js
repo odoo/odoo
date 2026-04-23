@@ -299,7 +299,7 @@ test("recover from error as much as possible when applying dynamiccontent", asyn
     b = "boom";
     c = "cc";
     expect(() => interaction.updateContent()).toThrow(
-        "An error occured while updating dynamic attribute 'b' (in interaction 'Test')"
+        "An error occurred while updating dynamic attribute 'b' (in interaction 'Test')"
     );
     expect(".test").toHaveOuterHTML(`<div class="test" a="aa" b="b" c="cc"></div>`);
 });

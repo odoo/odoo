@@ -16,9 +16,9 @@ const EPSON_ERRORS = {
     EPTR_CUTTER: _t("The cutter has a foreign matter, please check the cutter mechanism"),
     EPTR_MECHANICAL: _t("Mechanical error, please check the printer"),
     EPTR_REC_EMPTY: _t("The paper is empty, please load paper into the printer"),
-    EPTR_UNRECOVERABLE: _t("Low voltage unrecoverable error occured, please check the printer"),
+    EPTR_UNRECOVERABLE: _t("Low voltage unrecoverable error occurred, please check the printer"),
     EX_BADPORT: _t("The device is not connected, please check the printer power / connection"),
-    EX_TIMEOUT: _t("Timeout occured, please try again"),
+    EX_TIMEOUT: _t("Timeout occurred, please try again"),
 };
 
 export class TestEPos extends Component {

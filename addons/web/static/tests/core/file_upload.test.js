@@ -132,7 +132,7 @@ test("handles error", async () => {
     });
     const fileUploadService = await getService("file_upload");
     fileUploadService.upload("/test/", []);
-    await waitFor(".o_notification:has(.bg-danger):contains(An error occured while uploading)");
+    await waitFor(".o_notification:has(.bg-danger):contains(An error occurred while uploading)");
 });
 
 test("handles http not success", async () => {

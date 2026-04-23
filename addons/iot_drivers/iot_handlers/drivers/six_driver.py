@@ -114,7 +114,7 @@ class SixDriver(CtypesTerminalDriver):
             _logger.exception("Failed to perform Six transaction. Check for potential segmentation faults")
             sleep(3)  # needed to space out transaction requests
             self.send_status(
-                error="An error has occured. Check the transaction result manually with the payment provider",
+                error="An error has occurred. Check the transaction result manually with the payment provider",
                 request_data=transaction,
             )
 
@@ -134,7 +134,7 @@ class SixDriver(CtypesTerminalDriver):
             _logger.exception("Failed to cancel Six transaction. Check for potential segmentation faults.")
             sleep(3)  # needed to space out cancellation requests
             self.send_status(
-                error="An error has occured when cancelling Six transaction. Check the transaction result manually with the payment provider",
+                error="An error has occurred when cancelling Six transaction. Check the transaction result manually with the payment provider",
                 request_data=transaction,
             )
 
@@ -161,6 +161,6 @@ class SixDriver(CtypesTerminalDriver):
         except OSError:
             _logger.exception("Failed to get terminal balance. Check for potential segmentation faults.")
             self.send_status(
-                error="An error has occured when requesting the terminal balance. Check the terminal manually",
+                error="An error has occurred when requesting the terminal balance. Check the terminal manually",
                 request_data=data,
             )

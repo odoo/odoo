@@ -359,7 +359,7 @@ export class ResourceEditor extends Component {
      *
      * @private
      * @param {Object} resource a SCSS or JS file to save
-     * @return {Promise} indicates if the save is finished or if an error occured.
+     * @return {Promise} indicates if the save is finished or if an error occurred.
      */
     async saveSCSSorJS(resource) {
         const { url, arch } = resource;
@@ -377,7 +377,7 @@ export class ResourceEditor extends Component {
      * Saves a unique XML view.
      *
      * @param {Object} resource an xml view to save
-     * @returns {Promise} indicates if the save is finished or if an error occured.
+     * @returns {Promise} indicates if the save is finished or if an error occurred.
      */
     async saveXML(resource) {
         const { id, arch } = resource;
@@ -488,9 +488,7 @@ export class ResourceEditor extends Component {
     onReset() {
         this.dialog.add(ConfirmationDialog, {
             title: _t("Reset to default?"),
-            body: _t(
-                "All your custom changes will be lost. Are you sure?"
-            ),
+            body: _t("All your custom changes will be lost. Are you sure?"),
             confirmLabel: _t("Reset"),
             confirm: () => this.resetResource(),
             cancel: () => {},

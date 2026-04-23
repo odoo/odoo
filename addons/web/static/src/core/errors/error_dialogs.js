@@ -65,7 +65,7 @@ export class ErrorDialog extends Component {
         }
         this.logDate = date.toFormat("dd/MMM/yyyy HH:mm:ss", { locale: "en" });
 
-        this.contextDetails = "Occured ";
+        this.contextDetails = "Occurred ";
         if (this.props.serverHost) {
             this.contextDetails += `on ${this.props.serverHost} `;
         }

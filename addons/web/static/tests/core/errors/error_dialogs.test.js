@@ -46,14 +46,14 @@ test("ErrorDialog with traceback", async () => {
     await animationFrame();
     expect(queryAllTexts("main .clearfix div > *")).toEqual([
         "Odoo Error",
-        "Occured on 11/Mar/2019 09:30:00",
+        "Occurred on 11/Mar/2019 09:30:00",
         "ERROR_NAME",
         "Something bad happened",
         "This is a traceback string",
     ]);
     expect(queryAllTexts("main .clearfix div > p")).toEqual([
         "Odoo Error",
-        "Occured on 11/Mar/2019 09:30:00",
+        "Occurred on 11/Mar/2019 09:30:00",
     ]);
     expect(queryAllTexts("main .clearfix div > code")).toEqual([
         "ERROR_NAME",
@@ -88,14 +88,14 @@ test("Client ErrorDialog with traceback", async () => {
     await animationFrame();
     expect(queryAllTexts("main .clearfix div > *")).toEqual([
         "Odoo Client Error",
-        "Occured on 11/Mar/2019 09:30:00",
+        "Occurred on 11/Mar/2019 09:30:00",
         "ERROR_NAME",
         "Something bad happened",
         "This is a traceback string",
     ]);
     expect(queryAllTexts("main .clearfix div > p")).toEqual([
         "Odoo Client Error",
-        "Occured on 11/Mar/2019 09:30:00",
+        "Occurred on 11/Mar/2019 09:30:00",
     ]);
     expect(queryAllTexts("main .clearfix div > code")).toEqual([
         "ERROR_NAME",
@@ -115,7 +115,7 @@ test("button clipboard copy error traceback", async () => {
     patchWithCleanup(navigator.clipboard, {
         writeText(value) {
             expect(value).toBe(
-                `${error.name}\n\n${error.message}\n\nOccured on 11/Mar/2019 09:30:00\n\n${error.traceback}`
+                `${error.name}\n\n${error.message}\n\nOccurred on 11/Mar/2019 09:30:00\n\n${error.traceback}`
             );
         },
     });
@@ -273,14 +273,14 @@ test("ErrorDialog with timestamp provided", async () => {
     await animationFrame();
     expect(queryAllTexts("main .clearfix div > *")).toEqual([
         "Odoo Error",
-        "Occured on 14/Nov/2023 23:53:20",
+        "Occurred on 14/Nov/2023 23:53:20",
         "ERROR_NAME",
         "Something bad happened",
         "This is a traceback string",
     ]);
     expect(queryAllTexts("main .clearfix div > p")).toEqual([
         "Odoo Error",
-        "Occured on 14/Nov/2023 23:53:20",
+        "Occurred on 14/Nov/2023 23:53:20",
     ]);
     expect(queryAllTexts("main .clearfix div > code")).toEqual([
         "ERROR_NAME",

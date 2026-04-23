@@ -277,7 +277,7 @@ export class SplitPlugin extends Plugin {
      * Split around the given elements, until a given ancestor (included). Elements
      * will be removed in the process so caution is advised in dealing with their
      * references. Returns the new split root element that is a clone of
-     * limitAncestor or the original limitAncestor if no split occured.
+     * limitAncestor or the original limitAncestor if no split occurred.
      *
      * @param {Node[] | Node} elements
      * @param {HTMLElement} limitAncestor

@@ -108,7 +108,7 @@ class AccountMove(models.Model):
          - Send to E-Factura
 
         :param xml_data: string of the xml data to be sent
-        :return: the `list` of errors that occured during the sending and processing of data, if any
+        :return: the `list` of errors that occurred during the sending and processing of data, if any
         """
         self.ensure_one()
         if errors := self._l10n_ro_edi_get_pre_send_errors(xml_data):

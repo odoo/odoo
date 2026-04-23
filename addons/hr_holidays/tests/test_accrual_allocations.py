@@ -2940,7 +2940,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         When the carry over date matches the date of a level transition, some days are accrued. The number of
         accrued days is proportionate to the period that elapsed from the accrual period of the previous
         level. For example if 24 days are accrued yearly, and only 2 months have passed before the level
-        transition has occured, then the number of accrued days will be 2/12 * 24 = 4 days
+        transition has occurred, then the number of accrued days will be 2/12 * 24 = 4 days
 
         Create an accrual plan:
             - Carryover date: July 1st.
@@ -4933,7 +4933,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # The remaining leaves on a specific date should be:
             # 25/11/2024 to 08/12/2024: 21 days, no leave are deducted
             # 09/12/2024 to 31/12/2024: 11 days, the first leave is deducted as its start date is past
-            # 01/01/2025 to 05/01/2025: 26 days, carryover occured, from the 11 days only 5 are left, then the yearly 21 days are added
+            # 01/01/2025 to 05/01/2025: 26 days, carryover occurred, from the 11 days only 5 are left, then the yearly 21 days are added
             # from 06/01/2025: 16 days, the second leave is deducted as its start date is past
             assertions = [
                 ('2024-12-01', 21.0),

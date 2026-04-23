@@ -74,7 +74,7 @@ test("unmounts erroring main component", async () => {
     compA.state.shouldThrow = true;
     await animationFrame();
     expect.verifySteps([
-        'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
+        'An error occurred in the owl lifecycle (see this Error\'s "cause" property)',
         "BOOM",
     ]);
     expect.verifyErrors(["BOOM"]);
@@ -121,7 +121,7 @@ test("unmounts erroring main component: variation", async () => {
     compB.state.shouldThrow = true;
     await animationFrame();
     expect.verifySteps([
-        'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
+        'An error occurred in the owl lifecycle (see this Error\'s "cause" property)',
         "BOOM",
     ]);
     expect.verifyErrors(["BOOM"]);

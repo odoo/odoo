@@ -1630,7 +1630,7 @@
         let { error } = params;
         // Wrap error if it wasn't wrapped by wrapError (ie when not in dev mode)
         if (!(error instanceof OwlError)) {
-            error = Object.assign(new OwlError(`An error occured in the owl lifecycle (see this Error's "cause" property)`), { cause: error });
+            error = Object.assign(new OwlError(`An error occurred in the owl lifecycle (see this Error's "cause" property)`), { cause: error });
         }
         const node = "node" in params ? params.node : params.fiber.node;
         const fiber = "fiber" in params ? params.fiber : node.fiber;
@@ -1846,7 +1846,7 @@
                 }
             }
             catch (e) {
-                // if mountedFibers is not empty, this means that a crash occured while
+                // if mountedFibers is not empty, this means that a crash occurred while
                 // calling the mounted hooks of some component. So, there may still be
                 // some component that have been mounted, but for which the mounted hooks
                 // have not been called. Here, we remove the willUnmount hooks for these

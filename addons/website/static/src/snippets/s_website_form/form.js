@@ -663,7 +663,7 @@ export class Form extends Interaction {
         const resultEl = this.el.querySelector("#s_website_form_result, #o_website_form_result"); // !compatibility
 
         if (status === "error" && !message) {
-            message = _t("An error has occured, the form has not been sent.");
+            message = _t("An error has occurred, the form has not been sent.");
         }
 
         const renderedEls = this.renderAt(

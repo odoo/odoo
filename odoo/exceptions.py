@@ -56,7 +56,7 @@ class AccessDenied(UserError):
     def suppress_traceback(self):
         """
         Remove the traceback, cause and context of the exception, hiding
-        where the exception occured but keeping the exception message.
+        where the exception occurred but keeping the exception message.
 
         This method must be called in all situations where we are about
         to print this exception to the users.
