@@ -52,12 +52,12 @@
                         disabled="!this.pos.getOrder()?.getOrderlines()?.length"
                         onClick="this.clickPrintBill"/>
                 </t>
+                <!-- Pricelist Button -->
                 <t t-set="subText">
                     <t t-if="this.currentOrder?.pricelist_id">
                         <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>  
                     </t>
                 </t>
-                <!-- Pricelist Button -->
                 <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"
                     name="o_pricelist_button"
                     iconClasses="'fa fa-th-list'"
