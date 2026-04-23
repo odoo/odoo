@@ -1,13 +1,9 @@
 import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { BuilderComponent } from "@html_builder/core/building_blocks/builder_component";
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
-import {
-    basicContainerBuilderComponentProps,
-    useBuilderComponent,
-    useInputBuilderComponent,
-} from "@html_builder/core/utils";
+import { useBuilderComponent, useInputBuilderComponent } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, types as t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -15,46 +11,54 @@ import { useService } from "@web/core/utils/hooks";
 
 export class BuilderList extends Component {
     static template = "html_builder.BuilderList";
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        id: { type: String, optional: true },
-        addItemTitle: { type: String, optional: true },
-        itemShape: {
-            type: Object,
-            values: [
-                { value: "number" },
-                { value: "text" },
-                { value: "boolean" },
-                { value: "exclusive_boolean" },
-            ],
-            validate: (value) =>
-                // is not empty object and doesn't include reserved fields
-                Object.keys(value).length > 0 && !Object.keys(value).includes("_id"),
-            optional: true,
-        },
-        default: { optional: true },
-        sortable: { optional: true },
-        hiddenProperties: { type: Array, optional: true },
-        records: { type: String, optional: true },
-        defaultNewValue: { type: Object, optional: true },
-        columnWidth: { optional: true },
-        forbidLastItemRemoval: { type: Boolean, optional: true },
-        isEditable: { type: Boolean, optional: true },
-        limit: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        addItemTitle: _t("Add"),
-        itemShape: { value: "text" },
-        sortable: true,
-        hiddenProperties: [],
-        mode: "button",
-        defaultNewValue: {},
-        columnWidth: {},
-        forbidLastItemRemoval: false,
-        isEditable: true,
-        limit: 50,
-    };
     static components = { BuilderComponent, SelectMenu };
+
+    props = props(
+        {
+            "applyTo?": t.string(),
+            "preview?": t.boolean(),
+            "inheritedActions?": t.array(t.string()),
+
+            "action?": t.string(),
+            "actionParam?": t.any(),
+
+            // Shorthand actions.
+            "classAction?": t.any(),
+            "attributeAction?": t.any(),
+            "dataAttributeAction?": t.any(),
+            "styleAction?": t.any(),
+
+            "id?": t.string(),
+            "addItemTitle?": t.string(),
+            "itemShape?": t.customValidator(
+                t.record(t.selection(["number", "text", "boolean", "exclusive_boolean"])),
+                (value) =>
+                    // is not empty object and doesn't include reserved fields
+                    Object.keys(value).length > 0 && !Object.keys(value).includes("_id")
+            ),
+            "default?": t.any(),
+            "sortable?": t.any(),
+            "hiddenProperties?": t.array(),
+            "records?": t.string(),
+            "defaultNewValue?": t.object(),
+            "columnWidth?": t.any(),
+            "forbidLastItemRemoval?": t.boolean(),
+            "isEditable?": t.boolean(),
+            "limit?": t.number(),
+        },
+        {
+            addItemTitle: _t("Add"),
+            itemShape: { value: "text" },
+            sortable: true,
+            hiddenProperties: [],
+            mode: "button",
+            defaultNewValue: {},
+            columnWidth: {},
+            forbidLastItemRemoval: false,
+            isEditable: true,
+            limit: 50,
+        }
+    );
 
     setup() {
         if (this.props.default) {
