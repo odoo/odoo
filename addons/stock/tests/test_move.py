@@ -6170,11 +6170,31 @@ class TestStockMove(TestStockCommon):
         destination location and then the done quantity. In such cases, since
         the user has defined himself the destination location, we should not try
         to apply any putaway rule that would override his choice.
+
+        Additionally, ensure that when a delivery is waiting for availability
+        from a parent location, validating a receipt whose destination is a
+        child location of that parent triggers the reservation of the delivery.
         """
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
 
         child_location = self.stock_location.child_ids[0]
         self.picking_type_in.show_operations = True
+
+        # Create a delivery from the parent location to the customer location.
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [Command.create({
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': self.productA.id,
+                'uom_id': self.productA.uom_id.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        delivery.action_confirm()
+        self.assertEqual(delivery.state, 'confirmed', 'The delivery should be waiting for availability since there is no stock on hand.')
 
         receipt = self.env['stock.picking'].create({
             'location_id': self.customer_location.id,
@@ -6198,6 +6218,10 @@ class TestStockMove(TestStockCommon):
         self.assertRecordValues(receipt.move_ids.move_line_ids[-1], [
             {'location_dest_id': child_location.id, 'product_id': self.productA.id, 'quantity': 2},
         ])
+        receipt.button_validate()
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(delivery.state, 'assigned',
+                        'The delivery should be assigned since the receipt destination is a child location of the delivery source location.')
 
     def test_scheduled_date_after_backorder(self):
         today = fields.Datetime.today()
