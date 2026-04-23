@@ -29,7 +29,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:37+0000\n"
-"PO-Revision-Date: 2026-04-04 12:50+0000\n"
+"PO-Revision-Date: 2026-04-23 11:51+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-2/account/zh_Hans/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -992,19 +992,18 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        尊敬的 <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
-"t><br/><br/>\n"
+"        尊敬的 <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
+"<br/><br/>\n"
 "        感谢您的付款。\n"
-"        兹附上您的付款收据  <span style=\"font-weight:bold;\" t-"
-"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
-"金额\n"
-"        为 <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-"span> ，由 <t t-out=\"object.company_id.name or ''\">YourCompany</t>开具。\n"
+"        兹附上您的付款收据  <span style=\"font-weight:bold;\" t-out=\""
+"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> 金额\n"
+"        为 <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10.00</span> ，由 <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>开具。\n"
 "        <br/><br/>\n"
 "        如有任何疑问，欢迎随时联系我们。\n"
 "        <br/><br/>\n"
-"        Best regards,\n"
+"        祝好，\n"
 "        <t t-if=\"not is_html_empty(user.signature)\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
@@ -5855,7 +5854,7 @@ msgstr "成本与收入"
 #: model:account.group,name:account.2_us_group_5
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__cogs
 msgid "Cost of Goods Sold"
-msgstr "售出货物的成本"
+msgstr "销货成本"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_production
@@ -9014,7 +9013,7 @@ msgstr "频繁开支"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "From"
-msgstr "来自"
+msgstr "由"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -10327,7 +10326,7 @@ msgstr "国际贸易术语是一系列事先定义的、用于国际贸易的商
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_intrastat
 #: model:res.country.group,name:account.intrastat
 msgid "Intrastat"
-msgstr "国际联盟"
+msgstr "Intrastat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
@@ -13334,7 +13333,7 @@ msgstr "未结付款科目"
 #: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:account.account,name:account.2_account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
-msgstr "未结清收据"
+msgstr "未结清收款"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -16584,7 +16583,7 @@ msgstr "步骤已完成！"
 #. module: account
 #: model:account.account,name:account.1_stock_variation
 msgid "Stock Variation"
-msgstr ""
+msgstr "库存变动"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -17881,8 +17880,8 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"供应商账单验证后，该费用入账，具有永续库存估值的盎格鲁-撒克逊会计除外，在此类"
-"情况下，该费用（货物销售科目成本）在客户发票验证过程中识别。"
+"开支会在供应商账单获验证时入账，但在使用永续库存估值的英式（Anglo-Saxon）会计"
+"中除外。在该情况下，开支（销货成本账户）会在客户发票获验证时认列。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_line_label_uniq

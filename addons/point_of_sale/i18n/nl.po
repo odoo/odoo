@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-04-13 19:31+0000\n"
+"PO-Revision-Date: 2026-04-23 11:53+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/"
 "point_of_sale/nl/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -182,7 +182,7 @@ msgstr "(DUPLICAAT!)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "(Replace [printer_ip] with the printer IP address)"
-msgstr ""
+msgstr "(Vervang [printer_ip] met het IP-adres van de printer)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -211,7 +211,7 @@ msgstr "+ Nieuwe winkel"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ", you can skip the system parameter section."
-msgstr ""
+msgstr ", kun je het gedeelte over systeemparameters overslaan."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -223,7 +223,7 @@ msgstr "1 uur"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "19.1 or above"
-msgstr ""
+msgstr "19.1 of hoger"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -296,6 +296,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hallo <t t-"
+"out=\"client_name\">naam klant</t>,</t>\n"
+"                        <t t-else=\"\">Hallo,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Bedankt voor je aankoop bij <t t-out=\"store_name\">"
+"naam winkel</t>!</div>\n"
+"                    <div>In de bijlage vind je het aankoopbewijs voor je "
+"aankoop van <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+"dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
+"''\">date</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">time</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Met vriendelijke groet,</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Naam winkel</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -683,6 +713,8 @@ msgstr "Toegangstoken"
 msgid ""
 "Access printer configuration panel by puttin this URL in your search bar:"
 msgstr ""
+"Open het configuratiescherm van de printer door deze URL in je zoekbalk in "
+"te voeren:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -691,6 +723,8 @@ msgid ""
 "Access the below URL but replace [printer_ip] with your current Pritner IP "
 "address"
 msgstr ""
+"Ga naar de onderstaande URL, maar vervang [printer_ip] door het huidige IP-"
+"adres van je printer"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_warning
@@ -908,7 +942,7 @@ msgstr "Voeg één toe"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Add system parameter"
-msgstr ""
+msgstr "Systeemparameter toevoegen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -992,7 +1026,7 @@ msgstr "Adyment betaalterminal"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "After 19.1:"
-msgstr ""
+msgstr "Na 19.1:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1050,7 +1084,7 @@ msgstr "Alle verkoopregels"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Allow"
-msgstr ""
+msgstr "Toestaan"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1601,7 +1635,7 @@ msgstr "Eenvoudige kassabon"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Be aware that it works only on chromium based browser:"
-msgstr ""
+msgstr "Dit werkt alleen in chromium-gebaseerde browsers:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1615,7 +1649,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Before 19.1:"
-msgstr ""
+msgstr "Vóór 19.1:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
@@ -1709,7 +1743,7 @@ msgstr "Combo splitsen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Browser LNA Prompt"
-msgstr ""
+msgstr "Browser LNA-prompt"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_bus_mixin
@@ -2115,7 +2149,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Check if"
-msgstr ""
+msgstr "Controleer of"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__to_weight
@@ -2142,13 +2176,13 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Check list"
-msgstr ""
+msgstr "Checklist"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Check printer reachability:"
-msgstr ""
+msgstr "Controleer bereikbaarheid van printer:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -2558,7 +2592,7 @@ msgstr "Configuraties &gt; Instellingen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Configure"
-msgstr ""
+msgstr "Configureren"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2616,13 +2650,13 @@ msgstr "Bereidingsprinters aansluiten op je kassa"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_other_devices
 msgid "Connect printer devices to your PoS."
-msgstr ""
+msgstr "Sluit printerapparaten aan op je Kassa."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Connect printer to internet (Ethernet cable recommended)"
-msgstr ""
+msgstr "Sluit de printer aan op het internet (Ethernet-kabel aanbevolen)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3081,7 +3115,7 @@ msgstr "Dagelijkse verkoopsessies van je kassa."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid "Dangerous: Too Many Products"
-msgstr ""
+msgstr "Gevaarlijk: te veel producten"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
@@ -3383,7 +3417,7 @@ msgstr "Uitschakelen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Disable \"Redirect HTTP to HTTPS\""
-msgstr ""
+msgstr "Schakel \"HTTP omleiden naar HTTPS\" uit"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3702,7 +3736,7 @@ msgstr "Lege order"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Enable LNA on your database"
-msgstr ""
+msgstr "Schakel LNA in op je database"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__use_fast_payment
@@ -3719,6 +3753,8 @@ msgid ""
 "Enable the “Use Local Network Access” checkbox directly on the printer "
 "configuration."
 msgstr ""
+"Schakel het selectievakje “Gebruik lokale netwerktoegang” direct in de "
+"printerconfiguratie in."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__end_date
@@ -3763,7 +3799,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Environment check"
-msgstr ""
+msgstr "Omgevingscontrole"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__printer_ip
@@ -4129,7 +4165,7 @@ msgstr "Ga terug"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Google chrome, Microsoft Edge, Brave, Opera, Arc and others"
-msgstr ""
+msgstr "Google Chrome, Microsoft Edge, Brave, Opera, Arc en andere"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4269,13 +4305,13 @@ msgstr "Uur van de dag voor de bestelling"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "How to configure my devices properly:"
-msgstr ""
+msgstr "Zo stel je je apparaten correct in:"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "How to configure my printers"
-msgstr ""
+msgstr "Zo stel je printers in"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4287,12 +4323,16 @@ msgstr "Prijzen inclusief btw beheren"
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "I have access to my router configuration (To fix device IP addresses)"
 msgstr ""
+"Ik heb toegang tot de configuratie van mijn router (om IP-adressen van "
+"apparaten in te stellen)"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "I use an Epson printer (Check supported printers in Odoo documentation)"
 msgstr ""
+"Ik gebruik een Epson-printer (Controleer ondersteunde printers in de Odoo-"
+"documentatie)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_account__id
@@ -4409,6 +4449,8 @@ msgid ""
 "If everything is correct, the Local Network Access status icon will turn "
 "green:"
 msgstr ""
+"Als alles correct is, wordt het icoon voor de status van de lokale "
+"netwerktoegang groen:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4416,6 +4458,8 @@ msgstr ""
 msgid ""
 "If the permission is denied, refreshing the PoS will show this notification:"
 msgstr ""
+"Als de toestemming wordt geweigerd, wordt bij het herladen van de Kassa deze "
+"melding weergegeven:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4424,6 +4468,8 @@ msgid ""
 "If the system parameter is set, but the browser doesn't support LNA, the PoS "
 "will show this notification:"
 msgstr ""
+"Als de systeemparameter is ingesteld, maar de browser LNA niet ondersteunt, "
+"geeft de kassa deze melding weer:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4432,6 +4478,8 @@ msgid ""
 "If this endpoint does not returan a 404 error and displays a blank page, "
 "everything is ready."
 msgstr ""
+"Als dit eindpunt geen 404-fout retourneert en een lege pagina weergeeft, is "
+"alles klaar."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_orderline_id
@@ -4468,13 +4516,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "If you have the secure printing setting, disable it"
-msgstr ""
+msgstr "Als je de instelling voor veilig afdrukken hebt, schakel deze dan uit"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "If your database is version"
-msgstr ""
+msgstr "Als je database deze versie is:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_512
@@ -4864,6 +4912,8 @@ msgstr "Openhouden"
 msgid ""
 "Keep TLS settings enabled, otherwise the printer will not work with HTTPS."
 msgstr ""
+"Laat de TLS-instellingen ingeschakeld, anders werkt de printer niet met "
+"HTTPS."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4885,7 +4935,7 @@ msgstr "LED lamp"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "LNA Green Status"
-msgstr ""
+msgstr "LNA Groene status"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4897,7 +4947,7 @@ msgstr "Status toestemming Lokale netwerktoegang"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "LNA not supported message"
-msgstr ""
+msgstr "LNA niet-ondersteund bericht"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
@@ -4924,7 +4974,7 @@ msgstr "Laptopmodel x"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid "Large Product Count Detected"
-msgstr ""
+msgstr "Groot aantal producten gedetecteerd"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -5121,7 +5171,7 @@ msgstr "Link gekopieerd naar klembord"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Link your printers to your POS (ePOS)"
-msgstr ""
+msgstr "Koppel je printers aan je Kassa (ePOS)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5198,6 +5248,10 @@ msgid ""
 "browser communicate with \n"
 "                your devices without the need for importing certificates."
 msgstr ""
+"Local Network Access (LNA) is een Chrome-functie waarmee je browser \n"
+"                rechtstreeks met je lokale netwerk kan communiceren. Dit "
+"betekent dat je je browser kunt laten communiceren met \n"
+"                je apparaten zonder dat je certificaten hoeft te importeren."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5552,19 +5606,19 @@ msgstr "Mijn sessies"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "My browser is above version 142"
-msgstr ""
+msgstr "Mijn browser is hoger dan versie 142"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "My browser is chromium based (Chrome, Edge, Brave, etc.)"
-msgstr ""
+msgstr "Mijn browser is gebaseerd op Chromium (Chrome, Edge, Brave, enz.)"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "My printer can be connected through ethernet cables (recommended)"
-msgstr ""
+msgstr "Mijn printer kan worden aangesloten via ethernetkabels (aanbevolen)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5956,7 +6010,7 @@ msgstr "Notities"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Now your printer is properly configured to work with LNA"
-msgstr ""
+msgstr "Je printer is nu correct geconfigureerd om met LNA te werken"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6200,7 +6254,7 @@ msgstr "Open de pop-up met gelddetails"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Open your POS and try to print a ticket"
-msgstr ""
+msgstr "Open je kassa en probeer een ticket af te drukken"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
@@ -6547,7 +6601,7 @@ msgstr "Kassaconfiguratie"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "POS LNA denied message"
-msgstr ""
+msgstr "Kassa LNA afwijzingsbericht"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__pos_optional_product_ids
@@ -7300,7 +7354,7 @@ msgstr "Kassa's"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Point of sale configuration:"
-msgstr ""
+msgstr "Kassa-configuratie:"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_crocheted_poncho_unisize_product_template
@@ -7681,7 +7735,7 @@ msgstr "Afgedrukte productcategorieën"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Printer Checkbox"
-msgstr ""
+msgstr "Printer Selectievakje"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7698,7 +7752,7 @@ msgstr "Printernaam"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Printer Password Location"
-msgstr ""
+msgstr "Printer wachtwoordlocatie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__printer_type
@@ -8500,13 +8554,13 @@ msgstr "VERKOCHT:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "SSL Settings"
-msgstr ""
+msgstr "SSL-instellingen"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "SSL/TLS > Basic"
-msgstr ""
+msgstr "SSL/TLS > Basis"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
@@ -8644,7 +8698,7 @@ msgstr "Producten zoeken...."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Secure printing"
-msgstr ""
+msgstr "Veilig afdrukken"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__access_token
@@ -9382,7 +9436,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "System Parameter Setup"
-msgstr ""
+msgstr "Instellen van systeemparameters"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.t_shirt_slim_product_template
@@ -9804,7 +9858,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "The message will appear from the browser."
-msgstr ""
+msgstr "Het bericht wordt weergegeven in de browser."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9888,6 +9942,8 @@ msgstr "Het papier is op. Vul het papier aan in de printer"
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "The password is located on the back of the printer (remove covers)."
 msgstr ""
+"Het wachtwoord bevindt zich aan de achterkant van de printer (verwijder de "
+"afdekkingen)."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9958,7 +10014,7 @@ msgstr "De printer is niet bereikbaar."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "The printers are properly configured and the LNA is activated."
-msgstr ""
+msgstr "De printers zijn correct geconfigureerd en de LNA is geactiveerd."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_after
@@ -10214,6 +10270,9 @@ msgid ""
 "(limit)s). Loading all products may slow down the Point of Sale. Do you want "
 "to continue with Full Synchronization?"
 msgstr ""
+"Er zijn %(count)s producten beschikbaar voor deze Kassa (geconfigureerde "
+"limiet: %(limit)s). Het laden van alle producten kan het kassasysteem "
+"vertragen. Wil je doorgaan met volledige synchronisatie?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10224,6 +10283,11 @@ msgid ""
 "may cause it to crash or become unresponsive. It is strongly recommended to "
 "use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
+"Er zijn %(count)s producten beschikbaar voor deze Kassa (geconfigureerde "
+"limiet: %(limit)s). Het laden van zoveel producten zal het systeem ernstig "
+"vertragen en kan ervoor zorgen dat het crasht of niet meer reageert. Het "
+"wordt sterk aanbevolen om in plaats daarvan gelimiteerde synchronisatie te "
+"gebruiken. Wil je toch doorgaan?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10946,7 +11010,7 @@ msgstr "Bijwerken van de voorraad"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Update the printer firmware"
-msgstr ""
+msgstr "Werk de printerfirmware bij"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_upper
@@ -11127,6 +11191,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "We duly advise you to use Chrome or Brave browser."
 msgstr ""
+"Wij raden je ten zeerste aan om de Chrome- of Brave-browser te gebruiken."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__custom_website
@@ -11173,7 +11238,7 @@ msgstr "Welkom."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "What is it?"
-msgstr ""
+msgstr "Wat is het?"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__one
@@ -11625,7 +11690,7 @@ msgstr "Postcode"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "access"
-msgstr ""
+msgstr "toegang"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -11727,19 +11792,19 @@ msgstr "Bijv. frisdranken"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "ePOS print enabled"
-msgstr ""
+msgstr "Afdrukken met ePOS ingeschakeld"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "ePOS printers (Epson) configuration"
-msgstr ""
+msgstr "Configuratie van ePOS-printers (Epson)"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "ePOS-print"
-msgstr ""
+msgstr "ePOS-print"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__epson_epos
@@ -11750,7 +11815,7 @@ msgstr "ePoS"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "ePoS Printer Service"
-msgstr ""
+msgstr "ePoS printerservice"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -11801,13 +11866,13 @@ msgstr "van"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "http://[printer_ip]/cgi-bin/epos/service.cgi?devid=local_printer"
-msgstr ""
+msgstr "http://[printer_ip]/cgi-bin/epos/service.cgi?devid=local_printer"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "iOS devices (iPad, iPhones) are not compatible yet."
-msgstr ""
+msgstr "iOS-apparaten (iPad, iPhones) zijn nog niet compatibel."
 
 #. module: point_of_sale
 #. odoo-python
@@ -11845,7 +11910,7 @@ msgstr "een grootboekschema installeren"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "is enabled"
-msgstr ""
+msgstr "is ingeschakeld"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11902,7 +11967,7 @@ msgstr "telefoon placeholder"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "point_of_sale.use_lna"
-msgstr ""
+msgstr "point_of_sale.use_lna"
 
 #. module: point_of_sale
 #. odoo-python
@@ -11948,7 +12013,7 @@ msgstr "gebruikende"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "with a value of"
-msgstr ""
+msgstr "met een waarde van"
 
 #. module: point_of_sale
 #. odoo-javascript

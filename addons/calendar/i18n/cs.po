@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-04-18 13:42+0000\n"
+"PO-Revision-Date: 2026-04-23 11:53+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-2/"
 "calendar/cs/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -390,7 +390,7 @@ msgstr ""
 "                <td style=\"width: 100px; padding-top: 6px; color: "
 "#676F7B;\">\n"
 "                    <t t-if=\"object.event_id.videocall_source == "
-"'discuss'\">Připojte se přes</t>\n"
+"'discuss'\">Připojte se pomoci</t>\n"
 "                    <t t-else=\"\">Připojte se k</t>\n"
 "                </td>\n"
 "                <td style=\"padding-top: 6px;\">\n"
@@ -398,7 +398,7 @@ msgstr ""
 "target=\"_blank\" style=\"color: #008f8c;\">\n"
 "                        <t t-if=\"object.event_id.videocall_source == "
 "'discuss'\">Odoo Diskuse</t>\n"
-"                        <t t-else=\"\">videokonferenci</t>\n"
+"                        <t t-else=\"\">videoschůzce</t>\n"
 "                    </a>\n"
 "                </td>\n"
 "            </tr>\n"
@@ -1439,8 +1439,8 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"font-size: 13px; color: #374151;\">\n"
-"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
-"ctx.get('mail_tz')\"/>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get"
+"('mail_tz')\"/>\n"
 "   <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
 "    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/> \n"
 "   <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
@@ -1456,23 +1456,23 @@ msgstr ""
 "vašeho kalendáře. </span>\n"
 "    </p> <div style=\"margin: 32px 0 0;\">\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
-"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
-"\"> Podrobnosti</h2>\n"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\"> Podrobnosti</h2>\n"
 "        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
 "size: 13px; color: #374151;\"> <tr>\n"
 "                <td style=\"width: 100px; color: #676F7B;\"> Datum &amp; "
 "Čas</td>\n"
-"                <td style=\"font-weight: bold;\"> <t t-"
-"out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else "
-"None, dt_format='EEEE', lang_code=object.env.lang)\"> Úterý</t>\n"
+"                <td style=\"font-weight: bold;\"> <t t-out=\"format_datetime"
+"(dt=object.start, tz=mail_tz if not object.allday else None, "
+"dt_format='EEEE', lang_code=object.env.lang)\"> Úterý</t>\n"
 "                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='d', lang_code=object.env.lang)"
-"\">4</t>\n"
+"if not object.allday else None, dt_format='d', lang_code=object.env.lang)\">"
+"4</t>\n"
 "                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
 "if not object.allday else None, dt_format='MMMM y', "
 "lang_code=object.env.lang)\">Květen 2021</t>\n"
-"                    <t t-if=\"not object.allday\"> <t t-"
-"out=\"format_time(time=object.start, tz=mail_tz, time_format='short', "
+"                    <t t-if=\"not object.allday\"> <t t-out=\"format_time"
+"(time=object.start, tz=mail_tz, time_format='short', "
 "lang_code=object.env.lang)\"> 11:00</t>\n"
 "                        <t t-if=\"mail_tz\">\n"
 "                           <span style=\"font-size: 11px; font-weight: "
@@ -2283,7 +2283,7 @@ msgstr "Zobrazit popis"
 #: model:ir.model.fields,field_description:calendar.field_res_users__display_name
 #: model:ir.model.fields,field_description:calendar.field_res_users_settings__display_name
 msgid "Display Name"
-msgstr "Zobrazovací název"
+msgstr "Zobrazovaný název"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
@@ -2459,7 +2459,7 @@ msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
 msgstr ""
-"Každých %(interval)s měsíců na %(position)s%(weekday)s na %(count)s akce"
+"Každých %(interval)s měsíců na %(position)s %(weekday)s na %(count)s akce"
 
 #. module: calendar
 #. odoo-python
@@ -3181,8 +3181,8 @@ msgid ""
 msgstr ""
 "Volitelný překladový jazyk (kód ISO), který se použije při odesílání e-"
 "mailu. Pokud není nastaven, použije se jazyk hlavního partnera. Obvykle by "
-"se mělo jednat o zástupný výraz, který poskytuje příslušný jazyk, např. "
-"{{ object.partner_id.lang }}."
+"se mělo jednat o zástupný výraz, který poskytuje příslušný jazyk, např. {{ "
+"object.partner_id.lang }}."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3631,7 +3631,7 @@ msgstr "Synchronizovat s"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Synchronize your calendar with Google Calendar"
-msgstr "Synchronizovat svůj kalendář s Kalendářem Google"
+msgstr "Synchronizujte svůj kalendář s Kalendářem Google"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -3642,7 +3642,7 @@ msgstr "Synchronizujte svůj kalendář s Outlookem"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists!"
-msgstr "Název značky již existuje!"
+msgstr "Název štítku již existuje!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
@@ -3657,7 +3657,7 @@ msgstr "Šablona použitá pro vykreslení obsahu upomínky na e-mail."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Tentative"
-msgstr "Orientační"
+msgstr "Předběžné"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
@@ -3683,7 +3683,7 @@ msgid ""
 "            opportunities."
 msgstr ""
 "Kalendář je sdílen mezi zaměstnanci a plně integrován do\n"
-"jiné aplikace, jako je docházka zaměstnanců nebo obchodní \n"
+"jiné aplikace, jako jsou dovolené nebo obchodní \n"
 "příležitosti."
 
 #. module: calendar
@@ -3841,7 +3841,7 @@ msgstr "Jednotka"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Until"
-msgstr "Konec"
+msgstr "Do"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_delete_event
@@ -3948,7 +3948,7 @@ msgstr "Ano"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr "Ano, přijdu."
+msgstr "Ano, zúčastním se."
 
 #. module: calendar
 #. odoo-python
@@ -4005,7 +4005,7 @@ msgstr "odmítnuto"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr "např. Obchodní oběd"
+msgstr "např. Pracovní oběd"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form

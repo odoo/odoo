@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:37+0000\n"
-"PO-Revision-Date: 2026-04-11 14:22+0000\n"
+"PO-Revision-Date: 2026-04-23 11:53+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
 "hr_work_entry/de/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_employee__work_entry_source
@@ -60,6 +60,11 @@ msgid ""
 "\"%(country)s\".\n"
 "                    "
 msgstr ""
+"\n"
+"„%(insert_name)s“ kann nicht eingefügt werden:\n"
+"Der Arbeitseintragsart „%(name)s“ des Codes „%(code)s“ existiert bereits für "
+"das Land „%(country)s“.\n"
+"                    "
 
 #. module: hr_work_entry
 #. odoo-python
@@ -71,6 +76,11 @@ msgid ""
 "already exists.\n"
 "                    "
 msgstr ""
+"\n"
+"„%(insert_name)s“ kann nicht eingefügt werden:\n"
+"Die Arbeitseintragsart „%(name)s“ des Codes „%(code)s“ existiert bereits, "
+"ohne dass ein Land zugewiesen ist.\n"
+"                    "
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_attendance
@@ -101,7 +111,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_attendance
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_adoption_company
@@ -170,7 +180,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
 msgid "All"
-msgstr ""
+msgstr "Alle"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -182,7 +192,7 @@ msgstr "Alle Länder"
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__allowed_work_entry_type_ids
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__allowed_work_entry_type_ids
 msgid "Allowed Work Entry Type"
-msgstr ""
+msgstr "Zulässige Arbeitseintragsart"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
@@ -1957,7 +1967,7 @@ msgstr "Krankentage bis zu 52 Wochen (55 % von der Sozialversicherung bezahlt)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_sick_leave_without_certificate
 msgid "Sick Time Off Without Certificate"
-msgstr ""
+msgstr "Krankheitsurlaub ohne ärztliches Attest"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75
@@ -2532,6 +2542,8 @@ msgid ""
 "You cannot create more than one work entry type of code \"%(code)s\" for the "
 "same country (%(country)s)"
 msgstr ""
+"Sie können nicht mehr als eine Arbeitseintragsart vom Code „%(code)s“ für "
+"dasselbe Land erstellen (%(country)s)"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

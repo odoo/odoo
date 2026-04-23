@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-04-18 13:40+0000\n"
+"PO-Revision-Date: 2026-04-23 11:51+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/hr/"
 "ja/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__departure_do_archive_user
@@ -986,21 +986,21 @@ msgstr "適用"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__apply_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_apply_date
 msgid "Apply Date"
-msgstr ""
+msgstr "適用日"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_apply_immediately
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__apply_immediately
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_apply_immediately
 msgid "Apply Immediately"
-msgstr ""
+msgstr "今すぐ適用"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_action_other_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__action_other_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_action_other_date
 msgid "Apply date"
-msgstr ""
+msgstr "適用日"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_apprenticeship
@@ -1028,14 +1028,14 @@ msgstr "アーカイブ"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__do_archive_employee
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_do_archive_employee
 msgid "Archive Employee"
-msgstr ""
+msgstr "従業員をアーカイブ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_do_archive_user
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__do_archive_user
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_do_archive_user
 msgid "Archive Related User"
-msgstr ""
+msgstr "関連ユーザをアーカイブ"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_archive
@@ -1074,33 +1074,33 @@ msgstr "日々のプロジェクトタスクのサポート"
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_home
 msgid "At Home"
-msgstr ""
+msgstr "在宅"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "At Home - Present"
-msgstr ""
+msgstr "在宅 - 出勤"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_office
 msgid "At Office"
-msgstr ""
+msgstr "オフィス"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "At Office - Present"
-msgstr ""
+msgstr "オフィス - 出勤"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_other
 msgid "At Other"
-msgstr ""
+msgstr "その他"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -1178,7 +1178,7 @@ msgstr "アバター 512"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Average Hours"
-msgstr ""
+msgstr "平均時間"
 
 #. module: hr
 #. odoo-python
@@ -1307,7 +1307,7 @@ msgstr "翻訳可能なラベルを持つラジオボタン形式で表示され
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Cancel Departure"
-msgstr ""
+msgstr "退職をキャンセル"
 
 #. module: hr
 #. odoo-python
@@ -1330,6 +1330,8 @@ msgstr ""
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Cannot search or group by hr_presence state: too many employees (%s)"
 msgstr ""
+"hr_presence 状態による検索またはグループ化ができません: 従業員数が多すぎます "
+"(%s)"
 
 #. module: hr
 #. odoo-python
@@ -1474,7 +1476,7 @@ msgstr "会社ロゴ"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__company_tz
 msgid "Company Timezone"
-msgstr ""
+msgstr "会社のタイムゾーン"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
@@ -1585,7 +1587,7 @@ msgstr "契約概要"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view_enhanced
 msgid "Contract Period"
-msgstr ""
+msgstr "契約期間"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1655,7 +1657,7 @@ msgstr "契約社員"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 msgid "Contracts"
-msgstr ""
+msgstr "契約"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__country_id
@@ -1811,7 +1813,7 @@ msgstr "通貨記号：印刷時に使用される"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__exceptional_location_id
 msgid "Current"
-msgstr ""
+msgstr "現在"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_date_version
@@ -1836,7 +1838,7 @@ msgstr "現在、最終学年に在籍中"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__date
 msgid "Date"
-msgstr ""
+msgstr "日付"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__date_end
@@ -1855,7 +1857,7 @@ msgstr "開始日"
 #: model:ir.model.fields,help:hr.field_hr_employee_departure__departure_date
 #: model:ir.model.fields,help:hr.field_hr_version__departure_date
 msgid "Date at which the departure actually takes place."
-msgstr ""
+msgstr "実際に退職する日付。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__dismissal_date
@@ -1864,18 +1866,18 @@ msgstr ""
 msgid ""
 "Date at which the departure process starts. Differs from the actual "
 "departure date in case of a notice period."
-msgstr ""
+msgstr "退職手続きの開始日。予告期間がある場合、実際の退職日とは異なります。"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/js/DynamicMinDateTimeField.js:0
 msgid "Date with Dynamic Minimum Value"
-msgstr ""
+msgstr "動的な最小値を持つ日付"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__day_week_string
 msgid "Day Week String"
-msgstr ""
+msgstr "曜日文字列"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -2001,7 +2003,7 @@ msgstr "退職理由"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Departure date"
-msgstr ""
+msgstr "退職日"
 
 #. module: hr
 #. odoo-python
@@ -2009,7 +2011,7 @@ msgstr ""
 msgid ""
 "Departure date is earlier than the start date of the current contract(s) of "
 "%s."
-msgstr ""
+msgstr "退職日が、%s の現契約の開始日より前になっています。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
@@ -2021,7 +2023,7 @@ msgstr "扶養子女"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Detailed Reason"
-msgstr ""
+msgstr "詳細な理由"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -3516,7 +3518,7 @@ msgstr "法的同居人"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__legal_name
 msgid "Legal Name"
-msgstr "リーガル名"
+msgstr "正式氏名"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
