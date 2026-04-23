@@ -2511,7 +2511,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             return
 
         product_domains = Domain.OR(
-            [('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)]
+            [('product_id', '=', move.product_id.id), ('location_id', 'parent_of', move.location_dest_id.id)]
             for move in self
         )
         static_domain = [('state', 'in', ['confirmed', 'partially_available']),
