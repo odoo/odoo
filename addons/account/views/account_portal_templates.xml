@@ -248,6 +248,60 @@
         </t>
     </template>
 
+    <template id="address_form_additional_identifiers" inherit_id="portal.address_form_fields"
+              name="Address Form: Additional Identifiers">
+        <t name="b2b_fields" position="after">
+            <div t-if="is_used_as_billing"
+                 id="div_additional_identifiers" class="col-12 mb-2 o_additional_identifiers_portal">
+                <t t-foreach="additional_identifiers_metadata.items()" t-as="entry">
+                    <t t-set="identifier_key" t-value="entry[0]"/>
+                    <t t-set="meta" t-value="entry[1]"/>
+                    <t t-set="identifier_value" t-value="partner_additional_identifiers.get(identifier_key)"/>
+                    <div class="o_additional_identifier_field mb-2"
+                         t-att-data-identifier-key="identifier_key"
+                         t-attf-style="#{'' if identifier_value else 'display: none;'}">
+                        <label class="col-form-label fw-normal label-optional" t-attf-for="o_additional_identifier_{{identifier_key}}"
+                               t-out="meta['label']"/>
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                t-attf-id="o_additional_identifier_{{identifier_key}}"
+                                t-attf-name="{{identifier_key}}"
+                                t-att-value="identifier_value"
+                                t-att-placeholder="meta.get('placeholder')"
+                                t-att-aria-describedby="('o_additional_identifier_%s_help' % identifier_key) if meta.get('help') else None"
+                            />
+                            <button type="button" class="btn btn-outline-secondary o_remove_identifier"
+                                    title="Remove" aria-label="Remove">
+                                <i class="oi" data-icon="delete"/>
+                            </button>
+                        </div>
+                        <div t-if="meta.get('help')" class="form-text"
+                             t-attf-id="o_additional_identifier_{{identifier_key}}_help" t-out="meta['help']"/>
+                    </div>
+                </t>
+                <!-- Keep the identifiers not offered for the address country, so submitting doesn't drop them. -->
+                <t t-foreach="partner_additional_identifiers.items()" t-as="extra">
+                    <input t-if="extra[0] not in additional_identifiers_metadata"
+                           type="hidden" t-attf-name="{{extra[0]}}"
+                           t-att-value="extra[1]"/>
+                </t>
+                <div t-if="additional_identifiers_metadata" class="dropdown o_add_identifier_dropdown">
+                    <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="oi me-1" data-icon="add"/>Add identifier
+                    </button>
+                    <div class="dropdown-menu">
+                        <t t-foreach="additional_identifiers_metadata.items()" t-as="entry">
+                            <a href="#" class="dropdown-item o_add_identifier_item"
+                               t-att-data-identifier-key="entry[0]" t-out="entry[1]['label']"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="portal_my_details" inherit_id="portal.portal_my_details">
         <div name="address_details" position="inside">
             <t t-if="len(invoice_sending_methods) > 1 and invoice_edi_formats">

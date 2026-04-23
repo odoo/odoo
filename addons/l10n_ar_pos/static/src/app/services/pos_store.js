@@ -7,8 +7,6 @@ patch(PosStore.prototype, {
         await super.processServerData();
 
         if (this.isArgentineanCompany()) {
-            this["l10n_latam.identification.type"] =
-                this.models["l10n_latam.identification.type"].getFirst();
             this["l10n_ar.afip.responsibility.type"] =
                 this.models["l10n_ar.afip.responsibility.type"].getFirst();
         }

@@ -1,5 +1,6 @@
 from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged
+from odoo.tests import tagged
+
 from . import common
 
 
@@ -8,43 +9,33 @@ class TestResPartner(common.TestArCommon):
 
     def test_l10n_ar_is_company(self):
         """Check that `is_company` is computed correctly for AR and non-AR partners."""
-        it_cuit_id = self.env.ref('l10n_ar.it_cuit').id  # Tax Identification Number
-        it_dni_id = self.env.ref('l10n_ar.it_dni').id  # ID card
-        it_fid = self.env.ref('l10n_latam_base.it_fid')  # Foreign passport
-        self.assertTrue(it_fid.l10n_ar_afip_code)
-
         ar_id = self.env.ref('base.ar').id
         us_id = self.env.ref('base.us').id
         ar_company, ar_person_1, ar_person_2, foreign_company, foreign_person = self.env['res.partner'].create([
             {
                 'name': "AR Company",
                 'country_id': ar_id,
-                'l10n_latam_identification_type_id': it_cuit_id,
                 'vat': '30-71429569-8',  # prefix associated to companies
             },
             {
                 'name': "AR Person case 1",
                 'country_id': ar_id,
-                'l10n_latam_identification_type_id': it_cuit_id,
                 'vat': '20-05536168-2',  # prefix not associated to companies
             },
             {
                 'name': "AR Person case 2",
                 'country_id': ar_id,
-                'l10n_latam_identification_type_id': it_dni_id,
-                'vat': '20.123.456',
+                'additional_identifiers': {'AR_DNI': '20.123.456'},
             },
             {
                 'name': "Foreign Company",
                 'country_id': us_id,
-                'l10n_latam_identification_type_id': False,
                 'vat': '1234567890',
             },
             {
                 'name': "Foreign Person",
                 'country_id': us_id,
-                'l10n_latam_identification_type_id': it_fid.id,
-                'vat': '1234567890',
+                'additional_identifiers': {'PASSPORT': '1234567890'},
             },
         ])
         ar_contact = self.env['res.partner'].create({
@@ -57,12 +48,89 @@ class TestResPartner(common.TestArCommon):
         self.assertFalse(ar_person_1.is_company)
         self.assertFalse(ar_person_2.is_company)
         self.assertTrue(foreign_company.is_company)
-        # Note this last case is poorly handled in Odoo and should be fixed in future versions.
-        # One could expect to have is_company False for this case, but the visibility of l10n_latam_identifier_type_id
-        # in a multi company setup make it not so straightforward.
-        # For now, the identification_type is ignored for such partners.
-        self.assertTrue(foreign_person.is_company)
+        self.assertFalse(foreign_person.is_company)
 
-    def test_l10n_ar_cuit_number(self):
-        with self.assertRaisesRegex(ValidationError, 'Invalid length for "CUIT"'):
-            self.partner_ri.vat = "BE0477472701"
+    def test_l10n_ar_state_afip_code(self):
+        """The generic state ID (`AR_CI`) derives its AFIP document type from the state."""
+        ar_id = self.env.ref('base.ar').id
+        cordoba = self.env.ref('base.state_ar_x')   # AFIP code 3
+        santa_fe = self.env.ref('base.state_ar_s')  # AFIP code 12
+
+        partner = self.env['res.partner'].create({
+            'name': "AR State ID",
+            'country_id': ar_id,
+            'state_id': cordoba.id,
+            'additional_identifiers': {'AR_CI': '1234567'},
+        })
+        self.assertEqual(partner.l10n_ar_afip_code, '3')
+
+        partner.state_id = santa_fe
+        self.assertEqual(partner.l10n_ar_afip_code, '12')
+
+    def test_l10n_ar_identifier_precedence(self):
+        """The AFIP identification follows the document precedence (DNI, then CUIL, then the
+        rest) and not the order the identifiers were entered in."""
+        ar_id = self.env.ref('base.ar').id
+        partner = self.env['res.partner'].create({
+            'name': "AR Person many IDs",
+            'country_id': ar_id,
+            'additional_identifiers': {
+                'PASSPORT': 'AAB4587345',
+                'AR_CUIL': '20348204263',
+                'AR_DNI': '34654873',
+            },
+        })
+        self.assertEqual(partner.l10n_ar_afip_code, '96')
+        self.assertEqual(partner.l10n_ar_afip_id_value, '34654873')
+        self.assertEqual(partner._get_id_number_sanitize(), 34654873)
+
+        partner = self.env['res.partner'].create({
+            'name': "AR Person no DNI",
+            'country_id': ar_id,
+            'additional_identifiers': {
+                'PASSPORT': 'AAB4587345',
+                'AR_CUIL': '20348204263',
+            },
+        })
+        self.assertEqual(partner.l10n_ar_afip_code, '86')
+        self.assertEqual(partner.l10n_ar_afip_id_value, '20348204263')
+
+    def test_l10n_ar_state_required_for_ci(self):
+        """`_check_l10n_ar_state`: `AR_CI` requires a state that issues a state ID,
+        and that holds both when setting the identifier and when editing the state."""
+        ar_id = self.env.ref('base.ar').id
+        cordoba = self.env.ref('base.state_ar_x')
+        caba = self.env.ref('base.state_ar_c')  # does not issue a state ID (uses CPF)
+
+        with self.assertRaises(ValidationError):
+            self.env['res.partner'].create({
+                'name': "AR State ID no state",
+                'country_id': ar_id,
+                'additional_identifiers': {'AR_CI': '1234567'},
+            })
+
+        with self.assertRaises(ValidationError):
+            self.env['res.partner'].create({
+                'name': "AR State ID CABA",
+                'country_id': ar_id,
+                'state_id': caba.id,
+                'additional_identifiers': {'AR_CI': '1234567'},
+            })
+
+        partner = self.env['res.partner'].create({
+            'name': "AR State ID",
+            'country_id': ar_id,
+            'state_id': cordoba.id,
+            'additional_identifiers': {'AR_CI': '1234567'},
+        })
+        with self.assertRaises(ValidationError):
+            partner.state_id = False
+
+        partner = self.env['res.partner'].create({
+            'name': "AR State ID 2",
+            'country_id': ar_id,
+            'state_id': cordoba.id,
+            'additional_identifiers': {'AR_CI': '1234567'},
+        })
+        with self.assertRaises(ValidationError):
+            partner.state_id = caba

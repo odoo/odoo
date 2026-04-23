@@ -24,6 +24,8 @@ from odoo.tools.date_utils import all_timezones
 from odoo.tools.translate import LazyGettext
 from odoo.tools.partner_identifiers import (
     ADDITIONAL_IDENTIFIERS_METADATA,
+    COMPANY_CATEGORIES,
+    INDIVIDUAL_CATEGORIES,
     TIN_METADATA,
     get_deduced_identifiers,
     get_tin_metadata_of_country,
@@ -756,21 +758,24 @@ class ResPartner(models.Model):
     def _apply_synced_identifiers(self, source_identifiers):
         """ Mirror the *synced* identifiers of ``source_identifiers`` onto every record
         in ``self``, while keeping per-contact identifiers untouched.
-        Per-contact identifiers are those flagged ``synced=False`` in their metadata
+        Per-contact identifiers are those flagged ``synced=False`` in their metadata, and
+        individual identifiers, which stay on their own record.
         """
         all_metadata = self._get_all_identifiers_metadata()
+
+        def is_shared(key):
+            metadata = all_metadata.get(key, {})
+            return metadata.get('synced', True) and metadata.get('category') not in INDIVIDUAL_CATEGORIES
+
         synced = {
             key: value
             for key, value in (source_identifiers or {}).items()
-            if all_metadata.get(key, {}).get('synced', True)
+            if is_shared(key)
         }
         for record in self:
             existing = record.additional_identifiers or {}
-            merged = {
-                key: value
-                for key, value in existing.items()
-                if not all_metadata.get(key, {}).get('synced', True)
-            } | synced
+            own = {key: value for key, value in existing.items() if not is_shared(key)}
+            merged = own if any(record._is_individual_identifier(key) for key in own) else own | synced
             if merged != existing:
                 record.write({'additional_identifiers': merged})
 
@@ -782,7 +787,14 @@ class ResPartner(models.Model):
         if 'additional_identifiers' in sync_vals:
             sync_vals = dict(sync_vals)
             self._apply_synced_identifiers(sync_vals.pop('additional_identifiers'))
-        self.write(sync_vals)
+        if 'vat' in sync_vals:
+            individuals = self.filtered(lambda p: any(
+                p._is_individual_identifier(key) for key in (p.additional_identifiers or {})
+            ))
+            individuals.write({key: value for key, value in sync_vals.items() if key != 'vat'})
+            (self - individuals).write(sync_vals)
+        else:
+            self.write(sync_vals)
 
     @api.model
     def _company_dependent_commercial_fields(self):
@@ -1615,12 +1627,9 @@ class ResPartner(models.Model):
     def _compute_available_additional_identifiers_metadata(self):
         for partner in self:
             vals = {
-                key: {
                     # Resolve lazy translations now: JSON would otherwise stringify them in a frame where
                     # no language can be detected.
-                    k: self.env._(v) if isinstance(v, LazyGettext) else v  # pylint: disable=gettext-variable
-                    for k, v in metadata.items()
-                }
+                key: self._lazy_translate_additional_identifiers_metadata(metadata)
                 for key, metadata in self._get_all_additional_identifiers_metadata().items()
                 if not metadata.get('countries') or partner.country_code in metadata['countries']  # includes international
             }
@@ -1628,6 +1637,13 @@ class ResPartner(models.Model):
                 # Pops out the default 'OTHER' only if another 'EN' identifier is available
                 vals.pop('OTHER', None)
             partner.available_additional_identifiers_metadata = vals
+
+    def _lazy_translate_additional_identifiers_metadata(self, metadata):
+        """Resolve lazy translation in additional identifier metadata"""
+        return {
+            key: self.env._(value) if isinstance(value, LazyGettext) else value  # pylint: disable=gettext-variable
+            for key, value in metadata.items()
+        }
 
     def _get_additional_identifier(self, identifier_type):
         """Convenience getter for an entry of the JSON."""
@@ -1681,6 +1697,15 @@ class ResPartner(models.Model):
         return {**TIN_METADATA, **self._get_all_additional_identifiers_metadata()}
 
     @api.model
+    def _get_allowed_identifier_metadata_keys(self):
+        """ Metadata keys an identifier may declare. Localizations extend it with the keys
+        they read themselves, e.g. the code they report the identifier with. """
+        return {
+            'category', 'countries', 'display_optional', 'examples', 'format', 'help', 'label',
+            'placeholder', 'scheme', 'sequence', 'synced', 'validation_function',
+        }
+
+    @api.model
     def _get_all_identifiers_metadata_by_scheme(self):
         return {
             metadata.get('scheme'): {'key': key, **metadata}
@@ -1709,6 +1734,18 @@ class ResPartner(models.Model):
     def _get_identifier_label(self, identifier_key):
         """Return the label of an identifier given its key."""
         return self._get_all_identifiers_metadata().get(identifier_key, {}).get('label', '')
+
+    @api.model
+    def _is_individual_identifier(self, identifier_key):
+        """ Whether the identifier represents an individual (e.g. a citizen number). """
+        return self._get_all_identifiers_metadata().get(identifier_key, {}).get('category') in INDIVIDUAL_CATEGORIES
+
+    @api.model
+    def _is_company_identifier(self, identifier_key):
+        """ Whether the identifier represents a company (a tax number or an enterprise number).
+        Identifiers without a category fall on the company side, like `is_company` defaults to False. """
+        category = self._get_all_identifiers_metadata().get(identifier_key, {}).get('category')
+        return not category or category in COMPANY_CATEGORIES
 
     def _get_preferred_legal_entity_identifier_vals(self):
         """Return a dict {'scheme': scheme, 'value': value, ...metadata} of the preferred legal entity identifier for the given partner.

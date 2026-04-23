@@ -4,7 +4,7 @@
     <record id="base_view_partner_form" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="l10n_latam_base.view_partner_latam_form"/>
+        <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='identifiers']" position="after">
                 <field name="l10n_ar_afip_responsibility_type_id"

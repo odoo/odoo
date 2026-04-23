@@ -231,3 +231,54 @@ class PortalAccount(CustomerPortal):
             'invoice_edi_formats': dict(request.env['res.partner']._fields['invoice_edi_format']._description_selection(request.env)),
         })
         return rendering_values
+
+    # ------------------------------------------------------------
+    # Address form - additional identifiers
+    # ------------------------------------------------------------
+
+    def _get_checkout_additional_identifiers_metadata(self, country):
+        """Return additional identifiers for a country."""
+        if not country:
+            return {}
+        partner = request.env['res.partner'].new({'country_id': country.id})
+        metadata = partner.available_additional_identifiers_metadata
+        return {
+            key: {
+                'label': entry.get('label') or key,
+                'placeholder': entry.get('placeholder') or '',
+                'help': entry.get('help') or '',
+            }
+            for key, entry in sorted(metadata.items(), key=lambda item: item[1].get('sequence', 100))
+        }
+
+    def _prepare_address_form_values(self, partner_sudo, *args, **kwargs):
+        rendering_values = super()._prepare_address_form_values(partner_sudo, *args, **kwargs)
+        if rendering_values['is_used_as_billing']:
+            metadata = self._get_checkout_additional_identifiers_metadata(rendering_values['country'])
+            current_partner = partner_sudo or rendering_values['current_partner']
+            rendering_values.update({
+                'additional_identifiers_metadata': metadata,
+                'partner_additional_identifiers': current_partner.additional_identifiers or {},
+            })
+        return rendering_values
+
+    @http.route()
+    def portal_address_country_info(self, country, address_type, **kw):
+        res = super().portal_address_country_info(country, address_type, **kw)
+        res['additional_identifiers_metadata'] = self._get_checkout_additional_identifiers_metadata(country)
+        return res
+
+    def _validate_address_values(self, address_values, *args, **kwargs):
+        invalid_fields, missing_fields, error_messages = super()._validate_address_values(
+            address_values, *args, **kwargs
+        )
+        additional_identifiers = address_values.get('additional_identifiers') or {}
+        ResPartner = request.env['res.partner']
+        if address_values.get('vat'):
+            individual_keys = [key for key in additional_identifiers if ResPartner._is_individual_identifier(key)]
+            if individual_keys:
+                invalid_fields.update(individual_keys)
+                error_messages.append(request.env._(
+                    "An individual identifier cannot be combined with a VAT number."
+                ))
+        return invalid_fields, missing_fields, error_messages

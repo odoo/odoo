@@ -74,3 +74,4 @@ from . import test_account_bill_deductibility
 from . import test_dict_to_xml
 from . import test_account_move_import_template
 from . import test_account_move_tax_mode
+from . import test_portal_additional_identifiers

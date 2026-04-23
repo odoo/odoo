@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
+
+from odoo.addons.l10n_br.tools.partner_identifiers import BR_ADDITIONAL_IDENTIFIERS_METADATA
 
 
 class ResPartner(models.Model):
@@ -9,6 +11,10 @@ class ResPartner(models.Model):
     l10n_br_ie_code = fields.Char(string="IE", help="State Tax Identification Number. Should contain 9-14 digits.")
     l10n_br_im_code = fields.Char(string="IM", help="Municipal Tax Identification Number")
     l10n_br_isuf_code = fields.Char(string="SUFRAMA code", help="SUFRAMA registration number.")
+
+    @api.model
+    def _get_all_additional_identifiers_metadata(self):
+        return {**super()._get_all_additional_identifiers_metadata(), **BR_ADDITIONAL_IDENTIFIERS_METADATA}
 
     def _get_frontend_writable_fields(self):
         frontend_writable_fields = super()._get_frontend_writable_fields()

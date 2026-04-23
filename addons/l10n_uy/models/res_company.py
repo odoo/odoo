@@ -9,7 +9,3 @@ class ResCompany(models.Model):
         """ Uruguayan localization use documents """
         self.ensure_one()
         return self.chart_template == 'uy' or self.account_fiscal_country_id.code == "UY" or super()._localization_use_documents()
-
-    def _get_l10n_latam_base_country_codes(self):
-        # EXTENDS 'l10n_latam_base' - adds UY
-        return super()._get_l10n_latam_base_country_codes() + ['UY']

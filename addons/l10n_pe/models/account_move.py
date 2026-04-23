@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models
 
+from odoo.addons.l10n_pe.tools.partner_identifiers import PE_RUC_SUNAT_CODE
+
 PE_DOC_SUBTYPES = [
     ("l10n_pe.document_type01", "l10n_pe.document_type07", "l10n_pe.document_type08"),  # e-invoice
     ("l10n_pe.document_type02", "l10n_pe.document_type07b", "l10n_pe.document_type08b"),  # e-boleta
@@ -25,7 +27,7 @@ class AccountMove(models.Model):
                     result.append(("id", "in", doc_subtype_group_ids))
                     break
         result.append(("code", "in", ("01", "03", "07", "08", "20", "40")))
-        if self.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code != '6' and self.move_type == 'out_invoice':
+        if self.partner_id.l10n_pe_sunat_id_code != PE_RUC_SUNAT_CODE and self.move_type == 'out_invoice':
             result.append(('id', 'in', (
                 self.env.ref('l10n_pe.document_type08b')
                 | self.env.ref('l10n_pe.document_type02')

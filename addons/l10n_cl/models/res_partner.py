@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.exceptions import ValidationError
-from odoo import api, fields, models, _
+from odoo import api, fields, models
+
+from odoo.addons.l10n_cl.tools.partner_identifiers import CL_ADDITIONAL_IDENTIFIERS_METADATA
 
 
 class ResPartner(models.Model):
@@ -23,22 +24,12 @@ class ResPartner(models.Model):
     l10n_cl_activity_description = fields.Char(string='Activity Description', help="Chile: Economic activity.")
 
     @api.model
+    def _get_all_additional_identifiers_metadata(self):
+        return {**super()._get_all_additional_identifiers_metadata(), **CL_ADDITIONAL_IDENTIFIERS_METADATA}
+
+    @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_cl_sii_taxpayer_type']
-
-    def _run_check_identification(self, validation='error'):
-        """ We format the RUN thing (actually, it could just use the parent method)"""
-        l10n_cl_partners = self.filtered(lambda p: p.has_vat and p.country_code == 'CL')
-        if l10n_cl_partners:
-            identification_types = [self.env.ref('l10n_cl.it_RUN').id]
-            for partner in l10n_cl_partners.filtered(lambda p: p.l10n_latam_identification_type_id.id in identification_types):
-                partner.vat = partner.format_vat_cl(partner.vat)
-
-                if validation == 'error':
-                    if not partner._check_vat_number('CL', partner.vat):
-                        raise ValidationError(_('The format of your RUN is not valid.  It should be like 76086428-5.'))
-
-        return super(ResPartner, self - l10n_cl_partners)._run_check_identification(validation=validation)
 
     def _format_dotted_vat_cl(self, vat):
         vat_l = vat.split('-')

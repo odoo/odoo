@@ -25,8 +25,7 @@ class TestPePosReceipt(TestPointOfSaleHttpCommon):
         cls.partner = cls.env['res.partner'].create({
             'name': 'Luigys Toro',
             'country_id': cls.env.ref('base.pe').id,
-            'l10n_latam_identification_type_id': cls.env.ref('l10n_pe.it_DNI').id,
-            'vat': '70025425',
+            'additional_identifiers': {'PE_DNI': '70025425'},
         })
 
     def test_receipt_partner_vat_label(self):
@@ -40,5 +39,6 @@ class TestPePosReceipt(TestPointOfSaleHttpCommon):
             'amount_return': 0,
         })
 
-        extra_data = order.order_receipt_generate_data()['extra_data']
-        self.assertEqual(extra_data['partner_vat_label'], 'DNI')
+        data = order.order_receipt_generate_data()
+        self.assertEqual(data['extra_data']['partner_vat_label'], 'DNI')
+        self.assertEqual(data['partner']['vat'], '70025425')

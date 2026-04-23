@@ -45,7 +45,3 @@ class ResCompany(models.Model):
                     raise UserError(_('Could not change the ARCA Responsibility of this company because there are already accounting entries.'))
 
         return super().write(vals)
-
-    def _get_l10n_latam_base_country_codes(self):
-        # EXTENDS 'l10n_latam_base' - adds AR
-        return super()._get_l10n_latam_base_country_codes() + ['AR']

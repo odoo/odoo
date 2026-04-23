@@ -8,4 +8,5 @@
 #               Nhomar Hernandez (Vauxoo)
 #               Humberto Ochoa (Vauxoo)
 
+from . import tools
 from . import models
