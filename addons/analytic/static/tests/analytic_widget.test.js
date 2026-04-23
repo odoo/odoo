@@ -89,6 +89,10 @@ test("Analytic dynamic multi-edit", async () => {
     await contains(".o_list_renderer").click();  // close the widget
     await contains(".modal-footer .btn-secondary").click();  // cancel confirmation
 
+    // select the first 2 lines to be able to edit again
+    await contains(".o_list_table tbody tr:nth-child(1) .o_list_record_selector input").click();
+    await contains(".o_list_table tbody tr:nth-child(2) .o_list_record_selector input").click();
+    
     // update the right columns when ticked
     to_update = ["x_plan1_id"];
     await contains(".o_list_table tbody tr:first .o_field_analytic_distribution").click();
@@ -108,6 +112,10 @@ test("Analytic dynamic multi-edit", async () => {
     expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag_badge_text").toHaveText("Brussels");
     expect(".o_list_table tbody tr:nth-child(2) .o_field_analytic_distribution .o_tag_badge_text").toHaveText("Brussels");
 
+    // select the first 2 lines to be able to edit again
+    await contains(".o_list_table tbody tr:nth-child(1) .o_list_record_selector input").click();
+    await contains(".o_list_table tbody tr:nth-child(2) .o_list_record_selector input").click();
+    
     // everything should be back to like the first time we opened it
     to_update = [];
     await contains(".o_list_table tbody tr:first .o_field_analytic_distribution").click();

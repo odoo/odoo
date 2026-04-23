@@ -40,6 +40,10 @@ that have no counterpart in the general financial accounts.
         ],
         'web.assets_unit_tests': [
             'analytic/static/tests/**/*',
+            ('remove', 'analytic/static/tests/tours/**/*'),
+        ],
+        'web.assets_tests': [
+            'analytic/static/tests/tours/**/*',
         ],
     },
     'installable': True,

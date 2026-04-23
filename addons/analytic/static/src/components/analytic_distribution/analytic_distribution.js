@@ -491,6 +491,7 @@ export class AnalyticDistribution extends Component {
     async save() {
         await this.props.record.update({ [this.props.name]: this.dataToJson() });
         if (this.props.multi_edit) {
+            await this.props.record.model.root.load();
             await this.jsonToData(this.props.record.data[this.props.name]);
             this.initialFormattedData = this.state.formattedData;
             this.state.formattedData = [];
