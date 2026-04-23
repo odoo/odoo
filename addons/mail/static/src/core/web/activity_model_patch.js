@@ -68,7 +68,7 @@ patch(Activity.prototype, {
             [[this.id]],
             { feedback: this.feedback }
         );
-        this.activityBroadcastChannel?.postMessage({
+        this.store.activityBroadcastChannel?.postMessage({
             type: "RELOAD_CHATTER",
             payload: { id: this.res_id, model: this.res_model },
         });
@@ -77,7 +77,7 @@ patch(Activity.prototype, {
     remove({ broadcast = true } = {}) {
         this.delete();
         if (broadcast) {
-            this.activityBroadcastChannel?.postMessage({
+            this.store.activityBroadcastChannel?.postMessage({
                 type: "DELETE",
                 payload: { id: this.id },
             });
