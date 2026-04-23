@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
 
 from odoo import api, fields, models
 
@@ -43,7 +44,24 @@ class SaleOrderLine(models.Model):
                 registrations_vals.append(values)
 
         if registrations_vals:
-            self.env['event.registration'].sudo().create(registrations_vals)
+            new_registrations = self.env['event.registration'].sudo().create(registrations_vals)
+            # if the state was forced to draft, we want to schedule the mails in at least 1 hour from now
+            # to allow the users to edit the registration details before the mail is sent
+            force_draft_registrations = self.env['event.registration'].browse([
+                reg.id for reg, reg_vals in zip(new_registrations, registrations_vals)
+                if reg_vals.get('state') == 'draft'
+            ])
+            new_mail_registrations = self.env['event.mail.registration']
+            for event, registrations in force_draft_registrations.grouped('event_id').items():
+                new_mail_registrations += event.event_mail_ids._create_missing_mail_registrations(registrations)
+            now = fields.Datetime.now()
+            for mail_registration in new_mail_registrations:
+                # if scheduled to be sent within the next hour, schedule it exactly 1 hour from now
+                if mail_registration.scheduled_date <= now + timedelta(hours=1):
+                    mail_registration.scheduled_date = now + timedelta(hours=1)
+            # once the mail schedule is set, we set it to whatever value it needed to be in the first place
+            # if it was not going to be open/done, no email will be sent by the scheduler either way
+            force_draft_registrations._compute_registration_status()
         return True
 
     @api.depends('product_id')
