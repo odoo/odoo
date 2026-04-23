@@ -124,14 +124,15 @@ class TestProcurement(TestMrpCommon):
         mto_route.product_categ_selectable = True
         all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
 
-        # create MO, but check it raises error as components are in make to order and not everyone has
-        with self.assertRaises(UserError):
-            production_form = Form(self.env['mrp.production'])
-            production_form.product_id = self.product_4
-            production_form.product_uom_id = self.product_4.uom_id
-            production_form.product_qty = 1
-            production_product_4 = production_form.save()
-            production_product_4.action_confirm()
+        # create MO, no error should be raise even without any bom set on the product
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_4
+        production_form.product_uom_id = self.product_4.uom_id
+        production_form.product_qty = 1
+        production_product_4 = production_form.save()
+        production_product_4.action_confirm()
+        # check there is log in componenent chatter
+        self.assertTrue(production_product_4.move_raw_ids.product_id.message_post_counterpart.body)
 
     def test_procurement_3(self):
         warehouse = self.warehouse_1

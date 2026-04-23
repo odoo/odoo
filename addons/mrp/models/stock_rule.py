@@ -3,10 +3,13 @@
 from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.fields import Domain, Command
 from odoo.tools import OrderedSet
+
+from odoo.addons.stock.models.stock_rule import ProcurementException
 
 
 class StockRule(models.Model):
@@ -80,11 +83,25 @@ class StockRule(models.Model):
     @api.model
     def _run_manufacture(self, procurements):
         new_productions_values_by_company = defaultdict(lambda: defaultdict(list))
+        errors = []
         for procurement, rule in procurements:
             if procurement.product_uom.compare(procurement.product_qty, 0) <= 0:
                 # If procurement contains negative quantity, don't create a MO that would be for a negative value.
                 continue
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
+
+            if not bom:
+                if self.env.context.get('from_orderpoint'):
+                    msg = _('There is no matching Bill of Material to generate the manufacturing order for product %s. Go on the product form and add a Bill of Material.', procurement.product_id.display_name)
+                    errors.append((procurement, msg))
+                else:
+                    # If the bom is not set, we cannot create a MO.
+                    moves = procurement.values.get('move_dest_ids') or self.env['stock.move']
+                    if moves.propagate_cancel:
+                        moves._action_cancel()
+                    moves.procure_method = 'make_to_stock'
+                    self._notify_responsible_no_bom(procurement)
+                continue
 
             mo = self.env['mrp.production']
             if procurement.origin != 'MPS':
@@ -109,6 +126,9 @@ class StockRule(models.Model):
                     'product_qty': mo.product_id.uom_id._compute_quantity((mo.product_uom_qty + procurement_product_uom_qty), mo.product_uom_id),
                 }).change_prod_qty()
 
+        if errors:
+            raise ProcurementException(errors)
+
         for company_id in new_productions_values_by_company:
             productions_vals_list = new_productions_values_by_company[company_id]['values']
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
@@ -118,6 +138,10 @@ class StockRule(models.Model):
                     mo.action_confirm()
             productions._post_run_manufacture(new_productions_values_by_company[company_id]['procurements'])
         return True
+
+    @api.model
+    def _should_block_run(self):
+        return False
 
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         res = super()._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
@@ -246,6 +270,18 @@ class StockRule(models.Model):
         new_move_vals['production_group_id'] = move_to_copy.production_group_id.id
         new_move_vals['production_id'] = False
         return new_move_vals
+
+    def _notify_responsible_no_bom(self, procurement):
+        super()._notify_responsible_no_bom(procurement)
+        origin_orders = procurement.values.get('reference_ids').production_ids if procurement.values.get('reference_ids') else False
+        if origin_orders:
+            notified_users = procurement.product_id.responsible_id.partner_id | origin_orders.user_id.partner_id
+            self._post_no_bom_notification(origin_orders, notified_users, procurement.product_id)
+
+    def _post_no_bom_notification(self, records_to_notify, users_to_notify, product):
+        notification_msg = Markup(" ").join(Markup("%s") % user._get_html_link(f'@{user.name}') for user in users_to_notify)
+        notification_msg += Markup("<br/>%s <strong>%s</strong>, %s") % (_("No Bill of Material has been found to replenish"), product.display_name, _("this product should be manually replenished."))
+        records_to_notify.message_post(body=notification_msg, partner_ids=users_to_notify.ids)
 
 
 class StockRoute(models.Model):
