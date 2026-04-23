@@ -84,6 +84,11 @@ export const htmlComposerMessageField = {
     ...htmlMailField,
     additionalClasses: [...htmlMailField.additionalClasses, "ps-0", "o_mail_composer_message"],
     component: HtmlComposerMessageField,
+    extractProps({ attrs, options }, dynamicInfo) {
+        const props = htmlMailField.extractProps({ attrs, options }, dynamicInfo);
+        props.editorConfig.allowChecklist = false;
+        return props;
+    },
 };
 
 registry.category("fields").add("html_composer_message", htmlComposerMessageField);

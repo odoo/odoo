@@ -44,7 +44,6 @@ export const htmlMailField = {
     additionalClasses: ["o_field_html"],
     extractProps({ attrs, options }, dynamicInfo) {
         const props = htmlField.extractProps({ attrs, options }, dynamicInfo);
-        props.editorConfig.allowChecklist = false;
         props.embeddedComponents = false;
         return props;
     },
