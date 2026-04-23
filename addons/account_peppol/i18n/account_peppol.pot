@@ -4,16 +4,52 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1\n"
+"Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-04-22 18:37+0000\n"
+"PO-Revision-Date: 2026-04-22 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid ""
+"\n"
+"                            Create, send and receive e-invoices for free.\n"
+"                        "
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid ""
+"\n"
+"                            Odoo keeps you up to date with the new regulation.\n"
+"                        "
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid ""
+"\n"
+"                            Peppol allows for complete automation of sending and receiving e-invoices.\n"
+"                        "
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+msgid ""
+"\n"
+"                            Peppol is the secure standard for e-invoices used in EU and across the world.\n"
+"                        "
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -536,12 +572,6 @@ msgid "Create a Customer"
 msgstr ""
 
 #. module: account_peppol
-#. odoo-javascript
-#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
-msgid "Create, send and receive e-invoices for free."
-msgstr ""
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__create_uid
 msgid "Created by"
 msgstr ""
@@ -858,12 +888,6 @@ msgid "Odoo Demo ID"
 msgstr ""
 
 #. module: account_peppol
-#. odoo-javascript
-#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
-msgid "Odoo keeps you up to date with the new regulation."
-msgstr ""
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Other"
@@ -1021,13 +1045,6 @@ msgid "Peppol Use Parent Company"
 msgstr ""
 
 #. module: account_peppol
-#. odoo-javascript
-#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
-msgid ""
-"Peppol allows for complete automation of sending and receiving e-invoices."
-msgstr ""
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_common.py:0
 msgid "Peppol document UUID: %s"
@@ -1040,22 +1057,8 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "Peppol error: %s"
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/models/account_edi_common.py:0
 msgid "Peppol invoice received"
-msgstr ""
-
-#. module: account_peppol
-#. odoo-javascript
-#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
-msgid ""
-"Peppol is the secure standard for e-invoices used in EU and across the "
-"world."
 msgstr ""
 
 #. module: account_peppol
@@ -1124,8 +1127,7 @@ msgstr ""
 #: code:addons/account_peppol/models/res_company.py:0
 msgid ""
 "Please enter the mobile number in the correct international format.\n"
-"For example: +32123456789, where +32 is the country code.\n"
-"Currently, only European countries are supported."
+"For example: +32123456789, where +32 is the country code."
 msgstr ""
 
 #. module: account_peppol
@@ -1782,6 +1784,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "You can send this invoice electronically via Peppol."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_journal.py:0
+msgid ""
+"You can't change the type of a journal used for Peppol invoice reception toa type different than 'Purchase'.\n"
+"Please change the journal used for Peppol reception before changing the type of this journal."
 msgstr ""
 
 #. module: account_peppol

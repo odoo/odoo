@@ -4,16 +4,59 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1\n"
+"Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-04-22 18:37+0000\n"
+"PO-Revision-Date: 2026-04-22 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
+msgid ""
+"\n"
+"                                -> View History\n"
+"                            "
+msgstr ""
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+msgid ""
+"\n"
+"                            Add\n"
+"                        "
+msgstr ""
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
+msgid ""
+"\n"
+"                            There are currently no transaction lines for this card.\n"
+"                        "
+msgstr ""
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
+msgid ""
+"\n"
+"                            Valid until "
+msgstr ""
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+msgid ""
+"\n"
+"                Generate "
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__trigger
@@ -37,11 +80,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid " (Max %s)"
-msgstr ""
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
-msgid "$100"
 msgstr ""
 
 #. module: loyalty
@@ -90,12 +128,6 @@ msgid "(tax excluded)"
 msgstr ""
 
 #. module: loyalty
-#. odoo-javascript
-#: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
-msgid "-> View History"
-msgstr ""
-
-#. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
 msgid "10% Discount Coupons"
 msgstr ""
@@ -107,24 +139,9 @@ msgid "10% on your order"
 msgstr ""
 
 #. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
-msgid "1000"
-msgstr ""
-
-#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "2+1 Free"
-msgstr ""
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
-msgid "2023-08-20"
-msgstr ""
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
-msgid "2023-12-31"
 msgstr ""
 
 #. module: loyalty
@@ -227,10 +244,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid ""
 "<span invisible=\"not will_send_mail\">\n"
-"                            Generate and Send \n"
+"                            Generate and Send\n"
 "                        </span>\n"
 "                        <span invisible=\"will_send_mail\">\n"
-"                            Generate \n"
+"                            Generate\n"
 "                        </span>"
 msgstr ""
 
@@ -382,12 +399,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
 #: model:ir.model.fields,field_description:loyalty.field_res_users__loyalty_card_count
 msgid "Active loyalty cards"
-msgstr ""
-
-#. module: loyalty
-#. odoo-javascript
-#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
-msgid "Add"
 msgstr ""
 
 #. module: loyalty
@@ -1002,8 +1013,6 @@ msgid "Future orders"
 msgstr ""
 
 #. module: loyalty
-#. odoo-javascript
-#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 #: model:ir.actions.act_window,name:loyalty.loyalty_generate_wizard_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Generate"
@@ -1787,6 +1796,12 @@ msgstr ""
 
 #. module: loyalty
 #. odoo-python
+#: code:addons/loyalty/models/loyalty_card.py:0
+msgid "The expiry date cannot be in the past. Please select a valid date."
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid ""
 "The loyalty program's currency must be the same as all it's pricelists ones."
@@ -1821,8 +1836,6 @@ msgid ""
 msgstr ""
 
 #. module: loyalty
-#. odoo-javascript
-#: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 msgid "There are currently no transaction lines for this card."
 msgstr ""
@@ -1928,12 +1941,6 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__valid_until
 msgid "Valid Until"
-msgstr ""
-
-#. module: loyalty
-#. odoo-javascript
-#: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
-msgid "Valid until"
 msgstr ""
 
 #. module: loyalty
@@ -2183,6 +2190,11 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "used)"
+msgstr ""
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
+msgid "x"
 msgstr ""
 
 #. module: loyalty

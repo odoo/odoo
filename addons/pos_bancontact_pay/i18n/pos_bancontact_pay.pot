@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1\n"
+"Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-04-22 18:38+0000\n"
+"PO-Revision-Date: 2026-04-22 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,11 +49,6 @@ msgid "Access denied. Please check your Bancontact permissions."
 msgstr ""
 
 #. module: pos_bancontact_pay
-#: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
-msgid "Adyen"
-msgstr ""
-
-#. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Authentication with Bancontact failed. Please verify your API key."
@@ -72,6 +67,11 @@ msgstr ""
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
 msgid "Bancontact PPID"
+msgstr ""
+
+#. module: pos_bancontact_pay
+#: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
+msgid "Bancontact Pay"
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -96,7 +96,17 @@ msgstr ""
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
-msgid "Bancontact payment not found."
+msgid ""
+"Bancontact payments can only be cancelled for payment methods using "
+"Bancontact Pay as provider."
+msgstr ""
+
+#. module: pos_bancontact_pay
+#. odoo-python
+#: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
+msgid ""
+"Bancontact payments can only be created for payment methods using Bancontact"
+" Pay as provider."
 msgstr ""
 
 #. module: pos_bancontact_pay

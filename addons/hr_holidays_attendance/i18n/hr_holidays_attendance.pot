@@ -4,16 +4,34 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1\n"
+"Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-04-22 18:37+0000\n"
+"PO-Revision-Date: 2026-04-22 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/views/calendar/attendance_calendar_overview.xml:0
+msgid ""
+"\n"
+"                        NEW TIMEOFF REQUEST\n"
+"                    "
+msgstr ""
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/components/accrual_levels/accrual_levels.xml:0
+msgid ""
+"\n"
+"                every worked hour.\n"
+"                "
+msgstr ""
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -161,6 +179,7 @@ msgstr ""
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__compensable_as_leave
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_overtime_rule_view_form
 msgid "Give back as time off"
 msgstr ""
 
@@ -204,6 +223,11 @@ msgid "Last 2 Months"
 msgstr ""
 
 #. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__leave_compensation_rate
+msgid "Leave Compensation Rate"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/views/calendar/attendance_calendar_overview.xml:0
 msgid "Left"
@@ -217,12 +241,6 @@ msgstr ""
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
 msgid "Missing Hours"
-msgstr ""
-
-#. module: hr_holidays_attendance
-#. odoo-javascript
-#: code:addons/hr_holidays_attendance/static/src/views/calendar/attendance_calendar_overview.xml:0
-msgid "NEW TIMEOFF REQUEST"
 msgstr ""
 
 #. module: hr_holidays_attendance
@@ -268,6 +286,11 @@ msgid "Per Hour Worked"
 msgstr ""
 
 #. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__leave_compensation_rate
+msgid "Rate of leave compensation"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
 msgstr ""
@@ -307,13 +330,13 @@ msgid "Time Off Ledger"
 msgstr ""
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__work_entry_type_names
-msgid "Time Off Types"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_ids
+msgid "Time Offs"
 msgstr ""
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_ids
-msgid "Time Offs"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__work_entry_type_names
+msgid "Time Types"
 msgstr ""
 
 #. module: hr_holidays_attendance
@@ -357,7 +380,6 @@ msgid "You do not have enough extra hours to request this leave"
 msgstr ""
 
 #. module: hr_holidays_attendance
-#. odoo-javascript
-#: code:addons/hr_holidays_attendance/static/src/components/accrual_levels/accrual_levels.xml:0
-msgid "every worked hour."
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_overtime_rule_view_form
+msgid "with a rate of"
 msgstr ""

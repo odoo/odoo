@@ -4,16 +4,42 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1\n"
+"Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-04-22 18:37+0000\n"
+"PO-Revision-Date: 2026-04-22 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid ""
+"\n"
+"                            Confirm attendance?"
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid ""
+"\n"
+"                            Undo\n"
+"                        "
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/views/event_slot/calendar/event_slot_multi_selection_buttons.xml:0
+msgid ""
+"\n"
+"                Select days to add slots\n"
+"            "
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -123,38 +149,13 @@ msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
-msgid "+123456789"
-msgstr ""
-
-#. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_2
-msgid "10-14"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "1000 Brussels"
 msgstr ""
 
 #. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_3
-msgid "15-18"
-msgstr ""
-
-#. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_4
-msgid "18+"
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__four_per_sheet
 msgid "4 per sheet"
-msgstr ""
-
-#. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_1
-msgid "5-10"
 msgstr ""
 
 #. module: event
@@ -302,19 +303,6 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
-msgstr ""
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.view_event_form
-msgid ""
-"<span class=\"o_input_box_overlay_end\">attendees\n"
-"                                    <span class=\"ps-1\" invisible=\"not is_multi_slots\"> per slot</span>\n"
-"                                </span>"
-msgstr ""
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
-msgid "<span class=\"o_input_box_overlay_end\">attendees</span>"
 msgstr ""
 
 #. module: event
@@ -1462,7 +1450,15 @@ msgstr ""
 #: model:ir.ui.menu,name:event.menu_action_registration
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Attendees"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+msgid ""
+"Attendees\n"
+"                                    <span invisible=\"not is_multi_slots\"> per slot</span>"
 msgstr ""
 
 #. module: event
@@ -1727,12 +1723,6 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr ""
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Confirm attendance?"
 msgstr ""
 
 #. module: event
@@ -2918,6 +2908,8 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
 msgstr ""
 
@@ -3712,12 +3704,6 @@ msgid "Select Attendee"
 msgstr ""
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/views/event_slot/calendar/event_slot_multi_selection_buttons.xml:0
-msgid "Select days to add slots"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 msgid "Selected answer"
 msgstr ""
@@ -4264,7 +4250,7 @@ msgstr ""
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Ticket was first scanned on"
+msgid "Ticket was first scanned on "
 msgstr ""
 
 #. module: event
@@ -4402,12 +4388,6 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr ""
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Undo"
 msgstr ""
 
 #. module: event
@@ -4721,6 +4701,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "reserved"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+msgid "to"
 msgstr ""
 
 #. module: event
