@@ -1,12 +1,13 @@
 import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 
-import { Component } from "@odoo/owl";
+import { Component, onWillRender } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class SettingsPage extends Component {
     static template = "web.SettingsPage";
-    static components = { ActionSwiper };
+    static components = { Dropdown, DropdownItem };
     static props = {
         modules: Array,
         anchors: Array,
@@ -38,7 +39,6 @@ export class SettingsPage extends Component {
         }
 
         this.settingsRef = useRef("settings");
-        this.settingsTabRef = useRef("settings_tab");
         this.scrollMap = Object.create(null);
         useLayoutEffect(
             (settingsEl, currentTab) => {
@@ -52,6 +52,11 @@ export class SettingsPage extends Component {
             },
             () => [this.settingsRef.el, this.state.selectedTab]
         );
+        onWillRender(() => {
+            this.selectedModule = this.props.modules.find(
+                (module) => module.key === this.state.selectedTab
+            );
+        });
     }
 
     get invalidApps() {
@@ -66,48 +71,12 @@ export class SettingsPage extends Component {
         return invalidApps;
     }
 
-    getCurrentIndex() {
-        return this.props.modules.findIndex((object) => object.key === this.state.selectedTab);
-    }
-
-    hasRightSwipe() {
-        return (
-            this.env.isSmall && this.state.search.value.length === 0 && this.getCurrentIndex() !== 0
-        );
-    }
-    hasLeftSwipe() {
-        return (
-            this.env.isSmall &&
-            this.state.search.value.length === 0 &&
-            this.getCurrentIndex() !== this.props.modules.length - 1
-        );
-    }
-    async onRightSwipe() {
-        this.tabChangeProm = Promise.withResolvers();
-        this.state.selectedTab = this.props.modules[this.getCurrentIndex() - 1].key;
-        await this.tabChangeProm.promise;
-        this.scrollToSelectedTab();
-    }
-    async onLeftSwipe() {
-        this.tabChangeProm = Promise.withResolvers();
-        this.state.selectedTab = this.props.modules[this.getCurrentIndex() + 1].key;
-        await this.tabChangeProm.promise;
-        this.scrollToSelectedTab();
-    }
-
-    scrollToSelectedTab() {
-        const key = this.state.selectedTab;
-        this.settingsTabRef.el
-            .querySelector(`[data-key='${key}']`)
-            .scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-    }
-
     onSettingTabClick(key) {
         if (this.settingsRef.el) {
             const { scrollTop } = this.settingsRef.el;
             this.scrollMap[this.state.selectedTab] = { scrollTop };
         }
         this.state.selectedTab = key;
-        this.env.searchState.value = "";
+        this.env.searchState.clearSearch();
     }
 }
