@@ -296,3 +296,222 @@ export class UseSuggestion {
 export function useSuggestion() {
     return new UseSuggestion(useComponent());
 }
+<<<<<<< 3b5ab27105fec1f12d7790a968bb32d491116223
+||||||| 7af533b1022b45e38679813a853a0492b4ac601d
+
+/**
+ * Maps raw suggestion records to navigable list option objects for all suggestion types.
+ *
+ * @param {string} type
+ * @param {Suggestion[]} suggestions
+ * @param {Object} [params]
+ * @param {import("models").Thread} [params.thread] The thread where the suggestion is being
+ *   composed. Used e.g. to resolve partner display names in context and stored on the resulting
+ *   Option so that consumers (insertion handlers, mention templates) can access it.
+ * @returns {{ optionTemplate?: string, options: Option[] }}
+ */
+export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
+    const classList = "o-mail-Composer-suggestion";
+    switch (type) {
+        case "Partner":
+            return {
+                optionTemplate: "mail.Composer.suggestionPartner",
+                options: suggestions.map((suggestion) => {
+                    if (suggestion.isSpecial) {
+                        return {
+                            ...suggestion,
+                            group: 1,
+                            optionTemplate: "mail.Composer.suggestionSpecial",
+                            classList,
+                        };
+                    }
+                    if (suggestion?.Model?.getName?.() === "res.role") {
+                        return {
+                            label: suggestion.name,
+                            role: suggestion,
+                            thread,
+                            optionTemplate: "mail.Composer.suggestionRole",
+                            classList,
+                        };
+                    }
+                    return {
+                        label: thread?.getPersonaName(suggestion) ?? suggestion.name,
+                        partner: suggestion,
+                        thread,
+                        classList,
+                    };
+                }),
+            };
+        case "Thread":
+            return {
+                optionTemplate: "mail.Composer.suggestionThread",
+                options: suggestions.map((suggestion) => ({
+                    label: suggestion.fullNameWithParent,
+                    thread: suggestion,
+                    classList,
+                })),
+            };
+        case "ChannelCommand":
+            return {
+                optionTemplate: "mail.Composer.suggestionChannelCommand",
+                options: suggestions.map((suggestion) => ({
+                    label: suggestion.name,
+                    help: suggestion.help,
+                    classList,
+                })),
+            };
+        case "mail.canned.response":
+            return {
+                optionTemplate: "mail.Composer.suggestionCannedResponse",
+                options: suggestions.map((suggestion) => ({
+                    cannedResponse: suggestion,
+                    label: suggestion.substitution,
+                    source: suggestion.source,
+                    title: suggestion.substitution,
+                    classList,
+                })),
+            };
+        case "emoji":
+            return {
+                optionTemplate: "mail.Composer.suggestionEmoji",
+                options: suggestions.map((suggestion) => ({
+                    emoji: suggestion,
+                    label: suggestion.codepoints,
+                })),
+            };
+        default:
+            return { options: [] };
+    }
+}
+
+/**
+ * @param {Option} option
+ * @param {Object} [params]
+ * @param {import("models").Thread} [params.thread] The thread being viewed by the
+ *   user, needed to generate mention links that point back to the right record.
+ */
+export function makeMentionFromOption(option, { thread } = {}) {
+    let inlineElement;
+    if (option.partner) {
+        inlineElement = generatePartnerMentionElement(option.partner, thread);
+    } else if (option.isSpecial) {
+        inlineElement = generateSpecialMentionElement(option.label);
+    } else if (option.role) {
+        inlineElement = generateRoleMentionElement(option.role);
+    } else if (option.thread) {
+        inlineElement = generateThreadMentionElement(option.thread);
+    } else {
+        inlineElement = document.createTextNode(option.label);
+    }
+    return inlineElement;
+}
+=======
+
+/**
+ * Maps raw suggestion records to navigable list option objects for all suggestion types.
+ *
+ * @param {string} type
+ * @param {Suggestion[]} suggestions
+ * @param {Object} [params]
+ * @param {import("models").Thread} [params.thread] The thread where the suggestion is being
+ *   composed. Used e.g. to resolve partner display names in context and stored on the resulting
+ *   Option so that consumers (insertion handlers, mention templates) can access it.
+ * @returns {{ optionTemplate?: string, options: Option[] }}
+ */
+export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
+    const classList = "o-mail-Composer-suggestion";
+    switch (type) {
+        case "Partner":
+            return {
+                optionTemplate: "mail.Composer.suggestionPartner",
+                options: suggestions.map((suggestion) => {
+                    if (suggestion.isSpecial) {
+                        return {
+                            ...suggestion,
+                            group: 1,
+                            optionTemplate: "mail.Composer.suggestionSpecial",
+                            classList,
+                        };
+                    }
+                    if (suggestion?.Model?.getName?.() === "res.role") {
+                        return {
+                            label: suggestion.name,
+                            role: suggestion,
+                            thread,
+                            optionTemplate: "mail.Composer.suggestionRole",
+                            classList,
+                        };
+                    }
+                    return {
+                        label: thread?.getPersonaName(suggestion) ?? suggestion.name,
+                        partner: suggestion,
+                        thread,
+                        classList,
+                    };
+                }),
+            };
+        case "discuss.channel":
+        case "Thread":
+            return {
+                optionTemplate: "mail.Composer.suggestionThread",
+                options: suggestions.map((suggestion) => ({
+                    label: suggestion.fullNameWithParent,
+                    thread: suggestion,
+                    classList,
+                })),
+            };
+        case "ChannelCommand":
+            return {
+                optionTemplate: "mail.Composer.suggestionChannelCommand",
+                options: suggestions.map((suggestion) => ({
+                    label: suggestion.name,
+                    help: suggestion.help,
+                    classList,
+                })),
+            };
+        case "mail.canned.response":
+            return {
+                optionTemplate: "mail.Composer.suggestionCannedResponse",
+                options: suggestions.map((suggestion) => ({
+                    cannedResponse: suggestion,
+                    label: suggestion.substitution,
+                    source: suggestion.source,
+                    title: suggestion.substitution,
+                    classList,
+                })),
+            };
+        case "emoji":
+            return {
+                optionTemplate: "mail.Composer.suggestionEmoji",
+                options: suggestions.map((suggestion) => ({
+                    emoji: suggestion,
+                    label: suggestion.codepoints,
+                })),
+            };
+        default:
+            return { options: [] };
+    }
+}
+
+/**
+ * @param {Option} option
+ * @param {Object} [params]
+ * @param {import("models").Thread} [params.thread] The thread being viewed by the
+ *   user, needed to generate mention links that point back to the right record.
+ */
+export function makeMentionFromOption(option, { thread } = {}) {
+    let inlineElement;
+    if (option.partner) {
+        inlineElement = generatePartnerMentionElement(option.partner, thread);
+    } else if (option.isSpecial) {
+        inlineElement = generateSpecialMentionElement(option.label);
+    } else if (option.role) {
+        inlineElement = generateRoleMentionElement(option.role);
+    } else if (option.thread) {
+        inlineElement = generateThreadMentionElement(option.thread);
+    } else {
+        inlineElement = document.createTextNode(option.label);
+    }
+    return inlineElement;
+}
+>>>>>>> aa8a57df42c3d1a2de4f9805a1c3c613bab6893c
