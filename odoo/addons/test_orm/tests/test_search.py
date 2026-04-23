@@ -1,10 +1,83 @@
-from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 from odoo.fields import Command, Domain
-from odoo.tests import tagged, warmup, TransactionCase
+from odoo.tests import TransactionCase, tagged, warmup
+from odoo.tools import SQL, mute_logger
+
+from .common import TestOrmPartnerCommon
+from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 
 
 @tagged('at_install', '-post_install')
-class TestSearch(TransactionCase):
+class TestSearch(TestOrmPartnerCommon, TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._load_partners_set()
+
+    @mute_logger('odoo.models')
+    def test_search(self):
+        partners = self.env['test_orm.partner'].search([('name', 'ilike', 'g'), ('id', 'in', self.partners.ids)])
+        self.assertTrue(partners)
+        self.assertIsRecordset(partners, 'test_orm.partner')
+
+        for partner in partners:
+            self.assertIsRecord(partner, 'test_orm.partner')
+
+    @mute_logger('odoo.models')
+    def test_search_offset(self):
+        partners_offset = self.env['test_orm.partner'].search([('id', 'in', self.partners.ids)], offset=5)
+        self.assertTrue(partners_offset)
+        self.assertIsRecordset(partners_offset, 'test_orm.partner')
+
+        partners_slice = self.env['test_orm.partner'].search([('id', 'in', self.partners.ids)])[5:]
+        self.assertTrue(partners_slice)
+        self.assertIsRecordset(partners_slice, 'test_orm.partner')
+
+        for partner_offset, partner_slice in zip(partners_offset, partners_slice):
+            self.assertEqual(partner_offset.id, partner_slice.id)
+
+    @mute_logger('odoo.models')
+    def test_search_limit(self):
+        partners_limit = self.env['test_orm.partner'].search([('id', 'in', self.partners.ids)], limit=5)
+        self.assertTrue(partners_limit)
+        self.assertIsRecordset(partners_limit, 'test_orm.partner')
+
+        partners_slice = self.env['test_orm.partner'].search([('id', 'in', self.partners.ids)])[:5]
+        self.assertTrue(partners_slice)
+        self.assertIsRecordset(partners_slice, 'test_orm.partner')
+
+        for partner_limit, partner_slice in zip(partners_limit, partners_slice):
+            self.assertEqual(partner_limit.id, partner_slice.id)
+
+    @mute_logger('odoo.models')
+    def test_search_offset_and_limit(self):
+        partners_offset_limit = self.env['test_orm.partner'].search([('id', 'in', self.partners.ids)], offset=3, limit=7)
+        self.assertTrue(partners_offset_limit)
+        self.assertIsRecordset(partners_offset_limit, 'test_orm.partner')
+
+        partners_slice = self.env['test_orm.partner'].search([('id', 'in', self.partners.ids)])[3:10]
+        self.assertTrue(partners_slice)
+        self.assertIsRecordset(partners_slice, 'test_orm.partner')
+
+        for partner_offset_limit, partner_slice in zip(partners_offset_limit, partners_slice):
+            self.assertEqual(partner_offset_limit.id, partner_slice.id)
+
+    @mute_logger('odoo.models')
+    def test_search_count(self):
+        self.cr.execute(SQL(
+            "SELECT COUNT(*) FROM test_orm_partner WHERE active AND id IN %s",
+            tuple(self.partners.ids),
+        ))
+
+        sql_count = self.cr.fetchone()[0]
+        self.assertTrue(sql_count)
+        self.assertIsInstance(sql_count, int)
+
+        search_count = self.env['test_orm.partner'].search_count([('id', 'in', self.partners.ids)])
+        self.assertTrue(search_count)
+        self.assertIsInstance(search_count, int)
+
+        self.assertEqual(sql_count, search_count)
+
     def test_search_active(self):
         """
         test that a custom field x_active on a model with the standard active
