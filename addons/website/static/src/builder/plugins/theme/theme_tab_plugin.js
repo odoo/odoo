@@ -61,8 +61,9 @@ export const OPTION_POSITIONS = {
     BUTTON: 50,
     LINK: 60,
     INPUT: 70,
-    SHADOW: 80,
-    ADVANCED: 90,
+    CARD: 80,
+    SHADOW: 90,
+    ADVANCED: 100,
 };
 
 const FONT_WEIGHT_OPTIONS = [
@@ -174,6 +175,16 @@ export class ThemeTabPlugin extends Plugin {
                     _t("Input Fields"),
                     class ThemeInputOption extends BaseOptionComponent {
                         static template = "website.ThemeInputOption";
+                    }
+                )
+            ),
+            withSequence(
+                OPTION_POSITIONS.CARD,
+                this.getThemeOptionBlock(
+                    "theme-card",
+                    _t("Card"),
+                    class ThemeCardOption extends BaseOptionComponent {
+                        static template = "website.ThemeCardOption";
                     }
                 )
             ),
