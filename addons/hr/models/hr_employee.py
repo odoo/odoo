@@ -486,7 +486,7 @@ class HrEmployee(models.Model):
         return super()._has_field_access(field, operation) and (
             self.env.su
             or self.env.user.has_group("hr.group_hr_user")
-            or field.name not in ('activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error')
+            or field.name not in ('activity_calendar_event_id', 'rating_ids', 'message_has_sms_error')
         )
 
     def check_no_existing_contract(self, date):

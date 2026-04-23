@@ -629,6 +629,9 @@ class SlideChannel(models.Model):
             self.env.user._add_karma(self.karma_gen_channel_rank, self, _("Course Ranked"))
         return message
 
+    def _get_customer_portal_message_types(self):
+        return ["comment", "email"]
+
     def _mail_get_partner_fields(self, introspect_fields=False):
         return []
 

@@ -41,10 +41,8 @@ class PortalWebClientController(WebclientController):
         fetch_params=None,
         **params,
     ):
-        # Extract the domain from the `website_message_ids` field to restrict the visible messages according to the model.
-        model = request.env[thread_model]
         thread = ThreadController._get_thread_with_access(
-            model._name,
+            thread_model,
             thread_id,
             token=params.get('token'),
         )
@@ -59,16 +57,9 @@ class PortalWebClientController(WebclientController):
             request.update_context(
                 portal_data={"portal_partner": portal_partner, "portal_thread": thread},
             )
-        # All users in the portal see only non-internal messages; internal users are supposed to see
-        # the portal as portal users do, so they have the same restriction.
-        domain = (
-            Domain(self._setup_portal_message_fetch_extra_domain(params))
-            & Domain(model._fields['website_message_ids'].get_comodel_domain(model))
-            & Domain("res_id", "=", thread.id)
-            & ~request.env["mail.message"]._get_empty_domain()
-            & request.env["mail.message"]._get_search_domain_share()
-            & SHARE_DOMAIN
-        )
+        domain = self._setup_portal_message_fetch_extra_domain(
+            params
+        ) & self._get_portal_message_fetch_domain(thread)
         # sudo: mail.message - thread access is validated above, and domain is massively restricted to share-only messages
         messages = self._resolve_messages(
             store,
@@ -153,6 +144,19 @@ class PortalWebClientController(WebclientController):
             ),
             predicate=lambda t: t in portal_partner_by_thread,
             value=portal_partner_by_thread.get,
+        )
+
+    @classmethod
+    def _get_portal_message_fetch_domain(cls, records):
+        """Return a domain to fetch messages visible in a shared/portal context.
+        All users see only non-internal, non-empty messages; internal users are supposed
+        to see the portal as portal users do, so they have the same restriction.
+        Message types are further filtered per model via `_get_customer_portal_message_types`."""
+        return (
+            Domain([("model", "=", records._name), ("res_id", "in", records.ids)])
+            & Domain("message_type", "in", records._get_customer_portal_message_types())
+            & ~records.env["mail.message"]._get_empty_domain()
+            & SHARE_DOMAIN
         )
 
     @classmethod
