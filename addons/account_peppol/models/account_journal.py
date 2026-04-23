@@ -28,7 +28,7 @@ class AccountJournal(models.Model):
 
     def peppol_get_message_status(self):
         edi_users = self.env['account_edi_proxy_client.user'].search([
-            ('company_id.account_peppol_proxy_state', '=', 'active'),
+            ('company_id.account_peppol_proxy_state', 'in', ('active', 'sender')),
             ('company_id', 'in', self.company_id.ids),
             ('proxy_type', '=', 'peppol')
         ])

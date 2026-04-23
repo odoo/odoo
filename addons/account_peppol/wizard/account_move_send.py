@@ -88,7 +88,7 @@ class AccountMoveSend(models.TransientModel):
                 lambda partner: not partner.is_peppol_edi_format
             )
             wizard.enable_peppol = (
-                wizard.company_id.account_peppol_proxy_state == 'active'
+                wizard.company_id.account_peppol_proxy_state in ('active', 'sender')
                 and (
                     wizard.enable_ubl_cii_xml
                     or any(m.ubl_cii_xml_id and m.peppol_move_state not in ('processing', 'done') for m in wizard.move_ids)

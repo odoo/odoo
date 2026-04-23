@@ -68,6 +68,7 @@ class ResCompany(models.Model):
             ('sent_verification', 'Verification code sent'),
             ('pending', 'Pending'),
             ('active', 'Active'),
+            ('sender', 'Can send but not receive'),
             ('rejected', 'Rejected'),
             ('canceled', 'Canceled'),
         ],
@@ -160,7 +161,7 @@ class ResCompany(models.Model):
     @api.depends('account_peppol_proxy_state')
     def _compute_peppol_purchase_journal_id(self):
         for company in self:
-            if not company.peppol_purchase_journal_id and company.account_peppol_proxy_state not in ('not_registered', 'rejected'):
+            if not company.peppol_purchase_journal_id and company.account_peppol_proxy_state not in ('not_registered', 'rejected', 'sender'):
                 company.peppol_purchase_journal_id = self.env['account.journal'].search([
                     *self.env['account.journal']._check_company_domain(company),
                     ('type', '=', 'purchase'),

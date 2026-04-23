@@ -50,7 +50,7 @@ class AccountEdiProxyClientUser(models.Model):
         edi_users._peppol_get_new_documents()
 
     def _cron_peppol_get_message_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('proxy_type', '=', 'peppol')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ('active', 'sender')), ('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_message_status()
 
     # -------------------------------------------------------------------------
@@ -99,7 +99,7 @@ class AccountEdiProxyClientUser(models.Model):
             # _make_request_peppol won't commit on no_such_user error
             proxy_user = user._make_request(f"{user._get_server_url()}/api/peppol/1/participant_status")
 
-            state_map = {'active': 'active', 'verified': 'pending', 'rejected': 'rejected'}
+            state_map = {'active': 'active', 'sender': 'sender', 'verified': 'pending', 'rejected': 'rejected'}
 
             if proxy_user.get('peppol_state') in state_map:
                 user.company_id.account_peppol_proxy_state = state_map[proxy_user['peppol_state']]
@@ -322,6 +322,7 @@ class AccountEdiProxyClientUser(models.Model):
             local_state = {
                 'draft': 'not_registered',
                 'active': 'active',
+                'sender': 'sender',
                 'verified': 'pending',
                 'rejected': 'rejected',
             }.get(proxy_user.get('peppol_state'))

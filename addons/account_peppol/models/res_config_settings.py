@@ -12,6 +12,10 @@ from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 ALLOWED_COUNTRIES = set(EAS_MAPPING.keys()) - {'AU', 'SG', 'NZ'}
 
 
+class EndpointAlreadyRegisteredError(UserError):
+    """Raised when endpoint is already registered on the network."""
+
+
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
@@ -50,6 +54,22 @@ class ResConfigSettings(models.TransientModel):
         help="Using the config params, this field specifies which edi modes may be selected from the UI"
     )
     peppol_use_parent_company = fields.Boolean(compute='_compute_peppol_use_parent_company')
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+
+        proxy_state = res.get('account_peppol_proxy_state')
+        if proxy_state and ('sender', 'Can send but not receive') not in proxy_state.get('selection', []):
+            company_proxy_state_field = self.env['res.company']._fields['account_peppol_proxy_state']
+            self.env['ir.model.fields'].invalidate_model(['selection_ids'])
+            self.env['ir.model.fields.selection']._update_selection(
+                'res.company', 'account_peppol_proxy_state', company_proxy_state_field.selection,
+            )
+            self.env.registry.clear_cache()
+            res = super().fields_get(allfields, attributes)
+
+        return res
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
@@ -165,6 +185,7 @@ class ResConfigSettings(models.TransientModel):
         The first step of the Peppol onboarding.
         - Creates an EDI proxy user on the iap side, then the client side
         - Calls /activate_participant to mark the EDI user as peppol user
+        - If endpoint is already on Peppol, can register as sender-only after explicit confirmation
         """
         self.ensure_one()
         company = self.company_id
@@ -202,21 +223,20 @@ class ResConfigSettings(models.TransientModel):
 
         company.partner_id._check_peppol_eas()
 
-        if (
-            (participant_info := company.partner_id._check_peppol_participant_exists(edi_identification, check_company=True))
-            and not self.account_peppol_migration_key
-        ):
+        participant_info = company.partner_id._check_peppol_participant_exists(edi_identification, check_company=True)
+        should_offer_sender_only = bool(participant_info and not self.account_peppol_migration_key)
+
+        if should_offer_sender_only and not self.env.context.get('account_peppol_register_sender_only'):
             error_msg = _(
                 "A participant with these details has already been registered on the network. "
-                "If you have previously registered to a Peppol service, please deregister."
+                "If you continue, Odoo will register this company as sender only."
             )
 
             if isinstance(participant_info, str):
                 error_msg += _("The Peppol service that is used is likely to be %s.", participant_info)
-            raise UserError(error_msg)
+            raise EndpointAlreadyRegisteredError(error_msg)
 
         edi_user = edi_proxy_client.sudo()._register_proxy_user(company, 'peppol', self.account_peppol_edi_mode)
-        self.account_peppol_proxy_state = 'not_verified'
 
         # if there is an error when activating the participant below,
         # the client side is rolled back and the edi user is deleted on the client side
@@ -236,19 +256,33 @@ class ResConfigSettings(models.TransientModel):
             'peppol_contact_email': self.account_peppol_contact_email,
         }
 
-        params = {
-            'migration_key': self.account_peppol_migration_key,
-            'company_details': company_details,
-        }
+        self.account_peppol_proxy_state = 'not_verified'
+        if should_offer_sender_only:
+            self._call_peppol_proxy(
+                endpoint='/api/peppol/1/register_sender',
+                params={'company_details': company_details},
+                edi_user=edi_user,
+            )
+            self.account_peppol_proxy_state = 'sender'
+        else:
+            params = {
+                'migration_key': self.account_peppol_migration_key,
+                'company_details': company_details,
+            }
 
-        self._call_peppol_proxy(
-            endpoint='/api/peppol/1/activate_participant',
-            params=params,
-            edi_user=edi_user,
-        )
+            self._call_peppol_proxy(
+                endpoint='/api/peppol/1/activate_participant',
+                params=params,
+                edi_user=edi_user,
+            )
         # once we sent the migration key over, we don't need it
         # but we need the field for future in case the user decided to migrate away from Odoo
         self.account_peppol_migration_key = False
+
+    @handle_demo
+    def button_create_peppol_proxy_user_sender_only(self):
+        self.ensure_one()
+        return self.with_context(account_peppol_register_sender_only=True).button_create_peppol_proxy_user()
 
     @handle_demo
     def button_update_peppol_user_data(self):
@@ -370,3 +404,56 @@ class ResConfigSettings(models.TransientModel):
                 self.env.cr.commit()
 
         self._peppol_deregister()
+
+    @handle_demo
+    def button_peppol_reset_to_sender(self):
+        """Reset the participant back to sender and deregister it from the SMP."""
+        self.ensure_one()
+
+        if self.account_peppol_proxy_state == 'active':
+            # fetch all documents and message statuses before unregistering from receiver role
+            # so that the invoices are acknowledged
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+            if not tools.config['test_enable'] and not modules.module.current_test:
+                self.env.cr.commit()
+
+        if self.account_peppol_proxy_state != 'sender':
+            self._call_peppol_proxy(endpoint='/api/peppol/1/unregister_to_sender')
+
+        self.account_peppol_proxy_state = 'sender'
+        self.account_peppol_migration_key = False
+        return True
+
+    @handle_demo
+    def button_peppol_register_sender_as_receiver(self):
+        """Promote a sender-only connection back to receiver flow."""
+        self.ensure_one()
+
+        if self.account_peppol_proxy_state != 'sender':
+            raise UserError(_('Only sender-only connections can be reactivated for reception.'))
+
+        self._call_peppol_proxy(
+            endpoint='/api/peppol/1/register_sender_as_receiver',
+            params={
+                'supported_identifiers': [],
+            },
+        )
+
+        connection_status = self._call_peppol_proxy(endpoint='/api/peppol/2/participant_status')
+        connection_state = connection_status.get('peppol_state')
+
+        if connection_state == 'sender':
+            raise UserError(_(
+                "A receiver connection is already registered for this participant. "
+                "Please deregister that receiver connection first."
+            ))
+
+        if connection_state == 'receiver':
+            self.account_peppol_proxy_state = 'active'
+        else:
+            self.account_peppol_proxy_state = 'pending'
+
+        self.account_peppol_migration_key = False
+        self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger()
+        return True

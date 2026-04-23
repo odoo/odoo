@@ -70,13 +70,13 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="content-group mt-3"
-                                     invisible="account_peppol_proxy_state in ('rejected', 'not_registered', 'canceled', 'not_verified', 'sent_verification')">
+                                     invisible="account_peppol_proxy_state in ('rejected', 'not_registered', 'canceled', 'not_verified', 'sent_verification', 'sender')">
                                     <div class="row">
                                         <label string="Incoming Invoices Journal"
                                                for="account_peppol_purchase_journal_id"
                                                class="col-lg-3 o_light_label"/>
                                         <field name="account_peppol_purchase_journal_id"
-                                               required="account_peppol_proxy_state not in ('rejected', 'canceled', 'not_verified', 'not_registered', 'sent_verification')"/>
+                                               required="account_peppol_proxy_state not in ('rejected', 'canceled', 'not_verified', 'not_registered', 'sent_verification', 'sender')"/>
                                     </div>
                                 </div>
                                 <div class="content-group mt-3"
@@ -121,12 +121,19 @@
                                     Your migration key is:
                                     <field name="account_peppol_migration_key"
                                            nolabel="1"
-                                           readonly="account_peppol_proxy_state == 'active' and account_peppol_migration_key"/>
+                                           readonly="1"/>
                                 </div>
-                                <div invisible="account_peppol_proxy_state != 'active'">
+                                <div invisible="account_peppol_proxy_state not in ('active', 'sender')">
                                     Your Peppol identification is:
                                     <field name="account_peppol_edi_identification"
                                            nolabel="1"/>
+                                </div>
+                                <div class="mt-3" invisible="account_peppol_proxy_state not in ('active', 'pending')">
+                                    <button name="button_peppol_reset_to_sender"
+                                            type="object"
+                                            class="btn btn-link p-0 align-baseline"
+                                            string="Disable the reception."/>
+                                    Route your vendor bills elsewhere while maintaining the ability to send customer invoices.
                                 </div>
                                 <div class="mt-4" invisible="account_peppol_proxy_state != 'not_registered'">
                                     <field name="account_peppol_mode_constraint" invisible="1"/>
@@ -144,9 +151,9 @@
                                 </div>
                                 <div class="d-flex gap-1 action_buttons" colspan="3">
                                     <widget name="peppol_settings_buttons"
-                                            invisible="account_peppol_proxy_state not in ('not_registered', 'not_verified', 'sent_verification', 'pending', 'manually_approved', 'active')"/>
+                                            invisible="account_peppol_proxy_state not in ('not_registered', 'not_verified', 'sent_verification', 'pending', 'manually_approved', 'active', 'sender')"/>
                                     <div class="mt-3"
-                                         invisible="account_peppol_proxy_state in ('not_registered', 'active', 'rejected', 'canceled')">
+                                         invisible="account_peppol_proxy_state in ('not_registered', 'active', 'sender', 'rejected', 'canceled')">
                                         <button name="button_cancel_peppol_registration"
                                                 type="object"
                                                 string="Cancel registration"

@@ -61,14 +61,20 @@ def _mock_make_request(func, self, *args, **kwargs):
             } for i in args[1]['documents']],
         }
 
+    def _mock_unregister_to_sender(user, args, kwargs):
+        user.company_id.account_peppol_proxy_state = 'sender'
+        return True
+
     endpoint = args[0].split('/')[-1]
     return {
         'ack': lambda _user, _args, _kwargs: {},
         'activate_participant': lambda _user, _args, _kwargs: {},
+        'register_sender': lambda _user, _args, _kwargs: {},
         'get_all_documents': _mock_get_all_documents,
         'get_document': _mock_get_document,
         'participant_status': lambda _user, _args, _kwargs: {'peppol_state': 'active'},
         'send_document': _mock_send_document,
+        'unregister_to_sender': _mock_unregister_to_sender,
     }[endpoint](self, args, kwargs)
 
 def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
@@ -118,11 +124,24 @@ def _mock_update_user_data(func, self, *args, **kwargs):
 def _mock_migrate_participant(func, self, *args, **kwargs):
     self.account_peppol_migration_key = 'I9cz9yw*ruDM%4VSj94s'
 
+
+def _mock_reset_to_sender(func, self, *args, **kwargs):
+    self.account_peppol_proxy_state = 'sender'
+    self.account_peppol_migration_key = False
+
+
+def _mock_register_sender_as_receiver(func, self, *args, **kwargs):
+    self.account_peppol_proxy_state = 'active'
+    self.account_peppol_migration_key = False
+
+
 _demo_behaviour = {
     '_make_request_peppol': _mock_make_request,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
     'button_create_peppol_proxy_user': _mock_user_creation,
     'button_deregister_peppol_participant': _mock_deregister_participant,
+    'button_peppol_reset_to_sender': _mock_reset_to_sender,
+    'button_peppol_register_sender_as_receiver': _mock_register_sender_as_receiver,
     'button_migrate_peppol_registration': _mock_migrate_participant,
     'button_update_peppol_user_data': _mock_update_user_data,
 }

@@ -20,6 +20,7 @@ class PeppolSettingsButtons extends Component {
 
     setup() {
         super.setup();
+        this.orm = useService("orm");
         this.dialogService = useService("dialog");
         this.notification = useService("notification");
         this.state = useState({
@@ -48,6 +49,9 @@ class PeppolSettingsButtons extends Component {
     }
 
     get createUserButtonLabel() {
+        if (this.proxyState === "sender") {
+            return _t("Allow reception");
+        }
         const modes = {
             demo: _t("Validate registration (Demo)"),
             test: _t("Validate registration (Test)"),
@@ -67,7 +71,7 @@ class PeppolSettingsButtons extends Component {
         if (save) {
             await this._save();
         }
-        this.env.onClickViewButton({
+        return this.env.onClickViewButton({
             clickParams: {
                 name: methodName,
                 type: "object",
@@ -79,7 +83,7 @@ class PeppolSettingsButtons extends Component {
     }
 
     async _save () {
-        this.env.model.root.save({ reload: false });
+        await this.env.model.root.save({ reload: false });
     }
 
     showConfirmation(warning, methodName) {
@@ -108,6 +112,15 @@ class PeppolSettingsButtons extends Component {
         }
     }
 
+    async deregisterToSender() {
+        await this._callConfigMethod("button_peppol_reset_to_sender");
+    }
+
+    async allowReception() {
+        await this._callConfigMethod("button_peppol_register_sender_as_receiver", true);
+        await this.env.model.root.load();
+    }
+
     async updateDetails() {
         // avoid making users click save on the settings
         // and then clicking the update button
@@ -133,7 +146,41 @@ class PeppolSettingsButtons extends Component {
     }
 
     async createUser() {
-        await this._callConfigMethod("button_create_peppol_proxy_user", true);
+        const record = this.props.record;
+        try {
+            await this._save();
+            await this.orm.call(
+                record.resModel,
+                "button_create_peppol_proxy_user",
+                [[record.resId]],
+                { context: record.context }
+            );
+            await this.env.model.root.load();
+        } catch (error) {
+            const isAlreadyRegisteredError = (
+                error.exceptionName?.endsWith("EndpointAlreadyRegisteredError")
+                || error.data?.name?.endsWith("EndpointAlreadyRegisteredError")
+            );
+            if (!isAlreadyRegisteredError) {
+                throw error;
+            }
+            this.dialogService.add(ConfirmationDialog, {
+                body: error.data?.message || error.message,
+                confirmLabel: _t("OK"),
+                cancelLabel: _t("Cancel"),
+                confirm: async () => {
+                    await this._save();
+                    await this.orm.call(
+                        record.resModel,
+                        "button_create_peppol_proxy_user_sender_only",
+                        [[record.resId]],
+                        { context: record.context }
+                    );
+                    await this.env.model.root.load();
+                },
+                cancel: () => { },
+            });
+        }
     }
 }
 
