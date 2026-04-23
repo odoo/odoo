@@ -153,11 +153,15 @@
                                 <label for="work_phone" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
                                     <i class="d-none d-md-inline-flex fa fa-phone" title="Work Phone"/>
+                                    <field name="work_phone_sanitized" invisible="1"/>
+                                    <field name="work_phone_formatted" invisible="1"/>
                                     <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
                                 </div>
                                 <label for="mobile_phone" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
                                     <i class="d-none d-md-inline-flex fa fa-mobile" title="Work Mobile"/>
+                                    <field name="mobile_phone_sanitized" invisible="1"/>
+                                    <field name="mobile_phone_formatted" invisible="1"/>
                                     <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
                                 </div>
                                 <label for="category_ids" class="d-md-none"/>
@@ -232,6 +236,8 @@
                                 <group>
                                     <group string="Private Contact">
                                         <field name="private_email" placeholder="e.g. myprivateemail@example.com" string="Email"/>
+                                        <field name="private_phone_sanitized" invisible="1"/>
+                                        <field name="private_phone_formatted" invisible="1"/>
                                         <field name="private_phone" widget="phone" string="Phone"/>
                                         <field name="has_multiple_bank_accounts" invisible="1"/>
                                         <field name="is_trusted_bank_account" invisible="1"/>
@@ -321,7 +327,9 @@
                                     </group>
                                     <group string="Emergency Contact">
                                         <field name="emergency_contact" string="Contact Name"/>
-                                        <field name="emergency_phone" class="o_force_ltr" string="Phone"/>
+                                        <field name="emergency_phone_sanitized" invisible="1"/>
+                                        <field name="emergency_phone_formatted" invisible="1"/>
+                                        <field name="emergency_phone" widget="phone" class="o_force_ltr" string="Phone"/>
                                     </group>
                                     <group string="Location" name="hr_location_group">
                                         <label for="private_street" string="Private Address"/>
@@ -547,7 +555,9 @@
                     </header>
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name" string="Name" readonly="1"/>
-                    <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
+                    <field name="work_phone_sanitized" column_invisible="1"/>
+                    <field name="work_phone_formatted" column_invisible="1"/>
+                    <field name="work_phone" widget="phone" class="o_force_ltr" readonly="1" optional="show"/>
                     <field name="work_email" optional="hide"/>
                     <field name="work_location_name" readonly="0" string="Work Location" optional="hide"/>
                     <field name="contract_date_start" optional="hide"/>
@@ -595,7 +605,9 @@
                 <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="hr_employee_list">
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name" readonly="1"/>
-                    <field name="work_phone" class="o_force_ltr" readonly="1" optional="hide"/>
+                    <field name="work_phone_sanitized" column_invisible="1"/>
+                    <field name="work_phone_formatted" column_invisible="1"/>
+                    <field name="work_phone" widget="phone" class="o_force_ltr" readonly="1" optional="hide"/>
                     <field name="work_email" optional="hide"/>
                     <field name="contract_date_start" optional="hide"/>
                     <field name="contract_date_end" optional="hide"/>
@@ -635,6 +647,8 @@
                     <field name="show_hr_icon_display"/>
                     <field name="image_128" />
                     <field name="company_id"/>
+                    <field name="work_phone_sanitized"/>
+                    <field name="work_phone_formatted"/>
                     <templates>
                         <t t-name="card" class="flex-row">
                             <aside class="o_kanban_aside_full">
@@ -670,7 +684,7 @@
                                 </div>
                                 <div t-if="record.work_phone.raw_value">
                                     <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
-                                    <field name="work_phone" />
+                                    <field name="work_phone" widget="phone"/>
                                 </div>
                                 <div t-if="record.first_contract_date.raw_value" groups="hr.group_hr_manager" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
                                     <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>

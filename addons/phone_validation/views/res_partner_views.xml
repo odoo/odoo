@@ -10,4 +10,65 @@
             </xpath>
         </field>
     </record>
+
+    <!-- Load phone_formatted so the phone widget can display INTERNATIONAL
+         format while preserving the raw value in the phone field. -->
+    <record id="res_partner_view_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.phone.validation</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet//field[@name='phone'][@widget='phone']" position="before">
+                <field name="phone_sanitized" invisible="1"/><!-- phone widget: dial link -->
+                <field name="phone_formatted" invisible="1"/><!-- phone widget: display format -->
+            </xpath>
+            <!-- Inline contact form inside child_ids kanban -->
+            <xpath expr="//field[@name='child_ids']//form//field[@name='phone'][@widget='phone']" position="before">
+                <field name="phone_sanitized" invisible="1"/><!-- phone widget: dial link -->
+                <field name="phone_formatted" invisible="1"/><!-- phone widget: display format -->
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_simple_form" model="ir.ui.view">
+        <field name="name">res.partner.view.simple.form.inherit.phone.validation</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_simple_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone'][@widget='phone']" position="before">
+                <field name="phone_sanitized" invisible="1"/><!-- phone widget: dial link -->
+                <field name="phone_formatted" invisible="1"/><!-- phone widget: display format -->
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_list" model="ir.ui.view">
+        <field name="name">res.partner.view.list.inherit.phone.validation</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="before">
+                <field name="phone_sanitized" column_invisible="1"/><!-- phone widget: dial link -->
+                <field name="phone_formatted" column_invisible="1"/><!-- phone widget: display format -->
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="attributes">
+                <attribute name="widget">phone</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_kanban" model="ir.ui.view">
+        <field name="name">res.partner.view.kanban.inherit.phone.validation</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="phone_sanitized"/>
+                <field name="phone_formatted"/>
+            </xpath>
+            <xpath expr="//templates//field[@name='phone']" position="attributes">
+                <attribute name="widget">phone</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>

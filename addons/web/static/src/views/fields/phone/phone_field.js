@@ -13,16 +13,30 @@ export class PhoneField extends Component {
     static props = {
         ...standardFieldProps,
         placeholder: { type: String, optional: true },
+        formattedField: { type: String, optional: true },
+        dialField: { type: String, optional: true },
     };
     static components = { Dropdown, DropdownItem };
 
     setup() {
         this.input = useChildRef();
-        useInputField({ getValue: () => this.props.record.data[this.props.name] || "" });
+        useInputField({ getValue: () => this.value || "" });
+    }
+
+    get value() {
+        const { name, record } = this.props;
+        const formattedField = this.props.formattedField || `${name}_formatted`;
+        return record.data[formattedField] || record.data[name];
+    }
+
+    get dialNumber() {
+        const { name, record } = this.props;
+        const dialField = this.props.dialField || `${name}_sanitized`;
+        return record.data[dialField] || record.data[name];
     }
 
     get phoneHref() {
-        return "tel:" + this.props.record.data[this.props.name].replace(/\s+/g, "");
+        return "tel:" + this.dialNumber.replace(/\s+/g, "");
     }
 
     get actionButtons() {
@@ -50,10 +64,24 @@ export const phoneField = {
             type: "field",
             availableTypes: ["char"],
         },
+        {
+            label: _t("Formatted Field"),
+            name: "formatted_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
+        {
+            label: _t("Dial Field"),
+            name: "dial_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
     ],
     supportedTypes: ["char"],
-    extractProps: ({ placeholder }) => ({
+    extractProps: ({ options, placeholder }) => ({
         placeholder,
+        formattedField: options.formatted_field,
+        dialField: options.dial_field,
     }),
 };
 

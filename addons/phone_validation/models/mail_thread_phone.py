@@ -35,6 +35,11 @@ class MailThreadPhone(models.AbstractModel):
     phone_sanitized = fields.Char(
         string='Sanitized Number', compute="_compute_phone_sanitized", compute_sudo=True, store=True,
         help="Field used to store sanitized phone number. Helps speeding up searches and comparisons.")
+    phone_formatted = fields.Char(
+        string="Formatted Number",
+        compute="_compute_phone_formatted",
+        export_string_translation=False,
+    )
     phone_sanitized_blacklisted = fields.Boolean(
         string='Phone Blacklisted', compute="_compute_blacklisted", compute_sudo=True, store=False,
         search="_search_phone_sanitized_blacklisted", groups="base.group_user",
@@ -155,6 +160,11 @@ class MailThreadPhone(models.AbstractModel):
                 if sanitized:
                     break
             record.phone_sanitized = sanitized
+
+    @api.depends('phone_sanitized')
+    def _compute_phone_formatted(self):
+        for record in self:
+            record.phone_formatted = record._phone_get_formatted(record.phone_sanitized)
 
     @api.depends('phone_sanitized')
     def _compute_blacklisted(self):

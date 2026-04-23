@@ -20,7 +20,7 @@ patch(PhoneField.prototype, {
         this.action = useService("action");
     },
     get actionButtons() {
-        if (!this.props.enableButton || this.props.record.data[this.props.name].length === 0) {
+        if (!this.props.enableButton || !this.value) {
             return super.actionButtons;
         }
         return [
