@@ -2813,6 +2813,7 @@ export class PosStore extends WithLazyGetterTrap {
     async onPrepLinesSynced(prepLinePairs) {}
 
     async createComboFromLines(productTmpl, combinations) {
+        const order = this.selectedOrder;
         const prepLinePairs = [];
         const handlePreparationHistory = (srcLine, destLine, qty) => {
             const prepLines = srcLine.prep_line_ids;
@@ -2846,7 +2847,7 @@ export class PosStore extends WithLazyGetterTrap {
         combinations.forEach((items) => {
             for (const combo of Object.values(items)) {
                 for (const uuid of Object.keys(combo)) {
-                    const line = this.selectedOrder.lines.find((l) => l.uuid === uuid);
+                    const line = order.lines.find((l) => l.uuid === uuid);
                     if (!line) {
                         continue;
                     }
@@ -2871,7 +2872,7 @@ export class PosStore extends WithLazyGetterTrap {
             const comboPrices = computeComboItems(
                 productTmpl.product_variant_ids[0],
                 payload[0],
-                this.selectedOrder.pricelist_id,
+                order.pricelist_id,
                 this.data.models["decimal.precision"].getAll(),
                 this.data.models["product.template.attribute.value"].getAllBy("id"),
                 payload[1],
@@ -2889,7 +2890,7 @@ export class PosStore extends WithLazyGetterTrap {
                 linkOldNewLines[cl.uuid] = 0;
             });
 
-            const oldLines = this.selectedOrder.lines.filter((l) =>
+            const oldLines = order.lines.filter((l) =>
                 Object.keys(concernedLinesQty).includes(l.uuid)
             );
 
@@ -2926,20 +2927,26 @@ export class PosStore extends WithLazyGetterTrap {
                 prepLinePairs.push([firstChildPrepLine.uuid, newComboParentPrepLine.uuid]);
             }
         }
+        let needsSync = false;
         for (const [lineUuid, newQty] of Object.entries(concernedLinesQty)) {
             const line = this.models["pos.order.line"].getBy("uuid", lineUuid);
+            if (Number.isInteger(line.id)) {
+                needsSync = true;
+            }
             if (newQty > 0) {
                 line.setQuantity(newQty);
             } else {
                 line.order_id.removeOrderline(line);
             }
         }
-        if (prepLinePairs.length) {
-            await this.syncAllOrders({ orders: [this.selectedOrder] });
-            await this.onPrepLinesSynced(prepLinePairs);
+        if (needsSync) {
+            await this.syncAllOrders({ orders: [order] });
+            if (prepLinePairs.length) {
+                await this.onPrepLinesSynced(prepLinePairs);
+            }
         }
         if (comboLine) {
-            this.selectedOrder.selectOrderline(comboLine);
+            order.selectOrderline(comboLine);
         }
         return;
     }
