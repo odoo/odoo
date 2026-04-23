@@ -2314,19 +2314,6 @@ class AccountEdiUBL(models.AbstractModel):
         formatted_prepaid_amount = formatLang(self.env, prepaid_amount, currency_obj=currency)
         collected_values['logs'].append(_("A payment of %s was detected.", formatted_prepaid_amount))
 
-    def _import_ubl_invoice_add_rounding_amount(self, collected_values):
-        file_document_sign = collected_values['file_document_sign']
-        currency = collected_values['currency_values']['currency']
-        tree = collected_values['tree']
-        rounding_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}PayableRoundingAmount')
-        rounding_amount = file_document_sign * float(rounding_amount_str or 0.0)
-        if currency.is_zero(rounding_amount):
-            return
-
-        collected_values['rounding_amount'] = rounding_amount
-        formatted_rounding_amount = formatLang(self.env, rounding_amount, currency_obj=currency)
-        collected_values['logs'].append(_("A rounding amount of %s was detected.", formatted_rounding_amount))
-
     def _import_ubl_invoice_add_tax_total_values(self, collected_values):
         file_document_sign = collected_values['file_document_sign']
         odoo_document_type = collected_values['odoo_document_type']
@@ -2864,16 +2851,6 @@ class AccountEdiUBL(models.AbstractModel):
             base_line_kwargs['_create_values']['deferred_end_date'] = deferred_end_date
         return base_line_kwargs
 
-    def _import_ubl_invoice_get_rounding_base_line_kwargs(self, collected_values):
-        base_line_kwargs = {
-            **self._import_ubl_invoice_get_default_base_line_kwargs(collected_values),
-            'quantity': 1.0,
-            'price_unit': collected_values['rounding_amount'],
-            'tax_ids': [],
-        }
-        base_line_kwargs['_create_values']['name'] = _("Rounding")
-        return base_line_kwargs
-
     def _import_ubl_invoice_get_allowance_charge_line_kwargs(self, collected_values):
         allowance_charge = collected_values['allowance_charge']
         file_document_sign = collected_values['file_document_sign']
@@ -3021,14 +2998,6 @@ class AccountEdiUBL(models.AbstractModel):
                 **base_line_kwargs,
             ))
 
-        # Cash rounding line.
-        if collected_values.get('rounding_amount'):
-            base_line_kwargs = self._import_ubl_invoice_get_rounding_base_line_kwargs(collected_values)
-            base_lines.append(AccountTax._prepare_base_line_for_taxes_computation(
-                record=None,
-                **base_line_kwargs,
-            ))
-
         AccountTax._add_tax_details_in_base_lines(base_lines, company)
         AccountTax._round_base_lines_tax_details(base_lines, company)
 
@@ -3155,6 +3124,44 @@ class AccountEdiUBL(models.AbstractModel):
         ):
             invoice.line_ids = line_ids_commands
 
+    def _import_ubl_invoice_fix_untaxed_amount(self, collected_values):
+        tree = collected_values['tree']
+        file_document_sign = collected_values['file_document_sign']
+        currency = collected_values['currency_values']['currency']
+        tax_exclusive_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
+        if not tax_exclusive_amount_str:
+            return
+
+        payable_rounding_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}PayableRoundingAmount')
+        tax_exclusive_amount = file_document_sign * float(tax_exclusive_amount_str or 0.0)
+        payable_rounding_amount = file_document_sign * float(payable_rounding_amount_str or 0.0)
+        expected_untaxed_amount = tax_exclusive_amount + payable_rounding_amount
+        invoice = collected_values['invoice']
+        difference = currency.round(expected_untaxed_amount - invoice.amount_untaxed)
+        for line_collected_values in collected_values['lines_collected_values']:
+            for charge in line_collected_values['charges']:
+                attempt_tax_values = charge.get('attempt_tax_values')
+                if attempt_tax_values and attempt_tax_values.get('tax'):
+                    difference -= charge['amount']
+        if currency.is_zero(difference):
+            return
+
+        container = {'records': invoice}
+        with (
+            invoice._check_balanced(container),
+            invoice._disable_discount_precision(),
+            invoice._sync_dynamic_lines(container),
+        ):
+            invoice.invoice_line_ids = [
+                Command.create({
+                    'display_type': 'product',
+                    'name': _("Rounding"),
+                    'quantity': 1,
+                    'price_unit': difference,
+                    'tax_ids': [],
+                }),
+            ]
+
     def _import_attachments(self, invoice, tree):
         """ EXTENDS 'account_edi_common': ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
         IrConfigParam = self.env['ir.config_parameter'].sudo()
@@ -3273,7 +3280,6 @@ class AccountEdiUBL(models.AbstractModel):
 
         # Prepaid / rounding amounts / Tax total values.
         self._import_ubl_invoice_add_prepaid_amount(collected_values)
-        self._import_ubl_invoice_add_rounding_amount(collected_values)
         self._import_ubl_invoice_add_tax_total_values(collected_values)
 
         # Extract information about allowance / charges.
@@ -3290,5 +3296,6 @@ class AccountEdiUBL(models.AbstractModel):
         # End the invoice.
         self._import_ubl_invoice_write_collected_values(collected_values)
         self._import_ubl_invoice_fix_taxes_amounts(collected_values)
+        self._import_ubl_invoice_fix_untaxed_amount(collected_values)
         self._import_ubl_invoice_post_processing(collected_values)
         return True
