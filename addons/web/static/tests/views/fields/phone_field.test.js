@@ -16,6 +16,8 @@ import { browser } from "@web/core/browser/browser";
 
 class Partner extends models.Model {
     foo = fields.Char({ default: "My little Foo Value", trim: true });
+    foo_formatted = fields.Char();
+    foo_sanitized = fields.Char();
     name = fields.Char();
 
     _records = [{ foo: "yop" }, { foo: "blip" }];
@@ -205,6 +207,31 @@ test("url is correctly called in readonly", async () => {
 
     expect(".o_field_phone span:first-child").toHaveText("+12 345 67 89 00");
     await assertUrl(`.o_field_widget .o_phone_form_link`, "tel:+12345678900");
+});
+
+test("url uses sanitized field while displaying formatted value in readonly", async () => {
+    Partner._records[0].foo = "2025550124";
+    Partner._records[0].foo_formatted = "+1 202-555-0124";
+    Partner._records[0].foo_sanitized = "+12025550124";
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        readonly: true,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="foo_formatted" invisible="1"/>
+                        <field name="foo_sanitized" invisible="1"/>
+                        <field name="foo" widget="phone"/>
+                    </group>
+                </sheet>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_phone span:first-child").toHaveText("+1 202-555-0124");
+    await assertUrl(`.o_field_widget .o_phone_form_link`, "tel:+12025550124");
 });
 
 test("New record, fill in phone field, then click on call icon and save", async () => {

@@ -115,6 +115,31 @@ class Base(models.AbstractModel):
             number = False
         return number
 
+    def _phone_get_formatted(self, number):
+        """Return ``number`` in INTERNATIONAL display format.
+
+        Falls back to ``number`` itself when formatting is not possible
+        (invalid number, missing country, ...) and to ``False`` when empty.
+        Country resolution follows :meth:`_phone_format` (record-based), so
+        ``self`` must be a singleton when ``number`` needs a country lookup.
+
+        :param str number: number to format (typically a sanitized/E164 value).
+        :rtype: str | Literal[False]
+        """
+        if not number:
+            return False
+        return self._phone_format(number=number, force_format='INTERNATIONAL') or number
+
+    def _phone_update_companion_fields(self, field_names):
+        """Fill the ``<fname>_sanitized`` (E164) and ``<fname>_formatted``
+        (INTERNATIONAL) phone-widget companion fields for each name in
+        ``field_names``, for every record in ``self``."""
+        for record in self:
+            for fname in field_names:
+                sanitized = record._phone_format(fname=fname) or False
+                record[f'{fname}_sanitized'] = sanitized
+                record[f'{fname}_formatted'] = record._phone_get_formatted(sanitized)
+
     # ------------------------------------------------------------
     # RECIPIENT HELPERS
     # ------------------------------------------------------------

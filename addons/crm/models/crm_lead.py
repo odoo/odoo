@@ -636,11 +636,6 @@ class CrmLead(models.Model):
         for lead in self:
             lead.partner_phone_update = lead._get_partner_phone_update(force_void=False)
 
-    @api.onchange('phone', 'country_id', 'company_id')
-    def _onchange_phone_validation(self):
-        if self.phone:
-            self.phone = self._phone_format(fname='phone', force_format='INTERNATIONAL') or self.phone
-
     def _prepare_values_from_partner(self, partner):
         """ Get a dictionary with values coming from partner information to
         copy on a lead. Non-address fields get the current lead

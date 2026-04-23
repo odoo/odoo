@@ -5,6 +5,7 @@ from psycopg2.errors import UniqueViolation
 from freezegun import freeze_time
 
 from odoo import fields, Command
+from odoo.addons.phone_validation.tools import phone_validation
 from odoo.fields import Domain
 from odoo.tests import Form, users, new_test_user, HttpCase, tagged, TransactionCase
 from odoo.addons.hr.tests.common import TestHrCommon
@@ -685,6 +686,98 @@ class TestHrEmployee(TestHrCommon):
         self.assertNotEqual(partner.phone, first_employee.work_phone)
         self.assertNotEqual(partner.email, second_employee.work_email)
         self.assertNotEqual(partner.email, first_employee.work_email)
+
+    def test_work_phone_companion_fields_are_invalidated(self):
+        country = self.env.ref('base.be')
+        company = self.env['res.company'].create({
+            'name': 'Belgian Company',
+            'country_id': country.id,
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Phone Employee',
+            'company_id': company.id,
+        })
+
+        first_phone = '0456998877'
+        employee.work_phone = first_phone
+        first_sanitized = phone_validation.phone_format(
+            first_phone, country.code, country.phone_code, force_format='E164'
+        )
+        self.assertEqual(employee.work_phone_sanitized, first_sanitized)
+        self.assertEqual(
+            employee.work_phone_formatted,
+            phone_validation.phone_format(
+                first_sanitized, country.code, country.phone_code, force_format='INTERNATIONAL'
+            ),
+        )
+
+        second_phone = '0456112233'
+        employee.work_phone = second_phone
+        second_sanitized = phone_validation.phone_format(
+            second_phone, country.code, country.phone_code, force_format='E164'
+        )
+        self.assertEqual(employee.work_phone_sanitized, second_sanitized)
+        self.assertEqual(
+            employee.work_phone_formatted,
+            phone_validation.phone_format(
+                second_sanitized, country.code, country.phone_code, force_format='INTERNATIONAL'
+            ),
+        )
+
+    def test_restricted_phone_companion_fields(self):
+        """emergency_phone / private_phone expose sanitized + formatted
+        companions and keep their raw value (formatting is display-only)."""
+        country = self.env.ref('base.be')
+        company = self.env['res.company'].create({
+            'name': 'Belgian Company',
+            'country_id': country.id,
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Phone Employee',
+            'company_id': company.id,
+        })
+
+        for fname in ('emergency_phone', 'private_phone'):
+            raw = '0456998877'
+            employee[fname] = raw
+            sanitized = phone_validation.phone_format(
+                raw, country.code, country.phone_code, force_format='E164'
+            )
+            # raw value is preserved; only the companions hold the formatted forms
+            self.assertEqual(employee[fname], raw)
+            self.assertEqual(employee[f'{fname}_sanitized'], sanitized)
+            self.assertEqual(
+                employee[f'{fname}_formatted'],
+                phone_validation.phone_format(
+                    sanitized, country.code, country.phone_code, force_format='INTERNATIONAL'
+                ),
+            )
+
+            # changing the number re-computes the companions
+            new_raw = '0456112233'
+            employee[fname] = new_raw
+            new_sanitized = phone_validation.phone_format(
+                new_raw, country.code, country.phone_code, force_format='E164'
+            )
+            self.assertEqual(employee[f'{fname}_sanitized'], new_sanitized)
+
+    def test_restricted_phone_not_reformatted_in_form(self):
+        """Editing emergency/private phone in a form must keep the raw value:
+        the INTERNATIONAL-formatting onchange has been removed."""
+        country = self.env.ref('base.be')
+        company = self.env['res.company'].create({
+            'name': 'Belgian Company',
+            'country_id': country.id,
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Phone Employee',
+            'company_id': company.id,
+        })
+        with Form(employee) as form:
+            form.emergency_phone = '0456998877'
+            form.private_phone = '0456112233'
+        self.assertEqual(employee.emergency_phone, '0456998877')
+        self.assertEqual(employee.private_phone, '0456112233')
 
     @freeze_time('2025-12-01 09-00-00')
     def test_presence_state_groupby(self):

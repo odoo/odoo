@@ -102,7 +102,7 @@
                                     <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
                                 <field name="private_email" string="Private Email"/>
-                                <field name="private_phone" string="Private Phone" class="o_force_ltr"/>
+                                <field name="private_phone" widget="phone" class="o_force_ltr" string="Private Phone"/>
                             </group>
                             <group string="Emergency Contact">
                                 <field name="emergency_contact" string="Contact Name" placeholder="e.g. John Doe"/>
