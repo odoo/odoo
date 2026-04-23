@@ -2,7 +2,7 @@
 <odoo>
     <record id="l10n_fr_part_time_calendar" model="resource.calendar">
         <field name="name">Part time</field>
-        <field name="company_id" eval="False"/>
+        <field name="company_id" ref="base.main_company"/>
         <field name="hours_per_day">9</field>
         <field name="attendance_ids"
             eval="[(5, 0, 0),

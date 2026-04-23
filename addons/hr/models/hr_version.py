@@ -133,7 +133,7 @@ class HrVersion(models.Model):
     departure_apply_immediately = fields.Boolean(related='departure_id.apply_immediately', groups="hr.group_hr_user")
     departure_apply_date = fields.Date(related='departure_id.apply_date', groups="hr.group_hr_user")
 
-    resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id', check_company=True, string="Working Hours", tracking=1)
+    resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id', check_company=True, domain="[('company_id', '=', company_id)]", string="Working Hours", tracking=1)
     hours_per_week = fields.Float(string="Hours per Week", compute='_compute_hours_per_week', store=True, readonly=False)
     hours_per_day = fields.Float(string="Hours per Day", compute='_compute_hours_per_day', store=True, readonly=False)
     is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_user")
@@ -269,6 +269,15 @@ class HrVersion(models.Model):
                         version.employee_id.display_name))
             if not contract_period_exists:
                 dates_per_employee[version.employee_id].append((version.contract_date_start, version.contract_date_end, version))
+
+    @api.constrains('resource_calendar_id')
+    def _check_resource_calendar_company(self):
+        invalid = self.filtered(lambda v: v.resource_calendar_id and not v.resource_calendar_id.company_id)
+        if invalid:
+            raise ValidationError(self.env._(
+                'The following contracts have a working schedule not assigned to a company: %(names)s',
+                names=', '.join(invalid.mapped('resource_calendar_id.name')),
+            ))
 
     def check_contract_finished(self):
         if self.contract_date_start and not self.contract_date_end:

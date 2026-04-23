@@ -97,40 +97,6 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
                 'calendar_id': self.calendar_1.id,
             })
 
-    def test_global_leave_working_schedule_without_company(self):
-        """
-        Check public holidays for a company apply to employees of this company
-        when using a working schedule without a company.
-        """
-        calendar_no_company = self.env['resource.calendar'].create({
-            'name': 'Schedule without company',
-            'company_id': False,
-        })
-        self.employee_emp.resource_calendar_id = calendar_no_company
-
-        self.env['resource.calendar.leaves'].create({
-            'name': 'Public Holiday',
-            'date_from': datetime(2024, 1, 3, 0, 0),
-            'date_to': datetime(2024, 1, 3, 23, 59),
-            'calendar_id': calendar_no_company.id,
-            'company_id': self.employee_emp.company_id.id,
-        })
-        work_entry_type = self.env['hr.work.entry.type'].create({
-            'name': 'Paid Time Off',
-            'code': 'Test Paid Time Off',
-            'count_as': 'absence',
-            'requires_allocation': False,
-        })
-        leave = self.env['hr.leave'].create({
-            'name': 'Time Off',
-            'employee_id': self.employee_emp.id,
-            'work_entry_type_id': work_entry_type.id,
-            'request_date_from': date(2024, 1, 2),
-            'request_date_to': date(2024, 1, 4),
-        })
-
-        self.assertEqual(leave.number_of_days, 2, "Public holiday duration should not be included")
-
     def test_global_leave_number_of_days_with_new(self):
         """
             Check that leaves stored in memory (and not in the database)

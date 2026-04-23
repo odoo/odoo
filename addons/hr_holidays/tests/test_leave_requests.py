@@ -125,7 +125,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         cls.irregular_calendar = cls.env['resource.calendar'].create({
             'name': 'Irregular Calendar With Gaps',
-            'company_id': False,
             'attendance_ids': [(5, 0, 0),
                 ## Hours Per Week: 33, Avg hours_per_day = 6.6, 75% = 4.95
                 (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
@@ -2236,7 +2235,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def test_multi_timeoff_wizard_half_day_outside_company_calendar_period(self):
         evening_calendar = self.env['resource.calendar'].create({
             'name': 'Evening Calendar',
-            'company_id': False,
             'attendance_ids': [(5, 0, 0),
                 (0, 0, {'dayofweek': '0', 'hour_from': 19, 'hour_to': 22}),
             ],

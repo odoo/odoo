@@ -4,7 +4,7 @@
         <!-- Calendar -->
         <record id="resource_calendar_std_38h" model="resource.calendar" forcecreate="1">
             <field name="name">Standard 32 hours/week (4 work days, friday free)</field>
-            <field name="company_id" eval="False"/>
+            <field name="company_id" ref="base.main_company"/>
             <field name="hours_per_day">8</field>
             <field name="attendance_ids"
                 eval="[(5, 0, 0),
