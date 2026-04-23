@@ -76,7 +76,7 @@ var owl = (() => {
   });
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.28";
+  var version = "3.0.0-alpha.29";
   var OwlError = class extends Error {
     cause;
   };
@@ -641,7 +641,7 @@ var owl = (() => {
     };
     return readSignal;
   }
-  function invalidateSignal(signal22) {
+  function triggerSignal(signal22) {
     if (typeof signal22 !== "function" || signal22[atomSymbol]?.type !== "signal") {
       throw new OwlError(`Value is not a signal (${signal22})`);
     }
@@ -662,7 +662,7 @@ var owl = (() => {
   function signal(value) {
     return buildSignal(value, (atom) => atom.value);
   }
-  signal.invalidate = invalidateSignal;
+  signal.trigger = triggerSignal;
   signal.Array = signalArray;
   signal.Map = signalMap;
   signal.Object = signalObject;
@@ -1316,6 +1316,9 @@ ${issueStrings}`);
   }
   function forwardErrorToParent(boundary) {
     return (error, finalize) => {
+      if (boundary.app.destroyed) {
+        throw error;
+      }
       const { handled } = invokeErrorHandlers(boundary, error, finalize, false);
       if (!handled) {
         boundary.app._handleError(finalize());
@@ -1327,6 +1330,9 @@ ${issueStrings}`);
     let node = "node" in params ? params.node : params.fiber.node;
     const fiber = "fiber" in params ? params.fiber : node.fiber;
     const app = node.app;
+    if (app.destroyed) {
+      throw error;
+    }
     if (fiber) {
       let current = fiber;
       do {
@@ -1340,6 +1346,9 @@ ${issueStrings}`);
       try {
         app.destroy();
       } catch (e) {
+      }
+      if (error instanceof OwlError) {
+        return error;
       }
       return Object.assign(new OwlError(`[Owl] Unhandled error. Destroying the root component`), {
         cause: error
@@ -3923,6 +3932,7 @@ ${issueStrings}`);
     scheduler = new Scheduler();
     roots = /* @__PURE__ */ new Set();
     pluginManager;
+    destroyed = false;
     constructor(config3 = {}) {
       super(config3);
       this.name = config3.name || "";
@@ -4033,6 +4043,7 @@ ${issueStrings}`);
       this.pluginManager.destroy();
       this.scheduler.processTasks();
       apps.delete(this);
+      this.destroyed = true;
     }
     _handleError(error) {
       throw error;
@@ -4387,8 +4398,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-04-23T07:25:02.494Z",
-    hash: "ca2e2b8f",
+    date: "2026-04-23T11:26:50.262Z",
+    hash: "33ce43bd",
     url: "https://github.com/odoo/owl"
   };
 
@@ -4761,7 +4772,7 @@ ${issueStrings}`);
     };
     return readSignal;
   }
-  function invalidateSignal2(signal22) {
+  function triggerSignal2(signal22) {
     if (typeof signal22 !== "function" || signal22[atomSymbol2]?.type !== "signal") {
       throw new OwlError2(`Value is not a signal (${signal22})`);
     }
@@ -4782,7 +4793,7 @@ ${issueStrings}`);
   function signal2(value) {
     return buildSignal2(value, (atom) => atom.value);
   }
-  signal2.invalidate = invalidateSignal2;
+  signal2.trigger = triggerSignal2;
   signal2.Array = signalArray2;
   signal2.Map = signalMap2;
   signal2.Object = signalObject2;
