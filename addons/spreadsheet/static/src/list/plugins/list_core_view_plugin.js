@@ -5,10 +5,9 @@ import { ListDataSource } from "../list_data_source";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
 
-const { astToFormula } = spreadsheet;
-const { isEvaluationError } = spreadsheet.helpers;
+const { astToFormula, NotAvailableError, CircularDependencyError } = spreadsheet;
 const { isMarkdownLink, parseMarkdownLink } = spreadsheet.links;
-
+const { unquote, isMatrix, isEvaluationError } = spreadsheet.helpers;
 /**
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
  */
@@ -45,8 +44,9 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         switch (cmd.type) {
             case "START":
                 for (const listId of this.getters.getListIds()) {
-                    this._setupListDataSource(listId, 0);
+                    this._setupList(listId, 0);
                 }
+                this._addDomains();
                 break;
         }
     }
@@ -59,11 +59,11 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         switch (cmd.type) {
             case "INSERT_ODOO_LIST": {
                 const { listId, linesNumber } = cmd;
-                this._setupListDataSource(listId, linesNumber);
+                this._setupList(listId, linesNumber);
                 break;
             }
             case "DUPLICATE_ODOO_LIST": {
-                this._setupListDataSource(cmd.newListId, 0);
+                this._setupList(cmd.newListId, 0);
                 break;
             }
             case "REFRESH_ALL_DATA_SOURCES":
@@ -78,8 +78,8 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             case "UPDATE_ODOO_LIST":
             case "UPDATE_ODOO_LIST_DOMAIN": {
                 const listDefinition = this._getListModelDefinition(cmd.listId);
-                const dataSourceId = this._getListDataSourceId(cmd.listId);
-                this.lists[dataSourceId].onDefinitionChange(listDefinition);
+                this.lists[cmd.listId].definition = listDefinition;
+                this.lists[cmd.listId].dataSource.onDefinitionChange(listDefinition);
                 this._addDomain(cmd.listId);
                 break;
             }
@@ -116,8 +116,8 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
                     }
 
                     const listDefinition = this._getListModelDefinition(cmd.listId);
-                    const dataSourceId = this._getListDataSourceId(cmd.listId);
-                    this.lists[dataSourceId].onDefinitionChange(listDefinition);
+                    this.lists[cmd.listId].definition = listDefinition;
+                    this.lists[cmd.listId].dataSource.onDefinitionChange(listDefinition);
                     this._addDomain(cmd.listId);
                 }
                 break;
@@ -136,11 +136,15 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
     // Handlers
     // -------------------------------------------------------------------------
 
-    _setupListDataSource(listId, limit, definition) {
-        const dataSourceId = this._getListDataSourceId(listId);
-        definition = definition || this._getListModelDefinition(listId);
-        if (!(dataSourceId in this.lists)) {
-            this.lists[dataSourceId] = new ListDataSource(this.custom, { ...definition, limit });
+    _setupList(listId, limit) {
+        if (!(listId in this.lists)) {
+            const definition = this._getListModelDefinition(listId);
+            const dataSource = new ListDataSource(this.custom, { ...definition, limit });
+            this.lists[listId] = {
+                id: listId,
+                definition,
+                dataSource,
+            };
         }
         this._addDomain(listId);
     }
@@ -161,7 +165,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             domainList.push(this.getters.getGlobalFilterDomain(filterId, fieldMatch));
         }
         const domain = Domain.combine(domainList, "AND").toString();
-        this.getters.getListDataSource(listId).addDomain(domain);
+        this.lists[listId].dataSource.addDomain(domain);
     }
 
     /**
@@ -177,24 +181,12 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     /**
-     * Refresh the cache of a list
-     * @param {string} listId Id of the list
-     */
-    _refreshOdooList(listId) {
-        this.getters.getListDataSource(listId).load({ reload: true });
-    }
-
-    /**
      * Refresh the cache of all the lists
      */
     _refreshOdooLists() {
         for (const listId of this.getters.getListIds()) {
-            this._refreshOdooList(listId);
+            this.lists[listId].dataSource.load({ reload: true });
         }
-    }
-
-    _getListDataSourceId(listId) {
-        return `list-${listId}`;
     }
 
     _getUnusedLists() {
@@ -232,6 +224,63 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         return this.unusedLists;
     }
 
+    _getListModelDefinition(id) {
+        const definition = this.getters.getListDefinition(id);
+        return {
+            metaData: {
+                resModel: definition.model,
+            },
+            searchParams: {
+                domain: definition.domain,
+                context: definition.context,
+                orderBy: definition.orderBy,
+            },
+            name: definition.name,
+            columns: definition.columns,
+        };
+    }
+
+    _computeCellValue(listId, column, position) {
+        const formula = this.getters.getListCompiledColumnFormula(listId, column.name);
+        const getSymbolValue = (symbol) => {
+            symbol = unquote(symbol, "'");
+            const symbolColumn = this.lists[listId].definition.columns.find(
+                (col) => col.name === symbol
+            );
+            if (!symbolColumn) {
+                return new NotAvailableError(`There is no '${symbol}' column in the list.`);
+            } else if (symbolColumn.name === column.name) {
+                return new CircularDependencyError();
+            }
+            if (symbolColumn && symbolColumn.computedBy) {
+                return this._computeCellValue(listId, symbolColumn, position);
+            }
+            return this._getListCellValueAndFormat(listId, position, symbolColumn.name);
+        };
+        let result = this.getters.evaluateCompiledFormula(
+            column.computedBy.sheetId,
+            formula,
+            getSymbolValue
+        );
+        if (isMatrix(result)) {
+            result = result[0][0];
+        }
+        return result;
+    }
+
+    _getListCellValueAndFormat(listId, position, path) {
+        const list = this.lists[listId];
+        // shortcut to pre-fill the fetch list (spares a round of server call)
+        list.dataSource.addFieldPathToFetch(path);
+        const value = list.dataSource.getListCellValue(position, path);
+        if (typeof value === "object" && isEvaluationError(value.value)) {
+            return value;
+        }
+        const field = list.dataSource.getFieldFromFieldPath(path);
+        const format = this._getListFormat(listId, position, path, field);
+        return { value, format };
+    }
+
     _getListFormat(listId, position, path, field) {
         const locale = this.getters.getLocale();
         switch (field?.type) {
@@ -240,7 +289,11 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             case "float":
                 return "#,##0.00";
             case "monetary": {
-                const currency = this.getListCurrency(listId, position, path, field.currency_field);
+                const currency = this.lists[listId].dataSource.getListCurrency(
+                    position,
+                    path,
+                    field.currency_field
+                );
                 if (!currency) {
                     return "#,##0.00";
                 }
@@ -256,22 +309,6 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             default:
                 return undefined;
         }
-    }
-
-    _getListModelDefinition(id) {
-        const definition = this.getters.getListDefinition(id);
-        return {
-            metaData: {
-                resModel: definition.model,
-            },
-            searchParams: {
-                domain: definition.domain,
-                context: definition.context,
-                orderBy: definition.orderBy,
-            },
-            name: definition.name,
-            columns: definition.columns,
-        };
     }
 
     // -------------------------------------------------------------------------
@@ -420,9 +457,8 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @param {string} path
      */
     getListHeaderValue(listId, path) {
-        const def = this.getters.getListDefinition(listId);
-        const columnDef = def.columns.find((col) => col.name === path);
-        return columnDef?.string || this.getListDataSource(listId).getListHeaderValue(path);
+        const columnDef = this.lists[listId].definition.columns.find((col) => col.name === path);
+        return columnDef?.string || this.lists[listId].dataSource.getListHeaderValue(path);
     }
 
     /**
@@ -434,35 +470,33 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @returns {string|undefined}
      */
     getListCellValueAndFormat(listId, position, path) {
-        const dataSource = this.getListDataSource(listId);
-        const value = dataSource.getListCellValue(position, path);
-        if (typeof value === "object" && isEvaluationError(value.value)) {
-            return value;
+        const column = this.lists[listId].definition.columns.find((col) => col.name === path) || {
+            name: path,
+        };
+        if (column && column.computedBy) {
+            return this._computeCellValue(listId, column, position);
         }
-        const field = dataSource.getFieldFromFieldPath(path);
-        const format = this._getListFormat(listId, position, path, field);
-        return { value, format };
+        return this._getListCellValueAndFormat(listId, position, column.name);
     }
 
     getListCurrency(listId, position, path, currentFieldName) {
-        return this.getListDataSource(listId).getListCurrency(position, path, currentFieldName);
+        return this.lists[listId].dataSource.getListCurrency(position, path, currentFieldName);
     }
 
     /**
-     * @param {string} id
+     * @param {string} listId
      * @returns {import("@spreadsheet/list/list_data_source").default|undefined}
      */
-    getListDataSource(id) {
-        const dataSourceId = this._getListDataSourceId(id);
-        return this.lists[dataSourceId];
+    getListDataSource(listId) {
+        return this.lists[listId]?.dataSource;
     }
 
     /**
-     * @param {string} id
+     * @param {string} listId
      * @returns {Promise<import("@spreadsheet/list/list_data_source").ListDataSource>}
      */
-    async getAsyncListDataSource(id) {
-        const dataSource = this.getListDataSource(id);
+    async getAsyncListDataSource(listId) {
+        const dataSource = this.getListDataSource(listId);
         await dataSource.load();
         return dataSource;
     }
@@ -478,32 +512,50 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         if (rowCount === undefined) {
             throw new Error("The number of rows to fetch must be specified");
         }
-        const dataSource = this.getListDataSource(listId);
-        const definition = this.getters.getListDefinition(listId);
-        const columns = definition.columns.filter((col) => !col.hidden);
+        const list = this.lists[listId];
+        const columns = list.definition.columns.filter((col) => !col.hidden);
 
         if (columns.length === 0) {
             return { value: this.getters.getListDisplayName(listId) };
         }
-        columns.forEach((col) => dataSource.addFieldPathToFetch(col.name));
-        // triggers the fetch of the list values up to `rowCount` to fill the datasource cache (if not already done)
-        dataSource.getListCellValue(rowCount, columns[0]?.name);
 
-        const numberRecordsToLoad = Math.min(dataSource.data.length, rowCount);
+        const computedColumns = columns.filter((col) => !!col.computedBy);
+
+        const symbolsInComputed = new Set(
+            computedColumns.flatMap(
+                (col) => this.getters.getListCompiledColumnFormula(listId, col.name).symbols
+            )
+        );
+
+        const columnToFetch = [];
+        for (const col of list.definition.columns) {
+            if ((!col.hidden || symbolsInComputed.has(col.name)) && !col.computedBy) {
+                columnToFetch.push(col);
+            }
+        }
+
+        if (columnToFetch.length) {
+            columnToFetch.forEach((col) => list.dataSource.addFieldPathToFetch(col.name));
+            // triggers the fetch of the list values up to `rowCount` to fill the datasource cache (if not already done)
+            list.dataSource.getListCellValue(rowCount, columnToFetch[0]?.name);
+        }
+
+        const numberRecordsToLoad = Math.min(list.dataSource.data.length, rowCount);
         const valuesAndFormats = [];
-        for (const { name: fieldPath, hidden } of columns) {
-            if (hidden) {
+        for (const column of columns) {
+            if (column.hidden) {
                 continue;
             }
             const currentColumn = [];
-            currentColumn.push({ value: this.getListHeaderValue(listId, fieldPath) });
+            currentColumn.push({ value: this.getListHeaderValue(listId, column.name) });
             for (let position = 0; position < numberRecordsToLoad; position++) {
-                const cellValueAndFormat = this.getListCellValueAndFormat(
-                    listId,
-                    position,
-                    fieldPath
-                );
-                currentColumn.push(cellValueAndFormat);
+                if (column && column.computedBy) {
+                    currentColumn.push(this._computeCellValue(listId, column, position));
+                } else {
+                    currentColumn.push(
+                        this._getListCellValueAndFormat(listId, position, column.name)
+                    );
+                }
             }
             valuesAndFormats.push(currentColumn);
         }

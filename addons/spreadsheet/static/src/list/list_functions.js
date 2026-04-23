@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { helpers, registries, EvaluationError } from "@odoo/o-spreadsheet";
+import { addListDependencies } from "./list_helpers";
 
 const { arg, toString, toNumber } = helpers;
 const { functionRegistry } = registries;
@@ -32,6 +33,12 @@ const ODOO_LIST_VALUE = {
             return new EvaluationError(_t("The field name should not be empty."));
         }
         assertListsExists(id, this.getters);
+        const column = this.getters
+            .getListDefinition(id)
+            .columns.find((col) => col.name === _fieldName);
+        if (column) {
+            addListDependencies(this, id, [column]);
+        }
         return this.getters.getListCellValueAndFormat(id, position, _fieldName);
     },
 };
@@ -66,6 +73,8 @@ const ODOO_LIST = {
     compute: function (listId, rowCount) {
         const id = toString(listId);
         assertListsExists(id, this.getters);
+        const columns = this.getters.getListDefinition(id).columns;
+        addListDependencies(this, id, columns);
         const _rowCount = rowCount ? toNumber(rowCount, this.locale) : undefined;
         if (_rowCount !== undefined && _rowCount <= 0) {
             return new EvaluationError(
