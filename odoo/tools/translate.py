@@ -1451,6 +1451,7 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     result = []
 
     def handle_text(text, lineno):
+        text = (text or "").strip()
         if is_meaningful_term(text):
             result.append((lineno, None, text, []))
 
