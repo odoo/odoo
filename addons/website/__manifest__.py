@@ -253,6 +253,7 @@
             ('replace', 'web/static/src/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/snippets/**/*.js',
             ('remove', 'website/static/src/snippets/**/*.edit.js'),
+            'website/static/src/snippets/s_team_board/*.xml',
             'website/static/src/scss/website.scss',
             'website/static/src/scss/portal.scss',
             'website/static/src/scss/website_common.scss',
