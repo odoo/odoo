@@ -70,7 +70,7 @@ class ImageToolOptionPlugin extends Plugin {
                 if (image && image.tagName === "IMG") {
                     const imgInfo = await loadImageInfo(image);
                     if (!imgInfo.originalSrc || !imgInfo.originalId) {
-                        return;
+                        continue;
                     }
                     const isImgSupportedForProcessing = await isImageSupportedForProcessing(
                         image,
