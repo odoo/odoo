@@ -243,3 +243,25 @@ test("select a value, then empty the input and save", async () => {
     await contains(".o_form_button_save").click();
     expect.verifySteps([{ street: false }]);
 });
+
+test("widget is correctly rendered in readonly mode", async () => {
+    ResPartner._records = [
+        {
+            id: 1,
+            street: "Hammamet Nord 1",
+        },
+    ];
+
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="street" widget="google_address_autocomplete" readonly="1"/>
+            </form>`,
+    });
+
+    expect(".o_field_widget[name='street'] input").toHaveCount(0);
+    expect(".o_field_widget[name='street'] span").toHaveText("Hammamet Nord 1");
+});

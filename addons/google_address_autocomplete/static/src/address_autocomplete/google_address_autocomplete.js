@@ -135,6 +135,10 @@ export class AddressAutoComplete extends CharField {
         }
         this.props.record.update(valuesToUpdate);
     }
+
+    get value() {
+        return this.props.record.data[this.props.name] || "";
+    }
 }
 
 export const addressAutoComplete = {
