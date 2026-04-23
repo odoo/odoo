@@ -45,13 +45,17 @@ export class ButtonStyleOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = useDomState(async (el) => {
-            const buttonType = getButtonType(el);
+            const currentButtonType = getButtonType(el);
             const buttonStyles = await this.getButtonStyles(el);
+            const hasAlpha = this.getHasAlpha(buttonStyles);
             const state = {
-                buttonStyles: buttonStyles,
+                buttonStyles,
                 buttonCombinationClass: this.findColorCombination(el),
-                currentButtonType: buttonType,
-                currentButtonTypeData: this.buttonTypesData.find((btn) => btn.type == buttonType),
+                currentButtonType,
+                currentButtonTypeData: this.buttonTypesData.find(
+                    (btn) => btn.type == currentButtonType
+                ),
+                hasAlpha,
             };
             return state;
         });
@@ -72,36 +76,44 @@ export class ButtonStyleOption extends BaseOptionComponent {
             primary: "btn-primary",
             secondary: "btn-secondary",
         };
-        const previewVariables = [
+        const propertiesToCopy = [
             "background-color",
+            "background-image",
             "border",
-            "border-radius",
             "color",
             "font-family",
             "font-weight",
             "text-transform",
         ];
-
-        const buttonContainerEl = el.parentElement;
-        const iframeDocument = el.ownerDocument;
         const styles = {
             primary: "",
             secondary: "",
             custom: "",
         };
+
+        function copyStyle(styleFrom, styleTo) {
+            const hasBorder = parseFloat(styleFrom.getPropertyValue("border-width")) > 0;
+            for (const style of propertiesToCopy) {
+                if (style === "border" && !hasBorder) {
+                    // We do not copy the "border" property if border-width is 0
+                    continue;
+                }
+                const value = styleFrom.getPropertyValue(style);
+                if (value) {
+                    styles[styleTo] += `${style}: ${value};`;
+                }
+            }
+        }
+
+        const iframeDocument = el.ownerDocument;
         for (const [variantName, variantClass] of Object.entries(buttonVariants)) {
             const tempButtonEl = iframeDocument.createElement("a");
             tempButtonEl.className = `btn ${variantClass}`;
             this.dependencies.history.ignoreDOMMutations(() =>
-                buttonContainerEl.appendChild(tempButtonEl)
+                el.insertAdjacentElement("afterend", tempButtonEl)
             );
             const computedStyle = getComputedStyle(tempButtonEl);
-            for (const style of previewVariables) {
-                const value = computedStyle.getPropertyValue(style);
-                if (value) {
-                    styles[variantName] += `${style}: ${value};`;
-                }
-            }
+            copyStyle(computedStyle, variantName);
             this.dependencies.history.ignoreDOMMutations(() => tempButtonEl.remove());
         }
 
@@ -109,25 +121,33 @@ export class ButtonStyleOption extends BaseOptionComponent {
         // This way, if a custom button is currently in use, the customization is
         // correctly represented in the button preview. Otherwise, the custom
         // button style represents the style that the button would adopt once
-        // the customization begins.
+        // the customization begins. The button is cloned to prevent copying its
+        // hovered style.
+        const tempButtonEl = el.cloneNode(true);
+        this.dependencies.history.ignoreDOMMutations(() =>
+            el.insertAdjacentElement("afterend", tempButtonEl)
+        );
+        const computedStyle = getComputedStyle(tempButtonEl);
+        copyStyle(computedStyle, "custom");
+        this.dependencies.history.ignoreDOMMutations(() => tempButtonEl.remove());
 
-        // requestAnimationFrame is a temporary workaround necessary because
-        // the change of color seems to be animated even if it should not (see
-        // `withoutTransition` in `StyleAction.apply`). This should be removed
-        // once the transition problem is fixed.
-        await new Promise((resolve) => {
-            requestAnimationFrame(() => {
-                const computedStyle = getComputedStyle(el);
-                for (const style of previewVariables) {
-                    const value = computedStyle.getPropertyValue(style);
-                    if (value) {
-                        styles.custom += `${style}: ${value};`;
-                    }
-                }
-                resolve();
-            });
-        });
         return styles;
+    }
+
+    getHasAlpha(styles) {
+        // Check for rgba or hsla with alpha < 1
+        const hasAlpha = {};
+        for (const [variant, styleStr] of Object.entries(styles)) {
+            const rgbaMatch = styleStr.match(/background-color: rgba\([^)]+,\s*([0-9.]+)\)/);
+            const hslaMatch = styleStr.match(/background-color: hsla\([^)]+,\s*([0-9.]+)\)/);
+            const alpha = rgbaMatch
+                ? parseFloat(rgbaMatch[1])
+                : hslaMatch
+                ? parseFloat(hslaMatch[1])
+                : 1;
+            hasAlpha[variant] = alpha < 1;
+        }
+        return hasAlpha;
     }
 
     findColorCombination(el) {
