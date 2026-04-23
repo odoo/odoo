@@ -1,0 +1,17 @@
+.s_team_board {
+    .s_team_board_member {
+        .card-img-top {
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+        }
+
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        &:hover .card {
+            box-shadow: $box-shadow !important;
+            transform: translateY(-2px);
+        }
+    }
+}
