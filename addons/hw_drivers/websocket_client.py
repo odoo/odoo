@@ -1,9 +1,17 @@
 import json
 import logging
+<<<<<<< 0faac739c96e514674b2be78704a06f82762a300
+||||||| b05fa182b85bfe3539f20606d0d40a7624c5253f
+import pprint
+=======
+import pprint
+import ssl
+>>>>>>> 70c8b6ea5e28833319c298c26b0859b7e39c92ab
 import time
 import urllib.parse
 import urllib3
 import websocket
+import certifi
 
 from threading import Thread
 
@@ -108,9 +116,13 @@ class WebsocketClient(Thread):
         #
         #   This will also happen with the graceful quit as `reconnect` will trigger if the server
         #   is offline while attempting the new connection
+        ssl_context = ssl.create_default_context(cafile=certifi.where())
         while True:
             try:
-                run_res = self.ws.run_forever(reconnect=10)
+                run_res = self.ws.run_forever(
+                    reconnect=10,
+                    sslopt={"context": ssl_context},
+                )
                 _logger.debug("websocket run_forever return with %s", run_res)
             except Exception:
                 _logger.exception("An unexpected exception happened when running the websocket")
