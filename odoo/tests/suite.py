@@ -49,7 +49,8 @@ class TestSuite(BaseTestSuite):
             result._previousTestClass = test.__class__
 
             if not test.__class__._classSetupFailed:
-                if not hasattr(test, '_retry') or test._retry:
+                test_method = getattr(test, test._testMethodName)
+                if not hasattr(test_method, '_retry') or test_method._retry:
                     tests_run_count = default_tests_run_count
                 else:
                     tests_run_count = 1
@@ -66,7 +67,10 @@ class TestSuite(BaseTestSuite):
                             test(result)
                         if not (result.had_failure or quiet_log.had_error_log):
                             break
+                        old_test = test
                         test = test.__class__(test._testMethodName)  # re-create the test to reset its state
+                        test._test_params = getattr(old_test, '_test_params', None)
+                        test._test_modules = getattr(old_test, '_test_modules', None)
                         odoo.modules.module.current_test = test
                     else:  # last try
                         test(result)
