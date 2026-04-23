@@ -9,7 +9,7 @@ import { ListCoreViewPlugin } from "@spreadsheet/list/plugins/list_core_view_plu
 import { ListUIPlugin } from "@spreadsheet/list/plugins/list_ui_plugin";
 
 import { SEE_RECORD_LIST, SEE_RECORD_LIST_VISIBLE } from "./list_actions";
-const { inverseCommandRegistry } = spreadsheet.registries;
+const { inverseCommandRegistry, onIterationEndEvaluationRegistry } = spreadsheet.registries;
 
 function identity(cmd) {
     return [cmd];
@@ -58,5 +58,9 @@ inverseCommandRegistry
     .add("RENAME_ODOO_LIST", identity)
     .add("REMOVE_ODOO_LIST", identity)
     .add("DUPLICATE_ODOO_LIST", identity);
+
+onIterationEndEvaluationRegistry.add("list", (getters) => {
+    getters.invalidateListsCache();
+});
 
 export { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin };

@@ -4,9 +4,9 @@ import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
+import { ListPresentationLayer } from "../list_presentation";
 
 const { astToFormula } = spreadsheet;
-const { isEvaluationError } = spreadsheet.helpers;
 const { isMarkdownLink, parseMarkdownLink } = spreadsheet.links;
 
 /**
@@ -26,6 +26,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         "getAsyncListDataSource",
         "isListUnused",
         "getListValuesAndFormats",
+        "invalidateListsCache",
     ]);
     constructor(config) {
         super(config);
@@ -42,11 +43,8 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         switch (cmd.type) {
             case "START":
                 for (const listId of this.getters.getListIds()) {
-                    this._setupListDataSource(listId, 0);
+                    this._setupList(listId, 0);
                 }
-
-                // make sure the domains are correctly set before
-                // any evaluation
                 this._addDomains();
                 break;
         }
@@ -60,11 +58,11 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         switch (cmd.type) {
             case "INSERT_ODOO_LIST": {
                 const { listId, linesNumber } = cmd;
-                this._setupListDataSource(listId, linesNumber);
+                this._setupList(listId, linesNumber);
                 break;
             }
             case "DUPLICATE_ODOO_LIST": {
-                this._setupListDataSource(cmd.newListId, 0);
+                this._setupList(cmd.newListId, 0);
                 break;
             }
             case "REFRESH_ALL_DATA_SOURCES":
@@ -79,8 +77,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             case "UPDATE_ODOO_LIST":
             case "UPDATE_ODOO_LIST_DOMAIN": {
                 const listDefinition = this._getListModelDefinition(cmd.listId);
-                const dataSourceId = this._getListDataSourceId(cmd.listId);
-                this.lists[dataSourceId].onDefinitionChange(listDefinition);
+                this.lists[cmd.listId].updateDefinition(listDefinition);
                 this._addDomain(cmd.listId);
                 break;
             }
@@ -117,8 +114,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
                     }
 
                     const listDefinition = this._getListModelDefinition(cmd.listId);
-                    const dataSourceId = this._getListDataSourceId(cmd.listId);
-                    this.lists[dataSourceId].onDefinitionChange(listDefinition);
+                    this.lists[cmd.listId].updateDefinition(listDefinition);
                     this._addDomain(cmd.listId);
                 }
                 break;
@@ -130,11 +126,16 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
     // Handlers
     // -------------------------------------------------------------------------
 
-    _setupListDataSource(listId, limit, definition) {
-        const dataSourceId = this._getListDataSourceId(listId);
-        definition = definition || this._getListModelDefinition(listId);
-        if (!(dataSourceId in this.lists)) {
-            this.lists[dataSourceId] = new ListDataSource(this.custom, { ...definition, limit });
+    _setupList(listId, limit, definition) {
+        if (!(listId in this.lists)) {
+            definition = definition || this._getListModelDefinition(listId);
+            const dataSource = new ListDataSource(this.custom, { ...definition, limit });
+            this.lists[listId] = new ListPresentationLayer(
+                this.getters,
+                listId,
+                definition,
+                dataSource
+            );
         }
     }
 
@@ -154,7 +155,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             domainList.push(this.getters.getGlobalFilterDomain(filterId, fieldMatch));
         }
         const domain = Domain.combine(domainList, "AND").toString();
-        this.getters.getListDataSource(listId).addDomain(domain);
+        this.lists[listId].addDomain(domain);
     }
 
     /**
@@ -170,24 +171,12 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     /**
-     * Refresh the cache of a list
-     * @param {string} listId Id of the list
-     */
-    _refreshOdooList(listId) {
-        this.getters.getListDataSource(listId).load({ reload: true });
-    }
-
-    /**
      * Refresh the cache of all the lists
      */
     _refreshOdooLists() {
         for (const listId of this.getters.getListIds()) {
-            this._refreshOdooList(listId);
+            this.lists[listId].refresh();
         }
-    }
-
-    _getListDataSourceId(listId) {
-        return `list-${listId}`;
     }
 
     _getUnusedLists() {
@@ -223,32 +212,6 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         }
         this.unusedLists = [...unusedLists];
         return this.unusedLists;
-    }
-
-    _getListFormat(listId, position, path, field) {
-        const locale = this.getters.getLocale();
-        switch (field?.type) {
-            case "integer":
-                return "0";
-            case "float":
-                return "#,##0.00";
-            case "monetary": {
-                const currency = this.getListCurrency(listId, position, path, field.currency_field);
-                if (!currency) {
-                    return "#,##0.00";
-                }
-                return this.getters.computeFormatFromCurrency(currency);
-            }
-            case "date":
-                return locale.dateFormat;
-            case "datetime":
-                return locale.dateFormat + " " + locale.timeFormat;
-            case "char":
-            case "text":
-                return "@";
-            default:
-                return undefined;
-        }
     }
 
     _getListModelDefinition(id) {
@@ -388,9 +351,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @param {string} path
      */
     getListHeaderValue(listId, path) {
-        const def = this.getters.getListDefinition(listId);
-        const columnDef = def.columns.find((col) => col.name === path);
-        return columnDef?.string || this.getListDataSource(listId).getListHeaderValue(path);
+        return this.lists[listId].getListHeaderValue(path);
     }
 
     /**
@@ -402,20 +363,14 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @returns {string|undefined}
      */
     getListCellValueAndFormat(listId, position, path) {
-        const dataSource = this.getListDataSource(listId);
-        // shortcut to pre-fill the fetch list (spares a round of server call)
-        dataSource.addFieldPathToFetch(path);
-        const value = dataSource.getListCellValue(position, path);
-        if (typeof value === "object" && isEvaluationError(value.value)) {
-            return value;
-        }
-        const field = dataSource.getFieldFromFieldPath(path);
-        const format = this._getListFormat(listId, position, path, field);
-        return { value, format };
+        const column = this.lists[listId].definition.columns.find((col) => col.name === path) || {
+            name: path,
+        };
+        return this.lists[listId].getListCellValueAndFormat(column, position);
     }
 
     getListCurrency(listId, position, path, currentFieldName) {
-        return this.getListDataSource(listId).getListCurrency(position, path, currentFieldName);
+        return this.lists[listId].getListCurrency(position, path, currentFieldName);
     }
 
     /**
@@ -423,8 +378,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @returns {import("@spreadsheet/list/list_data_source").default|undefined}
      */
     getListDataSource(id) {
-        const dataSourceId = this._getListDataSourceId(id);
-        return this.lists[dataSourceId];
+        return this.lists[id].dataSource;
     }
 
     /**
@@ -445,38 +399,12 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     getListValuesAndFormats(listId, rowCount) {
-        if (rowCount === undefined) {
-            throw new Error("The number of rows to fetch must be specified");
-        }
-        const dataSource = this.getListDataSource(listId);
-        const definition = this.getters.getListDefinition(listId);
-        const columns = definition.columns.filter((col) => !col.hidden);
+        return this.lists[listId].getListValuesAndFormats(rowCount);
+    }
 
-        if (columns.length === 0) {
-            return { value: this.getters.getListDisplayName(listId) };
+    invalidateListsCache() {
+        for (const listId of this.getters.getListIds()) {
+            this.lists[listId].invalidateCache();
         }
-        columns.forEach((col) => dataSource.addFieldPathToFetch(col.name));
-        // triggers the fetch of the list values up to `rowCount` to fill the datasource cache (if not already done)
-        dataSource.getListCellValue(rowCount, columns[0]?.name);
-
-        const numberRecordsToLoad = Math.min(dataSource.data.length, rowCount);
-        const valuesAndFormats = [];
-        for (const { name: fieldPath, hidden } of columns) {
-            if (hidden) {
-                continue;
-            }
-            const currentColumn = [];
-            currentColumn.push({ value: this.getListHeaderValue(listId, fieldPath) });
-            for (let position = 0; position < numberRecordsToLoad; position++) {
-                const cellValueAndFormat = this.getListCellValueAndFormat(
-                    listId,
-                    position,
-                    fieldPath
-                );
-                currentColumn.push(cellValueAndFormat);
-            }
-            valuesAndFormats.push(currentColumn);
-        }
-        return valuesAndFormats;
     }
 }

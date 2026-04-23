@@ -1,13 +1,14 @@
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
-import { helpers } from "@odoo/o-spreadsheet";
+import { helpers, CompiledFormula } from "@odoo/o-spreadsheet";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
-const { getMaxObjectId, deepEquals, deepCopy } = helpers;
+const { getMaxObjectId, deepEquals, deepCopy, getCanonicalSymbolName } = helpers;
 
 /**
  * @typedef {Object} ListColumn
  * @property {string} name The technical field path of the column
  * @property {string} string The custom display name of the column
+ * @property {{formula: string, sheetId:string}} computedBy The MeasureState id
  * @property {boolean} [hidden] Whether the column is hidden or not
  */
 
@@ -22,6 +23,12 @@ const { getMaxObjectId, deepEquals, deepCopy } = helpers;
  * @property {string} actionXmlId
  */
 
+/**
+ * @typedef {Object} MeasureState
+ * @property {CompiledFormula} formula
+ * @property {Range[]} dependencies
+ */
+
 export class ListCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
         "getListDisplayName",
@@ -30,6 +37,8 @@ export class ListCorePlugin extends OdooCorePlugin {
         "getListName",
         "getNextListId",
         "isExistingList",
+        "getListCompiledMeasureFormula",
+        "getListCompiledMeasureDependencies",
     ]);
     constructor(config) {
         super(config);
@@ -37,6 +46,8 @@ export class ListCorePlugin extends OdooCorePlugin {
         this.nextId = 1;
         /** @type {Object.<string, ListDefinition>} */
         this.lists = {};
+        /** @type {Object.<string, Object.<string, MeasureState>>} */
+        this.compiledMeasureFormulas = {};
     }
 
     /**
@@ -130,6 +141,7 @@ export class ListCorePlugin extends OdooCorePlugin {
             }
             case "UPDATE_ODOO_LIST": {
                 this.history.update("lists", cmd.listId, cmd.list);
+                this._compileCalculatedMeasures(cmd.listId, cmd.list);
                 break;
             }
         }
@@ -192,13 +204,85 @@ export class ListCorePlugin extends OdooCorePlugin {
         return id in this.lists;
     }
 
+    getListCompiledMeasureFormula(listId, measureName) {
+        return this.compiledMeasureFormulas[listId]?.[measureName]?.formula;
+    }
+
+    getListCompiledMeasureDependencies(listId, measureName) {
+        return this.compiledMeasureFormulas[listId]?.[measureName]?.dependencies;
+    }
+
     // ---------------------------------------------------------------------
     // Private
     // ---------------------------------------------------------------------
 
     _addList(id, definition) {
         this.history.update("lists", id, definition);
+        this._compileCalculatedMeasures(id, definition);
         this.history.update("nextId", parseInt(id, 10) + 1);
+    }
+
+    _compileCalculatedMeasures(listId, definition) {
+        const computedColumns = definition.columns.filter((col) => col.computedBy);
+        for (const measure of computedColumns) {
+            const compiledFormula = CompiledFormula.Compile(
+                measure.computedBy.formula,
+                measure.computedBy.sheetId,
+                this.getters
+            );
+            this.history.update(
+                "compiledMeasureFormulas",
+                listId,
+                measure.name,
+                "formula",
+                compiledFormula
+            );
+        }
+        for (const measure of computedColumns) {
+            const dependencies = this._computeMeasureFullDependencies(listId, definition, measure);
+            this.history.update(
+                "compiledMeasureFormulas",
+                listId,
+                measure.name,
+                "dependencies",
+                dependencies
+            );
+        }
+    }
+
+    _computeMeasureFullDependencies(listId, definition, measure, exploredMeasures = new Set()) {
+        const rangeDependencies = [];
+        const formula = this.compiledMeasureFormulas[listId]?.[measure.name]?.formula;
+        exploredMeasures.add(measure.name);
+        for (const usedSymbols of formula.symbols) {
+            const otherMeasure = definition.columns.find(
+                (measureCandidate) =>
+                    getCanonicalSymbolName(measureCandidate.name) === usedSymbols &&
+                    measure.name !== measureCandidate.name
+            );
+
+            if (
+                !otherMeasure ||
+                !otherMeasure.computedBy ||
+                exploredMeasures.has(otherMeasure.name)
+            ) {
+                continue;
+            }
+
+            rangeDependencies.push(
+                ...this._computeMeasureFullDependencies(
+                    listId,
+                    definition,
+                    otherMeasure,
+                    exploredMeasures
+                )
+            );
+        }
+        rangeDependencies.push(...formula.rangeDependencies.filter((range) => !range.invalidXc));
+        rangeDependencies.push(
+            ...formula.getNamedRangesInFormula(this.getters).map((namedRange) => namedRange.range)
+        );
+        return rangeDependencies;
     }
 
     /**

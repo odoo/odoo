@@ -63,8 +63,7 @@ export class ListDataSource extends OdooViewsDataSource {
         this.maxPosition = Math.max(this.maxPosition, position);
     }
 
-    onDefinitionChange(nextDefinition) {
-        let shouldReload = false;
+    onDefinitionChange(nextDefinition, shouldReload = false) {
         const searchParams = JSON.parse(JSON.stringify(nextDefinition.searchParams));
         if (!deepEquals(this._initialSearchParams, searchParams)) {
             this._initialSearchParams = searchParams;
