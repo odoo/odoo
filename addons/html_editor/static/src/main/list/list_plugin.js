@@ -34,6 +34,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
 import { getTextColorOrClass, isColorGradient } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class ListPlugin extends Plugin {
     static id = "list";
@@ -868,7 +869,7 @@ export class ListPlugin extends Plugin {
             }
             element = element.parentElement;
         }
-        if (!closestLIendContainer.classList.contains("oe-nested")) {
+        if (!closestLIendContainer.classList.contains("oe-nested") && !isMobileOS()) {
             // Remove LI marker on first backspace.
             closestLIendContainer.classList.add("oe-nested");
             closestLIendContainer.classList.remove("o_checked");
