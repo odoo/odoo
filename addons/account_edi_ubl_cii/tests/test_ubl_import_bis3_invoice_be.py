@@ -123,3 +123,33 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
         self.assertTrue(bill.ubl_cii_xml_id)  # Original XML
         self.assertEqual(len(bill.attachment_ids), 1)  # Generated PDF
         self.assertTrue(any('pdf' in attachment.mimetype for attachment in bill.attachment_ids))
+
+    @freeze_time('2020-01-01')
+    def test_invoice_two_tax_subtotals_because_of_multi_currency(self):
+        """ In PINT, when dealing with multi-currency invoice, there are 2 TaxSubtotal, one per currency. """
+        tax_21 = self.percent_tax(21.0)
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_invoice_two_tax_subtotals_because_of_multi_currency',
+            journal=self.company_data['default_journal_sale'],
+        )
+
+        self.assertRecordValues(
+            invoice.invoice_line_ids,
+            [
+                {
+                    'quantity': 1.0,
+                    'price_unit': 899.99,
+                    'tax_ids': tax_21.ids,
+                },
+            ],
+        )
+        self.assertRecordValues(
+            invoice,
+            [
+                {
+                    'amount_untaxed': 899.99,
+                    'amount_tax': 189.01,
+                    'amount_total': 1089.0,
+                },
+            ],
+        )
