@@ -417,20 +417,19 @@ class TestArManual(common.TestArCommon):
         self.assertAlmostEqual(l10n_ar_values['price_subtotal'], 124716.0)
         self.assertAlmostEqual(l10n_ar_values['price_net'], 5196.5)
 
-    def test_l10n_ar_vat_with_non_numeric_value(self):
+    def test_l10n_ar_identification_with_non_numeric_value(self):
+        """ A non-numeric DNI or CUIL is rejected by its format validation, while a
+        passport accepts alphanumeric values (mirrors the pre-JSON identification test). """
         partner = self.env["res.partner"].create({"name": "AR Company", "country_id": self.env.ref("base.ar").id})
 
-        with self.assertRaisesRegex(ValidationError, 'Only numbers allowed for "DNI"'):
-            partner.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_dni")
-            partner.vat = "test"
+        with self.assertRaisesRegex(ValidationError, 'DNI'):
+            partner.additional_identifiers = {'AR_DNI': 'test'}
 
-        with self.assertRaisesRegex(ValidationError, 'Only numbers allowed for "CUIL"'):
-            partner.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_CUIL")
-            partner.vat = "1234567890a"
+        with self.assertRaisesRegex(ValidationError, 'CUIL'):
+            partner.additional_identifiers = {'AR_CUIL': '1234567890a'}
 
-        partner.l10n_latam_identification_type_id = self.env.ref("l10n_latam_base.it_pass")
-        partner.vat = "A12345678"
-        self.assertEqual(partner.vat, "A12345678")
+        partner.additional_identifiers = {'PASSPORT': 'A12345678'}
+        self.assertEqual(partner.additional_identifiers.get('PASSPORT'), 'A12345678')
 
     def test_l10n_ar_get_invoice_totals_for_report_refund_with_same_code(self):
         """Test _l10n_ar_get_invoice_totals_for_report for refund invoices with ARCA codes that can be used for both invoice and refund"""

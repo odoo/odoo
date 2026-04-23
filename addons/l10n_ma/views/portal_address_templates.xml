@@ -6,12 +6,12 @@
             <t t-set="ice_readonly" t-value="current_ice and not can_edit_commercial_fields"/>
             <div id="div_ma_ice" class="col-xl-6 mb-2"
                 t-att-style="(not country or country.code != 'MA') and 'display:none;'">
-                <label class="col-form-label label-optional" for="ma_ice">
+                <label class="col-form-label label-optional" for="MA_ICE">
                 ICE
                 </label>
                 <input
                     type="text"
-                    name="ma_ice"
+                    name="MA_ICE"
                     t-att-value="current_ice"
                     t-att-readonly="'1' if ice_readonly else None"
                     class="form-control"

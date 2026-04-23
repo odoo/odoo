@@ -42,13 +42,11 @@ Master Data:
         'base',
         'account_debit_note',
         'l10n_latam_invoice_document',
-        'l10n_latam_base',
         'account',
     ],
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
-        'data/l10n_latam_identification_type_data.xml',
         'data/res_partner_data.xml',
         'data/l10n_latam.document.type.csv',
         'data/l10n_ec.sri.payment.csv',

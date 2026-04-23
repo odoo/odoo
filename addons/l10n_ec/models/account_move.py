@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.l10n_ec.models.res_partner import PartnerIdTypeEc
 from odoo import fields, models, api
 from odoo.tools import SQL
 
@@ -140,7 +139,7 @@ class AccountMove(models.Model):
     @api.model
     def _get_l10n_ec_documents_allowed(self, identification_code):
         documents_allowed = self.env['l10n_latam.document.type']
-        for document_ref in _DOCUMENTS_MAPPING.get(identification_code.value, []):
+        for document_ref in _DOCUMENTS_MAPPING.get(identification_code, []):
             document_allowed = self.env.ref('l10n_ec.%s' % document_ref, False)
             if document_allowed:
                 documents_allowed |= document_allowed
@@ -154,7 +153,7 @@ class AccountMove(models.Model):
                 domain.extend([('internal_type', '=', 'debit_note')])
             elif self.move_type in ('out_invoice', 'in_invoice'):
                 domain.extend([('internal_type', '=', 'invoice')])
-            allowed_documents = self._get_l10n_ec_documents_allowed(PartnerIdTypeEc.get_ats_code_for_partner(self.partner_id, self.move_type))
+            allowed_documents = self._get_l10n_ec_documents_allowed(self.partner_id._l10n_ec_get_ats_code(self.move_type))
             domain.extend([('id', 'in', allowed_documents.ids)])
         return domain
 

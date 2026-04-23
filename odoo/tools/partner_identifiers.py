@@ -5,7 +5,6 @@ from stdnum import (
 from stdnum.at import uid as at_en
 from stdnum.au import acn as au_acn, abn as au_abn
 from stdnum.be import vat as be_vat
-from stdnum.br import cpf as br_cn
 from stdnum.ch import uid as ch_uid
 from stdnum.dk import cvr as dk_cvr
 from stdnum.ee import registrikood as ee_en
@@ -21,7 +20,7 @@ from stdnum.ro import cui as ro_cui
 from stdnum.se import orgnr as se_en
 from stdnum.sg import uen as sg_en
 
-from odoo.tools.translate import LazyTranslate
+from odoo.tools.translate import LazyGettext, LazyTranslate
 from odoo.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, pk_cn_validate, th_branch_code_validate
 
 from odoo.addons.base.models.res_country import (
@@ -45,6 +44,10 @@ GLN_SHARED_VALS = {
     'validation_function': ean.validate,
 }
 
+TIN_CATEGORIES = ['TIN', 'VAT', 'GST']
+INDIVIDUAL_CATEGORIES = ['CN']  # natural persons
+COMPANY_CATEGORIES = [*TIN_CATEGORIES, 'EN']  # legal entities (tax + enterprise numbers)
+
 TIN_METADATA = {
     'AD_VAT': {  # NRT
         # https://www.oecd.org/tax/automatic-exchange/crs-implementation-and-assistance/tax-identification-numbers/Andorra-TIN.pdf
@@ -65,6 +68,7 @@ TIN_METADATA = {
         'countries': ['AL'],
     },
     'AR_CUIT': {
+        'sequence': 10,
         'placeholder': '20055361682',
         'category': 'TIN',
         'countries': ['AR'],
@@ -100,6 +104,7 @@ TIN_METADATA = {
         'countries': ['BG'],
     },
     'BR_TIN': {  # CNPJ
+        'label': _lt('CNPJ'),
         'placeholder': _lt('16.727.230/0001-97'),
         'help': _lt('Brazilian company identification number. 14 digits.'),
         'category': 'TIN',
@@ -156,6 +161,7 @@ TIN_METADATA = {
         'countries': ['DO'],
     },
     'EC_RUC': {
+        'label': _lt('RUC'),
         'placeholder': _lt('1792060346001 or 1792060346'),
         'category': 'TIN',
         'countries': ['EC'],
@@ -495,15 +501,6 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'validation_function': be_vat.validate,
         'examples': ['0477472701', '1477472701'],
         'countries': ['BE'],
-    },
-    'BR_CN': {  # CPF
-        'sequence': 10,
-        'label': _lt('CPF'),
-        'placeholder': _lt('390.533.447-05'),
-        'help': _lt('Brazilian individual identification number.'),
-        'validation_function': br_cn.validate,
-        'category': 'CN',
-        'countries': ['BR'],
     },
     'CH_EN': {
         'sequence': 10,
@@ -984,6 +981,12 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'category': 'EN',
         'countries': ['UZ'],
     },
+    'PASSPORT': {
+        'label': _lt('Passport'),
+        'help': _lt('Passport number.'),
+        'category': 'CN',
+        'countries': ['AR', 'PE', 'CO', 'UY', 'EC'],
+    },
     # Keep international identifiers at the end of the dict
     'DUNS': {
         'sequence': 100,
@@ -1085,6 +1088,8 @@ def validation_error_message(env, identifier_label, identifier_value, example=No
     is rejected.
     """
     example = env._("\nExample: %(example)s", example=example) if example else ""
+    if isinstance(identifier_label, LazyGettext):
+        identifier_label = env._(identifier_label)  # pylint: disable=gettext-variable
     return env._(
         "Invalid identifier: %(identifier_value)s%(identifier_label)s.%(example)s",
         identifier_value=identifier_value,

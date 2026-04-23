@@ -39,8 +39,15 @@ class ResPartnerBank(models.Model):
             if bank.proxy_type == "email" and not email_normalize(value):
                 raise ValidationError(_("%s is not a valid email.", value))
 
+            ResPartner = self.env['res.partner']
             if bank.proxy_type == "br_cpf_cnpj" and (
-                not value or not self.partner_id.check_vat_br(value) or any(not char.isdecimal() for char in value)
+                not value
+                or not (
+                    ResPartner._validate_identifier('BR_CN', value)['valid']
+                    # the CNPJ is a tax number, it is only checked when validation is asked for
+                    or ResPartner._validate_identifier('BR_TIN', value, validation='setnull')['valid']
+                )
+                or not value.isalnum()
             ):
                 raise ValidationError(_("%s is not a valid CPF or CNPJ (don't include periods or dashes).", value))
 

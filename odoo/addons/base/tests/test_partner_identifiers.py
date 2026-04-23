@@ -124,20 +124,7 @@ class TestPartnerIdentifiers(TransactionCase):
 
     def test_allowed_metadata_keys(self):
         # Ensure that we don't have any other keys than the allowed ones
-        allowed_keys = {
-            'category',
-            'countries',
-            'display_optional',
-            'examples',
-            'format',
-            'help',
-            'label',
-            'placeholder',
-            'scheme',
-            'sequence',
-            'synced',
-            'validation_function',
-        }
+        allowed_keys = self.env['res.partner']._get_allowed_identifier_metadata_keys()
         for identifier_name, metadata in self.env['res.partner']._get_all_identifiers_metadata().items():
             for key in metadata:
                 self.assertIn(key, allowed_keys, f"Key '{key}' is not in allowed keys for identifier {identifier_name}")

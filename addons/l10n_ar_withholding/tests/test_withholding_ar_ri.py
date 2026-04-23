@@ -714,7 +714,6 @@ class TestArWithholdingArRi(TestArCommon):
         other_partner = self.env['res.partner'].create({
             'name': 'Other Partner',
             'l10n_ar_afip_responsibility_type_id': self.env.ref('l10n_ar.res_IVARI').id,
-            'l10n_latam_identification_type_id': self.env.ref('l10n_ar.it_cuit').id,
             'vat': '20301234567',
         })
         invoice2 = self.create_invoice(partner_id=other_partner)

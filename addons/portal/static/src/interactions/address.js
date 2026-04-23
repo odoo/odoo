@@ -151,6 +151,7 @@ export class CustomerAddress extends Interaction {
             this.el.querySelectorAll('.is-invalid').forEach(element => {
                 if (!result.invalid_fields.includes(element.name)) {
                     element.classList.remove('is-invalid');
+                    element.removeAttribute('aria-invalid');
                 }
             })
             result.invalid_fields.forEach(

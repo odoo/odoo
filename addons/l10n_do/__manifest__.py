@@ -76,14 +76,12 @@ en Odoo):
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
-        'l10n_latam_base',
         'l10n_latam_invoice_document',
     ],
     'auto_install': ['account'],
     'data': [
         'data/account_account_tag_data.xml',
         'data/account_tax_report_data.xml',
-        'data/l10n_latam_identification_type_data.xml',
         'data/l10n_latam_document_type_data.xml',
         'views/account_move_views.xml',
         'views/account_tax_views.xml',
