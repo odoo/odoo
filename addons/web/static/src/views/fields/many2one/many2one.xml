@@ -21,10 +21,10 @@
             <t t-if="this.props.readonly">
                 <t t-if="this.props.value">
                     <t t-if="this.props.canOpen">
-                        <a class="o_form_uri text-truncate d-inline-block w-100 align-bottom" t-att-class="this.props.linkCssClass" t-att-href="this.linkHref" t-on-click.prevent.stop="() => this.openRecord('action')" t-out="this.displayName" t-att-title="this.displayName"/>
+                        <a class="o_form_uri text-truncate d-inline-block w-100 align-bottom" t-att-class="this.props.linkCssClass" t-att-href="this.linkHref" t-on-click.prevent.stop="() => this.openRecord('action')" t-out="this.displayName" t-att-data-tooltip="this.displayName"/>
                     </t>
                     <t t-else="">
-                        <span t-out="this.displayName" t-att-title="this.displayName" class="text-truncate d-inline-block w-100 align-bottom"/>
+                        <span t-out="this.displayName" t-att-data-tooltip="this.displayName" class="text-truncate d-inline-block w-100 align-bottom"/>
                     </t>
                 </t>
             </t>
