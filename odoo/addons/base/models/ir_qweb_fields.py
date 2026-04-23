@@ -188,7 +188,9 @@ class FloatConverter(models.AbstractModel):
             precision = self.env['decimal.precision'].precision_get(options['decimal_precision'])
         elif options.get('precision') is None:
             int_digits = int(math.log10(abs(value))) + 1 if value != 0 else 1
-            max_dec_digits = max(15 - int_digits, 0)
+            # Within 15 digits, we have a float with no parasite digits.
+            # 14 is chosen here, as float_round will add a digit when performing its computations.
+            max_dec_digits = max(14 - int_digits, 0)
             # We display maximum 6 decimal digits or the number of significant decimal digits if it's lower
             precision = min(6, max_dec_digits)
             min_precision = min_precision or 1
