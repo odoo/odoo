@@ -64,3 +64,9 @@ class StockMove(models.Model):
             )
             price_unit += component_price * qty_per_kit_by_line.get(bom_line, 0)
         return price_unit
+
+    def _get_price_unit_delivery(self, product=None):
+        """Returns the unit price to value dropshipped kit moves"""
+        if product and product.is_kits and any(move._is_dropshipped() for move in self):
+            return self._get_price_unit(product=product, include_consumable=True)
+        return super()._get_price_unit_delivery(product=product)
