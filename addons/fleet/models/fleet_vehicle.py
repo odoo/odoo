@@ -373,17 +373,27 @@ class FleetVehicle(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        to_update_drivers_vehicle = set()
+        to_update_drivers_cars = set()
+        to_update_drivers_bikes = set()
         state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
         for vals in vals_list:
             if vals.get('future_driver_id'):
                 state_id = vals.get('state_id')
+                model_id = self.env['fleet.vehicle.model'].browse(vals['model_id'])
                 if not state_waiting_list or state_waiting_list.id != state_id:
-                    to_update_drivers_vehicle.add(vals['future_driver_id'])
-        if to_update_drivers_vehicle:
+                    if model_id.vehicle_type == 'bike':
+                        to_update_drivers_bikes.add(vals['future_driver_id'])
+                    elif model_id.vehicle_type == 'car':
+                        to_update_drivers_cars.add(vals['future_driver_id'])
+        if to_update_drivers_cars:
             self.search([
-                ('driver_id', 'in', to_update_drivers_vehicle),
+                ('driver_id', 'in', to_update_drivers_cars),
                 ('vehicle_type', '=', 'car'),
+            ]).plan_to_change_vehicle = True
+        if to_update_drivers_bikes:
+            self.search([
+                ('driver_id', 'in', to_update_drivers_bikes),
+                ('vehicle_type', '=', 'bike'),
             ]).plan_to_change_vehicle = True
 
         vehicles = super().create(vals_list)
@@ -416,9 +426,15 @@ class FleetVehicle(models.Model):
             vehicle_types = set(self.filtered(lambda vehicle: not state_waiting_list or\
                                 vals.get('state_id', vehicle.state_id.id) not in [state_waiting_list.id, state_new_request.id]).mapped('vehicle_type'))
             if vehicle_types:
-                self.env['fleet.vehicle'].search(
-                    [('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types), ('id', 'not in', self.ids)]
-                ).write({'plan_to_change_vehicle': True})
+                vehicle_read_group = dict(self.env['fleet.vehicle']._read_group(
+                    domain=[('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types), ('id', 'not in', self.ids)],
+                    groupby=['vehicle_type'],
+                    aggregates=['id:recordset'])
+                )
+                if 'bike' in vehicle_read_group:
+                    vehicle_read_group['bike'].write({'plan_to_change_vehicle': True})
+                if 'car' in vehicle_read_group:
+                    vehicle_read_group['car'].write({'plan_to_change_vehicle': True})
 
         if 'future_driver_id' in vals or 'driver_id' in vals:
             # delete existing open activities for vehicles in self.
