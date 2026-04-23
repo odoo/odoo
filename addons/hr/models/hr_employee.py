@@ -2080,13 +2080,33 @@ class HrEmployee(models.Model):
     def _get_versions_with_contract_overlap_with_period(self, date_from, date_to):
         """
         Returns the versions of the employee between date_from and date_to
-        that have at least 1 day in contract during that period
+        that have at least 1 day in contract during that period.
+        When multiple versions share the same contract dates, only keep
+        those with date_version >= date_from.
         """
-        return self.version_ids.filtered_domain([
+        versions = self.version_ids.filtered_domain([
             ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
             '|', ('contract_date_end', '>=', date_from), ('contract_date_end', '=', False),
         ])
 
+        grouped = {}
+        for version in versions:
+            key = (version.contract_date_start, version.contract_date_end)
+            grouped.setdefault(key, self.env['hr.version'])
+            grouped[key] |= version
+
+        result = self.env['hr.version']
+        for key, group in grouped.items():
+            if len(group) > 1:
+                valid_date_start_versions = group.filtered(lambda v: v.date_version >= date_from)
+                if valid_date_start_versions:
+                    result |= valid_date_start_versions
+                else:
+                    result |= group
+            else:
+                result |= group
+
+        return result
     # ---------------------------------------------------------
     # Messaging
     # ---------------------------------------------------------
