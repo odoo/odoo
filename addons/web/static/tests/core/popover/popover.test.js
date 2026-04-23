@@ -486,8 +486,8 @@ test("arrow follows target and can get sucked", async () => {
     `);
     class Parent extends Component {
         static template = xml`
-            <div class="popover-container" t-ref="this.props.containerRef">
-                <div class="popover-target" t-ref="this.props.targetRef" t-on-click="this.openPopover"/>
+            <div class="popover-container" t-custom-ref="this.props.containerRef">
+                <div class="popover-target" t-custom-ref="this.props.targetRef" t-on-click="this.openPopover"/>
             </div>
         `;
 
