@@ -36,15 +36,15 @@
                                 <strong>Amounting to:</strong> <t t-out="format_amount(env, pos_order.amount_total, pos_order.currency_id)"/>
                             </div>
                         </div>
+                        <div t-if="error_message" class="alert alert-danger" role="alert">
+                            <div class="col-lg-12">
+                                <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
+                            </div>
+                        </div>
                         <t t-if="user_is_connected">
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <h4>Billing address:</h4>
-                                </div>
-                            </div>
-                            <div t-if="error_message" class="alert alert-danger" role="alert">
-                                <div class="col-lg-12">
-                                    <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
                                 </div>
                             </div>
                             <t t-if="not partner_address">
