@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests import tagged
+from odoo.tests import tagged, RecordCapturer
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
 from odoo.addons.mail.models.mail_template import MailTemplate
@@ -170,8 +170,14 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             'order_line': order_line
         })
         self.assertTrue(abandoned_sale_order.is_abandoned_cart)
-
-        self.assertTrue(self.send_mail_patched(abandoned_sale_order.id))
+        with RecordCapturer(self.env['mail.mail']) as captured_mails:
+            self.env['website']._send_abandoned_cart_email()
+            self.assertEqual(len(captured_mails.records), 1, "more than one email for abandoned cart sent")
+            # since saas-18.1, the default email template for abandoned carts uses use_default_to == True
+            # thus it should not create an explicit email_to value but use partner_ids
+            self.assertFalse(captured_mails.records['email_to'])
+            self.assertEqual(captured_mails.records['partner_ids'].id, self.customer.id)
+            self.assertEqual(captured_mails.records['res_id'], abandoned_sale_order.id)
 
         # Test that no mail is sent if the partner has no email address.
         self.customer.email = False
