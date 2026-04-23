@@ -2,6 +2,8 @@
 
 import json
 import pprint
+import re
+import unicodedata
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -124,11 +126,20 @@ class PaymentProvider(models.Model):
             raise UserError(_("This action cannot be performed while the provider is disabled."))
 
         webhook_url = urls.urljoin(self.get_base_url(), const.WEBHOOK_ROUTE)
+        # Authorize.Net allows only letters, numbers, and underscores in webhook names.
+        webhook_name = re.sub(
+            r"[^\w]",
+            "",
+            unicodedata
+            .normalize("NFKD", self.company_id.name)
+            .encode("ascii", "ignore")
+            .decode("utf-8"),
+        ).ljust(3, "_")  # Ensure minimum length of 3.
         response = self._send_api_request(
             "POST",
             "/rest/v1/webhooks",
             json={
-                "name": self.company_id.name,
+                "name": webhook_name,
                 "url": webhook_url,
                 "eventTypes": list(const.HANDLED_WEBHOOK_EVENTS),
                 "status": "active",
