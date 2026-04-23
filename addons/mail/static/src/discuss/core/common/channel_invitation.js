@@ -40,6 +40,7 @@ export class ChannelInvitation extends Component {
             selectedEmails: [],
             selectedPartners: [],
             sentEmails: new Set(),
+            showingPartialResults: false,
         });
         this.debouncedFetchPartnersToInvite = useDebounced(
             this.fetchPartnersToInvite.bind(this),
@@ -51,6 +52,10 @@ export class ChannelInvitation extends Component {
                 this.fetchPartnersToInvite();
             }
         });
+    }
+
+    get searchLimit() {
+        return 15;
     }
 
     get selectablePartners() {
@@ -91,11 +96,8 @@ export class ChannelInvitation extends Component {
 
     get showingResultNarrowText() {
         return _t(
-            "Showing %(result_count)s results out of %(total_count)s. Narrow your search to see more choices.",
-            {
-                result_count: this.selectablePartners.length,
-                total_count: this.state.searchResultCount,
-            }
+            "Showing the first %(search_limit)s results. Narrow your search to see more choices.",
+            { search_limit: this.searchLimit }
         );
     }
 
@@ -109,10 +111,11 @@ export class ChannelInvitation extends Component {
     async fetchPartnersToInvite() {
         const results = await this.sequential(async () => {
             this.state.hasPendingRequest = true;
-            const res = await this.orm.call("res.partner", "search_for_channel_invite", [
-                this.searchStr,
-                this.props.channel?.id ?? false,
-            ]);
+            const res = await this.orm.call("res.partner", "search_for_channel_invite", [], {
+                search_term: this.searchStr,
+                channel_id: this.props.channel?.id ?? false,
+                limit: this.searchLimit,
+            });
             this.state.hasPendingRequest = false;
             return res;
         });
@@ -128,7 +131,7 @@ export class ChannelInvitation extends Component {
             this.searchStr,
             this.props.channel?.thread
         );
-        this.state.searchResultCount = results["count"];
+        this.state.showingPartialResults = results.partner_ids.length > this.searchLimit;
         const selectableEmails = this.state.selectedEmails.filter((addr) =>
             addr.includes(this.searchStr)
         );
