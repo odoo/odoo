@@ -492,12 +492,9 @@ def simulate_frontend_context(self, website_id=None):
         website_id = self.env.ref("base.default_website").id
 
     # Mock this method will be enough to simulate frontend context in most methods
-    def get_request_website():
-        return self.env["website"].browse(website_id)
-
-    patcher = patch(
-        "odoo.addons.website.models.ir_http.get_request_website", wraps=get_request_website
-    )
+    def get_current_website(fallback=None):
+        return self.env['website'].browse(website_id)
+    patcher = patch("odoo.addons.website.models.website.Website.get_current_website", wraps=get_current_website)
     self.startPatcher(patcher)
 
 

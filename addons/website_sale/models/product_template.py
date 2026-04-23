@@ -740,7 +740,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         combination = combination or self.env["product.template.attribute.value"]
-        website = request.website.with_context(self.env.context)
+        website = self.env['website'].get_current_website()
         uom = self.env["uom.uom"].browse(uom_id) or self._get_main_uom()
 
         if not product_id and not combination and not only_template:
@@ -971,7 +971,7 @@ class ProductTemplate(models.Model):
 
         :param int | typing.Iterable[int | str] combination_ids: The IDs of the currently selected
             `product.template.attribute.value` records.
-        :param int website_id: The ID of the current website (request.website.id). Used
+        :param int website_id: The ID of the current website. Used
             to generate correct image URLs for the specific domain context.
 
         :return: A dictionary mapping attribute value IDs to their corresponding image

@@ -552,8 +552,8 @@ class TestQwebDataSnippet(TransactionCase):
     def test_call_query_count_snippets_template(self):
         actual_queries = []
         with contextmanager(lambda: self._patchExecute(actual_queries))():
-            with MockRequest(self.env, website=self.env.ref('base.default_website')):
-                render = self.env['ir.ui.view'].render_public_asset('website.snippets')
+            with MockRequest(self.env, website=self.env.ref('base.default_website')) as request:
+                render = request.env['ir.ui.view'].render_public_asset('website.snippets')
                 self.assertTrue('name="Blockquote"' in render)
 
         re_sql = re.compile(r'\bir_ui_view\b', re.IGNORECASE)

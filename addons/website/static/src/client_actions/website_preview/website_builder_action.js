@@ -525,7 +525,7 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     get websiteId() {
-        return this.props.websiteId || router.current.website_id || false;
+        return this.props.websiteId || router.current.website_id || this.websiteService.currentWebsiteId || false;
     }
 
     waitForIframeReady() {

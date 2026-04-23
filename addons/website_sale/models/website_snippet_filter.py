@@ -162,8 +162,9 @@ class WebsiteSnippetFilter(models.Model):
         :return: List of dictionaries containing category ID, name, and cover image URL.
         :rtype: list[dict]
         """
+        website = self.env['website'].get_current_website()
         CategorySudo = self.env["product.public.category"].sudo()
-        domain = CategorySudo._get_available_category_domain(request.website.id)
+        domain = CategorySudo._get_available_category_domain(website.id)
         if parent_id:
             parent_category = CategorySudo.browse(parent_id)
             # Parent category should be first.
@@ -179,7 +180,7 @@ class WebsiteSnippetFilter(models.Model):
                 "name": cat.name,
                 "unpublished": not cat.has_published_products,
                 "cover_image": (
-                    request.website.image_url(cat, 'cover_image')
+                    website.image_url(cat, 'cover_image')
                     if cat.cover_image
                     else default_img_url
                 ),

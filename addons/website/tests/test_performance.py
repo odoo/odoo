@@ -80,7 +80,6 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
         sql_from_tables = {}
         sql_into_tables = {}
-
         query_separator = '\n' + '-' * 100 + '\n'
         queries = query_separator.join(sql_queries)
 
@@ -158,14 +157,14 @@ class TestStandardPerformance(UtilPerf):
             #    `exists()` which perform a request on the website.
             # 2. `_get_stream_from` ends up reading the requested record to
             #    give a name to the file (downloaded_name)
-            'ir_attachment': 2,
+            'ir_attachment': 1,
             # 1. `_record_to_stream()` does a `search()`..
             # 2. ..followed by a `_read()`
         }
-        self._check_url_hot_query(url, 4, select_tables_perf)
+        self._check_url_hot_query(url, 2, select_tables_perf)
 
         self.authenticate('portal', 'portal')
-        self._check_url_hot_query(url, 4, select_tables_perf)
+        self._check_url_hot_query(url, 2, select_tables_perf)
 
 
 class TestWebsitePerformanceCommon(UtilPerf):

@@ -83,7 +83,6 @@ def MockRequest(
     )
     if 'website' in env:
         mock_spec['is_frontend'] = True
-        mock_spec['website_routing'] = env_context.get('website_id') or env_context.get('fallback_website_id')
 
     request = Mock(
         # spec_set=list(mock_spec),  TODO: enable when cart and pricelist are removed from request

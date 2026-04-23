@@ -127,7 +127,7 @@
 <template id="post_answer">
     <div class="d-flex align-items-center mb-3">
         <div class="d-flex align-items-center">
-            <img t-if="uid" t-attf-class="o_wforum_avatar me-2 rounded-circle" t-att-src="request.website.image_url(user, 'avatar_128', '24x24')" alt="Avatar"/>
+            <img t-if="uid" t-attf-class="o_wforum_avatar me-2 rounded-circle" t-att-src="website.image_url(user, 'avatar_128', '24x24')" alt="Avatar"/>
             <h4 class="my-0">Your Answer</h4>
         </div>
         <button class="o_wforum_expand_toggle btn fa fa-expand ms-auto" data-bs-toggle="collapse"/>
@@ -508,7 +508,7 @@
                 t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <div class="d-flex gap-1 w-100">
-                        <img class="o_wforum_avatar d-none d-md-inline-block align-self-baseline rounded-circle me-1" t-att-src="request.website.image_url(user, 'avatar_128', '36x36')" alt="Avatar"/>
+                        <img class="o_wforum_avatar d-none d-md-inline-block align-self-baseline rounded-circle me-1" t-att-src="website.image_url(user, 'avatar_128', '36x36')" alt="Avatar"/>
                         <div class="w-100">
                             <textarea name="comment" class="form-control" rows="3" placeholder="Comment this post"/>
                             <div class="d-flex gap-1 mt-1">

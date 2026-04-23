@@ -25,7 +25,7 @@ class IrAttachment(models.Model):
         return super().get_serving_groups() + ['website.group_website_designer']
 
     def _get_serve_attachment(self, url, extra_domain=None, order=None):
-        website = self.env['website'].get_current_website()
+        website = self.env['website'].get_current_website(fallback=False)
         extra_domain = (extra_domain or []) + website.website_domain()
         order = ('website_id, %s' % order) if order else 'website_id'
         return super()._get_serve_attachment(url, extra_domain, order)

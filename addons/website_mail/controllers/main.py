@@ -19,7 +19,8 @@ class WebsiteMail(http.Controller):
         record.check_access('read')
 
         # search partner_id
-        if request.env.user != request.website.user_id:
+        website = request.env['website'].get_current_website()
+        if request.env.user != website.user_id:
             partner_id = request.env.user.partner_id.id
         else:
             # mail_thread method
@@ -63,7 +64,8 @@ class WebsiteMail(http.Controller):
                     {'res.model': [1, 2], 'res.model2': [1]}
                 ]
         """
-        public_user = request.website.user_id
+        website = request.env['website'].get_current_website()
+        public_user = website.user_id
         partner = self._get_user_partner()
         res = defaultdict(list)
         if partner:
@@ -83,7 +85,8 @@ class WebsiteMail(http.Controller):
 
     def _get_user_partner(self):
         """Return the effective partner of the current user."""
-        if request.env.user != request.website.user_id:
+        website = request.env['website'].get_current_website()
+        if request.env.user != website.user_id:
             return request.env.user.partner_id
         if pid := request.session.get('partner_id'):
             return request.env['res.partner'].sudo().browse(pid)

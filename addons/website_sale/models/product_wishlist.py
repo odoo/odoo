@@ -32,15 +32,16 @@ class ProductWishlist(models.Model):
     def current(self):
         """Get all wishlist items that belong to current user or session,
         filter products that are unpublished."""
-        if not request:
+        website = self.env["website"].get_current_website()
+        if not request or not website:
             return self
 
-        if request.website.is_public_user():
+        if website.is_public_user():
             wish = self.sudo().search([("id", "in", request.session.get("wishlist_ids", []))])
         else:
             wish = self.search([
                 ("partner_id", "=", self.env.user.partner_id.id),
-                ("website_id", "=", request.website.id),
+                ("website_id", "=", website.id),
             ])
 
         # TODO for /shop page, no need to check _is_add_to_cart_possible as it's only used to see

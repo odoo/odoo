@@ -271,6 +271,7 @@ class Delivery(WebsiteSale):
                 lambda t: t.company_id == order.company_id
             )
             if tax_ids:
+                website = request.env['website'].get_current_website()
                 fpos = order.fiscal_position_id
                 tax_ids = fpos.map_tax(tax_ids)
                 taxes = tax_ids.compute_all(
@@ -282,7 +283,7 @@ class Delivery(WebsiteSale):
                 )
                 if (
                     not is_express_checkout_flow
-                    and request.website.show_line_subtotals_tax_selection == "tax_excluded"
+                    and website.show_line_subtotals_tax_selection == "tax_excluded"
                 ):
                     rate["price"] = taxes["total_excluded"]
                 else:

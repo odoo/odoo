@@ -194,10 +194,19 @@ class Website(models.CachedModel):
 
     def _compute_menu(self):
         # prefetch all accessible menus at once
-        all_menus = self.env['website.menu'].search_fetch(Domain('website_id', 'in', self.ids))
+        all_menus = self.env['website.menu'].search_fetch(Domain('website_id', 'in', self.ids + [False]))
 
         for website in self:
             menus = all_menus.filtered(lambda m: m.website_id == website)
+
+            # add the child menu without contained into menu with a website
+            for menu in all_menus.filtered(lambda m: not m.website_id):
+                parent = menu.parent_id
+                while parent:
+                    if parent.website_id == website:
+                        menus += menu
+                        break
+                    parent = parent.parent_id
 
             # use field parent_id (1 query) to determine field child_id (2 queries by level)"
             children = dict.fromkeys(menus, ())
@@ -635,7 +644,7 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_recommended_themes(self, industry_id, palette, result_nbr_max=3):
-        Module = request.env['ir.module.module']
+        Module = self.env['ir.module.module']
         domain = Module.get_themes_domain()
         domain = Domain.AND([[('name', '!=', 'theme_default')], domain])
         client_themes = Module.search(domain).mapped('name')
@@ -1160,7 +1169,8 @@ class Website(models.CachedModel):
             name = 'Home'
             page_key = 'home'
 
-        template_record = self.env.ref(template)
+        website = self.get_current_website()
+        template_record = self.env.ref(template).with_context(website_id=website.id)
         arch = template_record.arch
         if sections_arch:
             tree = html.fromstring(arch)
@@ -1168,9 +1178,8 @@ class Website(models.CachedModel):
             for section in html.fromstring(f'<wrap>{sections_arch}</wrap>'):
                 wrap.append(section)
             arch = etree.tostring(tree, encoding="unicode")
-        website_id = self.env.context.get('website_id')
         key = self.get_unique_key(page_key, template_module)
-        view = template_record.copy({'website_id': website_id, 'key': key})
+        view = template_record.copy({'website_id': website.id, 'key': key})
 
         view.with_context(lang=None).write({
             'arch': arch.replace(template, key),
@@ -1394,18 +1403,16 @@ class Website(models.CachedModel):
             else:
                 website_id = False
 
-        return self.browse(website_id)
+        return self.browse(website_id).with_context(website_id=website_id)
 
     def _force(self):
-        self._force_website(self.id)
-
-    def _force_website(self, website_id):
         if request:
-            request.session['force_website_id'] = website_id and str(website_id).isdigit() and int(website_id)
+            request.session['force_website_id'] = self.id
 
     @api.model
     def is_public_user(self):
-        return request.env.user == request.website.user_id
+        website = self.get_current_website()
+        return self.env.user == website.user_id
 
     @api.model
     def viewref(self, view_id, raise_if_not_found=True):

@@ -2,6 +2,7 @@
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.web.controllers.home import Home
 
 
 class WebsiteBackend(http.Controller):
@@ -34,3 +35,25 @@ class WebsiteBackend(http.Controller):
     @http.route('/website/iframefallback', type="http", auth='user', website=True, readonly=True)
     def get_iframe_fallback(self):
         return request.render('website.iframefallback')
+
+
+class WebsiteBackendHome(Home):
+
+    @http.route()
+    def web_client(self, s_action=None, **kw):
+        website_actions = ('website.website_configurator', 'website.website_preview', 'website.action_website_configuration')
+        subpath = kw.get('subpath', '')
+        is_website_action = False
+        if subpath.startswith('action-'):
+            action = subpath[7:]
+            is_website_action = action in website_actions
+            for website_action in website_actions:
+                is_website_action = is_website_action or action == str(self.env['ir.model.data']._xmlid_to_res_id(website_action))
+
+        if (is_website_action
+            and not self.env.context.get('website_id')
+            and (website_id := request.session.get('force_website_id') or self.env.context.get('host_id'))
+            and website_id in self.env['website'].get_all().ids):
+            request.update_context(website_id=website_id)
+
+        return super().web_client(s_action, **kw)

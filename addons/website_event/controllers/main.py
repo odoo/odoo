@@ -68,7 +68,7 @@ class WebsiteEventController(http.Controller):
         if searches['date'] == 'upcoming':
             searches['date'] = 'scheduled'
 
-        website = request.website
+        website = request.env['website'].get_current_website()
 
         step = 12  # Number of events per page
 
@@ -217,7 +217,8 @@ class WebsiteEventController(http.Controller):
         try:
             # Every event page view should have its own SEO.
             page = view.key if view else page
-            values['seo_object'] = request.website.get_template(page)
+            website = request.env['website'].get_current_website()
+            values['seo_object'] = self.env['ir.ui.view'].with_context(website_id=website.id)._get_template_view(page).sudo()
             values['main_object'] = event
         except ValueError:
             # page not found

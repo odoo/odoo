@@ -48,12 +48,13 @@ class WebsitePartnership(WebsitePartnerPage):
         ])
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             base_partner_domain = Domain.AND([base_partner_domain, Domain('grade_id.website_published', '=', True)])
-        if request.website.is_view_active("website_partnership.search_setting") and search:
+        website = request.env['website'].get_current_website()
+        if website.is_view_active("website_partnership.search_setting") and search:
             base_partner_domain = Domain.AND([base_partner_domain, Domain.OR(
                 Domain(field, 'ilike', search)
                 for field in searched_fields
             )])
-        if request.website.is_view_active("website_partnership.companies_only_setting"):
+        if website.is_view_active("website_partnership.companies_only_setting"):
             base_partner_domain = Domain.AND([base_partner_domain, Domain('is_company', '=', True)])
         return base_partner_domain
 
@@ -70,8 +71,10 @@ class WebsitePartnership(WebsitePartnerPage):
 
         grades = self._get_grades(grade, list(base_partner_domain))
 
+        website = request.env['website'].get_current_website()
+
         # current search, modify the base_partner_domain
-        if request.website.is_view_active("website_partnership.categories_setting") and grade:
+        if website.is_view_active("website_partnership.categories_setting") and grade:
             base_partner_domain = Domain.AND([base_partner_domain, Domain('grade_id', '=', grade.id)])
 
         # format pager
@@ -81,7 +84,7 @@ class WebsitePartnership(WebsitePartnerPage):
         if search:
             url_args['search'] = search
         partner_count = request.env['res.partner'].sudo().search_count(base_partner_domain)
-        pager = request.website.pager(
+        pager = website.pager(
             url=url, total=partner_count, page=page, step=references_per_page, scope=7,
             url_args=url_args)
 

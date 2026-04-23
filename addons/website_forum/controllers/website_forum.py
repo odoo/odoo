@@ -41,7 +41,7 @@ class WebsiteForum(WebsiteProfile):
             def _get_my_other_forums():
                 post_domain = Domain('create_uid', '=', request.env.uid) | Domain('user_favourite', '=', True)
                 return request.env['forum.forum'].search(
-                    request.website.website_domain()
+                    request.env['website'].get_current_website().website_domain()
                     & Domain('id', '!=', forum.id)
                     & Domain('post_ids', 'any', post_domain)
                 )
@@ -76,7 +76,8 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route(['/forum'], type='http', auth="public", website=True, sitemap=sitemap_forum, readonly=True, list_as_website_content=_lt("Forum"))
     def forum(self, **kwargs):
-        domain = request.website.website_domain()
+        website = request.env['website'].get_current_website()
+        domain = website.website_domain()
         forums = request.env['forum.forum'].search(domain)
         if len(forums) == 1:
             slug = request.env['ir.http']._slug
@@ -149,7 +150,8 @@ class WebsiteForum(WebsiteProfile):
         )
 
         slug = request.env['ir.http']._slug
-        question_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
+        website = request.env['website'].get_current_website()
+        question_count, details, fuzzy_search_term = website._search_with_fuzzy(
             'forum_post', search, offset=0, limit=page * self._post_per_page, order=sorting, options=options)
         question_ids = details[0].get('results', Post)
         question_ids = question_ids[(page - 1) * self._post_per_page:page * self._post_per_page]
@@ -167,7 +169,7 @@ class WebsiteForum(WebsiteProfile):
             if value:
                 url_args[name] = value
 
-        pager = tools.lazy(lambda: request.website.pager(
+        pager = tools.lazy(lambda: website.pager(
             url=url, total=question_count, page=page, step=self._post_per_page,
             scope=5, url_args=url_args))
 
@@ -249,8 +251,9 @@ class WebsiteForum(WebsiteProfile):
 
         if search:
             values.update(search=search)
+            website = request.env['website'].get_current_website()
             search_domain = domain if filters in ('all', 'followed') else None
-            __, details, __ = request.website._search_with_fuzzy(
+            __, details, __ = website._search_with_fuzzy(
                 'forum_tag', search, offset=0, limit=None, order=order, options={'forum': forum, 'domain': search_domain},
             )
             tags = details[0].get('results', tags)

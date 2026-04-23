@@ -43,19 +43,20 @@ class WebsiteSeoMetadata(models.AbstractModel):
             images instead of default images
         """
         self.ensure_one()
-        title = request.website.name
+        website = self.env["website"].get_current_website()
+        title = website.name
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
 
-        img_field = 'social_default_image' if request.website.has_social_default_image else 'logo'
+        img_field = 'social_default_image' if website.has_social_default_image else 'logo'
 
         # Default meta for OpenGraph
         default_opengraph = {
             'og:type': 'website',
             'og:title': title,
-            'og:site_name': request.website.name,
-            'og:url': url_join(request.website.domain or request.httprequest.url_root, self.env['ir.http']._url_for(request.httprequest.path)),
-            'og:image': request.website.image_url(request.website, img_field),
+            'og:site_name': website.name,
+            'og:url': url_join(website.domain or request.httprequest.url_root, self.env['ir.http']._url_for(request.httprequest.path)),
+            'og:image': website.image_url(website, img_field),
         }
         default_twitter = {
             'twitter:card': 'summary_large_image',
@@ -76,7 +77,8 @@ class WebsiteSeoMetadata(models.AbstractModel):
             override `_default_website_meta` method instead of this method. This
             method only replaces user custom values in defaults.
         """
-        root_url = request.website.domain or request.httprequest.url_root.strip('/')
+        website = self.env["website"].get_current_website()
+        root_url = website.domain or request.httprequest.url_root.strip('/')
         default_meta = self._default_website_meta()
         opengraph_meta, twitter_meta = default_meta['default_opengraph'], default_meta['default_twitter']
         if self.website_meta_title:
@@ -238,14 +240,6 @@ class WebsiteMultiMixin(models.AbstractModel):
         help="Restrict to a specific website.",
         index=True,
     )
-
-    def can_access_from_current_website(self, website_id=False):
-        can_access = True
-        for record in self:
-            if (website_id or record.website_id.id) not in (False, request.env['website'].get_current_website().id):
-                can_access = False
-                continue
-        return can_access
 
 
 class WebsiteLocatedMixin(models.AbstractModel):
