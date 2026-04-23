@@ -150,6 +150,11 @@ export const tooltipService = {
             if (elementsWithTooltips.has(el)) {
                 openTooltip(el, elementsWithTooltips.get(el));
             } else if (element) {
+                // Prevent a native title tooltip from showing on the hovered element
+                // at the same time as the Odoo custom tooltip from its data-tooltip ancestor.
+                if (el !== element && el.title) {
+                    el.title = "";
+                }
                 const dataset = element.dataset;
                 const params = {
                     tooltip: dataset.tooltip,
