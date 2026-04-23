@@ -7,6 +7,7 @@ import { SettingsConfirmationDialog } from "./settings_confirmation_dialog";
 import { SettingsFormRenderer } from "./settings_form_renderer";
 import { normalize } from "@web/core/l10n/utils";
 import { useDebounced } from "@web/core/utils/timing";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 
 export class SettingsFormController extends formView.Controller {
     static template = "web.SettingsFormView";
@@ -17,9 +18,17 @@ export class SettingsFormController extends formView.Controller {
 
     setup() {
         super.setup();
-        useAutofocus();
+        this.inputRef = useAutofocus({ mobile: this.ui.isSmall }); // only force the focus on touch devices on small screens
         this.state = useState({ displayNoContent: false });
-        this.searchState = useState({ value: "" });
+        this.searchState = useState({
+            value: "",
+            clearSearch: () => {
+                if (this.inputRef.el) {
+                    this.inputRef.el.value = "";
+                }
+                this.searchState.value = "";
+            },
+        });
         this.rootRef = useRef("root");
         this.canCreate = false;
         useSubEnv({ searchState: this.searchState });
@@ -48,6 +57,7 @@ export class SettingsFormController extends formView.Controller {
             }
         });
 
+        this.searchBarToggler = useSearchBarToggler();
         this.initialApp = "module" in this.props.context ? this.props.context.module : "";
         this.debounceSearch = useDebounced(
             (value) => (this.searchState.value = normalize(value)),

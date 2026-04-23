@@ -9,7 +9,7 @@ import {
     resize,
     unload,
 } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, mockSendBeacon, mockTouch, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickModalButton,
     clickSave,
@@ -30,8 +30,6 @@ import {
     patchWithCleanup,
     serverState,
     stepAllNetworkCalls,
-    swipeLeft,
-    swipeRight,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -315,7 +313,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
         `,
     });
 
-    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
+    expect(queryAllTexts(".settings_tab")).toEqual(["CRM"], { message: "crm setting selected" });
     expect(".settings .app_settings_block").toBeVisible({
         message: "res.config.settings settings show",
     });
@@ -497,7 +495,8 @@ test("edit header field", async () => {
     expect("[name='foo_text'] input").toHaveValue("Hello again");
 });
 
-test("Warn when unset required field", async () => {
+test.tags("desktop");
+test("Warn when unset required field desktop", async () => {
     ResConfigSettings._fields.woof = fields.Char();
     await mountView({
         type: "form",
@@ -532,6 +531,48 @@ test("Warn when unset required field", async () => {
     await click(".o_form_button_cancel");
     await animationFrame();
     expect(".settings_tab a:eq(0)").not.toHaveClass("o_page_invalid");
+});
+
+test.tags("mobile");
+test("Warn when unset required field mobile", async () => {
+    ResConfigSettings._fields.woof = fields.Char();
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form js_class="base_settings">
+                <app string="Some App" name="someApp">
+                    <setting id="setting_id">
+                        <field name="woof" required="1"/>
+                    </setting>
+                </app>
+                <app string="Some Other App" name="someOtherApp">
+                    <setting id="setting_id"/>
+                </app>
+            </form>
+        `,
+    });
+    expect(".o_field_char[name=woof]").toHaveCount(1);
+
+    // Change page
+    await contains(".settings_tab .o-dropdown").click();
+    await animationFrame(); // await the dropdown to be opened
+    expect(".o-dropdown-item").toHaveCount(2);
+    expect(".o-dropdown-item:eq(0)").not.toHaveClass("text-danger");
+    await contains(".o-dropdown-item:eq(1)").click();
+    await animationFrame();
+
+    // Save
+    await clickSave();
+    await animationFrame();
+    await contains(".settings_tab .o-dropdown").click();
+    await animationFrame(); // await the dropdown to be opened
+    expect(".o-dropdown-item:eq(0)").toHaveClass("text-danger");
+
+    // Discard
+    await click(".o_form_button_cancel");
+    await animationFrame();
+    expect(".o-dropdown-item:eq(0)").not.toHaveClass("text-danger");
 });
 
 test("don't show noContentHelper if no search is done", async () => {
@@ -1452,7 +1493,8 @@ test("clicking on a button with noSaveDialog will not show discard warning", asy
     expect(".o_list_view").toHaveCount(1, { message: "should be open list view" });
 });
 
-test("settings view does not display o_not_app settings", async () => {
+test.tags("desktop");
+test("settings view does not display o_not_app settings - Desktop", async () => {
     await mountView({
         type: "form",
         resModel: "res.config.settings",
@@ -1480,6 +1522,37 @@ test("settings view does not display o_not_app settings", async () => {
     expect(queryAllTexts(".app_name")).toEqual(["CRM"]);
 
     expect(queryAllTexts(".settings .o_form_label")).toEqual(["Bar"]);
+});
+
+test.tags("mobile");
+test("settings view does not display o_not_app settings - mobile", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block title="CRM">
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+                <app notApp="1" string="Other App" name="otherapp">
+                    <h2>Other app tab</h2>
+                    <block>
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        `,
+    });
+
+    await contains(".settings_tab .o-dropdown").click();
+    await animationFrame(); // await the dropdown to be opened
+    expect(queryAllTexts(".o-dropdown-item")).toEqual(["CRM"]);
 });
 
 test("settings view shows a message if there are changes", async () => {
@@ -1992,7 +2065,8 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
     });
 });
 
-test("Open settings from url, with app anchor", async () => {
+test.tags("desktop");
+test("Open settings from url, with app anchor - Desktop", async () => {
     defineActions([
         {
             id: 1,
@@ -2028,6 +2102,44 @@ test("Open settings from url, with app anchor", async () => {
     expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Foo"]);
 });
 
+test.tags("mobile");
+test("Open settings from url, with app anchor - mobile", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            path: "settings",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="Not CRM" name="not_crm">
+                <block>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo">
+                        <field name="foo"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+
+    redirect("/odoo/settings#crm");
+    await mountWithCleanup(WebClient);
+    await animationFrame();
+    expect(queryAllTexts(".settings_tab")).toEqual(["CRM"], { message: "crm setting selected" });
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Foo"]);
+});
+
+test.tags("desktop");
 test("Open settings from url, with setting id anchor", async () => {
     defineActions([
         {
@@ -2068,76 +2180,43 @@ test("Open settings from url, with setting id anchor", async () => {
 });
 
 test.tags("mobile");
-test("swipe settings in mobile", async () => {
-    mockTouch(true);
-    await mountView({
-        type: "form",
-        resModel: "project",
-        arch: `
-            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                <app string="CRM" name="crm">
-                    <block>
-                        <setting help="this is bar">
-                            <field name="bar"/>
-                        </setting>
-                    </block>
-                </app>
-                <app string="Project" name="project">
-                    <block>
-                        <setting help="this is foo">
-                            <field name="foo"/>
-                        </setting>
-                    </block>
-                </app>
-            </form>`,
-    });
+test("Open settings from url, with setting id anchor - mobile", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            path: "settings",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="Not CRM" name="not_crm">
+                <block>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo" id="setting_id">
+                        <field name="foo"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
 
-    await swipeLeft(".settings");
+    redirect("/odoo/settings#setting_id");
+    await mountWebClient();
+    expect(queryAllTexts(".settings_tab")).toEqual(["CRM"], { message: "crm setting selected" });
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Foo"]);
+    expect(".o_setting_highlight").toHaveCount(1);
+    expect(queryAllTexts(".settings .o_setting_highlight .o_form_label")).toEqual(["Foo"]);
     await runAllTimers();
-    await animationFrame();
-    expect(".selected").toHaveAttribute("data-key", "project", {
-        message: "current setting should be project",
-    });
-
-    await swipeRight(".settings");
-    await runAllTimers();
-    await animationFrame();
-    expect(".selected").toHaveAttribute("data-key", "crm", {
-        message: "current setting should be crm",
-    });
-});
-
-test.tags("desktop");
-test("swipe settings on larger screen sizes has no effect", async () => {
-    mockTouch(true);
-    await mountView({
-        type: "form",
-        resModel: "project",
-        arch: `
-            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                <app string="CRM" name="crm">
-                    <block>
-                        <setting help="this is bar">
-                            <field name="bar"/>
-                        </setting>
-                    </block>
-                </app>
-                <app string="Project" name="project">
-                    <block>
-                        <setting help="this is foo">
-                            <field name="foo"/>
-                        </setting>
-                    </block>
-                </app>
-            </form>`,
-    });
-
-    await swipeLeft(".settings");
-    await runAllTimers();
-    await animationFrame();
-    expect(".selected").toHaveAttribute("data-key", "crm", {
-        message: "current setting should be crm",
-    });
+    expect(".o_setting_highlight").toHaveCount(0);
 });
 
 test("Don't cache settings data", async () => {
