@@ -230,7 +230,7 @@ class IrQwebFieldFloat(models.AbstractModel):
 
         # We use the precision or the maximum of relevent decimal digits if it's lower
         int_digits = int(math.log10(abs(value))) + 1 if value != 0 else 1
-        max_dec_digits = max(15 - int_digits, 0)
+        max_dec_digits = max(14 - int_digits, 0)
         precision = min(precision, max_dec_digits)
 
         fmt = f'%.{precision}f'
