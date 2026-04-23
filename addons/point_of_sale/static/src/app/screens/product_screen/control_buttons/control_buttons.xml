@@ -58,14 +58,13 @@
                     </t>
                 </t>
                 <!-- Pricelist Button -->
-                <t t-if="this.pos.cashier._role != 'minimal'"
-                    t-call="point_of_sale.controlButton" 
-                    name="o_pricelist_button" 
-                    iconClasses="fa fa-th-list"
-                    btnText="Pricelist"
-                    btnClasses="o_pricelist_button btn-secondary"
+                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"
+                    name="o_pricelist_button"
+                    iconClasses="'fa fa-th-list'"
+                    btnText.translate="Pricelist"
+                    btnClasses="'o_pricelist_button btn-secondary '"
                     onClick="() => this.clickPricelist()"
-                >
+                    subText="subText">
                 </t>
                 <!-- Tax Button -->
                 <t t-set="subText">
