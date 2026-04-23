@@ -894,11 +894,11 @@ async function getFormViewInfo({ list, context, activeField, viewService, env })
 export function useAddInlineRecord({ addNew }) {
     let creatingRecord = false;
 
-    async function addInlineRecord({ context, editable, controlContext }) {
+    async function addInlineRecord({ context, editable }) {
         if (!creatingRecord) {
             creatingRecord = true;
             try {
-                await addNew({ context, mode: "edit", position: editable, controlContext });
+                await addNew({ context, mode: "edit", position: editable });
             } finally {
                 creatingRecord = false;
             }

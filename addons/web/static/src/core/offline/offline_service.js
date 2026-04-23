@@ -205,10 +205,10 @@ class OfflineManager extends Reactive {
      *
      * @param {number} actionId
      * @param {"kanban"|"list"|"form"} [viewType]
-     * @param {number} [id] resId or fieldName
+     * @param {number} [resId]
      * @returns boolean
      */
-    isAvailableOffline(actionId, viewType, id) {
+    isAvailableOffline(actionId, viewType, resId) {
         const action = this._visited[actionId];
         if (!viewType) {
             return !!action;
@@ -217,7 +217,7 @@ class OfflineManager extends Reactive {
         if (viewType !== "form") {
             return !!view;
         }
-        return view?.[id];
+        return view?.includes(resId);
     }
 
     /**
@@ -229,26 +229,21 @@ class OfflineManager extends Reactive {
      * @param {number} [params.resId] the record id, when viewType is "form"
      * @param {Object} [params.search] the current search view state
      */
-    async setAvailableOffline(actionId, viewType, params) {
-        if (this.offline) {
-            return;
+    async setAvailableOffline(actionId, viewType, { resId, search }) {
+        if (!this.offline) {
+            const key = this._generateKey(actionId, viewType, resId);
+            let value;
+            if (["form", "kanban_quick_create", "list_quick_create"].includes(viewType)) {
+                value = true;
+            } else {
+                value = (await this._idb.read(this._visitedUITable, key)) || {};
+                let count = value[search.key]?.count || 0;
+                search = value[search.key]?.search || search; // keep original search (no "Custom Filter")
+                delete value[search.key]; // delete and re-add to mark it as "last visited"
+                value[search.key] = { count: ++count, search };
+            }
+            return this._idb.write(this._visitedUITable, key, value);
         }
-        const { resId, search, fieldName, fieldContext } = params;
-        const key = this._generateKey(actionId, viewType, resId, fieldName);
-        if (["form", "kanban_quick_create", "list_quick_create"].includes(viewType) && !fieldName) {
-            return this._idb.write(this._visitedUITable, key, true);
-        }
-
-        let payload = fieldName ? fieldContext : search;
-        const playloadKey = fieldName ? "fieldContext" : "search";
-
-        const value = (await this._idb.read(this._visitedUITable, key)) || {};
-        let count = value[payload.key]?.count || 0;
-        payload = value[payload.key]?.[playloadKey] || payload; // keep original search (no "Custom Filter")
-        delete value[payload.key]; // delete and re-add to mark it as "last visited"
-        value[payload.key] = { count: ++count, [playloadKey]: payload };
-
-        return this._idb.write(this._visitedUITable, key, value);
     }
 
     // -------------------------------------------------------------------------
@@ -359,8 +354,8 @@ class OfflineManager extends Reactive {
      * @param {number} [params.resId] the record id, when viewType is "form"
      * @returns string
      */
-    _generateKey(actionId, viewType, resId, fieldName) {
-        return JSON.stringify({ action: actionId, viewType, resId, fieldName });
+    _generateKey(actionId, viewType, resId) {
+        return JSON.stringify({ action: actionId, viewType, resId });
     }
 
     /**
@@ -369,25 +364,17 @@ class OfflineManager extends Reactive {
      * @private
      */
     async _populateVisited() {
-        return this._idb.getAllEntries(this._visitedUITable).then((entries) => {
+        return this._idb.getAllKeys(this._visitedUITable).then((keys) => {
             if (!this._offline) {
                 return; // status changed again meanwhile
             }
-            for (const { key, value } of entries) {
-                const { action, viewType, resId, fieldName } = JSON.parse(key);
+            for (const key of keys) {
+                const { action, viewType, resId } = JSON.parse(key);
                 this._visited[action] = this._visited[action] || { views: {} };
                 if (viewType === "form") {
-                    this._visited[action].views.form = this._visited[action].views.form || {};
-                    if (fieldName) {
-                        this._visited[action].views.form[fieldName] = Object.values(value).map(
-                            ({ fieldContext }) => JSON.parse(fieldContext.context || null)
-                        );
-                    } else {
-                        this._visited[action].views.form[resId] = true;
-                    }
+                    this._visited[action].views.form = this._visited[action].views.form || [];
+                    this._visited[action].views.form.push(resId);
                 } else {
-                    // TODO: We should do the same for list and kanban ? Like that is not need to be done in getAvailableSearchs !
-                    // avoid a idb read !
                     this._visited[action].views[viewType] = true;
                 }
             }

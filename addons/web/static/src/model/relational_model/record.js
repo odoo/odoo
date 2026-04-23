@@ -685,7 +685,6 @@ export class Record extends DataPoint {
             onUpdate: ({ withoutOnchange } = {}) =>
                 this._update({ [fieldName]: [] }, { withoutOnchange }),
             parent: this,
-            fieldName,
         };
         return new this.model.constructor.StaticList(this.model, config, data, options);
     }
@@ -767,7 +766,6 @@ export class Record extends DataPoint {
         for (const [fieldName, value] of Object.entries(values)) {
             const field = this.fields[fieldName];
             switch (field.type) {
-                case "one2many":
                 case "many2many": {
                     if (value) {
                         result[fieldName] = {};
@@ -1037,7 +1035,6 @@ export class Record extends DataPoint {
         for (const [fieldName, value] of Object.entries(changes)) {
             const field = this.fields[fieldName];
             switch (field.type) {
-                case "one2many":
                 case "many2many":
                     result[fieldName] = value ? value.commands : false;
                     break;

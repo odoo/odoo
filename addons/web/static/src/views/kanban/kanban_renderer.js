@@ -84,7 +84,6 @@ export class KanbanRenderer extends Component {
                 !this.props.list.isGrouped || this.props.list.groups.length > 0,
         });
         this.dialog = useService("dialog");
-        this.offlineService = useService("offline");
         this.exampleData = registry
             .category("kanban_examples")
             .get(this.props.archInfo.examples, null);
@@ -450,20 +449,6 @@ export class KanbanRenderer extends Component {
         return this.props.canQuickCreate;
     }
 
-    isNewAvailableOffline() {
-        if (!this.offlineService.offline) {
-            return true;
-        }
-        const fieldContexts = this.offlineService.isAvailableOffline(
-            this.env.config.actionId,
-            "form",
-            this.props.list._fieldName
-        );
-        if (!fieldContexts) {
-            return false;
-        }
-        return fieldContexts.includes(null);
-    }
     // ------------------------------------------------------------------------
     // Edition methods
     // ------------------------------------------------------------------------
