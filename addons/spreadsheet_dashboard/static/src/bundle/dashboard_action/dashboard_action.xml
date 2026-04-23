@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <div t-name="spreadsheet_dashboard.DashboardAction" class="o_action o_spreadsheet_dashboard_action o_field_highlight">
+        <t t-set="dashboard" t-value="this.loader.getActiveDashboard()"/>
         <ControlPanel display="this.controlPanelDisplay">
             <t t-set-slot="control-panel-actions" t-if="!this.loader.getActiveDashboard()?.isSample">
                 <t t-set="status" t-value="this.loader.getActiveDashboard() and this.loader.getActiveDashboard().status"/>
@@ -32,7 +33,6 @@
                 </div>
             </t>
         </ControlPanel>
-        <t t-set="dashboard" t-value="this.loader.getActiveDashboard()"/>
         <div class="o_content o_component_with_search_panel" t-att-class="{ o_mobile_dashboard: this.env.isSmall }">
             <t t-if="!this.env.isSmall">
                 <t t-if="this.state.sidebarExpanded" t-call="spreadsheet_dashboard.DashboardAction.Expanded"/>
