@@ -69,7 +69,7 @@
             <field name="arch" type="xml">
                 <list string="Picking list" multi_edit="1" sample="1" js_class="stock_list_view">
                     <header>
-                        <button name="action_assign" type="object" string="Check Availability"/>
+                        <button name="action_assign" type="object" string="Reserve"/>
                     </header>
                     <field name="company_id" column_invisible="True"/>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
@@ -114,7 +114,7 @@
                 <form string="Transfer">
                 <header>
                     <button name="action_confirm" invisible="state != 'draft'" string="Mark as To Do" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="q"/>
-                    <button name="action_assign" invisible="not show_check_availability" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="w"/>
+                    <button name="action_assign" invisible="not show_check_availability" string="Reserve" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="w"/>
                     <button name="button_validate" invisible="state in ('draft', 'confirmed', 'done', 'cancel')" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" data-hotkey="v"/>
                     <button name="button_validate" invisible="state in ('waiting', 'assigned', 'done', 'cancel')" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="v"/>
                     <widget name="signature" string="Sign" highlight="1"

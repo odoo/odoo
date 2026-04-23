@@ -44,7 +44,7 @@
                 <list string="Manufacturing Orders" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                     <header>
                         <button name="button_plan" type="object" string="Plan"/>
-                        <button name="action_assign"  type="object" string="Check availability"/>
+                        <button name="action_assign" type="object" string="Reserve"/>
                         <button name="action_cancel" type="object" string="Cancel"
                             confirm="Are you sure you want to cancel these manufacturing orders?&#10;This action cannot be undone."
                             confirm-title="Cancel Manufacturing Orders" confirm-label="Cancel these Orders"/>
@@ -244,8 +244,6 @@
                     <button name="button_plan" invisible="state not in ('confirmed', 'progress', 'to_close') or is_planned" type="object" string="Plan" class="oe_highlight" data-hotkey="z"/>
                     <button name="button_unplan" type="object" string="Unplan" invisible="not is_planned or state in ['cancel', 'done']" data-hotkey="z"/>
                     <button name="action_start"  type="object" string="Start" invisible="state != 'confirmed'"/>
-                    <button name="action_assign" invisible="state in ('draft', 'done', 'cancel') or not reserve_visible" string="Check availability" type="object" data-hotkey="c"/>
-                    <button name="do_unreserve" type="object" string="Unreserve" invisible="not unreserve_visible" data-hotkey="w"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
                             invisible="not id or state in ('done', 'cancel')"
@@ -622,7 +620,7 @@
                                 <field name="product_qty" widget="float_without_trailing_zeros" class="ms-auto flex-shrink-0"/>
                                 <field name="uom_id" class="ms-1 flex-shrink-0"/>
                             </div>
-                            <div class="d-flex mb-1">
+                            <div t-if="record.active_workcenter_ids.raw_value.length" class="d-flex mb-1">
                                 <field name="active_workcenter_ids" class="ms-1"/>
                             </div>
                             <footer class="text-muted">
@@ -818,11 +816,23 @@
             <field name="context">{'default_picking_type_id': active_id}</field>
         </record>
 
+
+        <record id="mrp_production_action_reserve" model="ir.actions.server">
+            <field name="name">Reserve</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                records.action_assign()
+            </field>
+        </record>
+
         <record id="mrp_production_action_unreserve_tree" model="ir.actions.server">
             <field name="name">Unreserve</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list,kanban</field>
             <field name="state">code</field>
             <field name="code">
             if records:

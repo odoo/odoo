@@ -271,7 +271,7 @@
 
                             <t t-set="no_reserved_product" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty &gt; x.quantity and x.move_line_ids and x.state!='done')"/>
                             <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product"><i class="fa fa-exclamation-triangle" />
-                                All products could not be reserved. Click on the "Check Availability" button to try to reserve products.
+                                All products could not be reserved. Click on the "Reserve" button to try to reserve products.
                             </p>
                             <p t-else=""/>
                             <div class="oe_structure"></div>
