@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.tools import email_normalize, single_email_re, SQL
+from odoo.tools import email_normalize, single_email_re
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
 
@@ -41,10 +41,10 @@ class ResPartner(models.Model):
 
         """
         store = Store()
-        channel_invites = self._search_for_channel_invite(store, search_term, channel_id, limit)
+        partner_ids = self._search_for_channel_invite(store, search_term, channel_id, limit)
         selectable_email = None
         email_already_sent = None
-        if channel_invites["count"] == 0 and single_email_re.match(search_term):
+        if not partner_ids and single_email_re.match(search_term):
             email = email_normalize(search_term)
             channel = self.env["discuss.channel"].search_fetch([("id", "=", int(channel_id))])
             member_domain = Domain("channel_id", "=", channel.id)
@@ -70,8 +70,8 @@ class ResPartner(models.Model):
                 )
 
         return {
-            **channel_invites,
             "email_already_sent": email_already_sent,
+            "partner_ids": partner_ids,
             "selectable_email": selectable_email,
             "store_data": store,
         }
@@ -94,19 +94,13 @@ class ResPartner(models.Model):
             domain &= Domain("channel_ids", "not in", channel.id)
             if channel.group_public_id:
                 domain &= Domain("user_ids.all_group_ids", "in", channel.group_public_id.id)
-        query = self._search(domain, limit=limit)
-        # bypass lack of support for case insensitive order in search()
-        query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
-        selectable_partners = self.env["res.partner"].browse(query)
+        selectable_partners = self.search(domain, limit=limit + 1, order="name, id")
         store.add(
             selectable_partners,
             "_store_channel_invite_fields",
             fields_params={"channel": channel},
         )
-        return {
-            "count": self.env["res.partner"].search_count(domain),
-            "partner_ids": selectable_partners.ids,
-        }
+        return selectable_partners.ids
 
     def _store_channel_invite_fields(self, res: Store.FieldList, *, channel):
         self._store_partner_fields(res)

@@ -30,7 +30,7 @@
                         <t t-if="this.props.channel">No one found to invite.</t>
                         <t t-else="">No users found.</t>
                     </p>
-                    <div t-if="this.state.searchResultCount > this.selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.showingResultNarrowText"/>
+                    <div t-if="this.state.showingPartialResults" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.showingResultNarrowText"/>
                     <ul class="pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0}">
                         <t t-foreach="this.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
                             <t t-call="discuss.ChannelInvitation-selectableItem">
