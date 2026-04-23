@@ -87,14 +87,30 @@ class TestOrmMixedComputes(models.Model):
             record.compute_without_dependency = fields.Datetime.now()
 
 
+class TestOrmPartnerCategory(models.Model):
+    _name = 'test_orm.partner.category'
+    _description = 'Test ORM Partner Category'
+
+    name = fields.Char(required=True)
+    parent_id = fields.Many2one('test_orm.partner.category')
+    child_ids = fields.One2many('test_orm.partner.category', 'parent_id')
+    partner_ids = fields.Many2many('test_orm.partner', column1='category_id', column2='partner_id')
+
+
 class TestOrmPartner(models.Model):
     _name = 'test_orm.partner'
     _description = 'Test ORM Partner'
+
+    def _default_category(self):
+        return self.env['test_orm.partner.category'].browse(self.env.context.get('category_id'))
 
     name = fields.Char(required=True)
     email = fields.Char()
     active = fields.Boolean(default=True)
     website = fields.Char()
+    vat = fields.Char(compute='_compute_vat')
+    category_id = fields.Many2many('test_orm.partner.category', column1='partner_id', column2='category_id', default=_default_category)
+    user_ids = fields.One2many('test_orm.users', 'partner_id', string="user_ids")
     parent_id = fields.Many2one('test_orm.partner')
     child_ids = fields.One2many('test_orm.partner', 'parent_id')
     country_id = fields.Many2one('test_orm.country')
@@ -111,6 +127,17 @@ class TestOrmPartner(models.Model):
                 name = f"{name} <{partner.email}>"
 
             partner.display_name = name
+
+    def _compute_vat(self):
+        self.vat = 'Tax ID'
+
+
+class TestOrmUsers(models.Model):
+    _name = 'test_orm.users'
+    _description = 'Test ORM Users'
+
+    name = fields.Char(required=True)
+    partner_id = fields.Many2one('test_orm.partner')
 
 
 class TestOrmCountry(models.Model):
