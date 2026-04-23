@@ -1324,6 +1324,10 @@ class HrEmployee(models.Model):
 
     def fetch(self, field_names=None):
         if self.browse().has_access('read'):
+            accessible_dept_managers = self.env['hr.department'].search([]).manager_id.mapped('id')
+            dept_managers = self.mapped('id')
+            if dept_managers and all(manager in accessible_dept_managers for manager in dept_managers):
+                return super(HrEmployee, self.sudo()).fetch(field_names)
             return super().fetch(field_names)
 
         # HACK: retrieve publicly available values from hr.employee.public and

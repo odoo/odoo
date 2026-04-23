@@ -62,3 +62,30 @@ class TestHrDepartment(TestMultiCompany):
         self.parents_parent_department.company_id = self.company_a.id
         self.assertTrue(self.parent_department.company_id == self.company_a)
         self.assertTrue(self.department.company_id == self.company_a)
+
+    def test_public_department_with_multicompany(self):
+        """
+        Checks that a department visible to all is accessible from company B, even if the department manager's
+        has its company set to A.
+        """
+        company_A = self.env['res.company'].create({'name': 'company_A'})
+        employee_company_A = self.env['hr.employee'].with_company(company_A).create({
+            'name': 'test A',
+            'company_id': company_A.id
+        })
+        employee_company = self.env['hr.employee'].with_company(company_A).create({
+            'name': 'test 1',
+            'company_id': self.env.company.id
+        })
+        self.env['hr.department'].create([{
+            'name': 'test department A',
+            'manager_id': employee_company_A.id,
+            'company_id': False
+        }, {
+            'name': 'test department 1',
+            'manager_id': employee_company.id,
+            'company_id': self.env.company.id
+        }])
+        empl = employee_company_A | employee_company
+        employees = self.env['hr.employee'].with_user(self.res_users_hr_officer).with_context(allowed_company_ids=[self.env.company.id]).browse(empl.ids)
+        employees.fetch(['name'])
