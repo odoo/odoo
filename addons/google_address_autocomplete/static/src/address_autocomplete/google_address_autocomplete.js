@@ -89,6 +89,10 @@ export class AddressAutoComplete extends CharField {
         ];
     }
 
+    get value() {
+        return this.props.record.data[this.props.name] || "";
+    }
+
     async onSelect(option) {
         if (option.type === "credits") {
             return;
