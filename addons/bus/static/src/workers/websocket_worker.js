@@ -570,12 +570,10 @@ export class WebsocketWorker {
         const shouldUpdateChannelSubscription =
             allTabsChannelsString !== this.lastChannelSubscription;
         if (force || shouldUpdateChannelSubscription) {
-            // Do not check for outdated state on the first connection: `last_id` comes from
-            // storage, so GC may have already occurred, but this is safe since the page
-            // was actively loaded. Only check on the first subscribe, as notifications
-            // are streamed in real time and cannot be missed during an active connection
-            // (no `lastChannelSubscription`).
-            const check_outdated = this.connectCount > 1 && !this.lastChannelSubscription;
+            // Only check on the first subscribe, as notifications are streamed in real
+            // time and cannot be missed during an active connection (no
+            // `lastChannelSubscription`).
+            const check_outdated = !this.lastChannelSubscription;
             this.lastChannelSubscription = allTabsChannelsString;
             this._sendToServer({
                 event_name: "subscribe",

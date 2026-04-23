@@ -72,13 +72,6 @@ export const busService = {
                 }
                 case "BUS:NOTIFICATION": {
                     const notifications = data.map(({ id, message }) => ({ id, ...message }));
-                    const receivedLastId = notifications.at(-1).id;
-                    const lsLastId = parseInt(
-                        localStorage.getItem("bus.last_notification_id") ?? 0
-                    );
-                    if (receivedLastId > lsLastId) {
-                        localStorage.setItem("bus.last_notification_id", receivedLastId);
-                    }
                     for (const { id, type, payload } of notifications) {
                         notificationBus.trigger(type, { id, payload });
                         busService._onMessage(env, id, type, payload);
@@ -137,12 +130,10 @@ export const busService = {
                 await workerService.registerHandler(handleMessage);
                 workerService.send("BUS:INITIALIZE_CONNECTION", {
                     websocketURL: `${params.serverURL.replace("http", "ws")}/websocket?version=${
-                        session.websocket_worker_version
+                        session.bus_info.worker_version
                     }`,
                     db: session.db,
-                    lastNotificationId: parseInt(
-                        localStorage.getItem("bus.last_notification_id") ?? 0
-                    ),
+                    lastNotificationId: session.bus_info.last_id,
                     uid,
                     startTs: startedAt.valueOf(),
                 });
