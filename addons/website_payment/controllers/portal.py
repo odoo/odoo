@@ -52,7 +52,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 raise ValidationError(_('Email is required.'))
             if not details.get('partner_country_id'):
                 raise ValidationError(_('Country is required.'))
-            partner_id = request.website.user_id.partner_id.id
+            website = request.env['website'].get_current_website()
+            partner_id = website.user_id.partner_id.id
             del kwargs['partner_details']
         else:
             partner_id = request.env.user.partner_id.id
@@ -202,7 +203,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :rtype: list[dict]
         """
         limit = self._cast_as_int(limit)
-        website = request.website
+        website = request.env['website'].get_current_website()
 
         # For any primary payment method with at least one compatible provider.
         compatible_providers_sudo = (
@@ -252,4 +253,5 @@ class PaymentPortal(payment_portal.PaymentPortal):
 class PortalAccount(account_payment_portal.PortalAccount):
     def _invoice_get_page_view_values(self, *args, **kwargs):
         """Override of `account_payment` to make the providers filtering website-aware."""
-        return super()._invoice_get_page_view_values(*args, website_id=request.website.id, **kwargs)
+        website = request.env['website'].get_current_website()
+        return super()._invoice_get_page_view_values(*args, website_id=website.id, **kwargs)

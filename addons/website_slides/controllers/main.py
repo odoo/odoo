@@ -49,10 +49,11 @@ class WebsiteSlides(WebsiteProfile):
                 yield {'loc': loc}
 
     def _slide_render_context_base(self):
+        website = request.env['website'].get_current_website()
         return {
             # current user info
             'user': request.env.user,
-            'is_public_user': request.website.is_public_user(),
+            'is_public_user': website.is_public_user(),
             # tools
             '_slugify_tags': self._slugify_tags,
         }
@@ -201,9 +202,10 @@ class WebsiteSlides(WebsiteProfile):
            current user is the one that uploaded it;
          * if not publisher and public: published;
         """
-        base_domain = request.website.website_domain() & Domain('channel_id', '=', channel.id) & Domain('is_category', '=', False)
+        website = request.env['website'].get_current_website()
+        base_domain = website.website_domain() & Domain('channel_id', '=', channel.id) & Domain('is_category', '=', False)
         if not channel.can_publish:
-            if request.website.is_public_user():
+            if website.is_public_user():
                 base_domain &= Domain('website_published', '=', True)
             else:
                 base_domain &= Domain('website_published', '=', True) | Domain('user_id', '=', request.env.user.id)
@@ -343,8 +345,9 @@ class WebsiteSlides(WebsiteProfile):
         render_values = {}
         if compute_channels_my:
             if not request.env.user._is_public():
+                website = request.env['website'].get_current_website()
                 channels_my_all = tools.lazy(lambda: request.env['slide.channel'].search(
-                    request.website.website_domain() & Domain([('is_visible', '=', True), ('is_member', '=', True)])))
+                    website.website_domain() & Domain([('is_visible', '=', True), ('is_member', '=', True)])))
                 # Order: Started but not finished > Not started > Finished
                 channels_my = tools.lazy(lambda: channels_my_all.filtered(lambda channel: channel.is_member).sorted(
                     lambda channel: -1 if channel.completed else channel.completion, reverse=True))
@@ -448,7 +451,8 @@ class WebsiteSlides(WebsiteProfile):
         options = self._get_slide_channel_search_options(**search_args)
         search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
-        search_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
+        website = request.env['website'].get_current_website()
+        search_count, details, fuzzy_search_term = website._search_with_fuzzy(
             'slide_channel', search, offset=0, limit=page * page_size if page else 1000, order=order, options=options)
         channels_all = details[0].get('results', request.env['slide.channel'])
         channels = channels_all[(page - 1) * page_size:page * page_size] if page else channels_all
@@ -461,6 +465,7 @@ class WebsiteSlides(WebsiteProfile):
         else:
             search_tags = request.env['slide.channel.tag']
 
+        website = request.env['website'].get_current_website()
         render_values = self._slide_render_context_base()
         render_values.update(self._prepare_user_values(**post))
         render_values.update(self._slides_channel_user_values(
@@ -477,7 +482,7 @@ class WebsiteSlides(WebsiteProfile):
             'top3_users': self._get_top3_users(),
             'slugify_tags': self._slugify_tags,
             'slide_query_url': QueryURL('/slides', ['tag']),
-            'pager': request.website.pager(
+            'pager': website.pager(
                 url=request.httprequest.path.partition('/page/')[0],
                 url_args=request.httprequest.args.to_dict(),
                 total=search_count,
@@ -555,8 +560,10 @@ class WebsiteSlides(WebsiteProfile):
         invite_hash = kw.get('invite_hash')
         valid_invite_values = {}
 
+        website = request.env['website'].get_current_website()
+
         # Invitation data processing
-        if request.website.is_public_user() and invite_partner_id and invite_hash and channel_id and not channel:
+        if website.is_public_user() and invite_partner_id and invite_hash and channel_id and not channel:
             valid_invite_values = self._get_channel_values_from_invite(channel_id, invite_hash, invite_partner_id)
             if valid_invite_values.get('invite_preview'):
                 channel = valid_invite_values.get('invite_channel')
@@ -620,7 +627,7 @@ class WebsiteSlides(WebsiteProfile):
 
         slide_count = request.env['slide.slide'].sudo().search_count(domain)
         page_count = math.ceil(slide_count / self._slides_per_page)
-        pager = request.website.pager(url=pager_url, total=slide_count, page=page,
+        pager = website.pager(url=pager_url, total=slide_count, page=page,
                                       step=self._slides_per_page, url_args=pager_args,
                                       scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
@@ -830,8 +837,10 @@ class WebsiteSlides(WebsiteProfile):
         invite_partner = invite_values.get('invite_partner')
         invite_channel_partner = invite_values.get('invite_channel_partner')
 
+        website = request.env['website'].get_current_website()
+
         # --- A user is logged
-        if not request.website.is_public_user():
+        if not website.is_public_user():
             if request.env.user.partner_id.id != invite_partner.id:
                 return self._redirect_to_slides_main('partner_fail')
             return self._redirect_to_channel(channel) if has_rights else self._redirect_to_slides_main('no_rights')
@@ -854,7 +863,8 @@ class WebsiteSlides(WebsiteProfile):
     def slide_channel_identify_from_invite(self, channel_id, invite_partner_id, invite_hash):
         """ This route redirects invited partners when they click on the login / signup button, when they are
         asked to login / signup as invited to a course as public user on the course page preview. """
-        if not request.website.is_public_user():
+        website = request.env['website'].get_current_website()
+        if not website.is_public_user():
             return self._redirect_to_slides_main('identify_fail')
 
         invite_partner_id = int(invite_partner_id)
@@ -870,7 +880,8 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/join'], type='jsonrpc', auth='public', website=True)
     def slide_channel_join(self, channel_id):
-        if request.website.is_public_user():
+        website = request.env['website'].get_current_website()
+        if website.is_public_user():
             return {
                 'error': 'public_user',
                 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c',
@@ -980,7 +991,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides/slide/<model("slide.slide"):slide>', type='http', auth="public",
                 website=True, sitemap=sitemap_slide_view, handle_params_access_error=handle_wslide_error)
     def slide_view(self, slide, **kwargs):
-        if not slide.channel_id.can_access_from_current_website() or not slide.active:
+        if slide.channel_id.website_id and slide.channel_id.website_id.id != self.env.context['website_id'] or not slide.active:
             raise werkzeug.exceptions.NotFound()
         # redirection to channel's homepage for category slides
         if slide.is_category:
@@ -1086,7 +1097,8 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route('/slides/slide/set_completed', website=True, type="jsonrpc", auth="public")
     def slide_set_completed(self, slide_id):
-        if request.website.is_public_user():
+        website = request.env['website'].get_current_website()
+        if website.is_public_user():
             return {'error': 'public_user'}
         fetch_res = self._fetch_slide(slide_id)
         if fetch_res.get('error'):
@@ -1106,7 +1118,8 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route('/slides/slide/set_uncompleted', website=True, type='jsonrpc', auth='public')
     def slide_set_uncompleted(self, slide_id):
-        if request.website.is_public_user():
+        website = request.env['website'].get_current_website()
+        if website.is_public_user():
             return {'error': 'public_user'}
         fetch_res = self._fetch_slide(slide_id)
         if fetch_res.get('error'):
@@ -1119,7 +1132,8 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route('/slides/slide/like', type='jsonrpc', auth="public", website=True)
     def slide_like(self, slide_id, upvote):
-        if request.website.is_public_user():
+        website = request.env['website'].get_current_website()
+        if website.is_public_user():
             return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
         # check slide access
         fetch_res = self._fetch_slide(slide_id)
@@ -1271,7 +1285,8 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route('/slides/slide/quiz/submit', type="jsonrpc", auth="public", website=True)
     def slide_quiz_submit(self, slide_id, answer_ids):
-        if request.website.is_public_user():
+        website = request.env['website'].get_current_website()
+        if website.is_public_user():
             return {'error': 'public_user'}
         fetch_res = self._fetch_slide(slide_id)
         if fetch_res.get('error'):

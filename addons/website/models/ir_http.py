@@ -42,8 +42,7 @@ class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     def routing_map(self, key=None):
-        if not key and request:
-            key = request.website_routing
+        key = self.env['website'].get_current_website().id
         return super().routing_map(key=key)
 
     @classmethod
@@ -80,7 +79,7 @@ class IrHttp(models.AbstractModel):
         if (
             path
             # don't try to match route if we know that no rewrite has been loaded.
-            and request.env['ir.http']._rewrite_len(request.website_routing)
+            and request.env['ir.http']._rewrite_len(request.env['website'].get_current_website().id)
             and (
                 len(path) > 1
                 and path.startswith('/')
@@ -117,7 +116,7 @@ class IrHttp(models.AbstractModel):
         if not request:
             yield from super()._generate_routing_rules(modules, converters)
             return
-        website_id = request.website_routing
+        website_id = self.env['website'].get_current_website().id
         logger.debug("_generate_routing_rules for website: %s", website_id)
         rewrites = self._get_rewrites(website_id)
         self._rewrite_len.__cache__.add_value(self, website_id, cache_value=len(rewrites))
@@ -195,9 +194,6 @@ class IrHttp(models.AbstractModel):
         website_id = get_current_website_id()
         host_id = request.env['ir.http']._get_host_id()
 
-        if not hasattr(request, 'website_routing'):
-            request.website_routing = website_id or host_id
-
         # set website into the context, used by match for the default lang
         if website_id or host_id:
             request.update_context(website_id=website_id or host_id)
@@ -221,7 +217,7 @@ class IrHttp(models.AbstractModel):
         for record in args.values():
             if isinstance(record, models.BaseModel) and 'website_id' in record._fields:
                 try:
-                    if record.website_id.id != website_id:
+                    if record.website_id and record.website_id.id != website_id:
                         raise werkzeug.exceptions.NotFound()
                 except AccessError:
                     # record.website_id might not be readable as
@@ -339,21 +335,17 @@ class IrHttp(models.AbstractModel):
         # propagate to the global context of the tab. If the company of
         # the website is not in the allowed companies of the user, set
         # the main company of the user.
+        context = cls._get_editor_context()
         website_company_id = website.company_id.id
         if user == website.user_id:
             # avoid a read on res_company_user_rel in case of public user
-            allowed_company_ids = [website_company_id]
+            context['allowed_company_ids'] = [website_company_id]
         elif website_company_id in user._get_company_ids():
-            allowed_company_ids = [website_company_id]
+            context['allowed_company_ids'] = [website_company_id]
         else:
-            allowed_company_ids = user.company_id.ids
+            context['allowed_company_ids'] = user.company_id.ids
 
-        request.update_context(
-            allowed_company_ids=allowed_company_ids,
-            **cls._get_editor_context(),
-        )
-
-        request.website = website.with_context(request.env.context)
+        request.update_context(**context)
 
     @classmethod
     def _post_dispatch(cls, response):
@@ -410,7 +402,7 @@ class IrHttp(models.AbstractModel):
             Domain('redirect_type', 'in', ('301', '302'))
             # trailing / could have been removed by server_page
             & Domain('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/'])
-            & request.website.website_domain()
+            & request.env['website'].get_current_website().website_domain()
         )
         return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
 
@@ -422,6 +414,8 @@ class IrHttp(models.AbstractModel):
             return parent
 
         # minimal setup to serve frontend pages
+        if not request.env.context.get('website_id'):
+            request.update_context(website_id=request.env.context.get('host_id'))
         cls._frontend_pre_dispatch()
         cls._handle_debug()
 
@@ -485,21 +479,22 @@ class IrHttp(models.AbstractModel):
 
     @api.model
     def get_frontend_session_info(self):
+        website = self.env['website'].get_current_website()
         session_info = super().get_frontend_session_info()
         geoip_country_code = request.geoip.country_code
         geoip_phone_code = request.env['res.country']._phone_code_for(geoip_country_code) if geoip_country_code else None
         session_info.update({
-            'is_website_user': request.env.user.id == request.website.user_id.id,
+            'is_website_user': request.env.user.id == website.user_id.id,
             'geoip_country_code': geoip_country_code,
             'geoip_phone_code': geoip_phone_code,
             'lang_url_code': request.lang.url_code,
         })
         if request.env.user.has_group('website.group_website_restricted_editor'):
             session_info.update({
-                'website_id': request.website.id,
-                'website_company_id': request.website.company_id.id,
+                'website_id': website.id,
+                'website_company_id': website.company_id.id,
             })
-        session_info['bundle_params']['website_id'] = request.website.id
+        session_info['bundle_params']['website_id'] = website.id
         return session_info
 
     @api.model
@@ -545,9 +540,10 @@ class IrHttp(models.AbstractModel):
 
         if force_create:
             force_track_values = force_track_values or {}
+            website = self.env['website'].sudo().get_current_website()
             visitor_id, _ = self.env['website.visitor']._upsert_visitor(
                 token_or_partner_id=access_token,
-                website_id=request.website.id,
+                website_id=website.id,
                 lang_id=request.lang.id,
                 country_code=request.geoip.country_code,  # GEOIP might return a country code unknown to odoo
                 timezone=self.env['website.visitor']._get_visitor_timezone(),

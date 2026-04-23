@@ -7,6 +7,7 @@ from http import HTTPStatus
 from odoo.http.session import SESSION_ROTATION_INTERVAL
 from odoo.tests import Like, new_test_user, tagged
 from odoo.tools import mute_logger
+from odoo.tools.misc import submap
 
 from .test_common import TestHttpBase
 from odoo.addons.test_http.controllers import CT_JSON
@@ -222,21 +223,16 @@ class TestHttpEchoReplyJsonWithDB(TestHttpBase):
         self.assertEqual(res.headers.get('Accept'), "application/json, application/json-rpc")
 
     def test_echojson3_context_db(self):
-        payload = json.dumps({
-            "jsonrpc": "2.0",
-            "id": 0,
-            "params": {
-                "context": {
-                    "name": "Thor"
-                },
-                "race": "Asgard",
-            },
-        })
-        res = self.db_url_open("/test_http/echo-json-context", data=payload, headers=CT_JSON)
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.text, '{"jsonrpc": "2.0", "id": 0, "result": '
-            f'{{"lang": "en_US", "tz": false, "uid": {self.jackoneill.id}}}'
-            '}')
+        res = self.make_jsonrpc_request(
+            '/test_http/echo-json-context',
+            params={'context': {'name': 'Thor'}},
+        )
+        expected = {
+            'lang': 'en_US',
+            'tz': False,
+            'uid': self.jackoneill.id,
+        }
+        self.assertEqual(submap(res, expected), expected)
 
     def test_echojson3_bad_json(self):
         payload = 'some non json garbage'

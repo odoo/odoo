@@ -69,7 +69,8 @@ class WebsiteBlog(http.Controller):
         BlogTag = request.env['blog.tag']
 
         # prepare domain
-        domain = request.website.website_domain()
+        website = request.env['website'].get_current_website()
+        domain = website.website_domain()
 
         if blog:
             domain &= Domain('blog_id', '=', blog.id)
@@ -117,7 +118,7 @@ class WebsiteBlog(http.Controller):
             state=state,
             **post
         )
-        total, details, fuzzy_search_term = request.website._search_with_fuzzy('blog_post', search,
+        total, details, fuzzy_search_term = website._search_with_fuzzy('blog_post', search,
             offset=0, limit=page * self._blog_post_per_page, order="is_published desc, published_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
         posts = posts[offset:offset + self._blog_post_per_page]
@@ -130,7 +131,7 @@ class WebsiteBlog(http.Controller):
             url_args["date_begin"] = date_begin
             url_args["date_end"] = date_end
 
-        pager = tools.lazy(lambda: request.website.pager(
+        pager = tools.lazy(lambda: website.pager(
             url=request.httprequest.path.partition('/page/')[0],
             total=total,
             page=page,
@@ -199,7 +200,8 @@ class WebsiteBlog(http.Controller):
     ], type='http', auth="public", website=True, sitemap=sitemap_blog, list_as_website_content=_lt("Blogs"))
     def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
-        blogs = tools.lazy(lambda: Blog.search(request.website.website_domain(), order="sequence"))
+        website = request.env['website'].get_current_website()
+        blogs = tools.lazy(lambda: Blog.search(website.website_domain(), order="sequence"))
 
         if not blog and len(blogs) == 1:
             url = QueryURL('/blog/%s' % request.env['ir.http']._slug(blogs[0]), search=search, **opt)()
@@ -283,7 +285,8 @@ class WebsiteBlog(http.Controller):
         BlogPost = request.env['blog.post']
         date_begin, date_end = post.get('date_begin'), post.get('date_end')
 
-        domain = request.website.website_domain()
+        website = request.env['website'].get_current_website()
+        domain = website.website_domain()
         blogs = blog.search(domain, order="sequence")
 
         tag = None
@@ -311,7 +314,7 @@ class WebsiteBlog(http.Controller):
         if (
             not next_post
             or not next_post.sudo().is_published
-            or next_post.website_id.id not in (False, request.website.id)
+            or next_post.website_id.id not in (False, website.id)
         ):
             # Fallback to the next post in the list.
             all_post_ids = all_post.ids

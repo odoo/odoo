@@ -65,7 +65,8 @@ class GoogleMap(http.Controller):
         else:
             partner_url = '/partners/'
 
-        google_maps_api_key = request.website.google_maps_api_key
+        website = request.env['website'].get_current_website()
+        google_maps_api_key = website.google_maps_api_key
         values = {
             'partner_url': partner_url,
             'partner_data': scriptsafe.dumps(partner_data),

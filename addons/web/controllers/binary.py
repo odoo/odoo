@@ -88,6 +88,7 @@ class Binary(Controller):
         assert isinstance(assets_params, dict)
         debug_assets = unique == 'debug'
         stream = None
+
         if unique in ('any', '%'):
             unique = ANY_UNIQUE
         if unique != 'debug':
@@ -113,7 +114,7 @@ class Binary(Controller):
                 # if we don't have a replica, the cursor is not readonly, use the same one to avoid a rollback
                 cursor_manager = nullcontext(env.cr)
             with cursor_manager as rw_cr:
-                rw_env = api.Environment(rw_cr, env.user.id, {})
+                rw_env = api.Environment(rw_cr, env.user.id, request.env.context)
                 try:
                     if filename.endswith('.map'):
                         _logger.error(".map should have been generated through debug assets, (version %s most likely outdated)", unique)

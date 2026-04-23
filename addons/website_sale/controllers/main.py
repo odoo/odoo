@@ -150,7 +150,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _get_shop_domain(
         self, search, category, attribute_value_dict, search_in_description=True, tags=None
     ):
-        domains = [request.website.sale_product_domain()]
+        website = request.env['website'].get_current_website()
+        domains = [website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
                 subdomains = [
@@ -296,7 +297,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         handle_params_access_error=lambda e, **_kwargs: NotFound.code,  # noqa: ARG005
     )
     def shop(self, page=0, category=None, search="", min_price=0.0, max_price=0.0, tags="", **post):
-        if not request.website.has_ecommerce_access():
+        website = self.env["website"].get_current_website()
+        if not website.has_ecommerce_access():
             return request.redirect(f"/web/login?redirect={request.httprequest.path}")
 
         post = {k: v for k, v in post.items() if not k.startswith("_")}
@@ -388,7 +390,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             conversion_rate = self.env["res.currency"]._get_conversion_rate(
                 company_currency,
                 website.currency_id,
-                request.website.company_id,
+                website.company_id,
                 fields.Date.today(),
             )
         else:
@@ -522,7 +524,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         category_entries = Category
         if category:
             available_categories = category.child_id.filtered(
-                lambda c: c.can_access_from_current_website()
+                lambda c: c.website_id.id in (website.id, False)
             )
             category_entries = (
                 (not search
@@ -532,7 +534,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if not category_entries:
                 parent = category.parent_id
                 available_categories = parent.child_id.filtered(
-                    lambda c: c.can_access_from_current_website()
+                    lambda c: c.website_id.id in (website.id, False)
                 )
                 category_entries = (
                     (not search
@@ -668,7 +670,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         handle_params_access_error=lambda e, **_kwargs: NotFound.code,  # noqa: ARG005
     )
     def product(self, product, pricelist=None, **kwargs):
-        if not request.website.has_ecommerce_access():
+        website = self.env['website'].get_current_website()
+        if not website.has_ecommerce_access():
             return request.redirect(f"/web/login?redirect={request.httprequest.path}")
 
         if pricelist is not None:
@@ -917,9 +920,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return product.sudo()._is_add_to_cart_allowed()
 
     def _prepare_product_values(self, product, **kwargs):
-        website = request.website
+        website = self.env['website'].get_current_website()
         category = product.public_categ_ids.filtered(
-            lambda categ: categ.can_access_from_current_website()
+            lambda categ: categ.website_id.id in (website.id, False)
         )[:1]
         markup_data = [
             website._prepare_ecommerce_store_markup_data(),
@@ -969,11 +972,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 combination=combination.with_env(self.env)
             )
             attribute_value_images = product._get_dynamic_attribute_images(
-                combination.ids, request.website.id
+                combination.ids, website.id
             )
         else:
             combination_info = product._get_combination_info()
-            attribute_value_images = product._get_dynamic_attribute_images([], request.website.id)
+            attribute_value_images = product._get_dynamic_attribute_images([], website.id)
 
         # Needed to trigger the recently viewed product rpc
         view_track = website.viewref("website_sale.product").track
@@ -1048,7 +1051,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         prev_pricelist.currency_id._convert(
                             min_price,
                             pricelist.currency_id,
-                            request.website.company_id,
+                            website.company_id,
                             round=False,
                         )
                     )
@@ -1060,7 +1063,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         prev_pricelist.currency_id._convert(
                             max_price,
                             pricelist.currency_id,
-                            request.website.company_id,
+                            website.company_id,
                             round=False,
                         )
                     )
@@ -1077,7 +1080,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             pricelist_sudo = (
                 self.env["product.pricelist"].sudo().search([("code", "=", promo)], limit=1)
             )
-            if not (pricelist_sudo and request.website.is_pricelist_available(pricelist_sudo.id)):
+            website = self.env["website"].get_current_website()
+            if not (pricelist_sudo and website.is_pricelist_available(pricelist_sudo.id)):
                 return request.redirect("%s?code_not_available=1" % redirect)
 
             self._apply_pricelist(pricelist=pricelist_sudo)
@@ -1118,7 +1122,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if pricelist is None:  # Reset the pricelist
             request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
             request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
-            request.pricelist = lazy(request.website._get_and_cache_current_pricelist)
+            website = self.env["website"].get_current_website()
+            request.pricelist = lazy(website._get_and_cache_current_pricelist)
 
             if order_sudo := request.cart:
                 pl_before = order_sudo.pricelist_id
@@ -1191,7 +1196,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ):
                     order_sudo._set_delivery_method(delivery_method, rate=rate)
 
-        checkout_page_values.update(request.website._get_checkout_step_values("/shop/checkout"))
+        website = self.env["website"].get_current_website()
+        checkout_page_values.update(website._get_checkout_step_values("/shop/checkout"))
         if try_skip_step and can_skip_delivery:
             return request.redirect(checkout_page_values["next_website_checkout_step_href"])
 
@@ -1264,7 +1270,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             use_delivery_as_billing=use_delivery_as_billing,
             **query_params,
         )
-        address_form_values.update(request.website._get_checkout_step_values("/shop/address"))
+        address_form_values.update(self.env.website._get_checkout_step_values("/shop/address"))
         return request.render("website_sale.address", address_form_values)
 
     def _prepare_address_form_values(self, *args, callback="", order_sudo=False, **kwargs):
@@ -1283,9 +1289,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         is_anonymous_cart = order_sudo._is_anonymous_cart()
         # Display b2b field is feature is enabled on given website
+        website = self.env["website"].get_current_website()
         rendering_values["display_b2b_fields"] = rendering_values.get(
             "display_b2b_fields", False
-        ) or request.website.is_view_active("website_sale.address_b2b")
+        ) or website.is_view_active("website_sale.address_b2b")
 
         if rendering_values["commercial_address_update_url"]:
             rendering_values["commercial_address_update_url"] = (
@@ -1447,7 +1454,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order_sudo and order_sudo._is_anonymous_cart():
             address_values["type"] = "contact"
 
-        if address_values["lang"] not in request.website.mapped("language_ids.code"):
+        website = self.env["website"].get_current_website()
+
+        if address_values["lang"] not in website.mapped("language_ids.code"):
             address_values.pop("lang")
 
         if not order_sudo:
@@ -1661,11 +1670,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         list_as_website_content=system_page_extra_info,
     )
     def extra_info(self, **post):
+        website = request.env['website'].get_current_website()
         # Check that this option is activated
-        extra_step = request.website.viewref("website_sale.extra_info")
+        extra_step = website.viewref("website_sale.extra_info")
         if not extra_step.active:
             return request.redirect(
-                request.website._get_next_breadcrumb_step_href("/shop/extra_info")
+                website._get_next_breadcrumb_step_href("/shop/extra_info")
             )
 
         order_sudo = request.cart
@@ -1682,13 +1692,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "order": order_sudo,
         }
 
-        values.update(request.website._get_checkout_step_values("/shop/extra_info"))
+        values.update(website._get_checkout_step_values("/shop/extra_info"))
 
         return request.render("website_sale.extra_info", values)
 
     # === CHECKOUT FLOW - PAYMENT/CONFIRMATION METHODS === #
 
     def _get_shop_payment_values(self, order, **_kwargs):
+        website = request.env['website'].get_current_website()
         checkout_page_values = {
             "sale_order": order,
             "website_sale_order": order,
@@ -1696,11 +1707,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "partner": order.partner_invoice_id,
             "order": order,
             "only_services": order.only_services,
-            **request.website._get_checkout_step_values("/shop/payment"),
+            **website._get_checkout_step_values("/shop/payment"),
         }
+        website = request.env['website'].get_current_website()
         payment_form_values = {
             **sale_portal.CustomerPortal._get_payment_values(
-                self, order, website_id=request.website.id
+                self, order, website_id=website.id
             ),
             "display_submit_button": False,  # The submit button is re-added outside the form.
             "transaction_route": f"/shop/payment/transaction/{order.id}",
@@ -1776,7 +1788,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order_sudo._validate_order()
 
         # clean context and session, then redirect to the confirmation page
-        request.website.sale_reset()
+        website = self.env["website"].get_current_website()
+        website.sale_reset()
         if tx_sudo and tx_sudo.state == "draft":
             return request.redirect(SHOP_PATH)
 
@@ -1813,9 +1826,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "website_sale_order": order,
             "order_tracking_info": self.order_2_return_dict(order),
         }
+        website = self.env['website'].get_current_website()
         if (
             self.env["res.users"]._get_signup_invitation_scope() == "b2c"
-            and request.website.is_public_user()
+            and website.is_public_user()
         ):
             order.partner_id.signup_prepare()
             signup_url = urlparse(
@@ -2044,7 +2058,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @staticmethod
     def _populate_currency_and_pricelist(kwargs):
-        website = request.website
+        website = request.env['website'].get_current_website()
         kwargs.update({"currency_id": website.currency_id.id, "pricelist_id": request.pricelist.id})
 
     @staticmethod
@@ -2062,9 +2076,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductCategory = request.env["product.public.category"]
         if category and isinstance(category, str) and not category.isdigit():
             return ProductCategory
+        website = request.env['website'].get_current_website()
         if (
             category := ProductCategory.browse(category and int(category)).exists()
-        ) and category.can_access_from_current_website():
+        ) and category.website_id.id in (website.id, False):
             return category
         return ProductCategory
 

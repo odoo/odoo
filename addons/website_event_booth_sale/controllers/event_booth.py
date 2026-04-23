@@ -23,7 +23,8 @@ class WebsiteEventBoothController(WebsiteEventController):
             return json.dumps({'error': error_code})
 
         booth_values = self._prepare_booth_registration_values(event, kwargs)
-        order_sudo = request.cart or request.website._create_cart()
+        website = self.env["website"].get_current_website()
+        order_sudo = request.cart or website._create_cart()
         if order_sudo._is_anonymous_cart():
             order_sudo._update_address(booth_values['partner_id'], ['partner_id'])
         order_sudo._cart_add(
@@ -36,7 +37,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             return json.dumps({'redirect': '/shop/cart'})
         else:
             order_sudo.action_confirm()
-            request.website.sale_reset()
+            website.sale_reset()
 
             return self._prepare_booth_registration_success_values(event.name, booth_values)
 

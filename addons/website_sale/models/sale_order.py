@@ -1050,7 +1050,8 @@ class SaleOrder(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return self.partner_id.id == request.website.user_id.sudo().partner_id.id
+        website = self.env["website"].get_current_website()
+        return self.partner_id.id == website.user_id.sudo().partner_id.id
 
     def _get_lang(self):
         res = super()._get_lang()

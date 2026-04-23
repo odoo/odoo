@@ -346,7 +346,7 @@
 
     <template id="website_sale.quick_reorder_button">
         <t t-set="quick_reorder_button_title">
-            <t t-if="request.website.is_public_user()">Login to reorder</t>
+            <t t-if="website.is_public_user()">Login to reorder</t>
             <t t-elif="not order_history">No previous products available for reorder.</t>
         </t>
         <span t-att-title="quick_reorder_button_title">

@@ -17,7 +17,7 @@ class TrackManifest(http.Controller):
         Using this metadata, user agents can provide developers with means to create user 
         experiences that are more comparable to that of a native application.
         """
-        website = request.website
+        website = request.env['website'].get_current_website()
         manifest = {
             'name': website.events_app_name,
             'short_name': website.events_app_name,
@@ -47,8 +47,9 @@ class TrackManifest(http.Controller):
         with file_open('website_event_track/static/src/js/service_worker.js', 'r') as fp:
             body = fp.read()
         js_cdn_url = 'undefined'
-        if request.website.cdn_activated:
-            cdn_url = request.website.cdn_url.replace('"','%22').replace('\x5c','%5C')
+        website = request.env['website'].get_current_website()
+        if website.cdn_activated:
+            cdn_url = website.cdn_url.replace('"', '%22').replace('\x5c', '%5C')
             js_cdn_url = '"%s"' % cdn_url
         body = body.replace('__ODOO_CDN_URL__', js_cdn_url)
         response = request.make_response(body, [

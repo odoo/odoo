@@ -133,7 +133,7 @@
         <meta t-if="no_index" name="robots" content="noindex"/>
         <t t-set="seo_object" t-value="seo_object or main_object"/>
         <t t-set="record" t-value="seo_object.view_id.sudo() if seo_object._name in ('website.page', 'website.controller.page') else seo_object.sudo()"/>
-        <t t-set="needs_translation" t-value="request.lang and request.website and request.lang.id != request.website.default_lang_id.id"/>
+        <t t-set="needs_translation" t-value="request.lang and website and request.lang.id != website.default_lang_id.id"/>
         <t t-set="meta_description" t-value="(website_meta.get('meta_description') or '').strip() if not needs_translation else (website_meta.get('default_meta_description') or '').strip()"/>
         <t t-if="record and needs_translation and 'website_meta_description' in record._fields">
             <t t-set="translated_description" t-value="(record.get_website_meta_i18n_value('website_meta_description', request.lang.code) or '').strip()"/>
@@ -3144,7 +3144,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 #   custom   #
 ##############
 
-<t t-out="request.website.sudo().robots_txt" />
+<t t-out="website.sudo().robots_txt" />
 </t>
 </t>
 </template>

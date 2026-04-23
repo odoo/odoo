@@ -260,7 +260,7 @@
         <a t-attf-href="/profile/user/#{ uid }?forum_id=#{ forum.id if forum else '' }"
             class="btn w-100 py-1 text-start d-flex align-items-center" data-bs-toggle="tooltip" data-trigger="hover"
             title="My profile">
-            <img class="o_wforum_avatar rounded-circle object-fit-cover" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
+            <img class="o_wforum_avatar rounded-circle object-fit-cover" t-att-src="website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
             <div class="d-flex flex-column justify-content-center ms-2">
                 <span class="mt-0 mb-1 h6-fs fw-bold" t-out="user_id.name"/>
                 <span class="fs-6 text-reset opacity-50"><t t-out="user_id.karma"/> XP</span>
@@ -342,7 +342,7 @@
             <section t-if="editable or (is_public_user and not forum_welcome_message)" t-attf-class="s_cover parallax s_parallax_is_fixed bg-black-50 pt48 pb48 #{'css_non_editable_mode_hidden' if editable else 'forum_intro'}" data-scroll-background-ratio="1" data-snippet="s_cover">
                 <t t-if="forum.image_1920">
                     <span class="s_parallax_bg_wrap">
-                        <span class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{request.website.image_url(forum, 'image_1920')}'); background-position: center;"/>
+                        <span class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920')}'); background-position: center;"/>
                     </span>
                 </t>
                 <div t-if="forum.image_1920" class="o_we_bg_filter bg-black-50"/>

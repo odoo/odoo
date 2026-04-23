@@ -40,4 +40,4 @@ def post_init_hook(env):
 
     if request:
         env = env(context=request.default_context())
-        request.website_routing = env['website'].get_current_website().id
+        request.update_context(website_id=env['website'].get_current_website().id)
