@@ -265,6 +265,7 @@ test("Search setting on multiple apps", async () => {
     expect(".o_searchview input").toHaveValue("Fo", {
         message: "input value should be updated",
     });
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual([
         "Foo",
         "Foo",
