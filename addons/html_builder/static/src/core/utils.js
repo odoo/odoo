@@ -66,7 +66,7 @@ export function useDomState(getState, { checkEditingElement = true } = {}) {
         }
     };
     const state = useState({});
-    onWillStart(handler);
+    onWillStart(() => handler());
     useBus(env.editorBus, "DOM_UPDATED", handler);
     return state;
 }
