@@ -7,7 +7,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
-import { mountComponent } from "@web/env";
+import { makeEnv, mountComponent, startServices } from "@web/env";
 import { Chrome } from "@point_of_sale/app/pos_app";
 
 const loader = reactive({ isShown: true, error: false });
@@ -29,12 +29,15 @@ whenReady(() => {
     };
     await whenReady();
     try {
+        const env = await makeEnv();
+        await startServices(env);
         const app = await mountComponent(Chrome, document.body, {
             name: "Odoo Point of Sale",
             props: { disableLoader: () => (loader.isShown = false) },
+            env,
         });
         window.addEventListener("beforeunload", function (event) {
-            if (app.env.services.pos_data.network.offline) {
+            if (env.services.pos_data.network.offline) {
                 var confirmationMessage = _t(
                     "You are currently offline. Reloading the page may cause you to lose unsaved data."
                 );
