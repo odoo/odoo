@@ -14,9 +14,9 @@
                                 <field name="create_date" string="Date"/>
                                 <field name="state" widget="account_document_state"/>
                                 <field name="attachment_name" string="File"/>
-                                <button name="action_retry" string="Retry" type="object" invisible="document_state in ['accepted', 'warning', 'unknown'] or l10n_sa_edi_chain_head_id"/>
-                                <button name="action_retry" string="Process" type="object" invisible="document_state != 'unknown' or l10n_sa_edi_chain_head_id"/>
-                                <button name="action_open_chain_head" string="Blocking Invoice" type="object" invisible="not l10n_sa_edi_chain_head_id"/>
+                                <button name="action_retry" string="Retry" type="object" invisible="document_state in ['accepted', 'warning', 'unknown'] or l10n_sa_edi_chain_head_id or parent.state == 'draft'"/>
+                                <button name="action_retry" string="Process" type="object" invisible="document_state != 'unknown' or l10n_sa_edi_chain_head_id or parent.state == 'draft'"/>
+                                <button name="action_open_chain_head" string="Blocking Invoice" type="object" invisible="not l10n_sa_edi_chain_head_id or parent.state == 'draft'"/>
                                 <field name="is_test" optional="True"/>
                             </list>
                         </field>

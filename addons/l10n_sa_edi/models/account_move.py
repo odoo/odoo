@@ -47,7 +47,7 @@ class AccountMove(models.Model):
                 invalid_moves_dict['l10n_sa_edi_invalid_date_moves'] += move
 
             if move.l10n_sa_show_reason and not move.l10n_sa_reason:
-                invalid_moves_dict['l10n_sa_edi_invalid_ref_moves'] += move
+                invalid_moves_dict['l10n_sa_edi_empty_reason_moves'] += move
 
             if move.l10n_sa_show_reason and not move._l10n_sa_check_billing_reference():
                 invalid_moves_dict['l10n_sa_edi_invalid_ref_moves'] += move
