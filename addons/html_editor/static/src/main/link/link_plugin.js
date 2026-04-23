@@ -15,6 +15,7 @@ import {
     isVisible,
     isZwnbsp,
     isContentEditable,
+    ICON_SELECTOR,
 } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
@@ -556,7 +557,7 @@ export class LinkPlugin extends Plugin {
         }
 
         const selectionTextContent = selection?.toString();
-        const isImage = !!findInSelection(selection, "img, .fa");
+        const isImage = !!findInSelection(selection, `img, ${ICON_SELECTOR}`);
 
         const applyCallback = (params) => {
             const { attributes, label, attachmentId } = params;
@@ -721,7 +722,10 @@ export class LinkPlugin extends Plugin {
                     this.dependencies.color.removeAllColor();
                 }
                 // Remove the current link (linkInDocument) if it has no content
-                if (cleanZWChars(link.textContent) === "" && !link.querySelector("img, .fa")) {
+                if (
+                    cleanZWChars(link.textContent) === "" &&
+                    !link.querySelector(`img, ${ICON_SELECTOR}`)
+                ) {
                     const [anchorNode, anchorOffset] = rightPos(link);
                     // We force the cursor after the link before removing the link
                     // to ensure we don't lose the selection position.
@@ -843,7 +847,7 @@ export class LinkPlugin extends Plugin {
         } else if (!selection.isCollapsed) {
             // Open the link tool only if we have an image selected and the selection
             // is fully contained in the image parent link.
-            const imageNode = findInSelection(selection, "img, .fa");
+            const imageNode = findInSelection(selection, `img, ${ICON_SELECTOR}`);
             const parentElement = imageNode?.parentElement;
             const linkContainingImage = imageNode && closestElement(imageNode, "a");
             if (

@@ -101,11 +101,6 @@ export class DomPlugin extends Plugin {
     resources = {
         user_commands: [
             {
-                id: "insertFontAwesome",
-                run: this.insertFontAwesome.bind(this),
-                isAvailable: isHtmlContentSupported,
-            },
-            {
                 id: "setTag",
                 run: this.setBlock.bind(this),
                 isAvailable: isHtmlContentSupported,
@@ -666,19 +661,6 @@ export class DomPlugin extends Plugin {
         for (const element of root.querySelectorAll(this.systemPropertiesSelector)) {
             clean(element);
         }
-    }
-
-    // --------------------------------------------------------------------------
-    // commands
-    // --------------------------------------------------------------------------
-
-    insertFontAwesome({ faClass = "fa fa-star" } = {}) {
-        const fontAwesomeNode = document.createElement("i");
-        fontAwesomeNode.className = faClass;
-        this.insert(fontAwesomeNode);
-        this.dependencies.history.addStep();
-        const [anchorNode, anchorOffset] = rightPos(fontAwesomeNode);
-        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
     }
 
     /**

@@ -3,7 +3,15 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { ICON_SELECTOR, isElement, isIconElement, isZwnbsp } from "@html_editor/utils/dom_info";
+import {
+    ICON_SELECTOR,
+    ICON_SIZE_CLASS_REGEX,
+    getIconType,
+    isElement,
+    isIconElement,
+    isTextNode,
+    isZwnbsp,
+} from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class IconPlugin extends Plugin {
@@ -62,29 +70,8 @@ export class IconPlugin extends Plugin {
                 if (!targetedNodes.length) {
                     return;
                 }
-                const isIconInTargetedNodes = targetedNodes.some(isIconElement);
-                // All nodes should be icons, their ZWS children, or their ancestors.
-                // FEFF nodes are only considered valid if an icon is selected and the
-                // FEFF is directly adjacent to it.
-                const isIconRelatedNode = (node) => {
-                    if (
-                        (node.classList?.contains("fa") &&
-                            this.dependencies.selection.isNodeEditable(node)) ||
-                        node.parentElement?.classList.contains("fa") ||
-                        (node.querySelector?.(":scope > .fa") && node.isContentEditable !== false)
-                    ) {
-                        return true;
-                    }
-                    if (isZwnbsp(node) && isIconInTargetedNodes) {
-                        return (
-                            node.nextElementSibling?.classList?.contains("fa") ||
-                            node.previousElementSibling?.classList?.contains("fa")
-                        );
-                    }
-                    return false;
-                };
-
-                if (targetedNodes.every(isIconRelatedNode)) {
+                const textNodes = targetedNodes.filter(isTextNode);
+                if (textNodes.every(isZwnbsp) && targetedNodes.some(isIconElement)) {
                     return this.toolbarNamespace;
                 }
             },
@@ -177,13 +164,14 @@ export class IconPlugin extends Plugin {
         if (!targetedIcon) {
             return;
         }
-        for (const classString of targetedIcon.classList) {
-            if (classString.match(/^fa-[2-5]x$/)) {
+        for (const classString of [...targetedIcon.classList]) {
+            if (ICON_SIZE_CLASS_REGEX.test(classString)) {
                 targetedIcon.classList.remove(classString);
             }
         }
-        if (size !== "1") {
-            targetedIcon.classList.add(`fa-${size}x`);
+        const iconType = getIconType(targetedIcon);
+        if (size !== "1" && iconType) {
+            targetedIcon.classList.add(`${iconType}-${size}x`);
         }
         this.dependencies.history.addStep();
     }
@@ -200,14 +188,15 @@ export class IconPlugin extends Plugin {
     hasIconSize(size) {
         const selectedIcon = this.getTargetedIcon();
         if (!selectedIcon) {
-            return;
+            return false;
         }
         if (size === "1") {
             return ![...selectedIcon.classList].some((classString) =>
-                classString.match(/^fa-[2-5]x$/)
+                ICON_SIZE_CLASS_REGEX.test(classString)
             );
         }
-        return selectedIcon.classList.contains(`fa-${size}x`);
+        const iconType = getIconType(selectedIcon);
+        return !!(iconType && selectedIcon.classList.contains(`${iconType}-${size}x`));
     }
 
     hasSpinIcon() {

@@ -16,6 +16,7 @@ import {
 } from "@html_editor/plugin_sets";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { nodeSize } from "@html_editor/utils/position";
+import { iconClasses } from "@html_editor/utils/dom_info";
 
 function isInline(node) {
     return ["I", "B", "U", "S", "EM", "STRONG", "IMG", "BR", "A", "FONT"].includes(node);
@@ -32,9 +33,9 @@ function toIgnore(node) {
         "IMG",
         "BR",
         "LI",
-        ".FA",
         "COL",
         "COLGROUP",
+        ...iconClasses.map((cls) => `.${cls.toUpperCase()}`),
     ].includes(node);
 }
 
