@@ -677,18 +677,33 @@ class IrModuleModule(models.Model):
         # ------------------------------------------------------------
 
         configurator_snippets = dict(manifest.get('configurator_snippets', {}))
-        addons = manifest.get('configurator_snippets_addons', {})
         installed_modules = self.env['ir.module.module']._installed()
 
-        # Add addon snippets to the main snippet list for batch generation
-        for module_name, pages in addons.items():
-            # generate snippet only if the module is installed
-            if module_name not in installed_modules and module_name != self.name:
-                continue
-            for page, snippets_to_insert in pages.items():
-                snippets = configurator_snippets.setdefault(page, [])
-                dynamic_snippets = [snippet for snippet, *_ in snippets_to_insert]
-                configurator_snippets[page] = list(dict.fromkeys(snippets + dynamic_snippets))
+        def add_addons_snippets(addons):
+            """ Add installable addon snippets to the configurator snippets. """
+            for module_name, pages in addons.items():
+                # A snippet such as `website_sale.x` can only be generated
+                # once `website_sale` exists, or while installing it.
+                if module_name not in installed_modules and module_name != self.name:
+                    continue
+                for page, snippets_to_insert in pages.items():
+                    snippets = configurator_snippets.setdefault(page, [])
+                    dynamic_snippets = [snippet for snippet, *_ in snippets_to_insert]
+                    configurator_snippets[page] = list(dict.fromkeys(snippets + dynamic_snippets))
+
+        theme = self.env['website'].get_current_website().theme_id
+        if theme and theme.name == self.name:
+            # The theme itself is being installed. Its manifest may add
+            # snippets for already installed modules such as `website_sale`.
+            addons = manifest.get('configurator_snippets_addons', {})
+            add_addons_snippets(addons)
+        elif theme:
+            # Another module is being installed after the theme was selected.
+            # Only include the theme addon snippets targeting this module.
+            theme_manifest = Manifest.for_addon(theme.name)
+            theme_addons = theme_manifest.get('configurator_snippets_addons', {})
+            addons = {self.name: theme_addons.get(self.name, {})}
+            add_addons_snippets(addons)
 
         # Generate general configurator snippet templates
         create_values = []
