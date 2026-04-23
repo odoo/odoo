@@ -2202,6 +2202,10 @@ class AccountMove(models.Model):
         return [('journal_id', 'not in', journal_groups.excluded_journal_ids.ids)]
 
     def _search_reconciled_payment_ids(self, operator, value):
+        if (operator, value) == ('=', False):
+            return [('matched_payment_ids', '=', False), ('line_ids.matched_debit_ids', '=', False), ('line_ids.matched_credit_ids', '=', False)]
+        if (operator, value) == ('!=', False):
+            return ['|', '|', ('matched_payment_ids', '!=', False), ('line_ids.matched_debit_ids', '!=', False), ('line_ids.matched_credit_ids', '!=', False)]
         if operator not in ('in', '='):
             return NotImplemented
         payment_ids = self.env['account.payment'].browse(value).reconciled_invoice_ids.ids
