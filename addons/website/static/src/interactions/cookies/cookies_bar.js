@@ -43,8 +43,11 @@ export class CookiesBar extends Popup {
     showPopup() {
         super.showPopup();
 
-        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
-        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
+        const cookiePolicyUrl = this.el.dataset.cookiePolicyUrl;
+        if (
+            cookiePolicyUrl &&
+            window.location.pathname === new URL(cookiePolicyUrl, window.location.origin).pathname
+        ) {
             this.onToggleCookiesBar();
         }
     }

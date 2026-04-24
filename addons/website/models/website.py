@@ -169,6 +169,11 @@ class Website(models.CachedModel):
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
     cookies_bar = fields.Boolean('Cookies Bar', help="Display a customizable cookies bar on your website.")
+    cookie_policy_id = fields.Many2one(
+        'website.page',
+        string="Cookie Policy Page",
+        help="Page used as the Cookie Policy link in the cookies bar.",
+    )
     configurator_done = fields.Boolean(help='True if configurator has been completed or ignored')
     block_third_party_domains = fields.Boolean(
         'Block 3rd-party domains',
@@ -352,6 +357,29 @@ class Website(models.CachedModel):
                 company = self.env['res.company'].browse(values['company_id'])
                 super(Website, public_user_to_change_websites).write(dict(values, user_id=company and company._get_public_user().id))
 
+        if 'cookies_bar' in values:
+            default_policy_page = self.env['website.page'].search([
+                ('website_id', '=', self.id),
+                ('url', '=', '/cookie-policy'),
+            ])
+            if not values['cookies_bar']:
+                default_policy_page.unlink()
+                self.cookie_policy_id = False
+            elif not self.cookie_policy_id:
+                cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
+                if cookies_view:
+                    cookies_view.with_context(website_id=self.id).write({'website_id': self.id})
+                    specific_cook_view = self.with_context(website_id=self.id).viewref('website.cookie_policy')
+                    if not default_policy_page:
+                        default_policy_page = self.env['website.page'].create({
+                            'is_published': True,
+                            'website_indexed': False,
+                            'url': '/cookie-policy',
+                            'website_id': self.id,
+                            'view_id': specific_cook_view.id,
+                        })
+                    values["cookie_policy_id"] = default_policy_page
+
         result = super(Website, self - public_user_to_change_websites).write(values)
 
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
@@ -362,26 +390,6 @@ class Website(models.CachedModel):
         # invalidate cache for `company.website_id` to be recomputed
         if 'sequence' in values or 'company_id' in values:
             (original_company | self.company_id)._compute_website_id()
-
-        if 'cookies_bar' in values:
-            existing_policy_page = self.env['website.page'].search([
-                ('website_id', '=', self.id),
-                ('url', '=', '/cookie-policy'),
-            ])
-            if not values['cookies_bar']:
-                existing_policy_page.unlink()
-            elif not existing_policy_page:
-                cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
-                if cookies_view:
-                    cookies_view.with_context(website_id=self.id).write({'website_id': self.id})
-                    specific_cook_view = self.with_context(website_id=self.id).viewref('website.cookie_policy')
-                    self.env['website.page'].create({
-                        'is_published': True,
-                        'website_indexed': False,
-                        'url': '/cookie-policy',
-                        'website_id': self.id,
-                        'view_id': specific_cook_view.id,
-                    })
 
         return result
 
