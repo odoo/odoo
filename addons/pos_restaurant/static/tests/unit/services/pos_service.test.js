@@ -871,7 +871,6 @@ describe("restaurant pos_store.js", () => {
         order.preset_time = DateTime.fromSQL("2025-02-13 15:00:00");
 
         await store.syncAllOrders({ orders: [order] });
-        order.last_order_preparation_change = { lines: { test: {} } };
 
         let sentPreparationCancelled = 0;
         store.sendOrderInPreparation = async () => {
