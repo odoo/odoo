@@ -202,8 +202,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the thumbnail of the first image has not been changed",
-            trigger:
-                ":iframe .s_image_gallery div.carousel-indicators button:first-child[style='background-image: url(/web/image/website.library_image_08)']",
+            trigger: `:iframe .s_image_gallery div.carousel-indicators button:first-child[style='background-image: url("/web/image/website.library_image_08");']`,
         },
         ...clickOnSave(),
         ...clickOnEditAndWaitEditMode(),
