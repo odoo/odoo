@@ -124,6 +124,9 @@ export function useMatrixKeyNavigation(
 
     onMounted(() => {
         for (const containerEl of getContainerEls()) {
+            if (!containerEl) {
+                continue;
+            }
             const matrix = makeElementsPositionMatrix(containerEl, matrixSiblingSelector);
             matrices.set(containerEl, matrix);
         }
@@ -131,6 +134,9 @@ export function useMatrixKeyNavigation(
 
     onPatched(() => {
         for (const containerEl of getContainerEls()) {
+            if (!containerEl) {
+                continue;
+            }
             if (
                 !matrices.has(containerEl) ||
                 !matrices.get(containerEl).flat().length !==
@@ -145,8 +151,11 @@ export function useMatrixKeyNavigation(
 
     return (ev) => {
         const currentContainerEl = getContainerEls().find((containerEl) =>
-            containerEl.contains(ev.currentTarget)
+            containerEl?.contains(ev.currentTarget)
         );
+        if (!currentContainerEl) {
+            return;
+        }
         const activeMatrixEl = ev.currentTarget.closest(matrixSiblingSelector);
         handleMatrixKeyNavigation(ev, {
             matrix: matrices.get(currentContainerEl),
