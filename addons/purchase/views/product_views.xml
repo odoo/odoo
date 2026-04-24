@@ -109,7 +109,7 @@
                     <button class="oe_stat_button" name="action_view_po"
                             groups="purchase.group_purchase_user"
                             type="object" icon="fa-credit-card" invisible="not purchase_ok"
-                            help="Purchased in the last 365 days. Incoming represents confirmed purchase orders not received or partially received">
+                            help="Purchased in the last 365 days. Incoming represents confirmed purchase orders not received, or partially received">
                         <div class="o_field_widget o_stat_info" invisible="is_storable == True">
                             <span class="o_stat_value d-flex gap-1">
                                 <field name="purchased_product_qty" widget="statinfo" nolabel="1" class="oe_inline" options="{'hide_trailing_zeros': true}"/>
@@ -150,7 +150,7 @@
                     <button class="oe_stat_button" name="action_view_po"
                             groups="purchase.group_purchase_user"
                             type="object" icon="fa-credit-card" invisible="not purchase_ok"
-                            help="Purchased in the last 365 days. Incoming represents confirmed sales order not received, or partially received">
+                            help="Purchased in the last 365 days. Incoming represents confirmed purchase orders not received, or partially received">
                         <div class="o_field_widget o_stat_info" invisible="is_storable == True">
                             <span class="o_stat_value d-flex gap-1">
                                 <field name="purchased_product_qty" widget="statinfo" nolabel="1" class="oe_inline" options="{'hide_trailing_zeros': true}"/>
