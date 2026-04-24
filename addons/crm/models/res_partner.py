@@ -43,7 +43,6 @@ class ResPartner(models.Model):
             'search_default_filter_won_status_won': 1,
             'search_default_filter_won_status_lost': 1,
             'search_default_filter_won_status_pending': 1,
-            'active_test': False,
         }
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
