@@ -11,6 +11,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, unique
+from odoo.tools.translate import LazyGettext
 from odoo.addons.account.models.account_move import BYPASS_LOCK_CHECK
 from odoo.addons.account.tools.partner_identifiers import (
     get_additional_identifiers_metadata_of_country,
@@ -579,6 +580,7 @@ class ResPartner(models.Model):
     ignore_abnormal_invoice_amount = fields.Boolean(company_dependent=True)
     vat = fields.Char(inverse='_inverse_vat', store=True)
     additional_identifiers = fields.Json(string="Additional Identifiers", copy=False)
+    available_additional_identifiers_metadata = fields.Json(compute='_compute_available_additional_identifiers_metadata')
     global_location_number = fields.Char(
         string="GLN",
         help="Global Location Number",
@@ -685,6 +687,20 @@ class ResPartner(models.Model):
     def _inverse_vat(self):
         self._check_vat()
         self._deduce_additional_identifiers_from_vat()
+
+    @api.depends('country_id')
+    def _compute_available_additional_identifiers_metadata(self):
+        for partner in self:
+            metadata = partner.get_available_additional_identifiers_metadata(partner.country_code)
+            # Resolve lazy translations now: JSON would otherwise stringify them in a frame where
+            # no language can be detected.
+            partner.available_additional_identifiers_metadata = {
+                key: {
+                    k: str(v) if isinstance(v, LazyGettext) else v
+                    for k, v in entry.items()
+                }
+                for key, entry in metadata.items()
+            }
 
     @api.depends('additional_identifiers')
     def _compute_global_location_number(self):
@@ -919,7 +935,6 @@ class ResPartner(models.Model):
 
     @api.model
     def get_available_additional_identifiers_metadata(self, country_code, seq_min=0, seq_max=199):
-        """ Feeds the partner identifiers widget."""
         return get_additional_identifiers_metadata_of_country(country_code, seq_min=seq_min, seq_max=seq_max)
 
     def _get_additional_identifier(self, identifier_type):
