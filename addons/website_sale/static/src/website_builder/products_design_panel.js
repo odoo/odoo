@@ -22,7 +22,6 @@ export class ProductsDesignPanel extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        this.needsDbPersistence = this.props.recordName?.length > 0;
 
         onMounted(() => {
             this.setupActionConnections();
