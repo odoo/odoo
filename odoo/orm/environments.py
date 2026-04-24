@@ -565,7 +565,7 @@ class Transaction:
     __slots__ = (
         '_Transaction__file_open_tmp_paths',
         '_cache', '_recent_envs', '_registry_sequence',
-        '_state_stack', '_weak_envs',
+        '_state_stack__', '_weak_envs',
         'access_read', 'default_env',
         'field_data', 'field_data_patches', 'field_dirty',
         'protected', 'registry', 'tocompute',
@@ -582,7 +582,7 @@ class Transaction:
         self.default_env: Environment | None = None
         self._registry_sequence = registry.registry_sequence
         # transaction state manipulated by savepoints
-        self._state_stack: list[TransactionState] = []
+        self._state_stack__: list[TransactionState] = []
 
         # cache data {field: cache_data_managed_by_field} often uses a dict
         # to store a mapping from id to a value, but fields may use this field
@@ -760,46 +760,46 @@ class Transaction:
         # get the registry and rebuild the stack of states
         self.registry = Registry(self.registry.db_name)
         self._registry_sequence = self.registry.registry_sequence
-        self._state_stack = [
+        self._state_stack__ = [
             TransactionState(
                 default_env=state.default_env,
                 registry_sequence=self._registry_sequence,
-            ) for state in self._state_stack]
+            ) for state in self._state_stack__]
 
         self.clear()
 
     @contextmanager
     def committing(self):
         """ Context for committing the connection. """
-        assert not self._state_stack, "Pending savepoints not released, cannot commit!"
+        assert not self._state_stack__, "Pending savepoints not released, cannot commit!"
         yield
         self.clear()
 
     @contextmanager
     def rollbacking(self):
         """ Context for rollbacking the connection. """
-        assert not self._state_stack, "Pending savepoints not released, cannot rollback!"
+        assert not self._state_stack__, "Pending savepoints not released, cannot rollback!"
         yield
         self.restore_state()
 
     def save_state(self):
         """ Save the current state of the transaction for future restore. """
         self.flush()
-        self._state_stack.append(TransactionState(
+        self._state_stack__.append(TransactionState(
             default_env=self.default_env,
             registry_sequence=self._registry_sequence,
         ))
 
     def merge_state(self):
         """ Merge current state into the last saved state. """
-        assert self._state_stack, "no state to pop"
-        self._state_stack.pop()
+        assert self._state_stack__, "no state to pop"
+        self._state_stack__.pop()
 
     def restore_state(self):
         """ Restore the previously saved state of the transaction after
         rollback execution (on savepoint or connection). """
-        if self._state_stack:
-            state = self._state_stack[-1]
+        if self._state_stack__:
+            state = self._state_stack__[-1]
             self.default_env = state.default_env
         if self.registry.registry_sequence != self._registry_sequence:
             # registry changed, reset the transaction
