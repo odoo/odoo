@@ -72,7 +72,7 @@ test("hr.timesheet (form): FloatFactorField is used when the current_company uom
     expect('div[name="unit_amount"] input[inputmode="decimal"]').toBeVisible({
         message: "unit_amount is displayed as float",
     });
-    expect('div[name="unit_amount"] input').toHaveValue("1.0", {
+    expect('div[name="unit_amount"] input').toHaveValue("1", {
         message: "unit_amount is not displayed as float and not as time",
     });
     expect('div[name="unit_amount"].o_field_float_toggle').not.toHaveCount(null, {
@@ -88,7 +88,7 @@ test("hr.timesheet (form): FloatFactorField is dependent on timesheet_uom_factor
         resModel: "account.analytic.line",
         resId: 1,
     });
-    expect('div[name="unit_amount"] input').toHaveValue("2.0", {
+    expect('div[name="unit_amount"] input').toHaveValue("2", {
         message: "timesheet_uom_factor is taken into account",
     });
 });
