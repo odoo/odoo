@@ -1,3 +1,11 @@
+<<<<<<< a94a5598f5cf7274bf0794de117e950b0cca3416
+||||||| 6ba80ed1427f1b3ca3ef1c8c5beae6e0695b3e25
+/** @odoo-module **/
+
+=======
+/** @odoo-module **/
+import { _t } from "@web/core/l10n/translation";
+>>>>>>> a3dc7aee541a67e4edc5d95ca74e00fe30c49747
 import { ChatGPTDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_dialog';
 import { useState, status } from "@odoo/owl";
 
@@ -11,12 +19,12 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
     };
     static defaultProps = {
         alternativesModes: {
-            correct: 'Correct',
-            short: 'Shorten',
-            long: 'Lengthen',
-            friendly: 'Friendly',
-            professional: 'Professional',
-            persuasive: 'Persuasive',
+            correct: _t("Correct"),
+            short: _t("Shorten"),
+            long: _t("Lengthen"),
+            friendly: _t("Friendly"),
+            professional: _t("Professional"),
+            persuasive: _t("Persuasive"),
         },
         numberOfAlternatives: 3,
     };
