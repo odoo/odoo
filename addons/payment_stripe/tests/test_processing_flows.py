@@ -83,6 +83,24 @@ class TestProcessingFlows(StripeCommon, PaymentHttpCommon):
         with patch("odoo.addons.payment_stripe.controllers.main.request", new=mock_request):
             self._assert_does_not_raise(Forbidden, controller._verify_signature, tx)
 
+    @mute_logger("odoo.addons.payment_stripe.controllers.main")
+    def test_reject_notification_when_missing_secret(self):
+        self.stripe.stripe_webhook_secret = False
+        tx = self._create_transaction("redirect")
+        controller = StripeController()
+        self.assertRaises(Forbidden, controller._verify_signature, tx)
+
+    @mute_logger("odoo.addons.payment_stripe.controllers.main", "odoo.addons.payment.utils")
+    def test_reject_notification_with_missing_timestamp(self):
+        tx = self._create_transaction("redirect")
+        signature_header = "v1=Test_Signature"
+        mock_request = MagicMock()
+        mock_request.httprequest.data = b""
+        mock_request.httprequest.headers = {"Stripe-Signature": signature_header}
+        controller = StripeController()
+        with patch("odoo.addons.payment_stripe.controllers.main.request", new=mock_request):
+            self.assertRaises(Forbidden, controller._verify_signature, tx)
+
     @freeze_time("2026-02-13 15:08:21")
     @mute_logger("odoo.addons.payment_stripe.controllers.main", "odoo.addons.payment.utils")
     def test_reject_notification_with_missing_signature(self):
