@@ -246,7 +246,7 @@
                                                     </td>
                                                 </t>
                                                 <t t-elif="line.display_type in ('line_section', 'line_subsection')" name="account_invoice_line_section">
-                                                    <t t-set="section_subtotal" t-value="line.get_section_subtotal()"/>
+                                                    <t t-set="section_subtotal" t-value="line.get_section_subtotal() if o.company_price_include == 'tax_excluded' else line.get_section_total()"/>
                                                     <!-- For desktop -->
                                                     <td name="line_name_td"
                                                         t-att-colspan="(1 if is_product else line_colspan)"
