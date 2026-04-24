@@ -95,6 +95,9 @@ export class SocialMediaLinks extends BaseOptionComponent {
      * @returns { SocialMediaLinkItem[] }
      */
     computeItems() {
+        // subscribe to signal to update render
+        void this.reorderTriggered.trigger;
+
         const missingRecordedSocialMediaNames = new Set(this.recordedSocialMediaNames);
         const idsLookUp = new Map(this.ids.map((id, i) => [id, i]));
         const idsInDom = new Set();
