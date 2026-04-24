@@ -659,3 +659,71 @@ class TestEdiZatca(TestSaEdiCommon):
             namespaces=self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
         )[0].text.strip()
         self.assertEqual(payable_amount, '115.00')
+
+    @freeze_time('2022-09-05 08:20:02')
+    def test_invoice_global_rounding_payable_amount(self):
+        """Test that prepaid tax amounts are calculated correctly when using global rounding.
+
+        Scenario: 8 invoice lines * 5.001 raw tax = 40.008 → 40.01 (correct, after global rounding)
+                  vs 5.00 + 5.00... = 40.00 (incorrect, from summing pre-rounded values)
+        """
+        self.ensure_installed('sale')
+
+        self.company.tax_calculation_rounding_method = 'round_globally'
+
+        # Create sale order with 8 lines at 33.34 each (triggers rounding precision issues)
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_sa.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 33.34,
+                    'product_uom_qty': 1,
+                    'tax_id': [Command.set(self.tax_15.ids)],
+                }) for _dummy in range(8)
+            ],
+        })
+        sale_order.action_confirm()
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order.ids,
+            'active_id': sale_order.id,
+            'default_journal_id': self.customer_invoice_journal.id,
+        }
+
+        downpayment_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({  # noqa: OLS03001
+            'advance_payment_method': 'percentage',
+            'amount': 100,
+        })
+        downpayment = downpayment_wizard._create_invoices(sale_order)
+        downpayment.action_post()
+
+        # Create final invoice that inludes downpayment lines
+        final_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})
+        final = final_wizard._create_invoices(sale_order)
+        final.action_post()
+
+        EdiHandler = self.env['account.edi.xml.ubl_21.zatca']
+        prepaid_vals = EdiHandler._l10n_sa_get_prepaid_amount(final, {})
+
+        self.assertGreaterEqual(len(prepaid_vals), 1, "Prepaid values shouldn't be empty")
+        # With correct rounding (sum raw at hundredth): 8 * 5.001 = 40.008 → 40.01
+        # With incorrect rounding (sum rounded): would be 8 * 5.00 = 40.00
+        expected_tax = final.currency_id.round(8 * 5.001)
+        self.assertEqual(
+            prepaid_vals['tax_amount'],
+            expected_tax,
+            f"Tax amount should be {expected_tax} (correct hundredth rounding), got \
+            {prepaid_vals['tax_amount']}"
+        )
+
+        monetary_vals = EdiHandler._l10n_sa_get_monetary_vals(final, {
+            'taxes_vals': {'base_amount_currency': 266.72, 'tax_amount_currency': 40.01},
+            'vals': {
+                'monetary_total_vals': {'line_extension_amount': 266.72, 'payable_rounding_amount': 0},
+                'allowance_charge_vals': [],
+            }
+        })
+        self.assertEqual(monetary_vals['payable_amount'], 0.0,
+        f"Payable amount should be 0.0 (fully prepaid), got {monetary_vals['payable_amount']}")

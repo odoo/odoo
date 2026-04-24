@@ -232,7 +232,14 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
                 filter_tax_values_to_apply=lambda l, t: not self.env['account.tax'].browse(t.get('id')).l10n_sa_is_retention
             )
             base_amount = abs(sum(tax_vals['tax_details_per_record'][l]['base_amount_currency'] for l in downpayment_lines))
-            tax_amount = abs(sum(tax_vals['tax_details_per_record'][l]['tax_amount_currency'] for l in downpayment_lines))
+            # Sum raw values before rounding to avoid cumulative rounding errors from individual line rounding
+            tax_amount = abs(sum(
+                values['raw_tax_amount_currency']
+                for downpayment_line in downpayment_lines
+                for values in tax_vals['tax_details_per_record'][downpayment_line]
+                ['tax_details'].values()
+            ))
+            tax_amount = invoice.currency_id.round(tax_amount)
             return {
                 'total_amount': base_amount + tax_amount,
                 'base_amount': base_amount,
