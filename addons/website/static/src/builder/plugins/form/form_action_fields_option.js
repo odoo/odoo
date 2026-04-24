@@ -17,10 +17,10 @@ export class FormActionFieldsOption extends BaseOptionComponent {
                 fields: [],
             },
         });
-        onWillStart(this.getFormInfo.bind(this));
-        onWillUpdateProps(this.getFormInfo.bind(this));
+        onWillStart(() => this.getFormInfo(this.props));
+        onWillUpdateProps((np) => this.getFormInfo(np));
     }
-    async getFormInfo(props = this.props) {
+    async getFormInfo(props) {
         const el = this.env.getEditingElement();
         const formInfo = await this.prepareFormModel(el, props.activeForm);
         Object.assign(
