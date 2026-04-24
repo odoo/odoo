@@ -72,12 +72,12 @@ class LivechatChatbotScriptController(http.Controller):
         if not next_step:
             # sudo - discuss.channel: marking the channel as closed as part of the chat bot flow
             discuss_channel.sudo().livechat_active = False
-            step_message = next(
+            step_message = next((
                 # sudo - chatbot.message.id: visitor can access chat bot messages.
                 m.mail_message_id for m in discuss_channel.sudo().chatbot_message_ids
                 if m.script_step_id == current_step
                 and m.mail_message_id.author_id == chatbot.operator_partner_id
-            )
+            ), request.env['mail.message'])
             store.add(discuss_channel)
             store.add_model_values(
                 "ChatbotStep",
