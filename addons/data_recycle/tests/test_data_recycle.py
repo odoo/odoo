@@ -84,3 +84,53 @@ class TestDataRecycle(TransactionCase):
         self.recycle_model.include_archived = True
         self.recycle_model._recycle_records()
         self.assertEqual(len(self.recycle_model.recycle_record_ids), 5)
+
+    def test_time_field_defaults(self):
+        """ Ensure that when no time field is specified, write_date with a 1-month delta is used by default. """
+        recycle_model = self.env['data_recycle.model'].create({
+            'name': 'Recycle Default Time Field',
+            'res_model_id': self.server_model.id,
+            'recycle_action': 'archive',
+        })
+        self.assertEqual(recycle_model.time_field_id.name, 'write_date', 'time_field_id should default to write_date.')
+        self.assertEqual(recycle_model.time_field_delta, 1, 'time_field_delta should default to 1.')
+        self.assertEqual(recycle_model.time_field_delta_unit, 'months', 'time_field_delta_unit should default to months.')
+
+        # Only servers with write_date older than 1 month should be picked up.
+        recycle_model._recycle_records()
+        self.assertTrue(
+            all(r.res_id in self.old_servers.ids for r in recycle_model.recycle_record_ids),
+            'Only old servers should be queued for recycling.'
+        )
+        self.assertTrue(
+            all(s.id not in recycle_model.recycle_record_ids.mapped('res_id') for s in self.new_servers),
+            'New servers should not be queued for recycling.'
+        )
+
+    def test_time_field_user_override(self):
+        """ Ensure that user-specified time_field_id and delta are preserved and applied correctly. """
+        date_field = self.env['ir.model.fields'].search(
+            [('name', '=', 'date'), ('model_id', '=', self.server_model.id)], limit=1)
+        recycle_model = self.env['data_recycle.model'].create({
+            'name': 'Recycle User Override Time Field',
+            'res_model_id': self.server_model.id,
+            'time_field_id': date_field.id,
+            'time_field_delta': 6,
+            'time_field_delta_unit': 'months',
+            'recycle_action': 'archive',
+        })
+        self.assertEqual(
+            recycle_model.time_field_id, date_field,
+            'The time_field_id inputted by the user should not be overridden by the compute.'
+        )
+
+        # Servers with date older than 6 months are picked up, but not the ones created today.
+        recycle_model._recycle_records()
+        self.assertEqual(
+            set(recycle_model.recycle_record_ids.mapped('res_id')), set(self.old_servers.ids),
+            'Only the 2-year-old servers should be queued using the user-defined date field and 6-month delta.'
+        )
+        self.assertFalse(
+            any(s.id in recycle_model.recycle_record_ids.mapped('res_id') for s in self.new_servers),
+            'Servers created today should not be queued for recycling.'
+        )
