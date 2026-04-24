@@ -1354,3 +1354,43 @@ class TestPurchase(AccountTestInvoicingCommon):
             "The UoM of the PO line for the Blue variant should not be the supplier info UoM (dozens) tied to Red.")
         self.assertNotIn(self.uom_dozen, po_line_blue.allowed_uom_ids,
             "The dozens UoM should not be allowed for the Blue variant since the supplier info is specific to Red.")
+
+    def test_action_receive_on_purchase_order_with_stock_installed(self):
+        """Verify that calling action_receive on a purchase order
+        while the stock module is installed raises a UserError,
+        and the received quantity remains zero.
+        """
+        self.ensure_installed('stock')
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'product_qty': 1,
+            })],
+        })
+        po.button_confirm()
+        with self.assertRaises(UserError):
+            po.action_receive()
+        self.assertEqual(po.order_line.qty_received, 0)
+
+
+@tagged('at_install', '-post_install')
+class TestPurchaseWithoutStock(AccountTestInvoicingCommon):
+
+    def test_qty_received_with_different_purchase_and_product_uom(self):
+        """Ensure that when a purchase order line uses a UoM different from the
+        product's default UoM (e.g. dozens instead of units), the received
+        quantity reflect the purchase UoM and ahquantity, not the product UoM quantity.
+        """
+        self.assertEqual(self.product.uom_id, self.env.ref('uom.product_uom_unit'))
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'product_qty': 1,
+                'uom_id': self.env.ref('uom.product_uom_dozen').id,
+            })],
+        })
+        po.button_confirm()
+        po.action_receive()
+        self.assertEqual(po.order_line.qty_received, 1)
