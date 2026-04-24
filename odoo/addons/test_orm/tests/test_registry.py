@@ -6,7 +6,7 @@ from odoo.tests.common import TransactionCase, tagged
 
 @tagged('post_install')
 class TestRegistry(TransactionCase):
-    def test_setup_models_field_leak(self):
+    def test_setup_models_field_leak(self, model_names=None):
         registry = self.registry
         registry._setup_models__(self.cr)  # clean start
 
@@ -28,7 +28,12 @@ class TestRegistry(TransactionCase):
             self.env.user.read()  # run some code
 
         # Re-setup models
-        registry._setup_models__(self.cr)
+        if model_names is None:
+            registry._setup_models__(self.cr)
+        else:
+            registry._setup_models__(self.cr, model_names)
+            registry.field_setup_dependents.clear()  # filled during incremental setup
+
         registry.clear_all_caches()  # stuff may remain in the cache
 
         # Now collect objects
@@ -68,3 +73,6 @@ class TestRegistry(TransactionCase):
                     info.append('...')
                     break
             self.fail('\n'.join(info))
+
+    def test_setup_models_field_leak_partial(self):
+        self.test_setup_models_field_leak(('res.users', 'res.company'))
