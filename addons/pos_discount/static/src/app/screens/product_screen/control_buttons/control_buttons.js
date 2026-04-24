@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { patch } from "@web/core/utils/patch";
@@ -50,9 +51,9 @@ patch(ControlButtons.prototype, {
                 lines.filter((ll) => ll.isGlobalDiscountApplicable())
             );
 
-            const taxes = tax_ids_array
+            const taxesForDiscountLine = tax_ids_array
                 .map((taxId) => this.pos.models["account.tax"].get(taxId))
-                .filter(Boolean);
+                .filter((tax) => tax && accountTaxHelpers.can_be_discounted(tax));
 
             // We add the price as manually set to avoid recomputation when changing customer.
             const discount = (-pc / 100.0) * baseToDiscount;
@@ -61,7 +62,7 @@ patch(ControlButtons.prototype, {
                     {
                         product_id: product,
                         price_unit: discount,
-                        tax_ids: [["link", ...taxes]],
+                        tax_ids: [["link", ...taxesForDiscountLine]],
                         product_tmpl_id: product.product_tmpl_id,
                     },
                     { merge: false }

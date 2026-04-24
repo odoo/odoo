@@ -49,3 +49,15 @@ registry.category("web_tour.tours").add("test_invoice_order_with_global_discount
             ReceiptScreen.receiptAmountTotalIs("90.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("pos_global_discount_fixed_and_percent_taxes", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Global Disc Fixed Tax Product"),
+            ProductScreen.clickControlButton("Discount"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs(118),
+        ].flat(),
+});
