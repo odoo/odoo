@@ -237,6 +237,10 @@ class PurchaseOrder(models.Model):
         match_fields = super()._prepare_grouped_data(rfq)
         return match_fields + (rfq.requisition_id.id,)
 
+    def _merge_po_post_process(self, rfqs):
+        super()._merge_po_post_process(rfqs)
+        self._merge_alternative_po(rfqs)
+
     def _merge_alternative_po(self, rfqs):
         if self.alternative_po_ids:
             super()._merge_alternative_po(rfqs)
