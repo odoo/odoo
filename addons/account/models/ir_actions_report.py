@@ -27,10 +27,10 @@ class IrActionsReport(models.Model):
 
         collected_streams = OrderedDict()
         for invoice in invoices:
-            attachment = self._prepare_local_attachments(invoice.message_main_attachment_id)
+            attachment = self._prepare_local_attachments(invoice.message_main_attachment_id.sudo())
             if attachment:
                 stream = pdf.to_pdf_stream(attachment)
-                if stream:
+                if stream and attachment.res_model:
                     record = self.env[attachment.res_model].browse(attachment.res_id)
                     try:
                         stream = pdf.add_banner(stream, record.name or '', logo=True)
