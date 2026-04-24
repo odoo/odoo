@@ -2008,3 +2008,33 @@ class TestSaleProject(TestSaleProjectCommon):
 
         for subtask in subtasks:
             self.assertEqual(subtask.sale_line_id, sale_order_line, "Subtask '%s' should inherit sale_line_id from parent task" % subtask.name)
+
+    def test_section_sale_line_from_template_has_no_task(self):
+        default_task = self.env['project.task'].with_context(tracking_disable=True).create({
+            'name': 'Task',
+            'project_id': self.project_global.id
+        })
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True, default_task_id=default_task.id).create({
+            'partner_id': self.partner.id,
+        })
+
+        quotation_template = self.env['sale.order.template'].create({
+            'name': 'Test quotation with section',
+        })
+        quotation_template.write({
+            'sale_order_template_line_ids': [
+                Command.set(
+                    self.env['sale.order.template.line'].create([{
+                        'name': 'section 1',
+                        'sale_order_template_id': quotation_template.id,
+                        'display_type': 'line_section',
+                    }]).ids
+                )
+            ]
+        })
+
+        sale_order.with_context(default_task_id=default_task.id).write({
+            'sale_order_template_id': quotation_template.id,
+        })
+        sale_order.with_context(default_task_id=default_task.id)._onchange_sale_order_template_id()
+        self.assertFalse(sale_order.order_line.mapped('task_id'), "SOL should have no related tasks, because it is a section")
