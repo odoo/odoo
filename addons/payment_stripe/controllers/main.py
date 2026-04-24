@@ -199,7 +199,7 @@ class StripeController(http.Controller):
         webhook_secret = stripe_utils.get_webhook_secret(tx_sudo.provider_id)
         if not webhook_secret:
             _logger.warning("ignored webhook event due to undefined webhook secret")
-            return
+            raise Forbidden()
 
         notification_payload = request.httprequest.data.decode('utf-8')
         signature_entries = request.httprequest.headers['Stripe-Signature'].split(',')
