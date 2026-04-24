@@ -109,7 +109,7 @@ registry.category("web_tour.tours").add("configurator_translation", {
 registry.category("web_tour.tours").add("configurator_page_creation", {
     steps: () => [
         ...runConfiguratorFlow("abbey", "Pricing Plan"),
-        // Verify configurator page templates exist in landing pages category.
+        // Verify configurator page templates exist in their matching category.
         {
             content: "Open create content menu",
             trigger: ".o_new_content_container button",
@@ -121,18 +121,18 @@ registry.category("web_tour.tours").add("configurator_page_creation", {
             run: "click",
         },
         {
-            content: "Click on landing pages category",
-            trigger: "[data-id='landing']",
+            content: "Click on pricing pages category",
+            trigger: ".o_website_page_templates_dialog aside [data-id='pricing']",
             run: "click",
         },
         {
             content: "Check if configurator pages exist",
-            trigger: "[data-id='landing'] .o_page_template[data-configurator-page]",
+            trigger: "#pane_pricing .o_page_template[data-configurator-page]",
         },
         {
-            content: "Configurator pages should appear at the start of the landing category",
+            content: "Configurator pages should appear at the start of the pricing category",
             trigger:
-                "[data-id='landing'] .row > :first-child .o_page_template:first-of-type[data-configurator-page]",
+                "#pane_pricing .row > :first-child .o_page_template:first-of-type[data-configurator-page]",
         },
         {
             content: "Exit dialog",

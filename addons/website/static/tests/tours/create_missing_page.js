@@ -73,7 +73,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on 'Blank Page'",
-            trigger: ".o_page_template .o_button_area:not(:visible)",
+            trigger: "button[data-name='add_blank_page']",
             run: "click",
         },
         {
@@ -183,7 +183,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on 'Blank Page'",
-            trigger: ".o_page_template .o_button_area:not(:visible)",
+            trigger: "button[data-name='add_blank_page']",
             run: "click",
         },
         {
