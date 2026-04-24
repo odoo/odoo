@@ -112,7 +112,7 @@ class HrVersion(models.Model):
 
     def _get_leaves_from_vals(self, vals):
         domain = [
-            ('state', '!=', 'refuse'),
+            ('state', 'not in', ['refuse', 'cancel']),
             ('employee_id', 'in', vals['employee_id']),
             ('date_to', '>=', fields.Date.from_string(vals.get('contract_date_start', vals.get('date_version', fields.Date.today())))),
             ('resource_calendar_id', '!=', vals.get('resource_calendar_id')),
