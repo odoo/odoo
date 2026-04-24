@@ -220,10 +220,7 @@ patch(OrderPaymentValidation.prototype, {
         this.pos.validated_orders_name_server_id_map[this.order.name] = this.order.id;
 
         // Now, do practically the normal flow
-        if (
-            (this.order.isPaidWithCash() || this.order.change) &&
-            this.pos.config.iface_cashdrawer
-        ) {
+        if ((this.order.isPaidWithCash() || this.order.change) && this.pos.canOpenCashdrawer) {
             this.pos.openCashbox();
         }
 

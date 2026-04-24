@@ -147,7 +147,7 @@
                         <t t-out="this.env.utils.formatCurrency(this.currentOrder.getTip())" />
                     </t>
                 </button>
-                <button t-if="this.pos.config.iface_cashdrawer" class="button js_cashdrawer btn btn-secondary btn-lg py-3 rounded"
+                <button t-if="this.pos.canOpenCashdrawer" class="button js_cashdrawer btn btn-secondary btn-lg py-3 rounded"
                     t-on-click="() => this.pos.openCashbox()">
                     <i class="fa fa-archive me-2" />Open Cashbox
                 </button>

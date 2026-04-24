@@ -626,7 +626,8 @@ export class SelfOrder extends Reactive {
                 .get(pm.payment_provider, null);
             pm.payment_interface = PaymentInterface ? new PaymentInterface(this, pm) : null;
         }
-
+        // In case of kiosk set last printer as default printer
+        this.ticketPrinter.defaultPrinter = this.ticketPrinter.receiptPrinters.at(-1);
         if (this.ticketPrinter.useLna) {
             initLNA(this.notification);
         }

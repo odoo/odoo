@@ -74,11 +74,14 @@
                                 <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
                                     <i class="fa fa-fw fa-plus" aria-hidden="true" /> Create Product
                                 </DropdownItem>
+                                <DropdownItem t-if="showPrinterButton" onSelected="() => this.pos.ticketPrinter.selectPrinter(true)">
+                                    <i class="fa fa-fw fa-print" aria-hidden="true" /> Printers
+                                </DropdownItem>
                                 <DropdownItem t-if="isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and ui.isSmall and !pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
                                     <i class="fa fa-fw fa-barcode" aria-hidden="true" /> <t t-if="this.pos.scanning">Stop</t> Barcode Scanner
                                 </DropdownItem>
                                 <DropdownItem t-if="pos.ticketPrinter.hasReceiptPrinters" onSelected="() => this.showSaleDetails()">
-                                    <i class="fa fa-fw fa-print" aria-hidden="true" /> Print Report
+                                    <i class="fa fa-fw fa-file-pdf-o" aria-hidden="true" /> Print Report
                                 </DropdownItem>
                                 <DropdownItem onSelected="() => pos.closePos()">
                                     <i class="fa fa-fw fa-chevron-left" aria-hidden="true" /> Backend

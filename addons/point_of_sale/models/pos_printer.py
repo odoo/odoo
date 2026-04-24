@@ -65,6 +65,7 @@ class PosPrinter(models.Model):
         ),
     )
     use_lna = fields.Boolean(string="Use Local Network Access")
+    use_cashdrawer = fields.Boolean(string='Link Cashdrawer', help="Automatically open the cashdrawer.")
     paper_size = fields.Selection(string="Paper Size", selection=[
         ('80', 'Standard 80mm'),
         ('58', 'Standard 58mm'),
@@ -92,13 +93,20 @@ class PosPrinter(models.Model):
 
             record.paper_size_keys = ",".join(standard_size)
 
+    @api.onchange('use_type')
+    def _onchange_use_type(self):
+        """Disable use_cashdrawer when printer type is preparation"""
+        for rec in self:
+            if rec.use_type == "preparation" and rec.use_cashdrawer:
+                rec.use_cashdrawer = False
+
     @api.model
     def _load_pos_data_domain(self, data, config):
         return [('id', 'in', config.preparation_printer_ids.ids + config.receipt_printer_ids.ids)]
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'printer_ip', 'paper_size', 'timeout']
+        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'printer_ip', 'paper_size', 'use_cashdrawer', 'timeout']
 
     @api.constrains('printer_ip')
     def _constrains_printer_ip(self):

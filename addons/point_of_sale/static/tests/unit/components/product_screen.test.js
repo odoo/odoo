@@ -129,3 +129,15 @@ test("drag and drop reorders products", async () => {
     expect(reorderedIds.indexOf(9)).toBeLessThan(reorderedIds.indexOf(7));
     expect(products.get(6).pos_sequence).toBe(21);
 });
+
+test("multiplePrinter using mock records", async () => {
+    const store = await setupPosEnv();
+    const printer = store.ticketPrinter;
+
+    localStorage.setItem(printer.printerStorageKey, "3");
+    const defaultPrinter1 = await printer.selectPrinter();
+    expect(defaultPrinter1.id).toBe(3);
+    localStorage.setItem(printer.printerStorageKey, "4");
+    const defaultPrinter2 = await printer.selectPrinter();
+    expect(defaultPrinter2.id).toBe(4);
+});

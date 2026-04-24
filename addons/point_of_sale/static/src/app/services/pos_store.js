@@ -506,8 +506,14 @@ export class PosStore extends WithLazyGetterTrap {
         this.openCashbox(_t("Cash in / out"));
         return makeAwaitable(this.dialog, CashMovePopup);
     }
+    get canOpenCashdrawer() {
+        return (
+            this.config.receipt_printer_ids.length &&
+            this.ticketPrinter?.defaultPrinter?.use_cashdrawer
+        );
+    }
     async openCashbox(action = undefined) {
-        if (this.config.iface_cashdrawer) {
+        if (this.canOpenCashdrawer) {
             await this.ticketPrinter.openCashbox();
 
             if (action) {

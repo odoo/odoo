@@ -15,6 +15,7 @@ export class BasePrinter {
         this.use_lna = printer.use_lna;
         this.paperSize = printer.paper_size || 80;
         this.timeout = printer.timeout || 3000;
+        this.use_cashdrawer = printer.use_cashdrawer;
     }
 
     get STYLE_MAPPING() {

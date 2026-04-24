@@ -9,11 +9,12 @@ export class SelectDefaultPrinterPopup extends Component {
         receipt_printers: Array,
         close: Function,
         getPayload: Function,
+        selectedId: { type: Number, optional: true },
     };
 
     setup() {
         this.state = useState({
-            selectedId: null,
+            selectedId: this.props.selectedId,
         });
     }
 

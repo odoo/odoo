@@ -108,6 +108,7 @@
             "point_of_sale/static/src/app/utils/printer/*",
             'point_of_sale/static/src/app/utils/html-to-image.js',
             'point_of_sale/static/src/app/utils/use_timed_press.js',
+            'point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.js',
             'point_of_sale/static/src/app/services/pos_ticket_printer_service.js',
             'point_of_sale/static/src/app/components/popups/retry_print_popup/**',
             'point_of_sale/static/src/app/components/popups/text_input_popup/**',

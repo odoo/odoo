@@ -376,14 +376,14 @@ export class PaymentScreen extends Component {
     shouldShowTipOrder() {
         return (
             (this.pos.config.iface_tipproduct && this.pos.config.tip_product_id) ||
-            this.pos.config.iface_cashdrawer
+            this.pos.canOpenCashdrawer
         );
     }
 
     optionalButtonValues() {
         return (
             (this.pos.config.iface_tipproduct && this.pos.config.tip_product_id) ||
-            this.pos.config.iface_cashdrawer
+            this.pos.canOpenCashdrawer
         );
     }
 }

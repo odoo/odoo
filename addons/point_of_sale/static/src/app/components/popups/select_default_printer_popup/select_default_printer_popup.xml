@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.SelectDefaultPrinterPopup" owl="1">
-        <Dialog size="'sm'" title.translate="Several printers are available">
-            <t t-out="'Choose another printer'"/>
+        <Dialog size="'sm'" title.translate="Several receipt printers are available">
+            Which one would you like to use as default for this device?
             <t t-foreach="this.props.receipt_printers" t-as="p" t-key="p.id">
                 <div class="my-2">
                     <label class="d-flex align-items-center">
@@ -17,6 +17,9 @@
                     </label>
                 </div>
             </t>
+            <div class="text-warning">
+                You can change your choice from the menu, under <b>Printers</b> item
+            </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="this.confirmSelection" t-att-disabled="!this.state.selectedId">
                     Confirm
