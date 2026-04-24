@@ -68,12 +68,12 @@ class LivechatChatbotScriptController(http.Controller):
             # sudo: visitor cannot write on channel otherwise. Just writing a
             # boolean is safe
             discuss_channel.sudo().livechat_active = False
-            step_message = next(
+            step_message = next((
                 # sudo - chatbot.message.id: visitor can access chat bot messages.
                 m.mail_message_id for m in discuss_channel.sudo().chatbot_message_ids
                 if m.script_step_id == current_step
                 and m.mail_message_id.author_id == chatbot.operator_partner_id
-            )
+            ), request.env['mail.message'])
             store = Store(discuss_channel)
             store.add_model_values(
                 "ChatbotStep",
