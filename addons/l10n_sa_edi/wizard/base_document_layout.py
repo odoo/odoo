@@ -13,8 +13,6 @@ class BaseDocumentLayout(models.TransientModel):
 
         additional_company_details = ""
 
-        if self.env.company.vat:
-            additional_company_details += Markup('VAT Number: %s <br/>') % self.env.company.vat
         if (code := self.env.company.l10n_sa_edi_additional_identification_scheme) and self.env.company.l10n_sa_edi_additional_identification_number:
             code_value = dict(self._fields['l10n_sa_edi_additional_identification_scheme']._description_selection(self.env))[code]
             additional_company_details += f"{code_value}: {self.env.company.l10n_sa_edi_additional_identification_number}"
