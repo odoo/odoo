@@ -580,14 +580,15 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
             'reply_to_mode': 'new',
             'reply_to': self.email_reply_to,
         })
-        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+        initial_msgs = self.mailing_list_1.contact_ids.message_ids
+        self.assertEqual(len(initial_msgs), 3, 'Should contain only creation messages')
 
         with self.mock_mail_gateway(mail_unlink_sent=True):
             mailing.action_send_mail()
 
         self.assertEqual(len(self._mails), 3)
         self.assertEqual(len(self._new_mails.exists()), 3)
-        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3)
+        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 6, 'Should add one message / record')
 
         # 2- Keep archives and reply-to set to 'answer = update thread'
         self.mailing_list_1.contact_ids.message_ids.unlink()
@@ -602,7 +603,7 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
 
         self.assertEqual(len(self._mails), 3)
         self.assertEqual(len(self._new_mails.exists()), 3)
-        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3)
+        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3, 'Should not add any message')
 
         # 3- Remove archives and reply-to set to 'answer = new thread'
         self.mailing_list_1.contact_ids.message_ids.unlink()

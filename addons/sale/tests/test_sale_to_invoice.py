@@ -202,7 +202,6 @@ class TestSaleToInvoice(TestSaleCommon):
         sale_order = (
             self
             .env["sale.order"]
-            .with_context(tracking_disable=True)
             .create({
                 "partner_id": self.partner_a.id,
                 "partner_invoice_id": self.partner_a.id,
@@ -260,7 +259,6 @@ class TestSaleToInvoice(TestSaleCommon):
         sale_order = (
             self
             .env["sale.order"]
-            .with_context(tracking_disable=True)
             .create({
                 "partner_id": self.partner_a.id,
                 "partner_invoice_id": self.partner_a.id,
@@ -306,7 +304,6 @@ class TestSaleToInvoice(TestSaleCommon):
         sale_order = (
             self
             .env["sale.order"]
-            .with_context(tracking_disable=True)
             .create({
                 "partner_id": self.partner_a.id,
                 "partner_invoice_id": self.partner_a.id,
@@ -786,7 +783,6 @@ class TestSaleToInvoice(TestSaleCommon):
         sale_order = (
             self
             .env["sale.order"]
-            .with_context(tracking_disable=True)
             .create({
                 "partner_id": self.partner_a.id,
                 "partner_invoice_id": self.partner_a.id,
@@ -794,7 +790,7 @@ class TestSaleToInvoice(TestSaleCommon):
             })
         )
 
-        SaleOrderLine = self.env["sale.order.line"].with_context(tracking_disable=True)
+        SaleOrderLine = self.env["sale.order.line"]
         SaleOrderLine.create({
             "name": "Section",
             "display_type": "line_section",
@@ -855,7 +851,6 @@ class TestSaleToInvoice(TestSaleCommon):
         sale_order = (
             self
             .env["sale.order"]
-            .with_context(tracking_disable=True)
             .create({
                 "partner_id": self.partner_a.id,
                 "partner_invoice_id": self.partner_a.id,
@@ -965,7 +960,6 @@ class TestSaleToInvoice(TestSaleCommon):
         sale_order = (
             self
             .env["sale.order"]
-            .with_context(tracking_disable=True)
             .create({
                 "partner_id": self.partner_a.id,
                 "partner_invoice_id": self.partner_a.id,
@@ -973,7 +967,7 @@ class TestSaleToInvoice(TestSaleCommon):
             })
         )
 
-        SaleOrderLine = self.env["sale.order.line"].with_context(tracking_disable=True)
+        SaleOrderLine = self.env["sale.order.line"]
         sol_prod_deliver = SaleOrderLine.create({
             "product_id": self.company_data["product_order_no"].id,
             "product_uom_qty": 5,
@@ -1213,7 +1207,7 @@ class TestSaleToInvoice(TestSaleCommon):
             "name": "EUR",
             "currency_id": self.env.ref("base.EUR").id,
         })
-        so1 = self.sale_order.with_context(mail_notrack=True).copy()
+        so1 = self.sale_order.copy()
         so1.pricelist_id = eur_pricelist
         so2 = so1.copy()
         usd_pricelist = self.env["product.pricelist"].create({

@@ -573,7 +573,6 @@ class CustomerPortal(Controller):
             )
             create_context = clean_context(request.env.context)
             create_context.update({
-                'tracking_disable': True,
                 'no_vat_validation': True,  # Already verified in _validate_address_values
             })
             partner_sudo = request.env['res.partner'].sudo().with_context(

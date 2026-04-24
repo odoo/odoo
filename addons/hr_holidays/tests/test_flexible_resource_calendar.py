@@ -64,7 +64,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'unit_of_measure': 'day',
         }])
 
-        self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).create([{
+        self.env['hr.leave'].create([{
             'name': 'Half 1',
             'work_entry_type_id': half_day_leave.id,
             'employee_id': self.flex_employee.id,
@@ -189,7 +189,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'unit_of_measure': 'day',
         })
 
-        self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).create({
+        self.env['hr.leave'].create({
             'name': 'Test Leave',
             'work_entry_type_id': test_leave_type.id,
             'employee_id': self.fully_flex_employee.id,

@@ -471,7 +471,6 @@ class TestSalePrices(SaleCommon):
         # product_2.cost_currency_id = so currency
         sales_order = (
             product_1_ctxt
-            .with_context(mail_notrack=True, mail_create_nolog=True)
             .env["sale.order"]
             .create({
                 "partner_id": user_in_other_company.partner_id.id,
@@ -497,7 +496,6 @@ class TestSalePrices(SaleCommon):
         pricelist.currency_id = main_curr
         sales_order = (
             product_1_ctxt
-            .with_context(mail_notrack=True, mail_create_nolog=True)
             .env["sale.order"]
             .create({
                 "partner_id": user_in_other_company.partner_id.id,

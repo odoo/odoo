@@ -88,6 +88,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         else:
             date_from_tz = datetime.combine(self.date_from, datetime.min.time(), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
             date_to_tz = datetime.combine(self.date_to, datetime.max.time(), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+        # seems 'tracking_disable' is wanted to speedup batch creation
         conflicting_leaves = self.env['hr.leave'].with_context(
             tracking_disable=True,
             mail_activity_automation_skip=True,

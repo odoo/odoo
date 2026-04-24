@@ -14,7 +14,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('res_partner', 'mail_tools', 'mail_thread_api')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestPartner(MailCommon):
 
     @classmethod
@@ -583,7 +583,7 @@ class TestPartner(MailCommon):
         self.assertEqual(p1.message_follower_ids.partner_id, self.partner_admin + p3)
         self.assertEqual(p1.message_ids, p1_msg_ids_init + p1_msg1)
         self.assertEqual(p2.activity_ids, self.env['mail.activity'])
-        self.assertEqual(p2.message_follower_ids.partner_id, self.partner_admin)
+        self.assertFalse(p2.message_follower_ids.partner_id)
         self.assertEqual(p2.message_ids, p2_msg_ids_init)
 
         MergeForm = Form(self.env['base.partner.merge.automatic.wizard'].with_context(

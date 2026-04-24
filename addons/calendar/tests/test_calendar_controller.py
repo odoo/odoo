@@ -11,18 +11,12 @@ class TestCalendarController(HttpCase):
         self.user = new_test_user(self.env, "test_user_1", email="test_user_1@nowhere.com", tz="UTC")
         self.other_user = new_test_user(self.env, "test_user_2", email="test_user_2@nowhere.com", password="P@ssw0rd!", tz="UTC")
         self.partner = self.user.partner_id
-        self.event = (
-            self.env["calendar.event"]
-            .create(
-                {
-                    "name": "Doom's day",
-                    "start": datetime(2019, 10, 25, 8, 0),
-                    "stop": datetime(2019, 10, 27, 18, 0),
-                    "partner_ids": [(4, self.partner.id)],
-                }
-            )
-            .with_context(mail_notrack=True)
-        )
+        self.event = self.env["calendar.event"].create({
+            "name": "Doom's day",
+            "start": datetime(2019, 10, 25, 8, 0),
+            "stop": datetime(2019, 10, 27, 18, 0),
+            "partner_ids": [(4, self.partner.id)],
+        })
 
     def test_accept_meeting_unauthenticated(self):
         self.event.write({"partner_ids": [(4, self.other_user.partner_id.id)]})

@@ -115,8 +115,8 @@ class TestSaleProject(TestSaleProjectCommon):
         })
 
     def test_sale_order_with_project_task(self):
-        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
-        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        SaleOrder = self.env['sale.order']
+        SaleOrderLine = self.env['sale.order.line']
 
         sale_order = SaleOrder.create({
             'partner_id': self.partner.id,
@@ -220,7 +220,7 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(self.project_global._get_sale_orders(), sale_order | sale_order_2)
 
     def test_sol_product_type_update(self):
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
@@ -244,7 +244,7 @@ class TestSaleProject(TestSaleProjectCommon):
         group_sale_manager = self.env.ref('sales_team.group_sale_manager')
         group_project_user = self.env.ref('project.group_project_user')
         self.env.user.write({'group_ids': [(6, 0, [group_sale_manager.id, group_project_user.id])]})
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
@@ -356,7 +356,7 @@ class TestSaleProject(TestSaleProjectCommon):
             show_create_project_button is set to True. If the sale order also has one project linked to it, then the show_project_and_task_button should be True, and the show_create_button
             should be updated to False
         """
-        sale_order_1 = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order_1 = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
@@ -428,11 +428,11 @@ class TestSaleProject(TestSaleProjectCommon):
         When we add an SOL from a template that is a service that has a service_policy that will generate a task,
         even if default_task_id is present in the context, a new task should be created when confirming the SO.
         """
-        default_task = self.env['project.task'].with_context(tracking_disable=True).create({
+        default_task = self.env['project.task'].create({
             'name': 'Task',
             'project_id': self.project_global.id
         })
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True, default_task_id=default_task.id).create({
+        sale_order = self.env['sale.order'].with_context(default_task_id=default_task.id).create({
             'partner_id': self.partner.id,
         })
         quotation_template = self.env['sale.order.template'].create({
@@ -465,7 +465,7 @@ class TestSaleProject(TestSaleProjectCommon):
 
     def test_project_creation_on_so_confirm_with_account(self):
         # Ensures that the company of the account of the SO is propagated to the project.
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
@@ -593,13 +593,13 @@ class TestSaleProject(TestSaleProjectCommon):
             'project_id':project_B.id,
         })
 
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
         })
 
-        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        SaleOrderLine = self.env['sale.order.line']
         SaleOrderLine.create({
             'name': product_A.name,
             'product_id': product_A.id,
@@ -730,7 +730,7 @@ class TestSaleProject(TestSaleProjectCommon):
             - Done
             - Cancelled
         """
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
         })
         product = self.env['product.product'].create({
@@ -981,7 +981,7 @@ class TestSaleProject(TestSaleProjectCommon):
             self.partner_b,  # partner_shipping_id
             self.env['res.partner'].create({'name': "unrelated partner"}),
         ]
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': partners[0].id,
             'partner_invoice_id': partners[1].id,
             'partner_shipping_id': partners[2].id,

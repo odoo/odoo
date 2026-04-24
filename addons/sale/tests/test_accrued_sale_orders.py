@@ -40,7 +40,6 @@ class TestAccruedSaleOrders(TestSaleCommon):
         cls.sale_order = (
             cls
             .env["sale.order"]
-            .with_context(tracking_disable=True)
             .create({
                 "partner_id": cls.partner_a.id,
                 "order_line": [

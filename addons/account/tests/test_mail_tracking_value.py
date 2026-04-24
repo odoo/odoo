@@ -74,7 +74,7 @@ class TestTracking(AccountTestInvoicingCommon, MailCase):
         ]
         for move in multiple_account_moves:
             with self.subTest(move['description']):
-                account_moves = self.env['account.move'].with_context(self._test_context).create(move['account_moves'])
+                account_moves = self.env['account.move'].create(move['account_moves'])
                 mail_invite = self.env['mail.followers.edit'].with_context({
                     'default_res_model': 'account.move',
                     'default_res_ids': account_moves.ids,

@@ -14,11 +14,11 @@ class TestServerAction(SMSCommon, TestSMSRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestServerAction, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
+        cls.test_record = cls.env['mail.test.sms'].create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
         })
-        cls.test_record_2 = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
+        cls.test_record_2 = cls.env['mail.test.sms'].create({
             'name': 'Test Record 2',
             'customer_id': False,
             'phone_nbr': cls.test_numbers[0],
@@ -86,11 +86,11 @@ class TestServerAction(SMSCommon, TestSMSRecipients):
         self.assertSMSNotification(
             [{'partner': self.test_record.customer_id}],
             'Dear %s this is an SMS.' % self.test_record.display_name,
-            messages=self.test_record.message_ids[-1]
+            messages=self.test_record.message_ids[0],
         )
         self.assertSMSNotification(
             [{'partner': self.env['res.partner'],
               'number': self.test_numbers_san[0]}],
             'Dear %s this is an SMS.' % self.test_record_2.display_name,
-            messages=self.test_record_2.message_ids[-1]
+            messages=self.test_record_2.message_ids[0],
         )
