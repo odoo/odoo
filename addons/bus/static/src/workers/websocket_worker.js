@@ -342,7 +342,7 @@ export class WebsocketWorker {
             if (reason === "OUTDATED_VERSION") {
                 console.warn("Worker deactivated due to an outdated version.");
                 this.active = false;
-                this.broadcast("BUS:OUTDATED");
+                this.broadcast("BUS:OUTDATED", { unregisterMultiTab: true });
             }
             // WebSocket was closed on purpose, do not try to reconnect.
             return;
