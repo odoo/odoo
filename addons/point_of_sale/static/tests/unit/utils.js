@@ -7,12 +7,11 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
-import { expect, destroy } from "@odoo/hoot";
+import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
 import { user } from "@web/core/user";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const { DateTime } = luxon;
 
@@ -163,19 +162,7 @@ export const createPaymentLine = (store, order, paymentMethod, data = {}) =>
     });
 
 export const activateMountingDialogs = async (env) => {
-    const dialog = await mountWithCleanup(ConfirmationDialog, {
-        env,
-        props: {
-            title: "Title",
-            body: "Body",
-            confirm: () => false,
-            cancel: () => true,
-            dismiss: () => false,
-            close: () => {},
-        },
-    });
-    destroy(dialog);
-    await animationFrame();
+    await mountWithCleanup(MainComponentsContainer, { env });
 };
 
 export const normalizeFunctionsInObject = (obj) =>
