@@ -93,6 +93,9 @@ export class SocialMediaLinks extends BaseOptionComponent {
      * @returns { SocialMediaLinkItem[] }
      */
     computeItems() {
+        // subscribe to signal to update render
+        void this.reorderTriggered.trigger;
+
         const items = this.domState.presentLinks.map((element, domPosition) => {
             let id = this.elIdsMap.get(element);
             if (!id) {
