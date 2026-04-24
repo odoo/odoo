@@ -173,6 +173,15 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record
                 - Accepted: Registered by the AEAT without errors""",
     )
+    obligado_partner_id = fields.Many2one(
+        string="Required to issue",
+        comodel_name='res.partner',
+        readonly=True,
+        required=True,
+        help="Partner acting as the 'ObligadoEmision' for this document. "
+             "For regular invoices this is the company's own partner. "
+             "For self-billing vendor bills this is the vendor.",
+    )
 
     @api.depends('document_type')
     def _compute_display_name(self):
@@ -443,7 +452,12 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if record_values['errors']:
             document_vals['errors'] = self._format_errors(error_title, record_values['errors'])
         else:
-            previous_document = record_values['company']._l10n_es_edi_verifactu_get_last_document()
+            obligado_partner = record_values.get('obligado_partner', record_values['company'].partner_id)
+            document_vals['obligado_partner_id'] = obligado_partner.id
+            issuer = self.env['l10n_es_edi_verifactu.issuer']._get_or_create(
+                record_values['company'], obligado_partner
+            )
+            previous_document = issuer._get_last_document()
             render_vals = self._render_vals(
                 record_values, previous_record_identifier=previous_document._get_record_identifier(),
             )
@@ -466,7 +480,8 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 _logger.error("%s\n%s\n%s", error_title, errors[0], json.dumps(document_dict, indent=4))
 
             if create_message:
-                batch_dict = self.with_company(record_values['company'])._get_batch_dict([document_dict])
+                emisor_values = record_values['record'].partner_id._l10n_es_edi_verifactu_get_values() if record_values.get('is_self_billing') else None
+                batch_dict = self.with_company(record_values['company'])._get_batch_dict([document_dict], emisor_values=emisor_values)
                 try:
                     _xml_node = create_message(batch_dict['Cabecera'], batch_dict['RegistroFactura'])
                 except zeep.exceptions.ValidationError as error:
@@ -479,7 +494,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                     _logger.error("%s\n%s\n%s", error_title, errors[0], json.dumps(batch_dict, indent=4))
 
             if not document_vals.get('errors'):
-                chain_sequence = record_values['company'].sudo()._l10n_es_edi_verifactu_get_chain_sequence()
+                chain_sequence = issuer._get_chain_sequence()
                 try:
                     document_vals['chain_index'] = int(chain_sequence.next_by_id())
                 except ValueError:
@@ -489,7 +504,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                     # We chain all the created documents per company in generation order.
                     # (indexed by `chain_index`).
                     # Thus we can not generate multiple documents for the same company at the same time.
-                    # Function `next_by_id` effectively locks `company.l10n_es_edi_verifactu_chain_sequence_id`
+                    # Function `next_by_id` effectively locks `issuer.chain_sequence_id`
                     # to prevent different transactions from chaining documents at the same time.
                     errors = [_("Error while chaining the document: %s", e)]
                     document_vals['errors'] = self._format_errors(error_title, errors)
@@ -581,21 +596,32 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if vals['cancellation']:
             render_vals = {
                 'IDFactura': {
-                    'IDEmisorFacturaAnulada': company_values['NIF'],
+                    'IDEmisorFacturaAnulada': (vals['record'].partner_id._l10n_es_edi_verifactu_get_values()['NIF'] if vals.get('is_self_billing') else company_values['NIF']),
                     'NumSerieFacturaAnulada': vals['name'],
                     'FechaExpedicionFacturaAnulada': invoice_date,
                 }
             }
             return render_vals
 
-        render_vals = {
-            'NombreRazonEmisor': company_values['NombreRazon'],
-            'IDFactura': {
-                'IDEmisorFactura': company_values['NIF'],
-                'NumSerieFactura': vals['name'],
-                'FechaExpedicionFactura': invoice_date,
+        if vals.get('is_self_billing', False):
+            emisor = vals['record'].partner_id._l10n_es_edi_verifactu_get_values()
+            render_vals = {
+                'NombreRazonEmisor': emisor['NombreRazon'],
+                'IDFactura': {
+                    'IDEmisorFactura': emisor['NIF'],
+                    'NumSerieFactura': vals['name'],
+                    'FechaExpedicionFactura': invoice_date,
+                }
             }
-        }
+        else:
+            render_vals = {
+                'NombreRazonEmisor': company_values['NombreRazon'],
+                'IDFactura': {
+                    'IDEmisorFactura': company_values['NIF'],
+                    'NumSerieFactura': vals['name'],
+                    'FechaExpedicionFactura': invoice_date,
+                }
+            }
 
         rectified_document = vals['refunded_document'] or vals['substituted_document']
         if vals['verifactu_move_type'] == 'invoice':
@@ -623,9 +649,18 @@ class L10nEsEdiVerifactuDocument(models.Model):
         # Si TipoFactura es F1 o F3 o R1 o R2 o R3 o R4 el bloque Destinatarios tiene que estar cumplimentado.
 
         if not vals['is_simplified']:
-            render_vals['Destinatarios'] = {
-                'IDDestinatario': [vals['partner']._l10n_es_edi_verifactu_get_values()]
-            }
+            if not vals.get('is_self_billing'):
+                render_vals['Destinatarios'] = {
+                    'IDDestinatario': [vals['partner']._l10n_es_edi_verifactu_get_values()]
+                }
+            else:
+                render_vals['EmitidaPorTerceroODestinatario'] = 'D'
+                render_vals['Destinatarios'] = {
+                    'IDDestinatario': {
+                        'NIF': company_values['NIF'],
+                        'NombreRazon': company_values['NombreRazon']
+                    }
+                }
 
         render_vals.update({
             'TipoFactura': tipo_factura,
@@ -893,6 +928,18 @@ class L10nEsEdiVerifactuDocument(models.Model):
     # Sending #
     ###########
 
+    def _l10n_es_edi_verifactu_get_obligado_partner(self):
+        """Return the partner that acts as 'ObligadoEmision' for this document.
+
+        For a self-billing document (emitted by the recipient on behalf of the vendor) the
+        ObligadoEmision is the vendor (move partner). For every other document it is the
+        company itself.
+        """
+        self.ensure_one()
+        if self.move_id:
+            return self.move_id._l10n_es_edi_verifactu_get_obligado_partner()
+        return self.company_id.partner_id
+
     @api.model
     def trigger_next_batch(self):
         """
@@ -903,17 +950,17 @@ class L10nEsEdiVerifactuDocument(models.Model):
             ('json_attachment_id', '!=', False),
             ('state', '=', False),
         ]
-        documents_per_company = self.sudo()._read_group(
+        documents_per_issuer = self.sudo()._read_group(
             unsent_domain,
-            groupby=['company_id'],
+            groupby=['company_id', 'obligado_partner_id'],
             aggregates=['id:recordset'],
         )
 
-        if not documents_per_company:
+        if not documents_per_issuer:
             return
 
         next_trigger_time = None
-        for company, documents in documents_per_company:
+        for company, obligado_partner, documents in documents_per_issuer:
             # Avoid sending a document twice due to concurrent calls to `trigger_next_batch`.
             # This should also avoid concurrently sending in general since the set of documents
             # in both calls should overlap. (Since we always include all previously unsent documents.)
@@ -938,7 +985,8 @@ class L10nEsEdiVerifactuDocument(models.Model):
             if not next_batch:
                 continue
 
-            next_batch_time = company.l10n_es_edi_verifactu_next_batch_time
+            issuer = self.env['l10n_es_edi_verifactu.issuer']._get_or_create(company, obligado_partner)
+            next_batch_time = issuer.next_batch_time
             if not next_batch_time or fields.Datetime.now() >= next_batch_time:
                 next_batch.with_company(company)._send_as_batch()
             else:
@@ -948,15 +996,14 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         # In case any of the documents were not successfully sent we trigger the cron again in 60s
         # (or at the next batch time if the 60s is earlier)
-        for company, documents in documents_per_company:
+        for company, obligado_partner, documents in documents_per_issuer:
             unsent_documents = documents.filtered_domain(unsent_domain)
-            next_batch_time = company.l10n_es_edi_verifactu_next_batch_time
             if unsent_documents:
-                # Trigger in 60s or at the next batch time (except if there is an earlier trigger already)
+                issuer = self.env['l10n_es_edi_verifactu.issuer']._get_or_create(company, obligado_partner)
+                next_batch_time = issuer.next_batch_time
                 in_60_seconds = fields.Datetime.now() + timedelta(seconds=60)
-                company_next_trigger_time = max(in_60_seconds, next_batch_time or datetime.min)
-                # Set `next_trigger_time` to the minimum of all the already encountered trigger times
-                next_trigger_time = min(next_trigger_time or datetime.max, company_next_trigger_time)
+                issuer_next_trigger_time = max(in_60_seconds, next_batch_time or datetime.min)
+                next_trigger_time = min(next_trigger_time or datetime.max, issuer_next_trigger_time)
 
         if next_trigger_time:
             cron = self.env.ref('l10n_es_edi_verifactu.cron_verifactu_batch', raise_if_not_found=False)
@@ -1071,9 +1118,16 @@ class L10nEsEdiVerifactuDocument(models.Model):
         return info
 
     def _send_as_batch(self):
-        # Documents in `self` should all belong to `self.env.company`.
+        # Documents in `self` belong to the issuer (could be self.env.company or partner_id from the move)
         # For the cron we specifically set the `self.env.company` on some functions we call.
         sender_company = self.env.company
+
+        obligado_partners = self.mapped('obligado_partner_id')
+        if len(obligado_partners) > 1:
+            raise UserError(_(
+                "All documents in a batch must share the same ObligadoEmision. "
+                "Got: %s", ', '.join(obligado_partners.mapped('name'))
+            ))
 
         batch_errors = self.with_company(sender_company)._send_as_batch_check()
         if batch_errors:
@@ -1089,7 +1143,10 @@ class L10nEsEdiVerifactuDocument(models.Model):
         incident = any(document.create_date > fields.Datetime.now() + timedelta(seconds=240) for document in self)
 
         document_dict_list = [document._get_document_dict() for document in self]
-        batch_dict = self.with_company(sender_company)._get_batch_dict(document_dict_list, incident=incident)
+        obligado_partner = self[0].obligado_partner_id
+        is_self_billing = obligado_partner != self.env.company.partner_id
+        emisor_values = obligado_partner._l10n_es_edi_verifactu_get_values() if is_self_billing else None
+        batch_dict = self.with_company(sender_company)._get_batch_dict(document_dict_list, incident=incident, emisor_values=emisor_values)
 
         info = self.with_company(sender_company)._send_batch(batch_dict)
 
@@ -1159,7 +1216,10 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if waiting_time_seconds:
             now = fields.Datetime.to_datetime(fields.Datetime.now())
             next_batch_time = now + timedelta(seconds=waiting_time_seconds)
-            self.env.company.l10n_es_edi_verifactu_next_batch_time = next_batch_time
+            issuer = self.env['l10n_es_edi_verifactu.issuer']._get_or_create(
+                self.env.company, self[0].obligado_partner_id
+            )
+            issuer.sudo().next_batch_time = next_batch_time
 
         self._cancel_after_sending(info)
 
@@ -1189,16 +1249,17 @@ class L10nEsEdiVerifactuDocument(models.Model):
         return errors
 
     @api.model
-    def _get_batch_dict(self, document_dict_list, incident=False):
+    def _get_batch_dict(self, document_dict_list, incident=False, emisor_values=None):
         company = self.env.company
         company_values = company.partner_id._l10n_es_edi_verifactu_get_values()
+        obligado = emisor_values or company_values
 
         batch_dict = {
-          "Cabecera": {
-              "ObligadoEmision": {
-                  "NombreRazon": company_values['NombreRazon'],
-                  "NIF": company_values['NIF'],
-              },
+            "Cabecera": {
+                "ObligadoEmision": {
+                    "NombreRazon": obligado['NombreRazon'],
+                    "NIF": obligado['NIF'],
+                },
               "RemisionVoluntaria": {
                   "Incidencia": 'S' if incident else 'N',
               },

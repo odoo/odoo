@@ -86,6 +86,15 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         # Do avoid updating the test files for every version we just assume that we are in 17.0
         cls.startClassPatcher(mock.patch.object(release, 'version', '17.0+e'))
 
+        # Purchase journal with self-billing enabled (emitting invoices on behalf of the vendor)
+        cls.self_billing_journal = cls.env['account.journal'].create({
+            'name': 'Self-Billing Purchase Journal',
+            'type': 'purchase',
+            'code': 'SBILL',
+            'company_id': cls.company.id,
+            'is_self_billing': True,
+        })
+
     def _json_file_to_dict(self, json_file):
         json_string = self.file_read(json_file).content
         res = json.loads(json_string)
@@ -160,7 +169,7 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
     def _mock_last_document(self, document):
         # Note: returns the same document for all companies
-        function_path = 'odoo.addons.l10n_es_edi_verifactu.models.res_company.ResCompany._l10n_es_edi_verifactu_get_last_document'
+        function_path = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_issuer.VerifactuIssuer._get_last_document'
         return mock.patch(function_path, return_value=(document or self.env['l10n_es_edi_verifactu.document']))
 
     def _mock_create_date(self, date):
@@ -189,10 +198,40 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
         return invoice
 
+    def _create_dummy_self_billing_invoice(self, name=None, invoice_date=None, partner=None):
+        """Create a posted self-billing vendor invoice (in_invoice on a self-billing journal).
+
+        In this scenario the recipient (our company) emits the invoice on behalf of the
+        vendor (partner).  The Veri*Factu ObligadoEmision for the resulting document is the
+        vendor partner, not the company.
+        """
+        invoice_vals = {
+            'move_type': 'in_invoice',
+            'journal_id': self.self_billing_journal.id,
+            'invoice_date': '2019-01-30',
+            'date': '2019-01-30',
+            'partner_id': (partner or self.partner_b).id,  # Spanish vendor
+            'invoice_line_ids': [
+                Command.create({'product_id': self.product_1.id, 'price_unit': 100.0, 'tax_ids': [Command.set(self.tax21_goods.ids)]}),
+            ],
+        }
+        if invoice_date is not None:
+            invoice_vals['invoice_date'] = invoice_date
+        if name is not None:
+            invoice_vals['name'] = name
+        invoice = self.env['account.move'].create(invoice_vals)
+        invoice.action_post()
+        return invoice
+
     def _mock_zeep_registration_operation_single_accept_no_wait(self):
         # Note: The real result is of type 'odoo.tools.zeep.client.SerialProxy'; here it is a dict
         zeep_response_dict = json.loads(self.file_read('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json').content)
-        self.env.company.sudo().l10n_es_edi_verifactu_next_batch_time = False  # to not get blocked by the wait time
+        issuer = self.env['l10n_es_edi_verifactu.issuer'].sudo().search([
+            ('company_id', '=', self.env.company.id),
+            ('obligado_partner_id', '=', self.env.company.partner_id.id),
+        ], limit=1)
+        if issuer:
+            issuer.next_batch_time = False
 
         def _mock_register_accept(*args, **kwargs):
             document_id_factura = args[1][0]['RegistroAlta']['IDFactura']
