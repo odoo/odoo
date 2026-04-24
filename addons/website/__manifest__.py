@@ -183,6 +183,7 @@
         'views/snippets/s_projects_grid_minimal.xml',
         'views/snippets/s_features_cards.xml',
         'views/snippets/s_achievements_list.xml',
+        'views/snippets/s_text_bold.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_banner_product.xml',
