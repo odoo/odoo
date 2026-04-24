@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_pos_order_form_inherit_pos_history" model="ir.ui.view">
+            <field name="name">pos.order.form.inherit.pos.history</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='products']" position="after">
+                    <page string="History" name="history">
+                        <field name="history_line_ids" colspan="4" nolabel="1" readonly="1" mode="list">
+                            <list string="Order lines" editable="bottom">
+                                <field name="product_id" />
+                                <field name="qty"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                                <field name="price_unit" widget="monetary"/>
+                                <field name="discount" width="50px" string="Disc.%"/>
+                                <field name="tax_ids_after_fiscal_position" widget="many2many_tax_tags" string="Taxes"/>
+                                <field name="tax_ids" widget="many2many_tax_tags" column_invisible="True"/>
+                                <field name="price_subtotal" widget="monetary" force_save="1"/>
+                                <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
+                                <field name="currency_id" column_invisible="True"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
