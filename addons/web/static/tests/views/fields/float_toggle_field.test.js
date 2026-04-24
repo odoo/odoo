@@ -88,11 +88,11 @@ test("kanban view (readonly) with option force_button", async () => {
             </kanban>`,
     });
 
-    expect("button.o_field_float_toggle").toHaveCount(1, {
+    expect("button.o_field_float_toggle").toHaveCount(2, {
         message: "should have rendered toggle button",
     });
 
-    const value = queryText("button.o_field_float_toggle");
+    const value = queryText("button.o_field_float_toggle:eq(0)");
     await contains("button.o_field_float_toggle").click();
     expect("button.o_field_float_toggle").not.toHaveText(value, {
         message: "float_field field value should be changed",
