@@ -21,9 +21,12 @@ odoo.livechatReady = new Deferred();
     const env = Object.assign(makeEnv(), { embedLivechat: true });
     await startServices(env);
     odoo.isReady = true;
-    const target = await makeShadow(makeRoot(document.body));
+    const root = makeRoot(document.body);
+    const target = await makeShadow(root);
     await mount(MainComponentsContainer, target, {
-        env,
+        env: Object.assign(Object.create(env), {
+            rootId: root.getAttribute("id"),
+        }),
         getTemplate,
         translateFn: _t,
         translatableAttributes: ["data-tooltip"],
