@@ -316,7 +316,7 @@ class PurchaseOrder(models.Model):
         for order in self:
             order.show_receive_button = (
                 order.state == 'purchase'
-                and any(line.qty_received < line.product_uom_qty for line in order.order_line)
+                and any(line.qty_received < line.product_qty for line in order.order_line)
                 and all(line.qty_received_method == "manual" for line in order.order_line)
             )
 
