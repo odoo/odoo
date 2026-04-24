@@ -94,6 +94,14 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
     'google.co.zw', 'google.cat',
 ])
 
+# Maps configurator page codes to their new page template category ids.
+# The category id must match a group defined in new_page_template_groups.
+# Pages not listed here fall back to 'about_us'.
+CONFIGURATOR_PAGE_CATEGORY = {
+    'homepage': 'about_us',
+    'pricing': 'pricing',
+}
+
 
 class Website(models.CachedModel):
     _inherit = 'website'
@@ -951,9 +959,10 @@ class Website(models.CachedModel):
             page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
                               xpath="(//div[hasclass('oe_structure')])[last()]")
             # Copy the configurator pages to preserve the original untouched
-            # pages in the landing page category when creating a new page.
+            # pages in their matching category when creating a new page.
+            category = CONFIGURATOR_PAGE_CATEGORY.get(page_code, 'about_us')
             page_view_id.copy({
-                'key': f"{index}_{page_view_id.key}_configurator_pages_landing",
+                'key': f"{index}_{page_view_id.key}_configurator_pages_{category}",
                 'website_id': website.id,
             })
 

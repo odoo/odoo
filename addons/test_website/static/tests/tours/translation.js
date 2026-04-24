@@ -21,7 +21,7 @@ function createNewPage() {
         },
         {
             content: "Select Blank page",
-            trigger: ".o_page_template:has(div.text-muted) .o_button_area:not(:visible)",
+            trigger: ".o_website_page_templates_dialog [data-name='add_blank_page']",
             run: "click",
         },
         {

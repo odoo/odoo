@@ -908,9 +908,9 @@ class Website(Home):
                         snippet = section_el.attrib['data-snippet']
                         # Because the templates are generated from specific
                         # t-snippet-calls such as:
-                        # "website.new_page_template_about_0_s_text_block",
+                        # "website.new_page_template_about_us_0_s_text_block",
                         # the generated data-snippet looks like:
-                        # "new_page_template_about_0_s_text_block"
+                        # "new_page_template_about_us_0_s_text_block"
                         # while it should be "s_text_block" only.
                         if '_s_' in snippet:
                             section_el.attrib['data-snippet'] = f's_{snippet.split("_s_")[-1]}'
