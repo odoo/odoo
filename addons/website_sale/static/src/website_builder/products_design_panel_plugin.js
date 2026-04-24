@@ -7,7 +7,6 @@ import { ProductsDesignPanel } from "./products_design_panel";
 export class ProductsDesignPanelPlugin extends Plugin {
     static id = "productsDesignPanel";
     static dependencies = ["builderActions", "builderComponents"];
-    static shared = ["registerPanel", "unregisterPanel"];
 
     resources = {
         builder_actions: {
@@ -43,16 +42,7 @@ export class ProductsDesignPanelPlugin extends Plugin {
     };
 
     setup() {
-        this.panels = new Set();
         this.productDesignListToSave = this.getResource("product_design_list_to_save");
-    }
-
-    registerPanel(panel) {
-        this.panels.add(panel);
-    }
-
-    unregisterPanel(panel) {
-        this.panels.delete(panel);
     }
 
     async onSave() {
@@ -203,13 +193,6 @@ export class SetGapAction extends BuilderAction {
 
     apply({ editingElement, value }) {
         editingElement.style.setProperty("--o-wsale-products-grid-gap", value);
-        if (this.panel?.needsDbPersistence) {
-            editingElement.dataset.gapToSave = value;
-        }
-    }
-
-    setPanel(panel) {
-        this.panel = panel;
     }
 }
 
