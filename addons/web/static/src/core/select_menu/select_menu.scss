@@ -61,10 +61,12 @@
         }
 
         &:before {
-            @include o-position-absolute($top: 50%);
+            @include o-position-absolute($top: 50%, $left: map-get($spacers, 2));
             transform: translateY(-50%);
             content: "search";
             font-family: 'Material Symbols Outlined';
+            line-height: 1;
+            opacity: .75;
         }
     }
 
@@ -88,6 +90,11 @@
         .o-dropdown-item:before {
             display: none;
         }
+    }
+
+    .o_filtered_text {
+        background: var(--SelectMenu__filteredText-bg-color, none);
+        color: var(--SelectMenu__filteredText-color, #{map-get($theme-colors, "primary")});
     }
 }
 
