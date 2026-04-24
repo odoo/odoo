@@ -1418,6 +1418,32 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertIn(officer_employee, admin_lines.employee_id)
         self.assertIn(self.other_employee, admin_lines.employee_id)
 
+    def test_regenerate_overtime_employee_unlink_overtimes_timezones(self):
+        """ Verifies that the overtimes are correctly unlinked when the calendar has a different timezone. """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'American calendar',
+            'attendance_ids': [
+                (0, 0, {'name': 'Sunday', 'dayofweek': '6', 'hour_from': 8, 'hour_to': 15, 'day_period': 'full_day'}),
+            ],
+            'tz': 'America/New_York',
+        })
+        self.employee.resource_calendar_id = calendar
+        attendance = self.env['hr.attendance'].create([{
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 11, 16, 10, 0),  # Sunday
+            'check_out': datetime(2025, 11, 17, 1, 0),  # Monday
+        }])
+
+        overtimes = attendance._linked_overtimes()
+        self.assertEqual(len(overtimes), 2)
+        self.assertEqual(overtimes.mapped('duration'), [7, 1])
+        self.assertEqual(overtimes.mapped('date'), [date(2025, 11, 16), date(2025, 11, 17)])
+
+        self.ruleset.action_regenerate_overtimes()
+
+        overtimes = attendance._linked_overtimes()
+        self.assertEqual(len(overtimes), 2)
+
     def test_updating_overtimes_on_midnight_boundary(self):
         """ Ensure that we can update overtimes for attendances that start
             and/or stop on a midnight boundary in the user's TZ.
