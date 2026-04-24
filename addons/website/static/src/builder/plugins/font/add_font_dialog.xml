@@ -73,14 +73,13 @@
             </div>
             <div class="col-lg-5" style="border-left: var(--gray-300) solid 1px;">
                 <!-- Preview -->
-                <t t-call="website.dialog.addFont.preview">
-                    <t t-if="this.state.googleFontFamily">
-                        <t t-set="previewFontName" t-value="this.state.googleFontFamily"/>
-                    </t>
-                    <t t-elif="this.state.uploadedFonts.length">
-                        <t t-set="previewFontName" t-value="this.state.uploadedFontName"/>
-                    </t>
+                <t t-if="this.state.googleFontFamily">
+                    <t t-set="previewFontName" t-value="this.state.googleFontFamily"/>
                 </t>
+                <t t-elif="this.state.uploadedFonts.length">
+                    <t t-set="previewFontName" t-value="this.state.uploadedFontName"/>
+                </t>
+                <t t-call="website.dialog.addFont.preview"/>
             </div>
         </div>
         <t t-set-slot="footer">
