@@ -47,19 +47,19 @@ export class PosPayment extends Base {
      * Kept in snake_case for consistency with existing model fields.
      */
     get payment_provider() {
-        return this.payment_method_id.payment_provider;
+        return this.payment_method_id?.payment_provider;
     }
 
     get useTerminal() {
-        return this.payment_method_id.useTerminal;
+        return this.payment_method_id?.useTerminal;
     }
 
     get useQr() {
-        return this.payment_method_id.useQr;
+        return this.payment_method_id?.useQr;
     }
 
     get useBankQrCode() {
-        return this.payment_method_id.useBankQrCode;
+        return this.payment_method_id?.useBankQrCode;
     }
 
     isSelected() {

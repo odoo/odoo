@@ -114,7 +114,7 @@ export class PosOrderline extends PosOrderlineAccounting {
     }
 
     get currency() {
-        return this.order_id.currency;
+        return this.order_id?.currency;
     }
 
     get pickingType() {
@@ -315,7 +315,7 @@ export class PosOrderline extends PosOrderlineAccounting {
 
     hasValidProductLot() {
         const valid_product_lot = this.getValidLots();
-        const lotsRequired = this.product_id.tracking == "serial" ? Math.abs(this.qty) : 1;
+        const lotsRequired = this.product_id?.tracking == "serial" ? Math.abs(this.qty) : 1;
         return lotsRequired === valid_product_lot.length;
     }
 
@@ -346,9 +346,9 @@ export class PosOrderline extends PosOrderlineAccounting {
             this.isPosGroupable() &&
             this.getDiscount() === orderline.getDiscount() &&
             this.price_type === orderline.price_type &&
-            this.currency.isZero(
-                this.currency.round(price) -
-                    this.currency.round(order_line_price) -
+            this.currency?.isZero(
+                this.currency?.round(price) -
+                    this.currency?.round(order_line_price) -
                     orderline.getPriceExtra()
             ) &&
             (!this.isLotTracked() || getLotName(this) === getLotName(orderline)) &&
@@ -361,7 +361,7 @@ export class PosOrderline extends PosOrderlineAccounting {
 
     isLotTracked() {
         return (
-            this.product_id.tracking === "lot" &&
+            this.product_id?.tracking === "lot" &&
             (this.pickingType.use_create_lots || this.pickingType.use_existing_lots)
         );
     }
@@ -461,7 +461,7 @@ export class PosOrderline extends PosOrderlineAccounting {
     }
 
     get packLotLines() {
-        const trackingStr = this.product_id.tracking == "lot" ? _t("Lot Number") : _t("SN");
+        const trackingStr = this.product_id?.tracking == "lot" ? _t("Lot Number") : _t("SN");
         return this.pack_lot_ids?.map((l) => `${trackingStr} ${l.lot_name}`);
     }
 

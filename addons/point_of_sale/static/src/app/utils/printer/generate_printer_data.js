@@ -43,7 +43,7 @@ export class GeneratePrinterData {
     }
 
     formatCurrency(amount) {
-        return formatCurrency(amount, this.currency.id);
+        return formatCurrency(amount, this.currency?.id);
     }
 
     /**
