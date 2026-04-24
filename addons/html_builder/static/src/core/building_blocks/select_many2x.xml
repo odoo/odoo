@@ -13,6 +13,7 @@
         onInput.bind="this.onInput"
         class="'o-hb-selectMany2X-wrapper min-w-0'"
         menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown'"
+        position="'bottom-end'"
         togglerClass="'o-hb-selectMany2X-toggle btn-secondary'"
     >
         <t t-out="this.props.message"/>
@@ -20,10 +21,10 @@
             <a
                 t-if="this.state.hasMore"
                 t-on-click="() => this.searchMore(select.data.searchValue)"
-                class="'o-dropdown-item dropdown-item o-navigable o_we_m2o_search_more'"
+                class="o-dropdown-item dropdown-item o-navigable o_we_m2o_search_more py-1 text-center"
                 title="Search to show more records"
             >
-                Search more...
+                Search more
             </a>
             <SelectMany2XCreate t-if="!!this.state.nameToCreate" name="this.state.nameToCreate" create="this.props.create"/>
         </t>
