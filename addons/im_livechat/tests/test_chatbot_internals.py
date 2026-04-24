@@ -583,3 +583,39 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         self.assertFalse(step.answer_ids, "Answers were not cleared after step_type was changed.")
         self.assertFalse(step_2.triggering_answer_ids, "Step 2 still has stale triggering answers.")
         self.assertFalse(step_3.triggering_answer_ids, "Step 3 still has stale triggering answers.")
+
+    def test_chatbot_without_operator(self):
+        chatbot_script = self.env["chatbot.script"].create({"title": "Question bot"})
+        self.env["chatbot.script.step"].create([
+            {
+                "chatbot_script_id": chatbot_script.id,
+                "message": "What is your question?",
+                "step_type": "free_input_single",
+            },
+            {
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Forwarding to operator",
+                "step_type": "forward_operator",
+            },
+        ])
+        self.livechat_channel.user_ids = False  # no operator
+        self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create({
+            "channel_id": self.livechat_channel.id,
+            "chatbot_script_id": chatbot_script.id,
+            "regex_url": "/",
+        })
+        data = self.make_jsonrpc_request("/im_livechat/get_session", {
+            "anonymous_name": "Test Visitor",
+            "channel_id": self.livechat_channel.id,
+            "chatbot_script_id": chatbot_script.id,
+        })
+        discuss_channel = self.env["discuss.channel"].browse(data["channel_id"])
+        self._post_answer_and_trigger_next_step(
+            discuss_channel,
+            "Connect to Operator",
+        )
+        self.make_jsonrpc_request("/chatbot/step/trigger", {
+            "channel_id": discuss_channel.id,
+            "chatbot_script_id": chatbot_script.id,
+        })
+        self.assertFalse(discuss_channel.livechat_active, "The livechat session must be inactive since there is no operator available.")
