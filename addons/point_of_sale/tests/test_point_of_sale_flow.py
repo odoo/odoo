@@ -2662,3 +2662,61 @@ class TestPointOfSaleFlow(CommonPosTest):
             "item modified after last_server_date must be fetched on incremental load")
         self.assertNotIn(item_future_start.id, loaded_ids,
             "item with date_start still in the future must not be fetched")
+
+    def test_picking_description_custom_variant(self):
+        """
+        Tests that a custom attribute is shown on the picking when being
+        processed through the PoS
+        """
+        attribute_custom = self.env['product.attribute'].create({
+            'name': 'Custom',
+            'display_type': 'radio',
+            'create_variant': 'no_variant',
+        })
+        attribute_value_custom = self.env['product.attribute.value'].create({
+            'name': 'Color',
+            'attribute_id': attribute_custom.id,
+            'is_custom': True,
+        })
+        self.test_product_1 = self.env['product.template'].create({
+            'name': 'Custom Product',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute_custom.id,
+                    'value_ids': [Command.set([attribute_value_custom.id])],
+                }),
+            ],
+        })
+        product_variant = self.test_product_1.product_variant_id
+        self.pos_config_usd.open_ui()
+
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config_usd.current_session_id.id,
+            'partner_id': self.partner.id,
+            'lines': [Command.create({
+                'product_id': product_variant.id,
+                'price_unit': 10.0,
+                'qty': 1.0,
+                'price_subtotal': 10.0,
+                'price_subtotal_incl': 10.0,
+                'custom_attribute_value_ids': [Command.create({
+                    'custom_product_template_attribute_value_id': self.test_product_1.attribute_line_ids.product_template_value_ids[0].id,
+                    'custom_value': 'White',
+                })],
+            })],
+            'amount_total': 10.0,
+            'amount_tax': 0.0,
+            'amount_paid': 10.0,
+            'amount_return': 0.0,
+        })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+        self.assertEqual(order.picking_ids.move_ids.description_picking, 'Custom: Color: White')
