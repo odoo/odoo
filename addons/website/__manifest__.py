@@ -181,6 +181,7 @@
         'views/snippets/s_hero_maintenance.xml',
         'views/snippets/s_hero_minimalist.xml',
         'views/snippets/s_projects_grid_minimal.xml',
+        'views/snippets/s_features_cards.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_banner_product.xml',
