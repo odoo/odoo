@@ -116,6 +116,10 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            content: `Wait for "Columns" group update`,
+            trigger: `.options-container[data-container-title="Columns"]:has(.options-container-label i.fa-caret-right)`,
+        },
+        {
             content: "Add a fake resized class on mobile to the 2nd item",
             trigger: `${columnsSnippetRow} > :nth-child(2)`,
             async run() {
