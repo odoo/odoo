@@ -606,7 +606,7 @@ class HrEmployee(models.Model):
                     allocation = precomputed_allocations.filtered(lambda alloc: alloc._origin.id == allocation.id)[0]
                     precomputed = True
             future_leaves = 0
-            if allocation.accrual_plan_id and not precomputed:
+            if allocation.accrual_plan_id and not precomputed and not ignore_future:
                 future_leaves = allocation._get_future_leaves_on(target_date)
             max_leaves = allocation.number_of_hours_display\
                 if allocation.work_entry_type_id.unit_of_measure == 'hour'\
