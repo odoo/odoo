@@ -235,6 +235,15 @@ class AccountAnalyticLine(models.Model):
         store=False,
         default=lambda self: self.env['decimal.precision'].precision_get("Percentage Analytic"),
     )
+    analytic_profitability = fields.Selection(
+        string='Profitability',
+        selection=[
+            ('revenue', 'Revenue'),
+            ('loss', 'Loss'),
+        ],
+        compute='_compute_analytic_profitability',
+        store=True,  # to make it available in Analytic Report
+    )
 
     def write(self, vals):
         self._check_can_write(vals)
@@ -285,3 +294,8 @@ class AccountAnalyticLine(models.Model):
     # Hook to be shared between non related modules
     def _check_can_write(self, vals):
         return True
+
+    @api.depends('amount')
+    def _compute_analytic_profitability(self):
+        for line in self:
+            line.analytic_profitability = 'revenue' if line.amount >= 0 else 'loss'
