@@ -7355,7 +7355,7 @@ class AccountMove(models.Model):
             return []
 
         if self.is_purchase_document(include_receipts=True):
-            attachment = self.message_main_attachment_id
+            attachment = self.message_main_attachment_id.sudo()
             return [{
                 'filename': attachment.name,
                 'filetype': attachment.mimetype,
