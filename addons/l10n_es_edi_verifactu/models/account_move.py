@@ -252,15 +252,19 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         company = self.company_id
+        obligado_partner = self._l10n_es_edi_verifactu_get_obligado_partner()
         document_type = 'cancellation' if cancellation else 'submission'
         vals = {
             'company': company,
             'record': self,
+            'obligado_partner': obligado_partner,
             'cancellation': cancellation,
+            'is_self_billing': self.journal_id.is_self_billing,
             'errors': self._l10n_es_edi_verifactu_check(cancellation=cancellation),
             'document_vals': {
                 'move_id': self.id,
                 'company_id': company.id,
+                'obligado_partner_id': obligado_partner.id,
                 'document_type': document_type,
             },
         }
@@ -282,7 +286,7 @@ class AccountMove(models.Model):
         move_type = self.move_type
         if move_type == 'out_invoice' and substituted_move:
             verifactu_move_type = 'correction_substitution'
-        elif move_type == 'out_invoice':
+        elif move_type in ['out_invoice', 'in_invoice']:
             verifactu_move_type = 'invoice'
         elif move_type == 'out_refund' and reversed_move.l10n_es_edi_verifactu_substitution_move_ids:
             verifactu_move_type = 'reversal_for_substitution'
@@ -339,3 +343,27 @@ class AccountMove(models.Model):
         document_map = self._l10n_es_edi_verifactu_create_documents(cancellation=cancellation)
         self.env['l10n_es_edi_verifactu.document'].trigger_next_batch()
         return document_map
+
+    # EXTENDS account_move
+    @api.depends('move_type', 'state', 'journal_id.is_self_billing')
+    def _compute_display_send_button(self):
+        super()._compute_display_send_button()
+        for move in self:
+            if (
+                move.move_type in ['in_invoice', 'in_refund']
+                and move.state == 'posted'
+                and move.journal_id.is_self_billing
+                and move.company_id.account_fiscal_country_id.code == 'ES'
+                and move.company_id.l10n_es_edi_verifactu_required
+            ):
+                move.display_send_button = True
+
+    def _l10n_es_edi_verifactu_get_obligado_partner(self):
+        """Return the partner acting as ObligadoEmision for this document.
+        For regular invoices this is always the company's own partner.
+        Overridden for self-billing vendor bills.
+        """
+        self.ensure_one()
+        if self.journal_id.is_self_billing:
+            return self.commercial_partner_id
+        return self.company_id.partner_id

@@ -119,3 +119,19 @@ class AccountMoveSend(models.AbstractModel):
                 if isinstance(error, dict) and error.get('verifactu_redirect_action'):
                     raise RedirectWarning('\n'.join(error['errors']), error['verifactu_redirect_action'], error['error_title'])
         super()._hook_if_errors(moves_data, allow_raising=allow_raising)
+
+    # EXTENDS account.move.send
+    @api.model
+    def _get_move_constraints(self, move):
+        constraints = super()._get_move_constraints(move)
+        if (
+                move.journal_id.is_self_billing
+                and move.state == 'posted'
+                and move.company_id.account_fiscal_country_id.code == 'ES'
+                and move.company_id.l10n_es_edi_verifactu_required
+        ):
+            # Self-billing vendor bills are in_invoice moves; remove only the
+            # move_type constraint that would otherwise block them.
+            constraints.pop('move_type', None)
+            return constraints
+        return constraints
