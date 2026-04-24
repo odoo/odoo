@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_achievements_list" name="Achievements List">
+    <section class="s_achievements_list pt80 pb80">
+        <div class="container">
+            <h2>Proven excellence</h2>
+            <p><br/></p>
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="s_achievements_list_list list-unstyled">
+                        <t t-call="website.s_achievements_list_item"
+                            name.translate="Primary Achievement Title"
+                            value.translate="x3"/>
+                        <t t-call="website.s_achievements_list_item"
+                            name.translate="Industry-Specific Award"
+                            value.translate="x1"/>
+                        <t t-call="website.s_achievements_list_item"
+                            name.translate="Organization Certification"
+                            value.translate="x4"/>
+                        <t t-call="website.s_achievements_list_item"
+                            name.translate="Media Feature or Publication"
+                            value.translate="x2"/>
+                        <t t-call="website.s_achievements_list_item"
+                            name.translate="Proprietary Patent Granted"
+                            value.translate="x6"/>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <ul class="s_achievements_list_list list-unstyled">
+                        <t t-call="website.s_achievements_list_item"
+                            name.translate="Secondary Recognition Name"
+                            value.translate="x2"/>
+                        <t t-call="website.s_achievements_list_item"
+                            name.translate="Notable Press Mention"
+                            value.translate="x8"/>
+                        <t t-call="website.s_achievements_list_item"
+                            name.translate="Strategic Partnership Milestone"
+                            value.translate="x5"/>
+                        <t t-call="website.s_achievements_list_item"
+                            name.translate="Community Impact Award"
+                            value.translate="x8"/>
+                        <t t-call="website.s_achievements_list_item"
+                            name.translate="Annual Industry Ranking"
+                            value.translate="x3"/>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_achievements_list_item">
+    <li class="s_achievements_list_item d-flex align-items-center gap-3 py-2 border-bottom">
+        <span t-out="name" class="flex-grow-1"/>
+        <strong t-out="value"/>
+    </li>
+</template>
+
+</odoo>
