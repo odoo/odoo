@@ -30,9 +30,11 @@ test("Nested Pricelists with different currencies", async () => {
         pricelist_id: basePricelist,
         compute_price: "formula",
         base: "list_price",
+        price_discount: 0,
         price_surcharge: 10,
     });
     basePricelist.update({ item_ids: [baseRule] });
+    basePricelist.computeGeneralRulesByCateg();
 
     // POS pricelist in MXN: based on USD pricelist + 25% discount
     const posPricelist = store.models["product.pricelist"].create({
@@ -47,6 +49,7 @@ test("Nested Pricelists with different currencies", async () => {
         base_pricelist_id: basePricelist,
     });
     posPricelist.update({ item_ids: [posRule] });
+    posPricelist.computeGeneralRulesByCateg();
 
     const productTemplate = store.models["product.template"].create({
         name: "Test Product",
