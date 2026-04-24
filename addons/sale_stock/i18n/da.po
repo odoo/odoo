@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-04-22 18:38+0000\n"
 "PO-Revision-Date: 2025-11-08 19:02+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
@@ -25,6 +25,72 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid ""
+"\n"
+"                                Available in stock\n"
+"                            "
+msgstr ""
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid ""
+"\n"
+"                                No future availability\n"
+"                            "
+msgstr ""
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid ""
+"\n"
+"                                Not enough future availability\n"
+"                            "
+msgstr ""
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid ""
+"\n"
+"                                Remaining demand available at "
+msgstr ""
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+msgid ""
+"\n"
+"                    1 Quotation"
+msgstr ""
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid ""
+"\n"
+"            View Forecast\n"
+"        "
+msgstr ""
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+msgid " Quotations"
+msgstr ""
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+msgid ""
+" will be late.\n"
+"        "
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid ""
 ".\n"
@@ -32,12 +98,6 @@ msgid ""
 msgstr ""
 ".\n"
 "                Manuelle handlinger kan være nødvendige."
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
-msgid "1 Quotation"
-msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -141,12 +201,6 @@ msgid "Available"
 msgstr "Til rådighed"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid "Available in stock"
-msgstr "Tilgængelig på lager"
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
 msgstr "Vælg at anvende specifikke ruter på salgsordrelinjer."
@@ -228,7 +282,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_reference__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
@@ -325,7 +378,6 @@ msgstr "Har forsinket afhentning"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_reference__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
@@ -438,12 +490,6 @@ msgid "No delivery yet! Automate them with sales orders."
 msgstr "Endnu ingen levering! Automatisér dem med salgsordrer."
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid "No future availability"
-msgstr "Ingen fremtidig tilgængelighed"
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Available"
 msgstr "Utilgængelig"
@@ -452,12 +498,6 @@ msgstr "Utilgængelig"
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Delivered"
 msgstr "Ikke leveret"
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid "Not enough future availability"
-msgstr "Ikke tilstrækkelig fremtidig tilgængelighed"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -469,8 +509,8 @@ msgstr ""
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid "On"
-msgstr "Den"
+msgid "On "
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
@@ -491,12 +531,6 @@ msgstr "Produktbevægelser (Lagerbevægelseslinje)"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
 msgstr "Mængde til levering"
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
-msgid "Quotations"
-msgstr "Tilbud"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -526,12 +560,6 @@ msgid "References"
 msgstr "Reference"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid "Remaining demand available at"
-msgstr "Resterende behov tilgængeligt den"
-
-#. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
 msgid "Replenish on Order (MTO)"
@@ -542,11 +570,6 @@ msgstr "Genopfyld på ordre (fremstilling på bestilling)"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Reserved"
 msgstr "Reserveret"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_return_picking
-msgid "Return Picking"
-msgstr "Returnering"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -686,23 +709,10 @@ msgstr "Rapport om lagerregel"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
-msgid "The delivery"
-msgstr "Leveringen"
-
-#. module: sale_stock
-#. odoo-python
-#: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
-"The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%(old_address)s\"</strong> to "
-"<strong>\"%(new_address)s\"</strong>,\n"
-"                        You should probably update the partner on this "
-"document."
+"The delivery\n"
+"            "
 msgstr ""
-"Leveringsadressen er blevet ændret på salgsordren<br/>\n"
-"                        Fra <strong>\"%(old_address)s\"</strong> til "
-"<strong>\"%(new_address)s\"</strong>,\n"
-"                        Du bør opdatere partneren på dette dokument."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -749,12 +759,6 @@ msgstr "Gælder, hvis en tilknyttet overførsel er forsinket"
 #: model:ir.model,name:sale_stock.model_res_users
 msgid "User"
 msgstr "Bruger"
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid "View Forecast"
-msgstr "Se prognose"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -814,9 +818,3 @@ msgstr "bestilt i stedet for"
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
 msgstr "bearbejdet i stedet for"
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
-msgid "will be late."
-msgstr "vil være forsinket."

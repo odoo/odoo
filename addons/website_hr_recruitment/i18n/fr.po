@@ -13,10 +13,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-01-15 12:33+0000\n"
+"POT-Creation-Date: 2026-04-22 18:37+0000\n"
+"PO-Revision-Date: 2026-03-14 13:05+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "website_hr_recruitment/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -52,14 +52,18 @@ msgstr ""
 "        "
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_searchbar_option.xml:0
+msgid ""
+"\n"
+"            Jobs\n"
+"        "
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "'. Showing results for '"
 msgstr "'. Affichage des résultats pour '"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
-msgid "+1 (650) 555-0187"
-msgstr "+1 (650) 555-0187"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -385,12 +389,6 @@ msgid "Departments Filter"
 msgstr "Filtre des départements"
 
 #. module: website_hr_recruitment
-#. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_searchbar_option_plugin.js:0
-msgid "Description"
-msgstr "Description"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Discover our products."
 msgstr "Découvrez nos produits."
@@ -545,7 +543,6 @@ msgid "Industries Filter"
 msgstr "Filtre par secteurs d’activité"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Insert a Job Description..."
 msgstr "Insérer une description de l'offre..."
@@ -592,11 +589,10 @@ msgid "Job not found"
 msgstr "Offre non trouvée"
 
 #. module: website_hr_recruitment
-#. odoo-javascript
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
+#: code:addons/website_hr_recruitment/models/hr_job.py:0
 #: code:addons/website_hr_recruitment/models/website.py:0
-#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_searchbar_option.xml:0
 #: model:ir.ui.menu,name:website_hr_recruitment.menu_job_pages
 #: model:website.menu,name:website_hr_recruitment.website_menu_jobs
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -605,7 +601,7 @@ msgstr "Postes"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option_plugin.js:0
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Jobs Page"
 msgstr "Page des offres d'emploi"
 
@@ -736,13 +732,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid "Potential Duplicate Detected: Ongoing Application"
-msgstr ""
+msgstr "Doublon potentiel détecté : candidature en cours"
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid "Potential Duplicate Detected: Refused Application"
-msgstr ""
+msgstr "Doublon potentiel détecté : candidature refusée"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
@@ -758,7 +754,7 @@ msgstr "Produits"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
 msgid "Publish On"
-msgstr ""
+msgstr "Publier sur"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -881,12 +877,19 @@ msgid "Strong analytical skills"
 msgstr "Compétences analytiques avancées"
 
 #. module: website_hr_recruitment
+#: model:website.page,name:website_hr_recruitment.thankyou
+msgid "Thank you (Recruitment)"
+msgstr ""
+
+#. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid ""
 "The following ongoing applications share an email address, phone number and/"
 "or linkedin profile with this application:"
 msgstr ""
+"Les candidatures en cours suivantes partagent les mêmes adresse e-mail, "
+"numéro de téléphone et/ou profil LinkedIn que cette candidature :"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -895,6 +898,8 @@ msgid ""
 "The following recently refused applications share an email address, phone "
 "number and/or linkedin profile with this application:"
 msgstr ""
+"Les candidatures récemment refusées suivantes partagent les mêmes adresse e-"
+"mail, numéro de téléphone et/ou profil LinkedIn que cette candidature :"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_absolute_url
@@ -1040,7 +1045,7 @@ msgstr "Image opengraph site web"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_rating
 msgid "Website rating"
-msgstr ""
+msgstr "Évaluation du site web"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -1089,6 +1094,8 @@ msgid ""
 "e.g. Summarize the position in one or two lines that will be displayed on "
 "the job page and the jobs list page..."
 msgstr ""
+"p. ex. Résumez le poste en une ou deux lignes qui seront affichées sur la "
+"page de l’offre d’emploi et sur la page de la liste des offres d’emploi..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply

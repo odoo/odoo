@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-04-22 18:37+0000\n"
 "PO-Revision-Date: 2025-11-09 15:11+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -28,11 +28,29 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid ""
-"\"\n"
-"                (ID:"
+"\n"
+"                The error occurred during the execution of the automation "
+"rule\n"
+"                \""
 msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+msgid ""
+"\n"
+"                You can ask an administrator to disable or fix this "
+"automation.\n"
+"            "
+msgstr ""
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+msgid ""
 "\"\n"
-"                (ID:"
+"                (ID: "
+msgstr ""
 
 #. module: base_automation
 #. odoo-javascript
@@ -515,8 +533,8 @@ msgstr "模型名称"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
 msgstr "动作 %(action_name)s 的模型应与自动规则 %(rule_name)s 的模型相匹配。"
 
 #. module: base_automation
@@ -797,8 +815,8 @@ msgstr "动作的目标模式 %(action_names)s 与规则模式不同。"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
 "这个 \"%(trigger_value)s\" %(trigger_label)s 只能与 \"%(state_value)s\" 动作"
 "类型一起使用"
@@ -809,16 +827,6 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr "如果为空，则所有字段都会被监视。"
-
-#. module: base_automation
-#. odoo-javascript
-#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
-msgid ""
-"The error occurred during the execution of the automation rule\n"
-"                \""
-msgstr ""
-"执行自动化规则时发生错误\n"
-"                \""
 
 #. module: base_automation
 #. odoo-python
@@ -981,12 +989,6 @@ msgid ""
 msgstr ""
 "利用自动化规则，您可以自动\n"
 "               <em>任何</em>工作流程。"
-
-#. module: base_automation
-#. odoo-javascript
-#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
-msgid "You can ask an administrator to disable or fix this automation."
-msgstr "您可要求系统管理员停用或修复此自动化功能。"
 
 #. module: base_automation
 #. odoo-python
