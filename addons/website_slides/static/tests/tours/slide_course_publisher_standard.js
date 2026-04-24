@@ -88,7 +88,7 @@ registerWebsitePreviewTour(
             {
                 content: "eLearning: is the Corgi set ?",
                 trigger:
-                    ':iframe img.o_wslides_course_pict.o_modified_image_to_save[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"][src^="data:image"]',
+                    ':iframe img.o_wslides_course_pict.o_b64_image_to_save[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"][src^="data:image"]',
                 run: "click",
             },
             {
