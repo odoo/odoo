@@ -281,7 +281,7 @@ class HrAttendance(models.Model):
             return Domain.FALSE
         domain_list = []
         for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items():
-            tz = ZoneInfo(employee.sudo()._get_tz())
+            tz = ZoneInfo(employee.tz)
             local_check_in = min(attendances.mapped('check_in')).replace(tzinfo=UTC).astimezone(tz)
             local_check_out = max(attendances.mapped('check_out')).replace(tzinfo=UTC).astimezone(tz)
             rulesets = attendances.mapped(lambda att: att.employee_id.sudo()._get_version(att.date)).ruleset_id
