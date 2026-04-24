@@ -61,12 +61,8 @@ test("the selection should be restricted when it crosses different div from left
         anchorNode: firstGrandchildEl.firstChild,
         anchorOffset: 0,
         focusOffset: 4,
+        isMouseEventSimulated: true,
     });
-
-    manuallyDispatchProgrammaticEvent(firstGrandchildEl, "mouseup", {
-        detail: 1,
-    });
-    manuallyDispatchProgrammaticEvent(firstGrandchildEl, "click");
     await animationFrame();
 
     // The selection should not be modified when it is inside the innermost
@@ -90,12 +86,8 @@ test("the selection should be restricted when it crosses different div from left
         anchorOffset: 0,
         focusNode: secondGrandchildEl.firstChild,
         focusOffset: 4,
+        isMouseEventSimulated: true,
     });
-
-    manuallyDispatchProgrammaticEvent(secondGrandchildEl, "mouseup", {
-        detail: 1,
-    });
-    manuallyDispatchProgrammaticEvent(secondGrandchildEl, "click");
     await animationFrame();
 
     // The selection should be modified when it is outside the innermost
@@ -126,12 +118,8 @@ test("the selection should be restricted when it crosses different div from righ
         anchorNode: secondGrandchildEl.firstChild,
         anchorOffset: 4,
         focusOffset: 0,
+        isMouseEventSimulated: true,
     });
-
-    manuallyDispatchProgrammaticEvent(firstGrandchildEl, "mouseup", {
-        detail: 1,
-    });
-    manuallyDispatchProgrammaticEvent(firstGrandchildEl, "click");
     await animationFrame();
 
     // The selection should not be modified when it is inside the innermost
@@ -155,12 +143,8 @@ test("the selection should be restricted when it crosses different div from righ
         anchorOffset: 4,
         focusNode: firstGrandchildEl.firstChild,
         focusOffset: 0,
+        isMouseEventSimulated: true,
     });
-
-    manuallyDispatchProgrammaticEvent(secondGrandchildEl, "mouseup", {
-        detail: 1,
-    });
-    manuallyDispatchProgrammaticEvent(secondGrandchildEl, "click");
     await animationFrame();
 
     // The selection should be modified when it is outside the innermost
