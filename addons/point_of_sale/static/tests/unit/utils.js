@@ -85,7 +85,7 @@ export const mountPosDialog = async (component, props) => {
         const flattenedChildren = (comp, acc = {}) => {
             const array = Object.values(comp.children);
             for (const child of array) {
-                acc[child.name] = child;
+                acc[child.componentName] = child;
                 flattenedChildren(child, acc);
             }
             return acc;
