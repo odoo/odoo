@@ -287,10 +287,14 @@ export class RelationalModel extends Model {
         } else {
             records = data.records;
         }
+        this._cacheMany2XRecord(config.activeFields, config.fields, records);
+    }
+
+    _cacheMany2XRecord(activeFields, fields, records) {
         for (const record of records) {
             for (const [fieldName, value] of Object.entries(record)) {
-                const field = config.fields[fieldName];
-                const activeField = config.activeFields[fieldName];
+                const field = fields[fieldName];
+                const activeField = activeFields[fieldName];
                 if (
                     activeField &&
                     activeField.invisible !== "True" &&
@@ -301,6 +305,12 @@ export class RelationalModel extends Model {
                         values = [value];
                     } else if (field.type === "many2many" && value && Array.isArray(value)) {
                         values = value.filter((v) => v.id && v.display_name);
+                    } else if (field.type === "one2many") {
+                        this._cacheMany2XRecord(
+                            activeField.related.activeFields,
+                            activeField.related.fields,
+                            value
+                        );
                     }
                     if (values.length) {
                         this.offline.cacheMany2XSearch(field.relation, values);
