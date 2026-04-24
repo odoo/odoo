@@ -4,69 +4,40 @@ import { Component, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
+const METADATA_FIELD = "available_additional_identifiers_metadata";
+
+function parseJson(value) {
+    if (!value) {
+        return {};
+    }
+    try {
+        return typeof value === "string" ? JSON.parse(value) : { ...value };
+    } catch {
+        return {};
+    }
+}
+
 export class AdditionalIdentifiersCommon extends Component {
     static template = "";
-    static props = {
-        ...standardFieldProps,
-        seqMin: { type: Number, optional: true, default: 0 },
-        seqMax: { type: Number, optional: true, default: 999 },
-    };
+    static props = { ...standardFieldProps };
 
     setup() {
         super.setup();
 
-        this.orm = useService("orm");
-
-        const value = this.props.record.data[this.props.name];
-        let identifiers = {};
-        if (value) {
-            try {
-                identifiers = typeof value === "string" ? JSON.parse(value) : { ...value };
-            } catch {
-                identifiers = {};
-            }
-        }
-
         this.state = useState({
-            identifiers: identifiers,
-            metadata: {},
+            identifiers: parseJson(this.props.record.data[this.props.name]),
+            metadata: parseJson(this.props.record.data[METADATA_FIELD]),
         });
 
         this.debouncedCommitChanges = debounce(this.commitChanges.bind(this), 50);
 
-        useRecordObserver(async (record) => {
-            const recordValue = record.data[this.props.name];
-            let parsed = {};
-            if (recordValue) {
-                try {
-                    parsed =
-                        typeof recordValue === "string"
-                            ? JSON.parse(recordValue)
-                            : { ...recordValue };
-                } catch {
-                    parsed = {};
-                }
-            }
-            this.state.identifiers = parsed;
-
-            const countryCode = record.data.country_code;
-            if (countryCode !== this.lastCountryCode) {
-                this.lastCountryCode = countryCode;
-                this.state.metadata = await this.orm.call(
-                    "res.partner",
-                    "get_available_additional_identifiers_metadata",
-                    [countryCode],
-                    {
-                        seq_min: this.props.seqMin,
-                        seq_max: this.props.seqMax,
-                    }
-                );
-            }
+        useRecordObserver((record) => {
+            this.state.identifiers = parseJson(record.data[this.props.name]);
+            this.state.metadata = parseJson(record.data[METADATA_FIELD]);
         });
     }
 
@@ -124,22 +95,18 @@ export class AdditionalIdentifiersList extends AdditionalIdentifiersCommon {
     }
 }
 
+const metadataFieldDependency = [{ name: METADATA_FIELD, type: "json", readonly: true }];
+
 export const additionalIdentifiersButton = {
     component: AdditionalIdentifiersButton,
-    extractProps: ({ attrs }) => ({
-        seqMin: Number(attrs.seqMin) || 0,
-        seqMax: Number(attrs.seqMax) || 999,
-    }),
     supportedTypes: ["json"],
+    fieldDependencies: metadataFieldDependency,
 };
 
 export const additionalIdentifiersList = {
     component: AdditionalIdentifiersList,
-    extractProps: ({ attrs }) => ({
-        seqMin: Number(attrs.seqMin) || 0,
-        seqMax: Number(attrs.seqMax) || 999,
-    }),
     supportedTypes: ["json"],
+    fieldDependencies: metadataFieldDependency,
 };
 
 registry.category("fields").add("additional_identifiers_button", additionalIdentifiersButton);
