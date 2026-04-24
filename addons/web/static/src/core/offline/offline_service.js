@@ -439,9 +439,13 @@ class OfflineManager extends Reactive {
                     if (e instanceof ConnectionLostError) {
                         break;
                     }
+                    let error = e.message || _t("Error");
+                    if (e.data) {
+                        error = e.data.name + " - " + e.data.message;
+                    }
                     this.scheduleORM(value.model, value.method, value.args, value.kwargs, {
                         id: key,
-                        extras: { ...value.extras, error: true },
+                        extras: { ...value.extras, error },
                     });
                 }
             }
