@@ -51,7 +51,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_bd_account_account(self):
         return {
             'l10n_bd_100502': {
-                'account_stock_expense_id': 'l10n_bd_500907',
                 'account_stock_variation_id': 'l10n_bd_500905',
             },
         }
