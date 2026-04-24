@@ -35,7 +35,7 @@ export class MailFullComposerSuggestionPlugin extends Plugin {
                 props: {
                     onSelect: this.onSelect.bind(this),
                     thread: this.config.thread,
-                    type: ev.data === "@" ? "Partner" : "Thread",
+                    type: ev.data === "@" ? "Partner" : "discuss.channel",
                     close: () => {
                         this.mentionList.close();
                     },

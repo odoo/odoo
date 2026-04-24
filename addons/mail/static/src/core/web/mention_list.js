@@ -65,7 +65,7 @@ export class MentionList extends Component {
 
     get placeholder() {
         switch (this.props.type) {
-            case "Thread":
+            case "discuss.channel":
                 return _t("Search for a channel...");
             case "Partner":
                 return _t("Search for a user...");
