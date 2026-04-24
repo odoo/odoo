@@ -57,15 +57,15 @@ def fetch_bus_notifications(cr, min_id_by_channel, ignore_ids=None):
     :return: List of notifications.
 
     """
-    threshold = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
     channels_by_id = defaultdict(list)
     for channel, min_id in min_id_by_channel.items():
         channels_by_id[min_id].append(json_dump(channel_with_db(cr.dbname, channel)))
-    channel_conditions = []
-    for min_id, channels in channels_by_id.items():
-        since = SQL("create_date > %s", threshold) if min_id == 0 else SQL("id > %s", min_id)
-        channel_conditions.append(SQL("(channel IN %s AND %s)", tuple(channels), since))
-    where = SQL(" OR ").join(channel_conditions)
+    where = SQL(" OR ").join(
+        [
+            SQL("(channel IN %s AND id > %s)", tuple(channels), min_id)
+            for min_id, channels in channels_by_id.items()
+        ],
+    )
     if ignore_ids:
         where = SQL("(%s) AND id NOT IN %s", where, tuple(ignore_ids))
     cr.execute(SQL("SELECT id, message FROM bus_bus WHERE %s ORDER BY id", where))
@@ -206,7 +206,7 @@ class BusBus(models.Model):
                         )
 
     @api.model
-    def _poll(self, channels, last=0, ignore_ids=None):
+    def _poll(self, channels, last, ignore_ids=None):
         return fetch_bus_notifications(self.env.cr, {c: last for c in channels}, ignore_ids)
 
     def _bus_last_id(self):

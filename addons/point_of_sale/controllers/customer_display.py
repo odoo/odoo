@@ -10,6 +10,7 @@ class PosCustomerDisplay(http.Controller):
             "point_of_sale.customer_display_index",
             {
                 "session_info": {
+                    "bus_info": request.env["ir.http"]._get_bus_session_info(),
                     "user_context": {
                       "lang":  request.env.user.lang or pos_config_sudo.company_id.partner_id.lang
                     },

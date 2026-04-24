@@ -56,8 +56,7 @@ class IrWebsocket(models.AbstractModel):
         """
         if not all(isinstance(c, str) for c in channels):
             raise ValueError("bus.Bus only string channels are allowed.")
-        # sudo - bus.bus: reading non-sensitive last bus id.
-        last = 0 if last > self.env["bus.bus"].sudo()._bus_last_id() else last
+        last = min(self.env["bus.bus"].sudo()._bus_last_id(), last)
         return {"channels": OrderedSet(self._build_bus_channel_list(list(channels))), "last": last}
 
     def _subscribe(self, og_data):
