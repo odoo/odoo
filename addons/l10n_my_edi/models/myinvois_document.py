@@ -725,7 +725,7 @@ class MyInvoisDocument(models.Model):
                 discount_amount_currency = (total_amount_currency - total_amount_discounted_currency) if has_discount else 0.0
 
                 # for the line name, when consolidating, we want to show first sequence - last sequence
-                sequenced_records = records.sorted(key=lambda r: r.name)
+                sequenced_records = records.sorted(key=lambda r: (r.sequence_number))
                 new_base_line = AccountTax._prepare_base_line_for_taxes_computation(
                     {},
                     tax_ids=taxes,
@@ -822,25 +822,13 @@ class MyInvoisDocument(models.Model):
         :return: A dict of invoices per journal, for each journal having a list of recordset each representing a single line in the xml.
         """
         lines_per_journal_prefix = {}
-        continuous_invoice_ids = set()
-        # We need to know if we 'skip' invoices when consolidating (sent separately, ...) to do so we will fetch all invoices
-        # whose sequence are between the lowest and highest in the invoices we send.
         for (journal, prefix), moves in invoices.grouped(lambda m: (m.journal_id, m.sequence_prefix)).items():
             journal_prefix_lines = []
-            # The aim of this loop is to detect 'gaps' in the sequences we are sending; most commonly would be cause
-            # by manually sending an invoice in the middle of others we want to consolidate.
-            # Note that the moves that we consolidated are added to the previous_numbers; otherwise when we re-split at
-            # the time of generating the XML the domain will skip them and result in a wrong split.
-            previous_numbers = set((self.env['account.move'].sudo().search([
-                ('journal_id', '=', journal.id),
-                ('sequence_prefix', '=', prefix),
-                ('sequence_number', '>=', min(moves.mapped('sequence_number')) - 1),
-                ('sequence_number', '<=', max(moves.mapped('sequence_number')) - 1),
-                '|',
-                ('l10n_my_edi_document_ids', '=', False),
-                ('l10n_my_edi_document_ids', 'not any', [('myinvois_state', '!=', 'cancelled')])
-            ]) | moves).mapped('sequence_number'))
-            for move in moves:
+            continuous_invoice_ids = set()
+            # Split whenever the immediate predecessor is not part of the selected invoices.
+            # This guarantees that any gap in the selected sequence creates a dedicated consolidated line.
+            previous_numbers = set(moves.mapped('sequence_number'))
+            for move in moves.sorted('sequence_number'):
                 if move.sequence_number > 1 and (move.sequence_number - 1) not in previous_numbers:
                     if continuous_invoice_ids:
                         journal_prefix_lines.append(self.env["account.move"].browse(continuous_invoice_ids))
@@ -849,7 +837,6 @@ class MyInvoisDocument(models.Model):
                     continuous_invoice_ids.add(move.id)
             if continuous_invoice_ids:
                 journal_prefix_lines.append(self.env["account.move"].browse(continuous_invoice_ids))
-                continuous_invoice_ids = set()
             lines_per_journal_prefix[journal, prefix] = journal_prefix_lines
 
         return lines_per_journal_prefix
