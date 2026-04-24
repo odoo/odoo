@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-04-22 18:39+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Afrikaans (https://www.transifex.com/odoo/teams/41243/af/)\n"
@@ -18,6 +18,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option.xml:0
+msgid ""
+"\n"
+"            Blogs\n"
+"        "
+msgstr ""
 
 #. module: website_blog
 #. odoo-python
@@ -323,12 +332,6 @@ msgid "All Blogs"
 msgstr ""
 
 #. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
-msgid "All blogs"
-msgstr ""
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
 msgid "All dates"
 msgstr ""
@@ -452,6 +455,12 @@ msgid "Author Name"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+msgid "Authors"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__publish_on
 msgid "Auto publish on"
 msgstr ""
@@ -523,10 +532,8 @@ msgid "Beyond The Eye"
 msgstr ""
 
 #. module: website_blog
-#. odoo-javascript
 #. odoo-python
 #: code:addons/website_blog/models/website.py:0
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root_global
@@ -537,6 +544,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Blog"
+msgstr ""
+
+#. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/website_blog.py:0
+msgid "Blog Articles"
 msgstr ""
 
 #. module: website_blog
@@ -551,7 +564,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_page_option_plugin.js:0
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 msgid "Blog Page"
 msgstr ""
 
@@ -585,6 +598,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_ids
+#: model:ir.model.fields,field_description:website_blog.field_res_partner__blog_post_ids
+#: model:ir.model.fields,field_description:website_blog.field_res_users__blog_post_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_post_pages
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Blog Posts"
@@ -631,7 +646,7 @@ msgstr ""
 #. odoo-javascript
 #. odoo-python
 #: code:addons/website_blog/controllers/main.py:0
-#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
 #: model:ir.ui.menu,name:website_blog.menu_blog_global
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
@@ -648,7 +663,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_post_page_option_plugin.js:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Blogs Page"
 msgstr ""
 
@@ -783,6 +798,11 @@ msgid "Comments/Views Stats"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model,name:website_blog.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__content
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__content
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -813,6 +833,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__cover_properties
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__cover_properties
 msgid "Cover Properties"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model,website_form_label:website_blog.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: website_blog
@@ -851,12 +876,6 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option_plugin.js:0
-msgid "Description"
-msgstr "Beskrywing"
-
-#. module: website_blog
-#. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Dexter"
 msgstr ""
@@ -866,10 +885,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_blog.field_website__display_name
 #: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr "Vertoningsnaam"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.index
+msgid "Drag blocks here to add them on all blogs"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -1087,6 +1112,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_res_partner__id
 #: model:ir.model.fields,field_description:website_blog.field_website__id
 #: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
 msgid "ID"
@@ -1662,12 +1688,6 @@ msgid "Promote a post"
 msgstr ""
 
 #. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option_plugin.js:0
-msgid "Publication Date"
-msgstr ""
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Publish on"
 msgstr ""
@@ -1872,6 +1892,11 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
+msgid "Share"
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 msgid "Share Links"
@@ -2023,6 +2048,11 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
+msgid "Social Media"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_1
 #: model_terms:blog.post,content:website_blog.blog_post_3
 #: model_terms:blog.post,content:website_blog.blog_post_4
@@ -2102,6 +2132,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_tags_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__tag_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__tag_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_tag_global
@@ -2426,18 +2457,8 @@ msgid "Views"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.index
-msgid "Visible in all blogs' pages"
-msgstr ""
-
-#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
 msgid "Visible on current website"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
-msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
 msgstr ""
 
 #. module: website_blog

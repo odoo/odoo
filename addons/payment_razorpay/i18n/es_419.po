@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"POT-Creation-Date: 2026-04-22 18:39+0000\n"
 "PO-Revision-Date: 2025-10-30 17:06+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -67,6 +67,11 @@ msgstr "Conectar"
 #: code:addons/payment_razorpay/controllers/onboarding.py:0
 msgid "Could not find Razorpay provider with id %s"
 msgstr "No se pudo encontrar el proveedor de Razorpay con el id %s"
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Disconnect"
+msgstr ""
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__display_name
@@ -150,6 +155,11 @@ msgid "Razorpay Account ID"
 msgstr "ID de la cuenta de Razorpay"
 
 #. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_is_oauth_supported
+msgid "Razorpay Is Oauth Supported"
+msgstr ""
+
+#. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
 msgid "Razorpay Key Id"
 msgstr "ID de la clave de Razorpay"
@@ -178,11 +188,16 @@ msgstr "Secreto del webhook de Razorpay"
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid ""
-"Razorpay credentials are missing. Click the \"Connect\" button to set up "
-"your account."
+"Razorpay credentials are missing. Please fill them to set up your account."
 msgstr ""
-"Faltan las credenciales de Razorpay. Haz clic en el botón \"Conectar\" para "
-"configurar tu cuenta."
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid ""
+"Razorpay credentials are missing. Please set the state back to 'Disabled' "
+"and click the \"Connect\" button to set up your account."
+msgstr ""
 
 #. module: payment_razorpay
 #. odoo-python
@@ -215,11 +230,6 @@ msgstr "Datos recibidos sin estado."
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Received incomplete refund data."
 msgstr "Se recibió información incompleta sobre los reembolsos."
-
-#. module: payment_razorpay
-#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
-msgid "Reset Your Razorpay Account"
-msgstr "Restablece tu cuenta de Razorpay"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
@@ -266,14 +276,10 @@ msgstr "Secreto del webhook"
 msgid ""
 "You are currently connected to Razorpay through the credentials method, "
 "which is\n"
-"                    deprecated. Click the \"Connect\" button below to use "
+"                    deprecated. Click the \"Connect\" button above to use "
 "the recommended OAuth\n"
 "                    method."
 msgstr ""
-"Estás conectado a Razorpay con el método de credenciales, este es\n"
-"                    obsoleto. Haz clic en el botón \"Conectar\" de abajo "
-"para usar el método de OAuth\n"
-"                   recomendado."
 
 #. module: payment_razorpay
 #. odoo-python

@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-01-31 12:48+0000\n"
+"POT-Creation-Date: 2026-04-22 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 13:07+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/"
 "website_hr_recruitment/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -51,14 +51,18 @@ msgstr ""
 "        "
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_searchbar_option.xml:0
+msgid ""
+"\n"
+"            Jobs\n"
+"        "
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "'. Showing results for '"
 msgstr "'. Resultaten weergeven voor '"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
-msgid "+1 (650) 555-0187"
-msgstr "+1 (650) 555-0187"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -260,7 +264,7 @@ msgstr "Sollicitant"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Application Info"
-msgstr "Toepassingsinfo"
+msgstr "Sollicitatieproces"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -378,12 +382,6 @@ msgid "Departments Filter"
 msgstr "Afdelingen filter"
 
 #. module: website_hr_recruitment
-#. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_searchbar_option_plugin.js:0
-msgid "Description"
-msgstr "Omschrijving"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Discover our products."
 msgstr "Ontdek onze producten."
@@ -417,7 +415,7 @@ msgstr ""
 "                    Het hele jaar door worden er vaak verschillende "
 "activiteiten georganiseerd, zoals wekelijkse\n"
 "                    sportsessies, teambuildingevenementen, maandelijkse "
-"borrels en nog veel meer"
+"borrels en nog veel meer."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -537,7 +535,6 @@ msgid "Industries Filter"
 msgstr "Bedrijfstakkenfilter"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Insert a Job Description..."
 msgstr "Voeg een functieomschrijving toe..."
@@ -584,11 +581,10 @@ msgid "Job not found"
 msgstr "Functie niet gevonden"
 
 #. module: website_hr_recruitment
-#. odoo-javascript
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
+#: code:addons/website_hr_recruitment/models/hr_job.py:0
 #: code:addons/website_hr_recruitment/models/website.py:0
-#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_searchbar_option.xml:0
 #: model:ir.ui.menu,name:website_hr_recruitment.menu_job_pages
 #: model:website.menu,name:website_hr_recruitment.website_menu_jobs
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -597,7 +593,7 @@ msgstr "Vacatures"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option_plugin.js:0
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Jobs Page"
 msgstr "Vacaturepagina"
 
@@ -724,13 +720,13 @@ msgstr "Sport samen samen met collega's; <br/>de rekening is voor ons."
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid "Potential Duplicate Detected: Ongoing Application"
-msgstr ""
+msgstr "Potentieel duplicaat gedetecteerd: Lopende sollicitatie"
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid "Potential Duplicate Detected: Refused Application"
-msgstr ""
+msgstr "Potentieel duplicaat gedetecteerd: Afgewezen sollicitatie"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
@@ -746,7 +742,7 @@ msgstr "Producten"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
 msgid "Publish On"
-msgstr ""
+msgstr "Publiceren op"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -869,12 +865,19 @@ msgid "Strong analytical skills"
 msgstr "Sterke analytische vaardigheden"
 
 #. module: website_hr_recruitment
+#: model:website.page,name:website_hr_recruitment.thankyou
+msgid "Thank you (Recruitment)"
+msgstr ""
+
+#. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid ""
 "The following ongoing applications share an email address, phone number and/"
 "or linkedin profile with this application:"
 msgstr ""
+"De volgende lopende aanvragen hebben hetzelfde e-mailadres, telefoonnummer "
+"en/of LinkedIn-profiel als deze sollicitatie:"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -883,6 +886,8 @@ msgid ""
 "The following recently refused applications share an email address, phone "
 "number and/or linkedin profile with this application:"
 msgstr ""
+"De volgende recent afgewezen aanvragen hebben hetzelfde e-mailadres, "
+"telefoonnummer en/of LinkedIn-profiel als deze sollicitatie:"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_absolute_url
@@ -1031,7 +1036,7 @@ msgstr "Website opengraph afbeelding"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_rating
 msgid "Website rating"
-msgstr ""
+msgstr "Websitebeoordeling"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -1080,6 +1085,8 @@ msgid ""
 "e.g. Summarize the position in one or two lines that will be displayed on "
 "the job page and the jobs list page..."
 msgstr ""
+"bv. Vat de functie samen in één of twee regels die op de vacaturepagina en "
+"de vacaturelijstpagina worden weergegeven..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"POT-Creation-Date: 2026-04-22 18:38+0000\n"
 "PO-Revision-Date: 2026-01-16 05:51+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -23,11 +23,36 @@ msgstr ""
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
+msgid ""
+"\n"
+"                    An error occured while loading the dashboard\n"
+"                "
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
+msgid ""
+"\n"
+"                Only chart figures are displayed in small screens but this "
+"dashboard doesn't contain any\n"
+"            "
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #. odoo-python
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_group.py:0
 msgid "%s (copy)"
 msgstr "%s (copie)"
+
+#. module: spreadsheet_dashboard
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_share.py:0
+msgid "%s - Share Link"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
@@ -46,15 +71,15 @@ msgid "Access Token"
 msgstr "Token de acces"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__active
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_share_view_search
+msgid "Active"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:res.groups,name:spreadsheet_dashboard.group_dashboard_manager
 msgid "Admin"
 msgstr "Admin"
-
-#. module: spreadsheet_dashboard
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
-msgid "An error occured while loading the dashboard"
-msgstr "A apărut o eroare la încărcarea tabloului de bord"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
@@ -72,6 +97,12 @@ msgstr ""
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.js:0
 msgid "Choose a dashboard...."
 msgstr "Alegeți un tablou de bord...."
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
+msgid "Close sidebar"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__company_ids
@@ -93,6 +124,7 @@ msgstr "Copie a unui tablou de bord partajat"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__create_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__create_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__create_uid
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_share_view_search
 msgid "Created by"
 msgstr "Creat de"
 
@@ -107,6 +139,7 @@ msgstr "Creat pe"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__dashboard_ids
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_id
 #: model:res.groups.privilege,name:spreadsheet_dashboard.res_groups_privilege_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_share_view_search
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_search
 msgid "Dashboard"
 msgstr "Tablou de bord"
@@ -203,6 +236,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_share_view_search
+msgid "Inactive"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__is_favorite
 msgid "Indicates whether the dashboard is favorited by the current user"
 msgstr ""
@@ -279,16 +317,14 @@ msgstr "Nu există tablou de bord disponibil"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
-#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
-msgid ""
-"Only chart figures are displayed in small screens but this dashboard doesn't "
-"contain any"
+#: code:addons/spreadsheet_dashboard/static/src/bundle/list/clickable_cell.js:0
+msgid "Open record"
 msgstr ""
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
-#: code:addons/spreadsheet_dashboard/static/src/bundle/list/clickable_cell.js:0
-msgid "Open record"
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
+msgid "Open sidebar"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -320,6 +356,7 @@ msgstr "Caută..."
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__dashboard_group_id
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_group_id
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_search
 msgid "Section"
 msgstr ""
@@ -346,6 +383,12 @@ msgstr "Secvență"
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_project
 msgid "Services"
 msgstr "Servicii"
+
+#. module: spreadsheet_dashboard
+#: model:ir.actions.act_window,name:spreadsheet_dashboard.spreadsheet_dashboard_share_action_configuration_share_links
+#: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_share_menu_configuration_share_links
+msgid "Share links"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard
@@ -385,6 +428,7 @@ msgstr "Comutare favorit"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__full_url
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_share_view_list
 msgid "URL"
 msgstr "URL"
 
@@ -426,6 +470,13 @@ msgstr "Nu puteți șterge %s deoarece este utilizat în alt modul."
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_share.py:0
 msgid "You don't have access to this dashboard. "
 msgstr "Nu aveși acces la acest tablou de bord. "
+
+#. module: spreadsheet_dashboard
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/controllers/share.py:0
+msgid ""
+"You don't have the rights to export data. Please contact an Administrator."
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
