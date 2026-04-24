@@ -40,11 +40,9 @@
                                     'o_disabled_while_sync': this.offlineService.syncingORM,
                                     'mb-2': element_last,
                                  }">
-                                <div t-attf-class="text-truncate {{element.error ? 'text-danger': ''}} {{ element.clickable ? '' : 'text-muted'}}">
+                                <div t-attf-class="text-truncate {{element.error ? 'text-danger': ''}} {{ element.clickable ? '' : 'text-muted'}}" t-att-data-tooltip="element.error ?? element.displayName">
                                     <i t-if="element.error" class="o_button_icon fa fa-fw fa-exclamation-circle text-danger me-1"/>
-                                    <span
-                                        t-att-title="element.displayName"
-                                        t-out="element.displayName"/>
+                                    <span t-out="element.displayName"/>
                                 </div>
                                 <div
                                     class="ms-auto"
