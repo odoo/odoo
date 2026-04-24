@@ -467,6 +467,29 @@ class TestConfigManager(TransactionCase):
         config._parse_config()
         config._warn_deprecated_options()
 
+    def test_05_repeated_config_arguments_are_merged_in_order(self):
+        with file_open_temporary_directory(self.env) as temp_dir:
+            base_config = f'{temp_dir}/base.conf'
+            override_config = f'{temp_dir}/override.conf'
+            with open(base_config, 'w', encoding='utf-8') as f:
+                f.write('[options]\n')
+                f.write('db_host = base.local\n')
+                f.write('smtp_port = 2526\n')
+            with open(override_config, 'w', encoding='utf-8') as f:
+                f.write('[options]\n')
+                f.write('db_host = override.local\n')
+                f.write('db_port = 6543\n')
+
+            self.config._parse_config([
+                '--config', base_config,
+                '--config', override_config,
+            ])
+
+        self.assertEqual(self.config['config'], override_config)
+        self.assertEqual(self.config['db_host'], 'override.local')
+        self.assertEqual(self.config['db_port'], 6543)
+        self.assertEqual(self.config['smtp_port'], 2526)
+
     def test_06_cli(self):
         with file_open('test_tools/tests/config/cli') as file:
             with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
@@ -737,6 +760,30 @@ class TestConfigManager(TransactionCase):
         self.parse_reset(['-c', file_path('test_tools/tests/config/multidb.conf'), '-i', 'base'])
         self.parse_reset(['-c', file_path('test_tools/tests/config/multidb.conf'), '-u', 'base'])
         error.assert_has_calls(4 * [call("Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")])
+
+    def test_10_save_with_multiple_config(self):
+        with file_open_temporary_directory(self.env) as temp_dir:
+            base_config = f'{temp_dir}/base.conf'
+            override_config = f'{temp_dir}/override.conf'
+            with open(base_config, 'w', encoding='utf-8') as f:
+                f.write('[options]\n')
+                f.write('db_host = base.local\n')
+                f.write('smtp_port = 2526\n')
+            with open(override_config, 'w', encoding='utf-8') as f:
+                f.write('[options]\n')
+                f.write('db_host = override.local\n')
+                f.write('db_port = 6543\n')
+
+            _, options = self.parse_reset([
+                '--save',
+                '--config', base_config,
+                '--config', override_config,
+            ])
+
+            self.assertEqual(options['config'], override_config)
+            self.assertEqual(options['db_host'], 'override.local')
+            self.assertEqual(options['db_port'], 6543)
+            self.assertEqual(options['smtp_port'], 2526)
 
     def test_11_auto_stop_after_init_after_test(self):
         for args, stop_after_init in [

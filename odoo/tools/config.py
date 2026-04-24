@@ -229,7 +229,7 @@ class configmanager:
 
         # Server startup config
         group = optparse.OptionGroup(parser, "Common options")
-        group.add_option("-c", "--config", dest="config", type='path', file_loadable=False, env_name='ODOO_RC',
+        group.add_option("-c", "--config", dest="config", action='append', type='path', file_loadable=False, env_name='ODOO_RC',
                          help="specify alternate config file")
         group.add_option("-s", "--save", action="store_true", dest="save", my_default=False, file_loadable=False,
                          help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
@@ -617,8 +617,12 @@ class configmanager:
         if unknown_args:
             self.parser.error(f"unrecognized parameters: {' '.join(unknown_args)}")
 
-        if not opt.save and opt.config and not os.access(opt.config, os.R_OK):
-            self.parser.error(f"the config file {opt.config!r} selected with -c/--config doesn't exist or is not readable, use -s/--save if you want to generate it")
+        config_files = opt.config or []
+
+        if not opt.save:
+            for config_file in config_files:
+                if not os.access(config_file, os.R_OK):
+                    self.parser.error(f"the config file {config_file!r} selected with -c/--config doesn't exist or is not readable, use -s/--save if you want to generate it")
 
         # Even if they are not exposed on the CLI, cli un-loadable variables still show up in the opt, remove them
         for option_name in list(vars(opt).keys()):
@@ -627,7 +631,7 @@ class configmanager:
 
         self._load_env_options()
         self._load_cli_options(opt)
-        self._load_file_options(self['config'])
+        self._load_files_options(config_files or [self['config']])
         self._postprocess_options()
 
         if opt.save:
@@ -663,6 +667,11 @@ class configmanager:
         for arg in keys:
             if getattr(opt, arg, None) is not None:
                 self._cli_options[arg] = getattr(opt, arg)
+
+        if opt.config:
+            # Keep backward-compatible behavior for the `config` option value:
+            # the last explicitly provided file is the active config path.
+            self._cli_options['config'] = opt.config[-1]
 
         if opt.log_handler:
             self._cli_options['log_handler'] = [handler for comma in opt.log_handler for handler in comma]
@@ -904,8 +913,14 @@ class configmanager:
             format_func = self.parser.option_class.TYPE_FORMATTER[option.type]
         return format_func(value)
 
-    def _load_file_options(self, rcfile):
+    def _load_files_options(self, rcfiles):
+        if isinstance(rcfiles, str):
+            rcfiles = [rcfiles]
         self._file_options.clear()
+        for rcfile in rcfiles:
+            self._load_file_options(rcfile)
+
+    def _load_file_options(self, rcfile):
         p = ConfigParser.RawConfigParser()
         try:
             p.read([rcfile])
@@ -919,7 +934,7 @@ class configmanager:
                         self._log(logging.WARNING,
                             "unknown option %r in the config file at "
                             "%s, option stored as-is, without parsing",
-                            name, self['config'],
+                            name, rcfile,
                         )
                     self._file_options[name] = value
                     continue
@@ -931,7 +946,7 @@ class configmanager:
                     and option.nargs_ != '?'
                 ):
                     # "False" used to be the my_default of many non-bool options
-                    self._log(logging.WARNING, "option %s reads %r in the config file at %s but isn't a boolean option, skip", name, value, self['config'])
+                    self._log(logging.WARNING, "option %s reads %r in the config file at %s but isn't a boolean option, skip", name, value, rcfile)
                     continue
                 self._file_options[name] = self.parse(name, value)
         except OSError:

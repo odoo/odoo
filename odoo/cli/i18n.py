@@ -54,7 +54,7 @@ class I18n(Command):
 
         for parser in (self.import_parser, self.export_parser, self.loadlang_parser):
             parser.add_argument(
-                '-c', '--config', dest='config',
+                '-c', '--config', dest='config', action='append', default=[],
                 help="use a specific configuration file")
             parser.add_argument(
                 '-d', '--database', dest='db_name', default=None,
@@ -106,8 +106,8 @@ class I18n(Command):
         parsed_args = self.parser.parse_args(args=cmdargs)
 
         config_args = ['--no-http']
-        if parsed_args.config:
-            config_args += ['-c', parsed_args.config]
+        for config_file in parsed_args.config:
+            config_args += ['-c', config_file]
         if parsed_args.db_name:
             config_args += ['-d', parsed_args.db_name]
 

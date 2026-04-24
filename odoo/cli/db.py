@@ -43,7 +43,7 @@ class Db(Command):
 
     def run(self, cmdargs):
         parser = self.parser
-        parser.add_argument('-c', '--config')
+        parser.add_argument('-c', '--config', action='append', default=[])
         parser.add_argument('-D', '--data-dir')
         parser.add_argument('--addons-path')
         parser.add_argument('-r', '--db_user')
@@ -184,18 +184,22 @@ class Db(Command):
 
         args = parser.parse_args(cmdargs)
 
-        config.parse_config([
+        config_args = [
             val
             for k, v in vars(args).items()
             if v is not None
-            if k in ['config', 'data_dir', 'addons_path'] or k.startswith(('db_', 'pg_'))
+            if k in ['data_dir', 'addons_path'] or k.startswith(('db_', 'pg_'))
             for val in [
                 '--data-dir' if k == 'data_dir'
                     else '--addons-path' if k == 'addons_path'
                     else f'--{k}',
                 v,
             ]
-        ], setup_logging=True)
+        ]
+        for config_file in args.config:
+            config_args += ['--config', config_file]
+
+        config.parse_config(config_args, setup_logging=True)
         report_configuration()
 
         args.func(args)
