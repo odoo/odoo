@@ -71,3 +71,35 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.discount_product_id = self.env.ref("pos_discount.product_product_consumable", raise_if_not_found=False)
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_global_discount_tax_group_2', login="pos_user")
+
+    def test_global_discount_excludes_fixed_tax_from_discount_line(self):
+        """Global discount line must not include fixed-amount taxes."""
+        tax_vat = self.env['account.tax'].create({
+            'name': "Global discount test 20% VAT",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'type_tax_use': 'sale',
+        })
+        tax_fixed = self.env['account.tax'].create({
+            'name': "Global discount test fixed 10",
+            'amount_type': 'fixed',
+            'amount': 10.0,
+            'type_tax_use': 'sale',
+        })
+        self.env['product.product'].create({
+            'name': 'Global Disc Fixed Tax Product',
+            'lst_price': 100.0,
+            'taxes_id': [Command.set((tax_vat + tax_fixed).ids)],
+            'available_in_pos': True,
+        })
+        self.main_pos_config.module_pos_discount = True
+        self.main_pos_config.discount_product_id = self.env.ref(
+            "pos_discount.product_product_consumable", raise_if_not_found=True
+        )
+        self.main_pos_config.discount_pc = 10.0
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "pos_global_discount_fixed_and_percent_taxes",
+            login="pos_user",
+        )
