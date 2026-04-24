@@ -26,3 +26,15 @@ registry.category("web_tour.tours").add("pos_global_discount_tax_group_2", {
             ProductScreen.totalAmountIs(108),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("pos_global_discount_fixed_and_percent_taxes", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Global Disc Fixed Tax Product"),
+            ProductScreen.clickControlButton("Discount"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs(118),
+        ].flat(),
+});
