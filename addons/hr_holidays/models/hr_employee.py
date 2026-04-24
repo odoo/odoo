@@ -501,7 +501,7 @@ class HrEmployee(models.Model):
                     allocation = precomputed_allocations.filtered(lambda alloc: alloc._origin.id == allocation.id)[0]
                     precomputed = True
             future_leaves = 0
-            if allocation.allocation_type == 'accrual' and not precomputed:
+            if allocation.allocation_type == 'accrual' and not precomputed and not ignore_future:
                 future_leaves = allocation._get_future_leaves_on(target_date)
             max_leaves = allocation.number_of_hours_display\
                 if allocation.holiday_status_id.request_unit in ['hour']\
