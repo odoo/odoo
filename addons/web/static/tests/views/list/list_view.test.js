@@ -6921,8 +6921,7 @@ test(`pager, grouped, with count limit reached and total above countLimit`, asyn
         message:
             "The true count being already computed, we can display it instead of the countLimit",
     });
-
-    await contains(`.o_pager_next:eq(1)`).click();
+    await pagerNext(queryFirst(`.o_pager_cell_buttons`));
     expect(`.o_group_header:first-of-type .o_pager_value`).toHaveText("3-4");
     expect(`.o_group_header:first-of-type .o_pager_limit`).toHaveText("5", {
         message:
