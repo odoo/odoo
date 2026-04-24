@@ -4,7 +4,6 @@ import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_util
 import * as tourUtils from "@sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("event_sale_with_product_configurator_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),
@@ -12,7 +11,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
         ...tourUtils.addProduct("Registration Event (TEST variants)"),
         {
             trigger:
-            'tr:has(div[name="o_sale_product_configurator_name"]:contains("Memorabilia")) button:has(i.oi-plus)',
+                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Memorabilia")) button:has(i.oi-plus)',
             run: "click",
         },
         {
@@ -49,13 +48,19 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
         ...tourUtils.addProduct("Registration Event (TEST variants)"),
         {
             trigger:
-            'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) label:contains("Adult")',
+                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) .form-check:has(label:contains("Adult")) input',
             run: "click",
         },
         {
+            content: "Wait that adult option is set",
             trigger:
-            'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) .o_sale_product_configurator_qty input',
-            run: "edit 5 && click body",
+                ".modal [name='sale_product_configurator_formatted_price']:eq(0):contains(30.00)",
+        },
+        {
+            content: "Set quantity to 5 then leave input to compute the price",
+            trigger:
+                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) .o_sale_product_configurator_qty input',
+            run: "edit 5 && press Tab",
         },
         configuratorTourUtils.assertPriceTotal("150.00"),
         {
@@ -92,7 +97,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
         ...tourUtils.addProduct("Registration Event (TEST variants)"),
         {
             trigger:
-            'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) label:contains("VIP")',
+                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) label:contains("VIP")',
             run: "click",
         },
         configuratorTourUtils.assertPriceTotal(60.0),

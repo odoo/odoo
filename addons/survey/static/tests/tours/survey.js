@@ -88,20 +88,12 @@ registry.category("web_tour.tours").add("test_survey", {
 });
 
 registry.category("web_tour.tours").add("test_survey_multilang", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => {
         return [
             {
                 content: "Select French",
                 trigger: "select[name='lang_code']",
-                run() {
-                    const langSelect = document.querySelector("select[name='lang_code']");
-                    if (Array.from(langSelect.classList).includes("d-none")) {
-                        throw new Error("The language selector must not be hidden.");
-                    }
-                    langSelect.value = "fr_BE";
-                    langSelect.dispatchEvent(new Event("change", { bubbles: true }));
-                },
+                run: "select fr_BE",
                 expectUnloadPage: true,
             },
             {
@@ -111,11 +103,7 @@ registry.category("web_tour.tours").add("test_survey_multilang", {
             {
                 content: "Select French",
                 trigger: "select[name='lang_code']",
-                run() {
-                    const langSelect = document.querySelector("select[name='lang_code']");
-                    langSelect.value = "fr_BE";
-                    langSelect.dispatchEvent(new Event("change", { bubbles: true }));
-                },
+                run: "select fr_BE",
                 expectUnloadPage: true,
             },
             {

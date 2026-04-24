@@ -8,7 +8,6 @@ import {
 registerWebsitePreviewTour(
     "snippet_visibility_option",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -48,35 +47,22 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content:
-                "Check that only the banner is marked as invisible and the column entry does not appear in the panel.",
-            trigger: "li > .o_we_invisible_entry",
-            run: () => {
-                const isBlockInvisible = document
-                    .querySelector("li .o_we_invisible_entry i")
-                    .classList.contains("fa-eye-slash");
-                const isColumnEntryDisplayed = document.querySelector(
-                    "li li .o_we_invisible_entry"
-                );
-                if (!isBlockInvisible || !!isColumnEntryDisplayed) {
-                    console.error("Visibility issue detected with the elements.");
-                }
-            },
+            content: "Check that only the banner is marked as invisible",
+            trigger: "li > .o_we_invisible_entry i.fa-eye-slash",
+        },
+        {
+            content: "And the column entry does not appear in the panel.",
+            trigger: "body:not(:has(li li .o_we_invisible_entry))",
         },
         ...clickOnSave(),
         ...clickOnEditAndWaitEditMode(),
         {
-            content: "Check that only the popup entry is displayed and that it is invisible.",
-            trigger: ".o_we_invisible_root_parent",
-            run: () => {
-                const isSubentryDisplayed = document.querySelector("li .o_we_invisible_entry");
-                const isPopupInvisible = document
-                    .querySelector(".o_we_invisible_root_parent > i")
-                    .classList.contains("fa-eye-slash");
-                if (!!isSubentryDisplayed || !isPopupInvisible) {
-                    console.error("Visibility issue detected with the elements.");
-                }
-            },
+            content: "Check that only the popup entry is displayed...",
+            trigger: ".o_we_invisible_root_parent > i.fa-eye-slash",
+        },
+        {
+            content: "...and that it is invisible",
+            trigger: "body:not(:has(li .o_we_invisible_entry))",
         },
         {
             content: "Click on the popup entry to show it.",
@@ -89,23 +75,13 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content:
-                "Check that the popup and banner are visible and the column is still invisible.",
-            trigger: "li li > .o_we_invisible_entry",
-            run: () => {
-                const isPopupVisible = document
-                    .querySelector(".o_we_invisible_root_parent i")
-                    .classList.contains("fa-eye");
-                const isBannerVisible = document
-                    .querySelector("li .o_we_invisible_entry i")
-                    .classList.contains("fa-eye");
-                const isColumnInvisible = document
-                    .querySelector("li li .o_we_invisible_entry i")
-                    .classList.contains("fa-eye-slash");
-                if (!isPopupVisible || !isBannerVisible || !isColumnInvisible) {
-                    console.error("Visibility issue detected with the elements.");
-                }
-            },
+            trigger: ".o_we_invisible_root_parent i.fa-eye",
+        },
+        {
+            trigger: "li .o_we_invisible_entry i.fa-eye",
+        },
+        {
+            trigger: "li li .o_we_invisible_entry i.fa-eye-slash",
         },
         {
             content: "Click on the popup entry to hide it.",
@@ -113,17 +89,10 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Check that only the popup entry is displayed and that it is invisible.",
-            trigger: ".o_we_invisible_root_parent",
-            run: () => {
-                const isSubentryDisplayed = document.querySelector("li .o_we_invisible_entry");
-                const isPopupInvisible = document
-                    .querySelector(".o_we_invisible_root_parent > i")
-                    .classList.contains("fa-eye-slash");
-                if (!!isSubentryDisplayed || !isPopupInvisible) {
-                    console.error("Visibility issue detected with the elements.");
-                }
-            },
+            trigger: "li .o_we_invisible_entry",
+        },
+        {
+            trigger: ".o_we_invisible_root_parent > i.fa-eye-slash",
         },
         {
             content: "Click on the popup entry to show it.",
@@ -131,23 +100,13 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content:
-                "Check that the popup and banner are visible and the column is still invisible.",
-            trigger: "li > .o_we_invisible_entry",
-            run: () => {
-                const isPopupVisible = document
-                    .querySelector(".o_we_invisible_root_parent i")
-                    .classList.contains("fa-eye");
-                const isBannerVisible = document
-                    .querySelector("li .o_we_invisible_entry i")
-                    .classList.contains("fa-eye");
-                const isColumnInvisible = document
-                    .querySelector("li li .o_we_invisible_entry i")
-                    .classList.contains("fa-eye-slash");
-                if (!isPopupVisible || !isBannerVisible || !isColumnInvisible) {
-                    console.error("Visibility issue detected with the elements.");
-                }
-            },
+            trigger: ".o_we_invisible_root_parent i.fa-eye",
+        },
+        {
+            trigger: "li .o_we_invisible_entry i.fa-eye",
+        },
+        {
+            trigger: "li li .o_we_invisible_entry i.fa-eye-slash",
         },
     ]
 );

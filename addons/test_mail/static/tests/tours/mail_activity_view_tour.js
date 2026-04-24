@@ -1,40 +1,17 @@
 import { registry } from "@web/core/registry";
 
-const setPager = (value) => [
+const checkRows = (values) => [
     {
-        content: "Click Pager",
-        trigger: ".o_pager_value:first()",
-        run: "click",
+        content: `There should be ${values.length} activities`,
+        trigger: `.o_activity_view tbody:has(.o_activity_record:count(${values.length}))`,
     },
-    {
-        content: "Change pager to display lines " + value,
-        trigger: "input.o_pager_value",
-        run: `edit ${value} && click body`,
-    },
-    {
-        trigger: `.o_pager_value:contains('${value}')`,
-    },
+    ...values.map((value, i) => ({
+        content: `Record match ${value}`,
+        trigger: `.o_activity_view tbody .o_data_row .o_activity_record:eq(${i}):text(${value})`,
+    })),
 ];
 
-const checkRows = (values) => ({
-    trigger: ".o_activity_view",
-    run: () => {
-        const dataRow = document.querySelectorAll(
-            ".o_activity_view tbody .o_data_row .o_activity_record"
-        );
-        if (dataRow.length !== values.length) {
-            throw Error(`There should be ${values.length} activities`);
-        }
-        values.forEach((value, index) => {
-            if (dataRow[index].textContent !== value) {
-                throw Error(`Record does not match ${value} != ${dataRow[index]}`);
-            }
-        });
-    },
-});
-
 registry.category("web_tour.tours").add("mail_activity_view_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps ) #245680
     steps: () => [
         {
             content: "Open the debug menu",
@@ -60,10 +37,32 @@ registry.category("web_tour.tours").add("mail_activity_view_tour", {
             trigger: `.o_data_row td:contains("Test Activity View")`,
             run: "click",
         },
-        checkRows(["Task 1", "Task 2", "Task 3"]),
-        ...setPager("1-2"),
-        checkRows(["Task 2", "Task 3"]),
-        ...setPager("3"),
-        checkRows(["Task 1"]),
+        ...checkRows(["Task 1", "Task 2", "Task 3"]),
+        {
+            content: "Click Pager",
+            trigger: "span.o_pager_value",
+            run: "click",
+        },
+        {
+            content: "Change pager to display lines 1-2",
+            trigger: "input.o_pager_value",
+            run: `edit 1-2`,
+        },
+        {
+            trigger: ".o_activity_view_table",
+            run: "click",
+        },
+        {
+            trigger: `span.o_pager_value:contains(1-2)`,
+        },
+        ...checkRows(["Task 2", "Task 3"]),
+        {
+            trigger: ".o_pager_next",
+            run: "click",
+        },
+        {
+            trigger: `span.o_pager_value:contains(3-3)`,
+        },
+        ...checkRows(["Task 1"]),
     ],
 });
