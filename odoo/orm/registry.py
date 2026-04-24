@@ -543,6 +543,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for model in env.values():
                 model._register_hook()
             env.flush_all()
+            self.check_null_constraints(env.cr)
 
     @functools.cached_property
     def field_inverses(self) -> Collector[Field, Field]:
@@ -622,6 +623,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # may be missing from these maps
             self.field_depends.pop(f, None)
             self.field_depends_context.pop(f, None)
+            self.not_null_fields.discard(f)
 
         # discard fields from all cached properties
         reset_cached_properties(self)
@@ -843,7 +845,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                         if field.store:
                             if (Model._table, field_name) in not_null_columns:
                                 self.not_null_fields.add(field)
-                            else:
+                            elif sql.column_exists(cr, Model._table, field_name):
                                 _schema.warning("Missing not-null constraint on %s", field)
                         elif field.compute_sql:
                             self.not_null_fields.add(field)

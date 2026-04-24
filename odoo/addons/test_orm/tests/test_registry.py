@@ -24,6 +24,7 @@ class TestRegistry(TransactionCase):
                 registry.is_modifying_relations(field)
                 registry.get_field_trigger_tree(field)
             del field
+            registry.check_null_constraints(self.cr)
             self.env.user.read()  # run some code
 
         # Re-setup models

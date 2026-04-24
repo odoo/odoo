@@ -412,7 +412,7 @@ class IrModel(models.Model):
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
         if not self.pool.uninstalling_modules:
-            # setup models; this automatically removes model from registry
+            # setup models; this automatically removes custom model from registry
             self.env.flush_all()
             self.pool._setup_models__(self.env.cr)
 
