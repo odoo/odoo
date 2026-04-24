@@ -22,6 +22,9 @@ export class ProductsDesignPanel extends BaseOptionComponent {
 
     setup() {
         super.setup();
+        // TODO master: remove this flag, along with the `setPanel` mechanism it
+        // was made for, nothing reads it anymore now that the gap is persisted
+        // from the `--o-wsale-products-grid-gap` style property.
         this.needsDbPersistence = this.props.recordName?.length > 0;
 
         onMounted(() => {
