@@ -1,4 +1,7 @@
 import { models, Command } from "@web/../tests/web_test_helpers";
+import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
+
+let receiptTemplatesPromise;
 
 export class PosOrder extends models.ServerModel {
     _name = "pos.order";
@@ -32,8 +35,18 @@ export class PosOrder extends models.ServerModel {
         return orderId;
     }
 
-    get_receipt_template_for_pos_frontend() {
-        return [];
+    async get_receipt_template_for_pos_frontend() {
+        if (!receiptTemplatesPromise) {
+            receiptTemplatesPromise = unmockedOrm(
+                "pos.order",
+                "get_receipt_template_for_pos_frontend",
+                [],
+                {}
+            ).catch(() => {
+                receiptTemplatesPromise = Promise.resolve([]);
+            });
+        }
+        return receiptTemplatesPromise;
     }
 
     sync_from_ui(data) {
