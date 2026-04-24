@@ -48,9 +48,11 @@ export class SelfOrderRouter extends Reactive {
      * Navigate to the given relative route.
      * We use the history API to navigate to it.
      * (this means that we don't make additional requests to the server)
-     * @param {string} route
+     * @param {string} routeName
+     * @param {Object} routeParams used to replace placeholders in the route path.
+     * @param {Object} historyState optional state associated with the navigation.
      */
-    navigate(routeName, routeParams = {}) {
+    navigate(routeName, routeParams = {}, historyState = {}) {
         const { route } = this.registeredRoutes[routeName];
         const url = new URL(browser.location.href);
 
@@ -59,7 +61,7 @@ export class SelfOrderRouter extends Reactive {
             (match, paramName) => routeParams[paramName]
         );
 
-        history.pushState({}, "", url);
+        history.pushState(historyState, "", url);
         this.path = window.location.pathname;
         this.historyPage = this.path;
     }
