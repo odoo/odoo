@@ -1,0 +1,19 @@
+.o_canvas_page {
+    flex: 1 0 auto;
+    background-color: $o-webclient-background-color;
+    border-bottom: 1px solid $border-color;
+    padding-left: 30px;
+    padding-right: 30px;
+    > .o_canvas_sheet {
+        @include make-container();
+        background-color: $o-view-background-color;
+        border: 1px solid $border-color;
+        box-shadow: 0 5px 20px -15px rgba(#000, 0.4);
+        margin: $o-sheet-vpadding auto;
+        padding: $o-sheet-vpadding;
+        // Selection
+        > .o_selection {
+            float: right;
+        }
+    }
+}
