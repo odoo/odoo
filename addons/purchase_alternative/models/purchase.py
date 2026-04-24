@@ -162,6 +162,10 @@ class PurchaseOrder(models.Model):
             best_price_unit_ids.update(lines.ids)
         return list(best_price_ids), list(best_date_ids), list(best_price_unit_ids)
 
+    def _merge_po_post_process(self, rfqs):
+        super()._merge_po_post_process(rfqs)
+        self._merge_alternative_po(rfqs)
+
     def _merge_alternative_po(self, rfqs):
         if self.alternative_po_ids:
             super()._merge_alternative_po(rfqs)
