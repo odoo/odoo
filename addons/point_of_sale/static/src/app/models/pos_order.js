@@ -515,7 +515,7 @@ export class PosOrder extends PosOrderAccounting {
 
     getTotalDiscount() {
         const ignored_product_ids = this._getIgnoredProductIdsTotalDiscount();
-        return this.currency.round(
+        return this.currency?.round(
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     const data = orderLine.order_id.prices.baseLineByLineUuids[orderLine.uuid];
@@ -748,7 +748,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get showChange() {
-        return !this.currency.isZero(this.change) && this.finalized;
+        return !this.currency?.isZero(this.change) && this.finalized;
     }
 
     getLinesToCompute() {

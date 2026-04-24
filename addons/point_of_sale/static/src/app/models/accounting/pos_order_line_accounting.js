@@ -28,13 +28,13 @@ export class PosOrderlineAccounting extends Base {
             return _t("Free");
         }
 
-        return formatCurrency(this.displayPrice, this.currency.id);
+        return formatCurrency(this.displayPrice, this.currency?.id);
     }
     get currencyDisplayPriceUnit() {
-        return formatCurrency(this.displayPriceUnit, this.currency.id);
+        return this.currency ? formatCurrency(this.displayPriceUnit, this.currency?.id) : "";
     }
     get currencyDisplayPriceUnitExcl() {
-        return formatCurrency(this.displayPriceUnitExcl, this.currency.id);
+        return this.currency ? formatCurrency(this.displayPriceUnitExcl, this.currency?.id) : "";
     }
 
     /**
@@ -66,32 +66,32 @@ export class PosOrderlineAccounting extends Base {
     }
     get displayPriceUnit() {
         return this.config.iface_tax_included === "total"
-            ? this.unitPrices.total_included
-            : this.unitPrices.total_excluded;
+            ? this.unitPrices?.total_included
+            : this.unitPrices?.total_excluded;
     }
     get displayPriceUnitExcl() {
-        return this.unitPrices.total_excluded;
+        return this.unitPrices?.total_excluded;
     }
     get displayPriceUnitNoDiscount() {
         return this.config.iface_tax_included === "total"
-            ? this.unitPrices.no_discount_total_included
-            : this.unitPrices.no_discount_total_excluded;
+            ? this.unitPrices?.no_discount_total_included
+            : this.unitPrices?.no_discount_total_excluded;
     }
 
     get priceIncl() {
-        return this.currency.round(this.prices.total_included * this.order_id.orderSign);
+        return this.currency?.round((this.prices?.total_included ?? 0) * this.order_id.orderSign);
     }
     get priceExcl() {
-        return this.currency.round(this.prices.total_excluded * this.order_id.orderSign);
+        return this.currency?.round((this.prices?.total_excluded ?? 0) * this.order_id.orderSign);
     }
     get priceInclNoDiscount() {
-        return this.currency.round(
-            this.prices.no_discount_total_included * this.order_id.orderSign
+        return this.currency?.round(
+            (this.prices?.no_discount_total_included ?? 0) * this.order_id.orderSign
         );
     }
     get priceExclNoDiscount() {
-        return this.currency.round(
-            this.prices.no_discount_total_excluded * this.order_id.orderSign
+        return this.currency?.round(
+            (this.prices?.no_discount_total_excluded ?? 0) * this.order_id.orderSign
         );
     }
 
@@ -103,8 +103,8 @@ export class PosOrderlineAccounting extends Base {
         if (!this.order_id) {
             return undefined;
         }
-        const data = this.order_id.prices.baseLineByLineUuids[this.uuid];
-        return data.tax_details;
+        const data = this.order_id.prices?.baseLineByLineUuids?.[this.uuid];
+        return data?.tax_details;
     }
 
     /**
@@ -114,8 +114,8 @@ export class PosOrderlineAccounting extends Base {
         if (!this.order_id) {
             return undefined;
         }
-        const data = this.order_id.unitPrices.baseLineByLineUuids[this.uuid];
-        return data.tax_details;
+        const data = this.order_id.unitPrices?.baseLineByLineUuids?.[this.uuid];
+        return data?.tax_details;
     }
 
     get productProductPrice() {

@@ -40,19 +40,19 @@ export class PosOrderAccounting extends Base {
      * They must be used each time a price is displayed to the user.
      */
     get currencyDisplayPrice() {
-        return formatCurrency(this.displayPrice, this.currency.id);
+        return formatCurrency(this.displayPrice, this.currency?.id);
     }
 
     get currencyDisplayPriceIncl() {
-        return formatCurrency(this.priceIncl, this.currency.id);
+        return formatCurrency(this.priceIncl, this.currency?.id);
     }
 
     get currencyDisplayPriceExcl() {
-        return formatCurrency(this.priceExcl, this.currency.id);
+        return formatCurrency(this.priceExcl, this.currency?.id);
     }
 
     get currencyAmountTaxes() {
-        return formatCurrency(this.amountTaxes, this.currency.id);
+        return formatCurrency(this.amountTaxes, this.currency?.id);
     }
 
     /**
@@ -60,8 +60,8 @@ export class PosOrderAccounting extends Base {
      */
     get displayPrice() {
         return this.config.iface_tax_included === "total"
-            ? this.currency.round(this.priceIncl)
-            : this.currency.round(this.priceExcl);
+            ? this.currency?.round(this.priceIncl)
+            : this.currency?.round(this.priceExcl);
     }
 
     /**
@@ -93,7 +93,7 @@ export class PosOrderAccounting extends Base {
             this.config.rounding_method.asymmetricRound(isNegative ? -remaining : remaining) == 0
                 ? 0
                 : Math.abs(remaining);
-        return isNegative ? this.currency.round(-amount) : this.currency.round(amount);
+        return isNegative ? this.currency?.round(-amount) : this.currency?.round(amount);
     }
     get change() {
         const isNegative = this.totalDue < 0;
@@ -110,7 +110,7 @@ export class PosOrderAccounting extends Base {
             Math.abs(this.amountPaid) +
             (isNegative ? -roundingSanatizer : roundingSanatizer);
 
-        const amount = isNegative ? -this.currency.round(total) : this.currency.round(total);
+        const amount = isNegative ? -this.currency?.round(total) : this.currency?.round(total);
         return this.shouldRoundChange
             ? this.config.rounding_method.asymmetricRound(amount)
             : amount;
@@ -131,7 +131,7 @@ export class PosOrderAccounting extends Base {
             this.config.rounding_method.asymmetricRound(total < 0 ? -remaining : remaining) == 0
                 ? Math.abs(remaining)
                 : 0;
-        return isNegative ? this.currency.round(amount) : this.currency.round(-amount);
+        return isNegative ? this.currency?.round(amount) : this.currency?.round(-amount);
     }
 
     /**
@@ -164,17 +164,17 @@ export class PosOrderAccounting extends Base {
     }
     get totalDue() {
         return this.config.hasCashRounding
-            ? this.currency.round(this.prices.taxDetails.total_amount_no_rounding)
-            : this.currency.round(this.prices.taxDetails.total_amount);
+            ? this.currency?.round(this.prices.taxDetails.total_amount_no_rounding)
+            : this.currency?.round(this.prices.taxDetails.total_amount);
     }
     get amountTaxes() {
         return this.prices.taxDetails.tax_amount_currency;
     }
     get orderHasZeroRemaining() {
-        return this.currency.isZero(this.remainingDue);
+        return this.currency?.isZero(this.remainingDue);
     }
     get amountPaid() {
-        return this.currency.round(
+        return this.currency?.round(
             this.payment_ids.reduce(function (sum, paymentLine) {
                 // Return lines are created after the sync, should not be taken into account in
                 // the paid amount otherwise, the change would be wrong.
@@ -225,7 +225,7 @@ export class PosOrderAccounting extends Base {
     setOrderPrices() {
         this.amount_paid = this.amountPaid; // Already rounded by the getter
         this.amount_tax = this.amountTaxes; // Already rounded by the getter
-        this.amount_total = this.currency.round(this.priceIncl);
+        this.amount_total = this.currency?.round(this.priceIncl);
         this.amount_return = this.change; // Already rounded by the getter
         this.lines.forEach((line) => {
             line.price_subtotal = line.priceExcl;

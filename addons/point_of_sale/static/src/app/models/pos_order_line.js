@@ -114,7 +114,7 @@ export class PosOrderline extends PosOrderlineAccounting {
     }
 
     get currency() {
-        return this.order_id.currency;
+        return this.order_id?.currency;
     }
 
     get selectedComboIds() {
@@ -222,10 +222,10 @@ export class PosOrderline extends PosOrderlineAccounting {
     }
 
     recomputeUnitPrice() {
-        const productTemplate = this.product_id.product_tmpl_id;
+        const productTemplate = this.product_id?.product_tmpl_id;
         this.setUnitPrice(
             productTemplate.getPrice(
-                this.order_id.pricelist_id,
+                this.order_id?.pricelist_id,
                 this.getQuantity(),
                 this.getPriceExtra(),
                 false,
@@ -260,9 +260,9 @@ export class PosOrderline extends PosOrderlineAccounting {
             this.isPosGroupable() &&
             this.getDiscount() === orderline.getDiscount() &&
             this.price_type === orderline.price_type &&
-            this.currency.isZero(
-                this.currency.round(price) -
-                    this.currency.round(order_line_price) -
+            this.currency?.isZero(
+                this.currency?.round(price) -
+                    this.currency?.round(order_line_price) -
                     orderline.getPriceExtra()
             ) &&
             this.full_product_name === orderline.full_product_name &&
