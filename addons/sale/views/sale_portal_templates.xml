@@ -974,16 +974,6 @@
                 </div>
             </section>
 
-            <section t-if="sale_order.signature" id="signature" name="Signature">
-                <div class="row mt-4" name="signature">
-                    <div t-attf-class="#{'col-3' if report_type != 'html' else 'col-sm-7 col-md-4'} ms-auto text-center">
-                        <h5>Signature</h5>
-                        <img t-att-src="image_data_uri(sale_order.signature)" style="max-height: 6rem; max-width: 100%;"/>
-                        <p t-field="sale_order.signed_by"/>
-                    </div>
-                </div>
-            </section>
-
             <section t-if="not is_html_empty(sale_order.note)" id="terms" class="mt-4">
                 <h4 class="">Terms &amp; Conditions</h4>
                 <hr class="mt-0 mb-1"/>
