@@ -2290,8 +2290,8 @@ class SaleOrder(models.Model):
         )
         if invalid_targets:
             raise UserError(
-                _("The following sale orders %(invalid_orders) can't be delivered. Cancelled all deliveries."),
-                invalid_orders=invalid_targets)
+                _("The following sale orders %(invalid_orders)s can't be delivered. Cancelled all deliveries.",
+                invalid_orders=invalid_targets))
         for order in self:
             for line in order.order_line:
                 line.qty_delivered = line.product_uom_qty
