@@ -458,3 +458,7 @@ class PurchaseOrder(models.Model):
         """ remove the given references from the list of references. """
         self.ensure_one()
         self.reference_ids = [Command.unlink(stock_reference.id) for stock_reference in reference]
+
+    def _merge_po_post_process(self, rfqs):
+        super()._merge_po_post_process(rfqs)
+        self.reference_ids += rfqs.reference_ids
