@@ -34,7 +34,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'data/mail_alias_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_templates.xml',
-        'data/hr_expense_sequence.xml',
         'data/hr_expense_data.xml',
         'data/hr_expense_tour.xml',
         'wizard/hr_expense_refuse_reason_views.xml',
