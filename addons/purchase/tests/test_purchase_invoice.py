@@ -770,6 +770,33 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertEqual(inv.invoice_line_ids[2].name, f"{pol_prod_product_in_name.name}", "When description contains the product name, the invoice line name should only be the description")
         self.assertEqual(inv.invoice_line_ids[3].name, f"{pol_prod_name_in_product.product_id.display_name}\n{pol_prod_name_in_product.name}", "When the product name contains the description, the invoice line name should be the product name and the description")
 
+    def test_invoice_qty_with_different_purchase_and_product_uom(self):
+        """Ensure that when a purchase order line uses a UoM different from the
+        product's default UoM (e.g. dozens instead of units), the received
+        quantity and the generated invoice both reflect the purchase UoM and
+        quantity, not the product UoM quantity.
+        """
+        self.assertEqual(self.product_deliver.uom_id, self.env.ref('uom.product_uom_unit'))
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.product_deliver.name,
+                'product_id': self.product_deliver.id,
+                'product_qty': 1,
+                'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                'price_unit': 12,
+                'tax_ids': False,
+            })],
+        })
+        po.button_confirm()
+        po.action_receive()
+        self.assertEqual(po.order_line.qty_received, 1)
+        po.action_create_invoice()
+        invoice = po.invoice_ids
+        self.assertEqual(invoice.invoice_line_ids.product_uom_id, self.env.ref('uom.product_uom_dozen'))
+        self.assertEqual(invoice.invoice_line_ids.quantity, 1)
+        self.assertEqual(invoice.amount_total, 12)
+
 
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
