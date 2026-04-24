@@ -12,7 +12,6 @@ from io import BytesIO
 from itertools import islice
 from textwrap import shorten
 from xml.etree import ElementTree as ET
-from collections import defaultdict
 
 import requests
 import werkzeug.urls
@@ -610,168 +609,41 @@ class Website(Home):
         order = order or 'name ASC'
         return 'is_published desc, %s, id desc' % order
 
-    def _sort_results_by_relevance(self, results, phrase, sort_by_model=False):
-        # Order of priority:
-        # name > (tags) > description
-        term_list = list({t for t in (phrase or '').lower().split() if t})
+    def word_coverage_similarity(self, search_term, target_text, multiplier=1):
+        if not search_term or not target_text:
+            return 0.0
 
-        def is_perfect_match(search_text, term):
-            return bool(re.search(rf"\b{re.escape(term)}\b", search_text, flags=re.IGNORECASE))
+        def tokenize(text):
+            return set(re.findall(r'\w+', text.lower()))
 
-        def get_position_term_pairs(term_list, text):
-            position_word_pairs = []
-            missing_word_count = 0
-            for term in term_list:
-                is_missing = True
-                start = 0
-                while True:
-                    start = text.find(term, start)
-                    if start == -1:
-                        if is_missing:
-                            missing_word_count += 1
-                        break
-                    is_missing = False
-                    position_word_pairs.append((start, term))
-                    start += len(term)
-            return [sorted(position_word_pairs), missing_word_count]  # Sort by position
+        search_tokens = tokenize(search_term)
+        target_tokens = tokenize(target_text)
 
-        def get_best_distance(position_word_pairs):
-            required_term_count = len({word for _, word in position_word_pairs})
-            if required_term_count < 2:
-                return 0
+        if not search_tokens:
+            return 0.0
 
-            left = 0
-            term_counts = defaultdict(int)
-            terms_in_current_window = 0
-            best_window_size = float('inf')
+        intersection = search_tokens.intersection(target_tokens)
+        coverage_score = len(intersection) / len(search_tokens)
+        perfect_match_score = (search_term in target_text.lower()) * 5.0
+        proximity_score = 0
+        if coverage_score > 0:
+            from difflib import SequenceMatcher
+            proximity_score = SequenceMatcher(None, search_term.lower(), target_text.lower()).ratio()
 
-            for right in range(len(position_word_pairs)):
-                right_pos, right_word = position_word_pairs[right]
+        # We multiply coverage by 10 to ensure it always outweighs proximity
+        return multiplier * ((coverage_score * 10) + perfect_match_score + proximity_score)
 
-                # Add the right-side word to our window
-                if term_counts[right_word] == 0:
-                    terms_in_current_window += 1
-                term_counts[right_word] += 1
-
-                while terms_in_current_window == required_term_count:
-                    left_pos, left_word = position_word_pairs[left]
-                    current_window_size = right_pos - (left_pos + len(left_word))
-
-                    # If this is the tightest window we've seen, save it
-                    if current_window_size < best_window_size:
-                        best_window_size = current_window_size
-
-                    # Remove the left-size word and slide the window forward
-                    term_counts[left_word] -= 1
-                    if term_counts[left_word] == 0:
-                        terms_in_current_window -= 1
-                    left += 1
-
-            return best_window_size
-
-        def get_description(result):
+    def _sort_results_by_relevance(self, results_data, term):
+        for result in results_data:
             desc_field = result.get('_mapping', {}).get('description', {}).get('name', '')
-            return result.get(desc_field) or ''
-
-        results_to_sort = []
-        for result in results:
-            description_text = get_description(result).lower()
+            desc = (result.get(desc_field) or '').lower()
             name_text = (result.get('name') or '').lower()
             tag_names = [(tag.get('name') or '').lower() for tag in result.get('tag_ids', [])]
-
-            tag_matched_count = 0
-            imperfect_match_in_name_count = 0
-            imperfect_match_in_desc_count = 0
-            for term in term_list:
-                has_tag_match = any(term in tag_name for tag_name in tag_names)
-                if has_tag_match:
-                    tag_matched_count += 1
-
-                term_matches_in_name = name_text.find(term, 0)
-                term_matches_in_desc = description_text.find(term, 0)
-
-                if term_matches_in_name != -1 and not is_perfect_match(name_text, term):
-                    imperfect_match_in_name_count += 1
-                if term_matches_in_desc != -1 and not is_perfect_match(description_text, term):
-                    imperfect_match_in_desc_count += 1
-
-            name_pos_term_pairs, missing_word_in_name_count = get_position_term_pairs(term_list, name_text)
-            desc_pos_term_pairs, missing_word_in_desc_count = get_position_term_pairs(term_list, description_text)
-            name_best_distance = 0
-            desc_best_distance = 0
-
-            if len(term_list) - missing_word_in_name_count >= 2:
-                name_best_distance = get_best_distance(name_pos_term_pairs)
-            if len(term_list) - missing_word_in_desc_count >= 2:
-                desc_best_distance = get_best_distance(desc_pos_term_pairs)
-
-            is_perfect_name = missing_word_in_name_count == 0 and imperfect_match_in_name_count == 0
-            is_perfect_desc = missing_word_in_desc_count == 0 and imperfect_match_in_desc_count == 0
-            has_imperfect_name_without_missing = missing_word_in_name_count == 0 and imperfect_match_in_name_count > 0
-            has_imperfect_desc_without_missing = missing_word_in_desc_count == 0 and imperfect_match_in_desc_count > 0
-            if is_perfect_name:
-                rank = 0
-                imperfect_match_count = 0
-                distance = name_best_distance
-            elif is_perfect_desc:
-                rank = 2
-                imperfect_match_count = 0
-                distance = desc_best_distance
-            elif has_imperfect_name_without_missing:
-                rank = 4
-                imperfect_match_count = imperfect_match_in_name_count
-                distance = name_best_distance
-            elif has_imperfect_desc_without_missing:
-                rank = 6
-                imperfect_match_count = imperfect_match_in_desc_count
-                distance = desc_best_distance
-            else:
-                rank = 8
-                if missing_word_in_name_count < missing_word_in_desc_count:
-                    imperfect_match_count = missing_word_in_name_count
-                    distance = name_best_distance
-                elif missing_word_in_desc_count < missing_word_in_name_count:
-                    # description is more penalized compared to name
-                    imperfect_match_count = missing_word_in_desc_count + 1
-                    distance = desc_best_distance
-                else:
-                    imperfect_match_count = missing_word_in_name_count
-                    distance = min(name_best_distance, desc_best_distance)
-            # We want tags to make the result superior when present and matching
-            if tag_matched_count:
-                if tag_matched_count == len(term_list):
-                    rank = min(rank, 1)
-                else:
-                    rank = max(0, rank - 1)
-                imperfect_match_count -= tag_matched_count
-
-            results_to_sort.append({
-                'result': result,
-                'rank': rank,
-                'imperfect_match_count': imperfect_match_count,
-                'distance': distance,
-            })
-
-        results = [sorted_result['result'] for sorted_result in sorted(
-            results_to_sort,
-            key=lambda x: (
-                x['rank'],
-                x['imperfect_match_count'],
-                x['distance'],
-            ),
-        )]
-        if sort_by_model:
-            # When sorted by model, we group all the results by model
-            # The model with the best result score first, and so on
-            models = []
-            for res in results:
-                if res.get('model') not in models:
-                    models.append(res.get('model'))
-            results_by_model = []
-            for model in models:
-                results_by_model += [res for res in results if res.get('model') == model]
-            return results_by_model
-        return results
+            name_score = self.word_coverage_similarity(term, name_text, 3)
+            desc_score = self.word_coverage_similarity(term, desc, 1)
+            tag_score = self.word_coverage_similarity(term, ' '.join(tag_names), 2)
+            result['score'] = sum([name_score, desc_score, tag_score])
+        return sorted(results_data, key=lambda i: i['score'], reverse=True)
 
     @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
     def autocomplete(self, search_type=None, term=None, order=None, offset=0, limit=6, max_nb_chars=999, options=None):
@@ -877,11 +749,7 @@ class Website(Home):
                 for group_key, group in result.items()
                 for record in group['data']
             ]
-            ranked_results = self._sort_results_by_relevance(
-                ranked_results,
-                term,
-                sort_by_model=options.get('sort_by_model', False),
-            )
+            ranked_results = self._sort_results_by_relevance(ranked_results, term)
             if options.get('sort_by_model'):
                 grouped_result = {}
                 for record in ranked_results:
