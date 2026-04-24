@@ -1,4 +1,5 @@
 import { nodeToTree } from "@html_editor/core/history_plugin";
+import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { selectElements } from "@html_editor/utils/dom_traversal";
@@ -197,21 +198,9 @@ export class EmbeddedComponentPlugin extends Plugin {
             });
         }
         this.trigger("on_will_mount_component_handlers", { name, env, props });
-        const root = this.app.createRoot(Component, {
-            props,
-            env,
+        const { root } = mountComponent(this.app, Component, host, props, env, {
+            onAfterComplete: () => this.trigger("on_component_mounted_handlers"),
         });
-        root.mount(host);
-        // Patch mount fiber to hook into the exact call stack where root is
-        // mounted (but before). This will remove host children synchronously
-        // just before adding the root rendered html.
-        const fiber = root.node.fiber;
-        const fiberComplete = fiber.complete;
-        fiber.complete = () => {
-            host.replaceChildren();
-            fiberComplete.call(fiber);
-            this.trigger("on_component_mounted_handlers");
-        };
         const onComponentInserted = this.extractOnComponentInserted(host);
         if (onComponentInserted) {
             // If a pending operation should be executed after the first mount

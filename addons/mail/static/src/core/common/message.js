@@ -1,5 +1,6 @@
 import { useChildSubEnv, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
+import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
@@ -550,13 +551,24 @@ export class Message extends Component {
             // from the pre node. If call replaceChildren() first, that content is gone,
             // so value becomes empty and highlighting loses the original code text.
             const props = getProps(el);
-            el.replaceChildren();
-            const root = this.__owl__.app.createRoot(Component, {
+            const { root, mountPromise } = mountComponent(
+                this.__owl__.app,
+                Component,
+                el,
                 props,
-                env: this.env,
-            });
-            root.mount(el).catch();
-            el.dataset.embeddedMounted = "1";
+                this.env,
+                {
+                    onBeforeComplete: () => {
+                        if (!el.isConnected) {
+                            return false;
+                        }
+                        el.dataset.embeddedMounted = "1";
+                    },
+                }
+            );
+            // Don't show mounting errors as they will happen often when the host
+            // is disconnected from the DOM because of a patch
+            mountPromise.catch();
             roots.push(root);
         }
         return roots;
