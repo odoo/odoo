@@ -995,6 +995,10 @@ class PropertiesDefinition(Field):
         'tags': {'tags'},
     }
 
+    def setup(self, model):
+        self.properties_fields = ()  # reset in case of re-setup
+        return super().setup(model)
+
     def set_properties_visibility(self, definition, property_names, hidden: bool):
         """
         Set visibility of properties in the definition.
