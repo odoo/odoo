@@ -312,6 +312,14 @@ class MetaModel(type):
                 add_default('write_date', Datetime(
                     string='Last Updated on', readonly=True))
 
+    def __subclasscheck__(self, subclass):
+        cls = self if getattr(self, 'pool', None) is None else self.__bases__[1]
+        return super(MetaModel, cls).__subclasscheck__(subclass)
+
+    def __instancecheck__(self, instance):
+        cls = self if getattr(self, 'pool', None) is None else self.__bases__[1]
+        return super(MetaModel, cls).__instancecheck__(instance)
+
 
 safe_checker.add_hook(MetaModel, None)  # Optimization to serialize model class(es) faster
 
@@ -6555,7 +6563,7 @@ class TopModel(BaseModel):
             # all fields for records are unprotected
             return super().write(vals)
 
-        _logger.warning("Mixing protected and unprotected fields when writing")
+        # _logger.warning("Mixing protected and unprotected fields when writing")
         unprotected_fnames = frozenset(unprotected_fnames)
         unprotected_groups: dict[frozenset, list] = defaultdict(list)
         for id_ in self._ids:

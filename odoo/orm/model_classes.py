@@ -142,7 +142,7 @@ _logger = logging.getLogger('odoo.registry')
 
 def is_model_definition(cls: type) -> bool:
     """ Return whether ``cls`` is a model definition class. """
-    return isinstance(cls, models.MetaModel) and getattr(cls, 'pool', None) is None
+    return isinstance(cls, models.MetaModel) and getattr(cls, 'pool', None) is None and not getattr(cls, '_topless', False)
 
 
 def is_model_class(cls: type) -> bool:
@@ -177,7 +177,8 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
         model_cls = registry[name]
         _check_model_extension(model_cls, model_def)
     else:
-        model_cls = type(name, (model_def,), {
+        model_cls_ = type(name, (model_def,), {'_register': False, '_topless': True, '_name': name})
+        model_cls = type(name, (models.TopModel, model_cls_), {
             'pool': registry,                       # this makes it a model class
             '_name': name,
             '_register': False,
@@ -196,12 +197,13 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
         if parent_name not in registry:
             raise TypeError(f"Model {name!r} inherits from non-existing model {parent_name!r}.")
         parent_cls = registry[parent_name]
+        parent_cls_ = parent_cls.__bases__[1]
         if parent_name == name:
             for base in parent_cls._base_classes__:
                 bases.add(base)
         else:
-            _check_model_parent_extension(model_cls, model_def, parent_cls)
-            bases.add(parent_cls)
+            _check_model_parent_extension(model_cls, model_def, parent_cls_)
+            bases.add(parent_cls_)
             model_cls._inherit_module[parent_name] = model_def._module
             parent_cls._inherit_children.add(name)
 
@@ -330,13 +332,14 @@ def setup_model_classes(env: Environment):
 
 def _prepare_setup(model_cls: type[BaseModel]):
     """ Prepare the setup of the model. """
+    model_cls_ = model_cls.__bases__[1]
     if model_cls._setup_done__:
-        assert model_cls.__bases__ == model_cls._base_classes__
+        assert model_cls_.__bases__ == model_cls._base_classes__
         return
 
     # changing base classes is costly, do it only when necessary
-    if model_cls.__bases__ != model_cls._base_classes__:
-        model_cls.__bases__ = model_cls._base_classes__
+    if model_cls_.__bases__ != model_cls._base_classes__:
+        model_cls_.__bases__ = model_cls._base_classes__
 
     # reset those attributes on the model's class for _setup_fields() below
     for attr in ('_rec_name', '_active_name'):
@@ -541,11 +544,11 @@ def _add_manual_models(env: Environment):
     for name, model_cls in list(env.registry.items()):
         if model_cls._custom:
             removed_fields.update(model_cls._fields.values())
-            del env.registry.models[name]
             # remove the model's name from its parents' _inherit_children
-            for parent_cls in model_cls.__bases__:
-                if hasattr(parent_cls, 'pool'):
-                    parent_cls._inherit_children.discard(name)
+            for parent_cls in model_cls.__bases__[1].__bases__:
+                if hasattr(parent_cls, '_name'):
+                    env.registry[parent_cls._name]._inherit_children.discard(name)
+            del env.registry.models[name]
 
     if removed_fields:
         env.registry._discard_fields(list(removed_fields))
