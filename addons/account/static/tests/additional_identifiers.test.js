@@ -9,9 +9,27 @@ import {
     fields,
     models,
     mountView,
-    onRpc,
 } from "@web/../tests/web_test_helpers";
 
+
+const DEFAULT_METADATA = {
+    FR_SIRET: {
+        label: "France SIRET",
+        sequence: 10,
+        placeholder: "73282932000074",
+    },
+    FR_SIREN: {
+        label: "France SIREN",
+        sequence: 20,
+        placeholder: "732829320",
+    },
+    EAN_GLN: {
+        label: "EAN/GLN",
+        sequence: 100,
+        placeholder: "9780471117094",
+        help: "Global Location Number",
+    },
+};
 
 class Partner extends models.Model {
     _records = [
@@ -19,16 +37,21 @@ class Partner extends models.Model {
             id: 1,
             country_code: "FR",
             additional_identifiers: { FR_SIRET: "73282932000074" },
+            available_additional_identifiers_metadata: DEFAULT_METADATA,
         },
         {
             id: 2,
             country_code: "FR",
             additional_identifiers: {},
+            available_additional_identifiers_metadata: DEFAULT_METADATA,
         },
     ];
 
     additional_identifiers = fields.Json({ string: "Additional identifiers" });
     country_code = fields.Char({ string: "Country Code" });
+    available_additional_identifiers_metadata = fields.Json({
+        string: "Available identifiers metadata",
+    });
 
     _views = {
         form: /* xml */ `
@@ -46,36 +69,8 @@ class Partner extends models.Model {
 defineModels([Partner]);
 defineMailModels();
 
-/** Default mock for the metadata RPC — a minimal FR-focused metadata dict. */
-function mockMetadata() {
-    onRpc(
-        "res.partner",
-        "get_available_additional_identifiers_metadata",
-        () => ({
-            FR_SIRET: {
-                label: "France SIRET",
-                sequence: 10,
-                placeholder: "73282932000074",
-            },
-            FR_SIREN: {
-                label: "France SIREN",
-                sequence: 20,
-                placeholder: "732829320",
-            },
-            EAN_GLN: {
-                label: "EAN/GLN",
-                sequence: 100,
-                placeholder: "9780471117094",
-                help: "Global Location Number",
-            },
-        }),
-    );
-}
-
 test.tags("desktop");
 test("list widget renders existing identifiers as labeled inputs", async () => {
-    mockMetadata();
-
     await mountView({
         type: "form",
         resModel: "partner",
@@ -92,8 +87,6 @@ test("list widget renders existing identifiers as labeled inputs", async () => {
 
 test.tags("desktop");
 test("list widget hides when there are no identifiers", async () => {
-    mockMetadata();
-
     await mountView({
         type: "form",
         resModel: "partner",
@@ -106,8 +99,6 @@ test("list widget hides when there are no identifiers", async () => {
 
 test.tags("desktop");
 test("button widget dropdown lists only identifiers not yet in use", async () => {
-    mockMetadata();
-
     await mountView({
         type: "form",
         resModel: "partner",
@@ -124,8 +115,6 @@ test("button widget dropdown lists only identifiers not yet in use", async () =>
 
 test.tags("desktop");
 test("adding an identifier via the dropdown appends a row with an empty input", async () => {
-    mockMetadata();
-
     await mountView({
         type: "form",
         resModel: "partner",
@@ -149,8 +138,6 @@ test("adding an identifier via the dropdown appends a row with an empty input", 
 
 test.tags("desktop");
 test("editing an input commits the value back to the record", async () => {
-    mockMetadata();
-
     await mountView({
         type: "form",
         resModel: "partner",
@@ -169,8 +156,6 @@ test("editing an input commits the value back to the record", async () => {
 
 test.tags("desktop");
 test("clearing an input removes the identifier from the list", async () => {
-    mockMetadata();
-
     await mountView({
         type: "form",
         resModel: "partner",
@@ -186,15 +171,11 @@ test("clearing an input removes the identifier from the list", async () => {
 
 test.tags("desktop");
 test("dropdown respects identifier sequence ordering", async () => {
-    onRpc(
-        "res.partner",
-        "get_available_additional_identifiers_metadata",
-        () => ({
-            EAN_GLN: { label: "EAN/GLN", sequence: 100 },
-            FR_SIRET: { label: "France SIRET", sequence: 10 },
-            FR_SIREN: { label: "France SIREN", sequence: 20 },
-        })
-    );
+    Partner._records[1].available_additional_identifiers_metadata = {
+        EAN_GLN: { label: "EAN/GLN", sequence: 100 },
+        FR_SIRET: { label: "France SIRET", sequence: 10 },
+        FR_SIREN: { label: "France SIREN", sequence: 20 },
+    };
 
     await mountView({
         type: "form",
@@ -214,13 +195,9 @@ test("dropdown respects identifier sequence ordering", async () => {
 
 test.tags("desktop");
 test("dropdown is hidden when no identifier types are available", async () => {
-    onRpc(
-        "res.partner",
-        "get_available_additional_identifiers_metadata",
-        () => ({
-            FR_SIRET: { label: "France SIRET", sequence: 10 },
-        }),
-    );
+    Partner._records[0].available_additional_identifiers_metadata = {
+        FR_SIRET: { label: "France SIRET", sequence: 10 },
+    };
 
     await mountView({
         type: "form",
