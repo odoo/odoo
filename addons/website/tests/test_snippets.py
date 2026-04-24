@@ -170,3 +170,26 @@ class TestSnippets(HttpCase):
         self.assertEqual(image_elem.attrib['width'], '100%')
         self.assertEqual(image_elem.attrib['height'], '100%')
         self.assertEqual(image_elem.attrib['preserveaspectratio'], 'xMidYMid slice')
+
+    def test_change_cookie_policy_page(self):
+        website = self.env.ref('website.default_website')
+        website.cookies_bar = True
+        cookie_page = self.env["website.page"].create({
+            "name": "Test Cookie Policy",
+            "type": "qweb",
+            "url": "/test-cookie-policy",
+            "website_id": website.id,
+        })
+        website.cookie_policy_id = cookie_page
+        # Verify /website/cookie-policy redirects to the configured policy page
+        res = self.url_open('/website/cookie-policy', allow_redirects=False)
+        self.assertEqual(res.status_code, 303)
+        self.assertTrue(res.headers['Location'].endswith('/test-cookie-policy'))
+
+        # Explicitly remove custom policy if any
+        website.cookie_policy_id = False
+        res = self.url_open('/website/cookie-policy', allow_redirects=False)
+
+        # Should redirect to default /cookie-policy page
+        self.assertEqual(res.status_code, 303)
+        self.assertTrue(res.headers['Location'].endswith('/cookie-policy'))

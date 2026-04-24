@@ -37,6 +37,7 @@ export class FooterOptionPlugin extends Plugin {
                 return false;
             }
         },
+        immutable_link_selectors: [".o_cookie_policy_link_container a.oe_unremovable"],
         footer_templates_providers: [
             () =>
                 [

@@ -247,6 +247,15 @@
                                         string="Add domains to the block list" class="btn-link"
                                         icon="fa-ban" noSaveDialog="true"/>
                                 </div>
+                                <div class="content-group" invisible="cookie_policy_id" groups="base.group_no_one">
+                                    <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to choose your Cookie Policy Configuration.</div>
+                                </div>
+                                <div class="content-group" invisible="not cookie_policy_id" groups="base.group_no_one" title="Select your custom cookie policy page">
+                                    <div class="row mt16">
+                                        <label class="col-lg-5 o_light_label" string="Cookie policy page" for="cookie_policy_id"/>
+                                        <field name="cookie_policy_id" options="{'no_create': True}" domain="[('website_id', '=', website_id)]"/>
+                                    </div>
+                                </div>
                             </div>
                         </setting>
                     </block>
