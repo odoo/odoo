@@ -950,7 +950,7 @@ class PurchaseOrder(models.Model):
                 oldest_rfq.message_post(body=oldest_rfq_message)
 
                 rfqs.filtered(lambda r: r.state != 'cancel').button_cancel()
-                oldest_rfq._merge_alternative_po(rfqs)
+                oldest_rfq._merge_po_post_process(rfqs)
 
                 # Keep the oldest RFQ IDs
                 merged_rfq_ids.append(oldest_rfq.id)
@@ -968,6 +968,10 @@ class PurchaseOrder(models.Model):
             action['domain'] = [('id', 'in', merged_rfq_ids)]
         return action
 
+    def _merge_po_post_process(self, rfqs):
+        pass
+
+    # TODO: remove in master
     def _merge_alternative_po(self, rfqs):
         pass
 
