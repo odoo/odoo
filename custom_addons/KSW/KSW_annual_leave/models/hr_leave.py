@@ -17,6 +17,67 @@ class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
     # ------------------------------------------------------------------
+    # Employee picker domain
+    # ------------------------------------------------------------------
+    # Odoo's stock `_get_employee_domain` (hr_holidays/models/hr_leave.py)
+    # restricts non-Officer users to `user_id == uid OR leave_manager_id
+    # == uid`. KSW Leaves uses the `hr.employee.parent_id` chain
+    # (matching KSW_deduction) traversed recursively via `child_of`.
+    #
+    # IMPORTANT: the picker scope follows the **Create** tier only —
+    # not the union of all four CRUD tiers. The picker's job is to
+    # answer "for whom can the user submit a new leave?". View tier
+    # widens visibility of existing leaves but does NOT widen the
+    # creation scope, and showing employees the user can SEE but not
+    # CREATE for in the picker would let them pick a subordinate and
+    # then hit a "create access denied" wall on save. Driving the
+    # picker by the Create tier keeps the four privileges orthogonal
+    # AND keeps the UX honest:
+    #   * Create=Officer  -> all employees
+    #   * Create=Supervisor -> own + parent_id descendants
+    #   * Create=Self    -> own only
+    def _get_employee_domain(self):
+        domain = [
+            ('active', '=', True),
+            ('company_id', 'in', self.env.companies.ids),
+        ]
+        user = self.env.user
+        if user.has_group('KSW_annual_leave.group_leave_create_officer'):
+            return domain
+        if user.has_group('KSW_annual_leave.group_leave_create_supervisor'):
+            # `child_of` on hr.employee traverses _parent_name (= parent_id)
+            # and includes the anchor itself, so this returns the user's
+            # own employee record + every descendant in the org chart.
+            domain += [
+                '|',
+                ('user_id', '=', user.id),
+                ('id', 'child_of', user.employee_ids.ids),
+            ]
+        else:
+            domain += [('user_id', '=', user.id)]
+        return domain
+
+    # ------------------------------------------------------------------
+    # Override `validation_type` to be readonly to prevent propagating
+    # writes back to hr.leave.type. The upstream definition declares it
+    # `related='holiday_status_id.leave_validation_type', readonly=False`,
+    # which causes the form's save payload to write the value back to
+    # the related type record. Because hr.leave.type only allows write
+    # to the Administrator group (`hr_holidays.group_hr_holidays_manager`),
+    # any non-admin user submitting a leave hits an AccessError on the
+    # type record even though they aren't actually trying to change the
+    # validation policy. Making this field readonly here breaks that
+    # propagation while keeping the value accessible everywhere it is
+    # only **read** in core code (e.g. _action_validate, activity_update).
+    # ------------------------------------------------------------------
+    validation_type = fields.Selection(
+        related='holiday_status_id.leave_validation_type',
+        readonly=True,
+    )
+
+
+
+    # ------------------------------------------------------------------
     # Annual-leave duration: calendar days (including weekends/holidays)
     # per Saudi labor law.  Only applies to leave types flagged with
     # is_annual_leave = True.
