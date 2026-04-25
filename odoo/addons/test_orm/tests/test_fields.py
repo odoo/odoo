@@ -5397,7 +5397,7 @@ class TestWriteOverrideTranslatedFields(TransactionCase):
     }
 
     def test_write_override_translated_field(self):
-        base_write = self.env.registry['base'].write
+        base_write = self.env.registry['base'].__bases__[1].write
         violations = []
         modules_to_check = set(self.env['ir.module.module'].search([
             ('name', 'in', list(self.CHECKED_FIELD_NAMES)),
@@ -5409,14 +5409,15 @@ class TestWriteOverrideTranslatedFields(TransactionCase):
             if module_name in modules_to_check
         }
         for model in self.env.registry.values():
-            if model.write is base_write:
+            model_ = model.__bases__[1]
+            if model_.write is base_write:
                 continue
             translated_field_names = [
                 field.name for field in model._fields.values() if field.translate
             ]
             if not translated_field_names:
                 continue
-            for cls in model.__mro__:
+            for cls in model_.__mro__:
                 if 'write' not in cls.__dict__:
                     continue
                 write_method = cls.__dict__['write']
