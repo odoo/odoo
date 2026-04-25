@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-04-16 15:35+0000\n"
+"PO-Revision-Date: 2026-04-22 16:01+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/sv/>\n"
@@ -32,7 +32,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account_check_printing
 #. odoo-python
@@ -289,7 +289,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr "Kontrollstumpar för flera sidor"
+msgstr "Checkhäfte med flera sidor"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
@@ -331,15 +331,15 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
-"Betalningar som ska skrivas ut som checkar måste ha \"Check\" valt som "
-"betalningsmetod och inte redan ha stämts av"
+"Betalningar som ska skrivas ut som checkar måste ha 'Check' angiven som "
+"betalningsmetod och kan inte redan ha stämts av"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to "
 "print on."
-msgstr "Ange numret på den första förtryckta check som du ska skriva ut på."
+msgstr "Ange numret på den första förtryckta check som ska skrivas ut."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -415,8 +415,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
-"Något gick fel med Kontrollera layout, välj en annan layout i Inställningar "
-"för fakturering/redovisning och försök igen."
+"Något gick fel med checklayouten, vänligen välj en annan layout i "
+"inställningarna för Fakturor/Bokföring och försök igen."
 
 #. module: account_check_printing
 #. odoo-python
@@ -425,8 +425,8 @@ msgid ""
 "The check number you entered (%(num)s) exceeds the maximum allowed value of %"
 "(max)d. Please enter a smaller number."
 msgstr ""
-"Checknumret du angav (%(num)s) överstiger det högsta tillåtna värdet %(max)"
-"d. Vänligen ange ett mindre nummer."
+"Det checknummer du angett (%(num)s) överstiger det högsta tillåtna värdet %"
+"(max)d. Vänligen ange ett mindre nummer."
 
 #. module: account_check_printing
 #. odoo-python
@@ -466,7 +466,7 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
-"Med det här alternativet kan du skriva ut kontrolluppgifter (stump) på flera "
+"Med det här alternativet kan du skriva ut checkuppgifter (häfte) på flera "
 "sidor om de inte får plats på en enda sida."
 
 #. module: account_check_printing
@@ -476,20 +476,21 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Med detta alternativ kan du skriva ut datumetiketten på checken enligt CPA.\n"
-"Inaktivera detta om din förtryckta check innehåller datumetiketten."
+"Med detta alternativ kan du skriva ut en datumetikett på checken enligt "
+"CPA.\n"
+"Avaktivera detta om din förtryckta check redan innehåller en datumetikett."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
 msgstr ""
-"Detta gör det möjligt att spara antalet motsvarande checkar på betalningarna."
+"Detta gör det möjligt att spara det motsvarande checknumret på betalningar."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr "Avmarkera Skickat"
+msgstr "Avmarkera som Skickad"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited

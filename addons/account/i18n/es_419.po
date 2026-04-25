@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:37+0000\n"
-"PO-Revision-Date: 2026-04-15 22:03+0000\n"
+"POT-Creation-Date: 2026-04-24 17:35+0000\n"
+"PO-Revision-Date: 2026-04-24 18:39+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/account/es_419/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -174,13 +174,13 @@ msgstr "%(exception)s para %(user)s%(end_datetime_string)s%(reason)s."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(label)s a %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s (Draft)"
-msgstr ""
+msgstr "%(label)s a %(currency_amount)s (Borrador)"
 
 #. module: account
 #. odoo-python
@@ -3353,7 +3353,7 @@ msgstr "Depreciación acumulada"
 #: model:account.account,name:account.1_retained_earnings
 #: model:account.account,name:account.2_account_account_us_retained_earnings
 msgid "Accumulated Retained Earnings"
-msgstr ""
+msgstr "Ganancias retenidas acumuladas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -4297,7 +4297,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "Asignación de las ganancias o pérdidas"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -4447,7 +4447,9 @@ msgstr "Autocompletar"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
 msgid "Auto-complete from a previous bill or refund."
-msgstr "Auto completar a partir de una factura o reembolso previo."
+msgstr ""
+"Completa de forma automática a partir de una factura de proveedor o "
+"reembolso anterior."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -6809,7 +6811,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "Ganancias y pérdidas acumuladas no distribuidas"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -6921,7 +6923,7 @@ msgstr "Balance de estado de cuenta actual"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
 msgid "Current Year Earnings"
-msgstr "Ganancias del año corriente"
+msgstr "Ganancias del año en curso"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__custom_audit_action_id
@@ -11287,7 +11289,7 @@ msgstr "Tiene asientos"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
 msgid "Is Exact Move Duplicate"
-msgstr ""
+msgstr "Es un movimiento duplicado exacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -12872,7 +12874,7 @@ msgstr "Solicitud de cancelación necesaria"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "Necesita actualización"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -14619,7 +14621,7 @@ msgstr "URL de acceso al portal"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Post"
-msgstr "Publicar"
+msgstr "Registrar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -14959,7 +14961,7 @@ msgstr "Cuenta de ganancias"
 #: model:account.account,name:account.1_profit_or_loss
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Profit or Loss Appropriation"
-msgstr ""
+msgstr "Asignación de ganancias o pérdidas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -15154,13 +15156,6 @@ msgstr "Valores de codificación rápida"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
 msgstr "Codificación rápida"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2one_account_account/many2one_account_account.js:0
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Quick search: %s"
-msgstr "Búsqueda rápida: %s"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rd
@@ -20187,7 +20182,7 @@ msgstr "Actualizar términos y condiciones"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "Actualizar aplicación"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20833,7 +20828,7 @@ msgstr "Línea del asistente"
 #: model:account.account,name:account.1_wip
 #: model:account.account,name:account.2_account_account_us_wip
 msgid "Work in Progress"
-msgstr "Trabajo en progreso"
+msgstr "Trabajo en curso"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_compensation_insurance
@@ -22409,6 +22404,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factura autofacturada (Referencia "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid "Quick search: %s"
+#~ msgstr "Búsqueda rápida: %s"
 
 #~ msgid "%(name)s - Draft at (%(currency_amount)s)"
 #~ msgstr "%(name)s - Borrador en (%(currency_amount)s)"

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-13 20:51+0000\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
+"PO-Revision-Date: 2026-04-24 07:56+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet/sv/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -255,6 +255,12 @@ msgstr "%s är inte en giltig vecka (det ska vara ett tal mellan 0 och 53)"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s matches in all sheets"
 msgstr "%s matcher i alla ark"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "'${str}'"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1143,25 +1149,6 @@ msgstr "Ett intervall med datum som motsvarar kassaflödena i cashflow_amounts."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred during the image transfer"
 msgstr "Ett oväntat fel inträffade under bildöverföringen"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          Additional information can be found in the browser console."
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"Ett oväntat fel uppstod när du klistrade in innehåll.\n"
-"          Detta beror förmodligen på att kalkylbladets version inte stämmer "
-"överens."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4256,25 +4243,6 @@ msgstr "Funktionen [[FUNCTION_NAME]] gav inget resultat."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"Funktionen [[FUNCTION_NAME]] förväntar sig att criteria_range och criterion "
-"ska vara i par."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"Funktionen [[FUNCTION_NAME]] förväntar sig att criteria_range har samma "
-"dimension"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 
@@ -4585,7 +4553,7 @@ msgstr "Grupper"
 #. module: spreadsheet
 #: model:ir.model,name:spreadsheet.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP-rutt"
+msgstr "HTTP-routing"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4886,8 +4854,7 @@ msgstr "I utvärderingen av [[FUNCTION_NAME]] kan inte '%s' hittas inom '%s'."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"          number of rows of the second matrix (%s)."
+"equal to the           number of rows of the second matrix (%s)."
 msgstr ""
 
 #. module: spreadsheet
@@ -6171,6 +6138,12 @@ msgstr "Ny pivot"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Next coupon date after the settlement date."
 msgstr "Nästa kupongdag efter avräkningsdagen."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13294,14 +13267,9 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Om tomma textmeddelanden ska tas bort från splitresultaten eller inte. "
-"Standardbeteendet är att behandla\n"
-"        på varandra följande avgränsare som en (om SANT). Om FALSK läggs "
-"tomma cellvärden till mellan på varandra följande avgränsare."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13523,6 +13491,12 @@ msgstr "År"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
 msgid "Yesterday"
 msgstr "Igår"
@@ -13538,6 +13512,14 @@ msgstr "Du kan inte slå samman celler inuti ett befintligt filter."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "Du kan inte skapa överlappande tabeller."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"and image content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13946,6 +13928,39 @@ msgstr "igår"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "noll"
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "Ett oväntat fel uppstod när du klistrade in innehåll.\n"
+#~ "          Detta beror förmodligen på att kalkylbladets version inte "
+#~ "stämmer överens."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "Funktionen [[FUNCTION_NAME]] förväntar sig att criteria_range och "
+#~ "criterion ska vara i par."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "Funktionen [[FUNCTION_NAME]] förväntar sig att criteria_range har samma "
+#~ "dimension"
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Om tomma textmeddelanden ska tas bort från splitresultaten eller inte. "
+#~ "Standardbeteendet är att behandla\n"
+#~ "        på varandra följande avgränsare som en (om SANT). Om FALSK läggs "
+#~ "tomma cellvärden till mellan på varandra följande avgränsare."
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."

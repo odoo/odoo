@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-03-14 09:43+0000\n"
+"POT-Creation-Date: 2026-04-24 17:36+0000\n"
+"PO-Revision-Date: 2026-04-23 09:41+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/nl/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -49,19 +49,31 @@ msgid "(Un)Group lines by tax"
 msgstr "Regels (de)groeperen per btw"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "<span class=\"text-muted\">FROM</span>"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "<span class=\"text-muted\">TO</span>"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "A payment of %s was detected."
 msgstr "Een betaling van %s werd gedetecteerd."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "A rounding amount of %s was detected."
 msgstr "Er is een afrondingsbedrag van %s gedetecteerd."
 
@@ -248,6 +260,7 @@ msgstr "Contact"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid ""
 "Could not retrieve a partner corresponding to '%s'. A new partner was "
 "created."
@@ -258,6 +271,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and "
 "activate the currency?"
@@ -284,12 +298,14 @@ msgstr "Kan de btw: %(amount)s %% voor regel '%(line)s' niet ophalen."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'."
 msgstr "Kan de btw: %(tax_percentage)s %% voor regel '%(line)s' niet ophalen."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Could not retrieve the tax: %s for the document level allowance/charge."
 msgstr ""
 "We konden de btw: %s niet ophalen voor de vergoeding/toeslag op "
@@ -507,6 +523,12 @@ msgstr "Formaat gebruikt om het document te importeren: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid "Format used to import the invoice: %s"
+msgstr "Formaat gebruikt om de factuur te importeren: %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Format: %s"
 msgstr "Formaat: %s"
@@ -560,7 +582,7 @@ msgstr "Gegenereerd door Odoo"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0246
 msgid "German Electronic Business Address"
-msgstr ""
+msgstr "Duits elektronisch bedrijfsadres"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung
@@ -804,7 +826,7 @@ msgstr "Nederland BTW"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0244
 msgid "Nigeria Tax Identification"
-msgstr ""
+msgstr "Btw-nummer Nigeria"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0192
@@ -895,6 +917,7 @@ msgstr "Roemenië BTW"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Rounding"
 msgstr "Afronding"
 
@@ -931,7 +954,7 @@ msgstr "SIA Object Identifiers"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0245
 msgid "SK Tax identification number (DIČ)"
-msgstr ""
+msgstr "SK btw-nummer (DIČ)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9951
@@ -1010,6 +1033,11 @@ msgid "Tax Exemption Reason Code"
 msgstr "Belastingvrijstelling Reden Code"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "Tax ID"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
@@ -1079,6 +1107,7 @@ msgstr "De btw van het land %s moet worden voorafgegaan door de landcode."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "The bank account couldn't be fetched: %s"
 msgstr "De bankrekening kon niet worden opgehaald: %s"
 
@@ -1091,6 +1120,7 @@ msgstr "Het land is vereist voor het %s."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "The currency '%s' is not active."
 msgstr "De valuta '%s' is niet actief."
 
@@ -1115,6 +1145,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 msgid ""
@@ -1197,7 +1228,7 @@ msgstr "Ubl Cii vereist een reden voor vrijstelling"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Ungrouped lines from %s"
-msgstr ""
+msgstr "Niet-gegroepeerde regels uit %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -1399,6 +1430,8 @@ msgid ""
 "VATEX-EU-135-1 - Exempt based on article 135, section 1 of Council Directive "
 "2006/112/EC"
 msgstr ""
+"VATEX-EU-135-1 - Vrijgesteld op basis van artikel 135, lid 1 van Richtlijn "
+"2006/112/EG van de Raad"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143
@@ -1909,6 +1942,9 @@ msgid ""
 "des Impôts (CGI ; General tax code) Exonération de TVA - Article 261 D-3° du "
 "Code Général des Impôts"
 msgstr ""
+"VATEX-FR-CGI261D-3 - Vrijstelling op basis van artikel 261 D, lid 3, van de "
+"Code Général des Impôts (CGI; Algemene belastingwet) Vrijstelling van btw - "
+"Artikel 261 D, lid 3, van de Code Général des Impôts"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-4
@@ -1984,6 +2020,11 @@ msgid "Vatican VAT"
 msgstr "Vaticaanse BTW"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "View Partner(s)"
@@ -2015,7 +2056,7 @@ msgstr "Je kunt enkel regels (de)groeperen van een conceptfactuur"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You can only group lines of an invoice"
-msgstr ""
+msgstr "Je kunt enkel regels groeperen van een factuur"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2108,6 +2149,3 @@ msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 
 #~ msgid "Singapore BIS Billing 3.0 SG"
 #~ msgstr "Singapore BIS Billing 3.0 SG"
-
-#~ msgid "Format used to import the invoice: %s"
-#~ msgstr "Formaat gebruikt om de factuur te importeren: %s"

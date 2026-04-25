@@ -28,7 +28,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-17 15:20+0000\n"
+"PO-Revision-Date: 2026-04-24 07:45+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/stock/cs/>"
 "\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: stock
 #. odoo-python
@@ -6913,7 +6913,7 @@ msgstr "Použití balíku"
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid "Package manually relocated"
-msgstr "Balíček ručně přemístěn"
+msgstr "Balík přemístěn ručně"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__valid_sscc
@@ -6947,11 +6947,13 @@ msgid ""
 "Packages %(duplicate_names)s are moved to different locations while being in "
 "the same container %(container_name)s."
 msgstr ""
+"Balíky %(duplicate_names)s jsou přemístěny na různá místa, zatímco se "
+"nacházejí ve stejným kontejneru %(container_name)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__packages_count
 msgid "Packages Count"
-msgstr ""
+msgstr "Počet balíků"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
@@ -6961,8 +6963,8 @@ msgid ""
 "                Once created, the whole package can be moved at once, or "
 "products can be unpacked and moved as single units again."
 msgstr ""
-"Balíčky se obvykle vytvářejí prostřednictvím přesunů (během operace balení) "
-"a mohou obsahovat různé produkty.\n"
+"Balíky se obvykle vytvářejí prostřednictvím přesunů (během operace balení) a "
+"mohou obsahovat různé produkty.\n"
 "Po vytvoření lze celý balík přesunout najednou nebo lze produkty rozbalit a "
 "opět přesunout jako jednotlivé jednotky."
 
@@ -7037,7 +7039,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__partial_package_names
 msgid "Partial Package Names"
-msgstr ""
+msgstr "Názvy částečných balíků"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__partially_available
@@ -8528,7 +8530,7 @@ msgstr "U tohoto produktu lze vybrat trasy"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_uom_uom__route_ids
 msgid "Routes propagated from the package type"
-msgstr ""
+msgstr "Trasy použité z typu balíku"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8791,7 +8793,7 @@ msgstr ""
 #: code:addons/stock/static/src/views/list/stock_add_package_list_view.js:0
 #: code:addons/stock/static/src/views/picking_form/stock_move_one2many.js:0
 msgid "Select Packages to Move"
-msgstr ""
+msgstr "Vyberte balíky k přemístění"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
@@ -8801,7 +8803,7 @@ msgstr "Vybrat trasu"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_put_in_pack_form
 msgid "Select a Package Type"
-msgstr ""
+msgstr "Vyberte typ balení"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -8949,7 +8951,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__set_package_type
 msgid "Set Package Type"
-msgstr ""
+msgstr "Nastavte typ balení"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9303,7 +9305,7 @@ msgstr "Zdrojový balík"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Package:"
-msgstr ""
+msgstr "Zdrojový balík:"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.stock_split_picking
@@ -9423,7 +9425,7 @@ msgstr "Skladová operace"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr "Cílové balení"
+msgstr "Cíl skladového balení"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_history

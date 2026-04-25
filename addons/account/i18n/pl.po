@@ -57,8 +57,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:37+0000\n"
-"PO-Revision-Date: 2026-04-13 11:42+0000\n"
+"POT-Creation-Date: 2026-04-24 17:35+0000\n"
+"PO-Revision-Date: 2026-04-21 22:27+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/account/"
 "pl/>\n"
@@ -218,13 +218,13 @@ msgstr "%(exception)s dla %(user)s%(end_datetime_string)s%(reason)s."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(label)s w %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s (Draft)"
-msgstr ""
+msgstr "%(label)s w %(currency_amount)s (wersja robocza)"
 
 #. module: account
 #. odoo-python
@@ -1495,7 +1495,7 @@ msgstr "<span> (KR)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (DR)</span>"
-msgstr "<span>(DR)</span>"
+msgstr "<span>(Wn)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -2647,13 +2647,12 @@ msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
 msgstr ""
-"Płatność z wykorzystaniem nierozliczonego konta nie może zostać potwierdzona "
-"bez posiadania wpisu w dzienniku."
+"Płatności z zaległym saldem nie można potwierdzić bez zapisu w dzienniku."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
 msgid "A report line with the same code already exists."
-msgstr "Wiersz raportu o tym kodzie już istnieje."
+msgstr "Wiersz raportu o tym samym kodzie już istnieje."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2679,7 +2678,7 @@ msgstr "Pojedynczy wyjątek musi zmieniać dokładnie jedno pole daty blokady."
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "A statement should only contain lines from the same journal."
-msgstr "Zestawienie powinno zawierać tylko wiersze z tego samego czasopisma."
+msgstr "Zestawienie powinno zawierać tylko wiersze z tego samego dziennika."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_account_tag_name_uniq
@@ -2756,7 +2755,7 @@ msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
 msgstr ""
-"Konta %(account)s zostaną podzielone na %(num_accounts)s, po jednym dla "
+"Konto %(account)s zostanie podzielone na %(num_accounts)s, po jednym dla "
 "każdej firmy:\n"
 
 #. module: account
@@ -2883,12 +2882,12 @@ msgstr "Nazwa właściciela konta"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_tree
 msgid "Account Journal"
-msgstr "Dziennik"
+msgstr "Dziennik księgowy"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr "Grupa dziennika"
+msgstr "Grupa dziennika księgowego"
 
 #. module: account
 #: model:ir.model,name:account.model_account_lock_exception
@@ -2981,7 +2980,7 @@ msgstr "Należności na koncie (PoS)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
-msgstr "Uzgodnienie kont"
+msgstr "Uzgadnianie kont"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -3011,7 +3010,7 @@ msgstr "Znaczniki konta"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Account Tax"
-msgstr "Podatki"
+msgstr "Podatki księgowe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
@@ -3065,13 +3064,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid ""
 "Account for the difference amount after the expense discount has been granted"
-msgstr "Zaksięgowanie kwoty różnicy po udzieleniu rabatu na wydatki"
+msgstr "Uwzględnij kwotę różnicy po przyznaniu rabatu na wydatki"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
-msgstr "Rozliczanie kwoty różnicy po przyznaniu rabatu dochodowego"
+msgstr "Uwzględnij kwotę różnicy po przyznaniu zniżki od dochodu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -3090,8 +3089,7 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
-"Nazwa właściciela konta, w przypadku gdy jest inna niż nazwa właściciela "
-"konta"
+"Nazwa posiadacza konta, w przypadku gdy różni się od nazwy posiadacza konta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
@@ -3106,12 +3104,12 @@ msgstr "Wiersz kreatora łączenia kont"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
 msgid "Account on Product"
-msgstr "Konto dla produktu"
+msgstr "Konto produktu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 msgid "Account on which to post the tax amount"
-msgstr "Konto, na którym należy zaksięgować kwotę podatku"
+msgstr "Konto, na które należy zaksięgować kwotę podatku"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
@@ -3146,7 +3144,7 @@ msgstr "Alternatywne konto"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "Account to transfer to."
-msgstr "Konto docelowe."
+msgstr "Konto, na które ma nastąpić transfer."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__revenue_accrual_account_id
@@ -3179,7 +3177,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account with Entries"
-msgstr "Konto z wpisami"
+msgstr "Konto z zapisami"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
@@ -3187,7 +3185,7 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to "
 "today"
 msgstr ""
-"Konto: Zaksięgować wpisy robocze z włączonym auto_post i datą księgowania do "
+"Konto: Zaksięguj wpisy robocze z włączonym auto_post i datą księgowania do "
 "dnia dzisiejszego"
 
 #. module: account
@@ -3260,7 +3258,7 @@ msgstr "Tryb firmy księgowej zmieni kodowanie faktur/rachunków:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr "Ustawienia związane z księgowością są stosowane do"
+msgstr "Ustawienia związane z księgowością są zarządzane w"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__accounts
@@ -3330,23 +3328,23 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued %(entry_type)s entry as of %(date)s"
-msgstr "Rozliczenia bierne okresowe %(entry_type)s na dzień %(date)s"
+msgstr "Zapisy memoriałowe %(entry_type)s na dzień %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Accrued Account"
-msgstr "Akredytowane konto"
+msgstr "Konto rozliczeń międzyokresowych"
 
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr "Kreator akredytowanych zamówień"
+msgstr "Kreator zamówień międzyokresowych"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued total"
-msgstr "Akredytowana suma"
+msgstr "Suma rozliczeń międzyokresowych"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_acc_depreciation
@@ -3357,7 +3355,7 @@ msgstr "Skumulowana amortyzacja"
 #: model:account.account,name:account.1_retained_earnings
 #: model:account.account,name:account.2_account_account_us_retained_earnings
 msgid "Accumulated Retained Earnings"
-msgstr ""
+msgstr "Skumulowane zyski zatrzymane"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -4287,7 +4285,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "Przydzielenie zysku lub straty"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -6776,7 +6774,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "Skumulowane niepodzielone zyski i straty"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -11231,7 +11229,7 @@ msgstr "Jest wpisem"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
 msgid "Is Exact Move Duplicate"
-msgstr ""
+msgstr "Czy to dokładna kopia ruchu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -12804,7 +12802,7 @@ msgstr "Potrzeba anulowania żądania"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "Konieczność aktualizacji"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -14897,7 +14895,7 @@ msgstr "Konto wynikowe"
 #: model:account.account,name:account.1_profit_or_loss
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Profit or Loss Appropriation"
-msgstr ""
+msgstr "Przydzielenie zysku lub straty"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -15092,13 +15090,6 @@ msgstr "Wartości szybkiego kodowania"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
 msgstr "Szybkie kodowanie"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2one_account_account/many2one_account_account.js:0
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Quick search: %s"
-msgstr "Szybkie wyszukiwanie: %s"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rd
@@ -20090,7 +20081,7 @@ msgstr "Aktualizacja regulaminu"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "Zaktualizuj aplikację"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -22305,6 +22296,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Samodzielnie rozliczana faktura (nr ref. "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid "Quick search: %s"
+#~ msgstr "Szybkie wyszukiwanie: %s"
 
 #~ msgid "%(name)s - Draft at (%(currency_amount)s)"
 #~ msgstr "%(name)s - Wersja robocza (%(currency_amount)s)"

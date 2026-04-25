@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-04-24 17:36+0000\n"
 "PO-Revision-Date: 2026-04-14 07:05+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
@@ -49,6 +49,16 @@ msgid "(Un)Group lines by tax"
 msgstr "Lisää/poista rivien ryhmittely verokohtaisesti"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "<span class=\"text-muted\">FROM</span>"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "<span class=\"text-muted\">TO</span>"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "A"
 msgstr "A"
@@ -56,12 +66,14 @@ msgstr "A"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "A payment of %s was detected."
 msgstr "Havaittiin maksu: %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "A rounding amount of %s was detected."
 msgstr "Havaittiin %s suuruinen pyöristys."
 
@@ -244,6 +256,7 @@ msgstr "Yhteystiedot"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid ""
 "Could not retrieve a partner corresponding to '%s'. A new partner was "
 "created."
@@ -252,6 +265,7 @@ msgstr "'%s' vastaavan kumppanin haku ei onnistunut. Luotiin uusi kumppani."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and "
 "activate the currency?"
@@ -278,6 +292,7 @@ msgstr "Veron hakeminen ei onnistunut: %(amount)s %% riville '%(line)s'."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'."
 msgstr ""
 "Veron hakeminen ei onnistunut: %(tax_percentage)s %% riville '%(line)s'."
@@ -285,6 +300,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Could not retrieve the tax: %s for the document level allowance/charge."
 msgstr ""
 "Veron hakeminen ei onnistunut: %s asiakirjatason määrärahaa/maksua varten."
@@ -495,6 +511,12 @@ msgstr "Yhteisömyynnin tulee sisältää toimitusosoite."
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Format used to import the document: %s"
 msgstr "Asiakirjan tuonnissa käytettävä muoto: %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid "Format used to import the invoice: %s"
+msgstr "Laskun tuonnissa käytetty muoto: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -886,6 +908,7 @@ msgstr "Romanian ALV"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Rounding"
 msgstr "Pyöristys"
 
@@ -1001,6 +1024,11 @@ msgid "Tax Exemption Reason Code"
 msgstr "Verovapautuksen syykoodi"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "Tax ID"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
@@ -1066,6 +1094,7 @@ msgstr "%s:n ALV-etuliitteen pitäisi olla sen maakoodi."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "The bank account couldn't be fetched: %s"
 msgstr "Pankkitilin hakeminen ei onnistunut: %s"
 
@@ -1078,6 +1107,7 @@ msgstr "%s vaatii maan."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "The currency '%s' is not active."
 msgstr "Valuutta '%s' ei ole aktiivinen."
 
@@ -1101,6 +1131,7 @@ msgstr "Kenttä 'Siistitty tilinumero' vaaditaan vastaanottavassa pankissa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 msgid ""
@@ -1971,6 +2002,11 @@ msgid "Vatican VAT"
 msgstr "Vatikaanin ALV"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "View Partner(s)"
@@ -2086,6 +2122,3 @@ msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 
 #~ msgid "Your endpoint"
 #~ msgstr "Päätepisteesi"
-
-#~ msgid "Format used to import the invoice: %s"
-#~ msgstr "Laskun tuonnissa käytetty muoto: %s"

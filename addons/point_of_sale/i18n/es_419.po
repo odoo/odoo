@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-15 22:01+0000\n"
+"POT-Creation-Date: 2026-04-24 17:35+0000\n"
+"PO-Revision-Date: 2026-04-23 05:28+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/point_of_sale/es_419/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -273,8 +273,8 @@ msgstr ""
 "                        <t t-else=\"\">Hola,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Gracias por comprar en <t t-out=\"store_name\">"
-"Nombre de la tienda</t>.</div>\n"
+"                    <div>Gracias por comprar en <t t-"
+"out=\"store_name\">Nombre de la tienda</t>.</div>\n"
 "                    <div>Te enviamos el recibo de la compra que realizaste "
 "el <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
@@ -2077,7 +2077,7 @@ msgstr "Seleccione una orden"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "Choose customer"
-msgstr "Elija un cliente"
+msgstr "Elige un cliente"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
@@ -2763,7 +2763,7 @@ msgstr "Estado de la sesión actual"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_header_or_footer
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_header_or_footer
 msgid "Custom Header & Footer"
-msgstr "Encabezado y pie de página personalizado"
+msgstr "Encabezado y pie de página personalizados"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__custom_attribute_value_ids
@@ -2890,6 +2890,12 @@ msgstr "Peligro: Hay demasiados productos"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "Tablero"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Database Connection Lost"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7955,6 +7961,12 @@ msgstr "Sesión relacionada: %(link)s"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Reload"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
@@ -9322,6 +9334,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The company must have a fiscal country set."
 msgstr "La empresa debe tener un país fiscal configurado."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid ""
+"The connection to the local database was lost. Reloading the page will "
+"restore it and prevent any loss of unsaved orders."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

@@ -46,12 +46,13 @@
 # Konsta Aavaranta <konsta.aavaranta@sprintit.fi>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@futural.fi>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:37+0000\n"
-"PO-Revision-Date: 2026-04-16 13:24+0000\n"
+"POT-Creation-Date: 2026-04-24 17:35+0000\n"
+"PO-Revision-Date: 2026-04-23 09:40+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/account/"
 "fi/>\n"
@@ -60,7 +61,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -209,13 +210,13 @@ msgstr "%(exception)s kohdissa %(user)s%(end_datetime_string)s%(reason)s."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(label)s: %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s (Draft)"
-msgstr ""
+msgstr "%(label)s: %(currency_amount)s (Luonnos)"
 
 #. module: account
 #. odoo-python
@@ -3362,7 +3363,7 @@ msgstr "Kertyneet poistot"
 #: model:account.account,name:account.1_retained_earnings
 #: model:account.account,name:account.2_account_account_us_retained_earnings
 msgid "Accumulated Retained Earnings"
-msgstr ""
+msgstr "Kertyneet voittovarat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -4291,7 +4292,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "Voiton tai tappion käsittely"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -6780,7 +6781,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "Kertyneet jakamattomat voitot ja tappiot"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -11226,7 +11227,7 @@ msgstr "On kirjauksia"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
 msgid "Is Exact Move Duplicate"
-msgstr ""
+msgstr "On tarkka kirjauksen kaksoiskappale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -12786,7 +12787,7 @@ msgstr "Tarvitaan pyynnön peruutus"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "Päivitettävä"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -14867,7 +14868,7 @@ msgstr "Voittotili"
 #: model:account.account,name:account.1_profit_or_loss
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Profit or Loss Appropriation"
-msgstr ""
+msgstr "Voiton tai tappion käsittely"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -15062,13 +15063,6 @@ msgstr "Nopean koodauksen arvot"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
 msgstr "Nopea koodaus"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2one_account_account/many2one_account_account.js:0
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Quick search: %s"
-msgstr "Pikahaku: %s"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rd
@@ -16233,7 +16227,7 @@ msgstr "Lähetä kopio osoitteeseen"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__allow_out_payment
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__outbound
 msgid "Send Money"
-msgstr "Siirrä rahaa"
+msgstr "Salli maksut"
 
 #. module: account
 #. odoo-javascript
@@ -17396,7 +17390,7 @@ msgstr "Veroryhmät"
 #: model:ir.model.fields,field_description:account.field_base_document_layout__vat
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax ID"
-msgstr "Verotunniste"
+msgstr "Verotunnus"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
@@ -20031,7 +20025,7 @@ msgstr "Päivitä käyttöehdot"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "Päivitä sovellus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -22217,6 +22211,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Itselaskutettu lasku (viite {{ object.name or "
 "'n/a' }})"
+
+#~ msgid "Quick search: %s"
+#~ msgstr "Pikahaku: %s"
 
 #~ msgid "%(name)s - Draft at (%(currency_amount)s)"
 #~ msgstr "%(name)s - Luonnos (%(currency_amount)s)"

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:37+0000\n"
-"PO-Revision-Date: 2026-04-07 13:41+0000\n"
+"POT-Creation-Date: 2026-04-24 17:36+0000\n"
+"PO-Revision-Date: 2026-04-21 22:27+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/pl/>\n"
@@ -506,9 +506,9 @@ msgid ""
 "is not supported by the MSH."
 msgstr ""
 "Mimo że dokument komunikatu jest poprawnie sformułowany i zgodny ze "
-"schematem, niektóre wartości elementów/atrybutów nie mogą być przetworzone "
-"zgodnie z oczekiwaniami, ponieważ powiązana funkcja nie jest obsługiwana "
-"przez MSH."
+"schematem, niektóre wartości elementów/atrybutów nie mogą zostać "
+"przetworzone zgodnie z oczekiwaniami, ponieważ powiązana funkcja nie jest "
+"obsługiwana przez MSH."
 
 #. module: account_peppol
 #. odoo-python
@@ -613,7 +613,7 @@ msgid ""
 msgstr ""
 "Pośrednik MSH przypisał wiadomość do MPC w celu pobrania i pomyślnie ją "
 "zapisał. Jednak pośrednik ustawił limit czasu, przez jaki był gotów czekać "
-"na pobranie wiadomości, i limit ten został osiągnięty."
+"na pobranie wiadomości i limit ten został osiągnięty."
 
 #. module: account_peppol
 #. odoo-python
@@ -648,7 +648,7 @@ msgstr "Uwierzytelnianie zakończone sukcesem"
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__available_peppol_edi_formats
 msgid "Available Peppol Edi Formats"
-msgstr "Dozwolone formaty Peppol Edi"
+msgstr "Dostępne formaty Peppol Edi"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_sending_methods
@@ -708,7 +708,7 @@ msgstr "Nie można zarejestrować użytkownika w aplikacji %s"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Check Partner(s)"
-msgstr "Sprawdź partnera//-ów"
+msgstr "Sprawdź partnera/-ów"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_eas
@@ -788,8 +788,8 @@ msgid ""
 "Could not find an XSD with which to validate the document with identifier "
 "\"%s\"."
 msgstr ""
-"Nie można było znaleźć XSD umożliwiającego walidację dokumentu z "
-"identyfikatorem \"%s\"."
+"Nie można znaleźć XSD umożliwiającego walidację dokumentu z identyfikatorem "
+"\"%s\"."
 
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
@@ -1122,7 +1122,7 @@ msgstr "Zapis dziennika"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__write_uid
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio aktualizowane przez"
+msgstr "Ostatnio zaktualizowane przez"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__write_date
@@ -1380,6 +1380,12 @@ msgstr "Peppol ID"
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Peppol ID should be different from main company."
 msgstr "Peppol ID powinien być różny od głównej firmy."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
+#: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
+msgid "Peppol Is Sent"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata
@@ -1876,7 +1882,7 @@ msgstr "Dokument nie mógł zostać wysłany do uczestnika Peppol."
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be validated."
-msgstr "Dokument nie mógł być zweryfikowany."
+msgstr "Dokument nie mógł zostać zweryfikowany."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1964,7 +1970,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The incoming message could not be decompressed."
-msgstr "Przychodząca wiadomość nie może być dekompresowana."
+msgstr "Przychodząca wiadomość nie może być zdekompresowana."
 
 #. module: account_peppol
 #. odoo-python
@@ -2203,7 +2209,7 @@ msgstr "Użyj wyboru połączenia nadrzędnego"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
-msgstr "Weryfikuj"
+msgstr "Zweryfikuj"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.partner_action_verify_peppol
@@ -2326,6 +2332,9 @@ msgid ""
 "Please change the journal used for Peppol reception before changing the type "
 "of this journal."
 msgstr ""
+"Nie można zmienić typu dziennika używanego do odbioru faktur Peppol na inny "
+"typ niż \"Zakup\".\n"
+"Zmień dziennik używany do odbioru Peppol przed zmianą typu tego dziennika."
 
 #. module: account_peppol
 #. odoo-python
@@ -2400,7 +2409,7 @@ msgid ""
 "invoices. We will register you on Odoo as a sender only."
 msgstr ""
 "Twoja firma jest już zarejestrowana do otrzymywania faktur w Punkcie Dostępu "
-"(%s). Zarejestrujemy Cię w Odoo jako jedynie odbiorcę."
+"(%s). Zarejestrujemy Cię w Odo jedynie jako odbiorcę."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

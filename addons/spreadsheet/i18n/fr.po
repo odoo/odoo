@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
 "PO-Revision-Date: 2026-04-14 13:03+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
@@ -273,6 +273,12 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s matches in all sheets"
 msgstr "%s correspondances dans toutes les feuilles"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "'${str}'"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1193,28 +1199,6 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred during the image transfer"
 msgstr "Une erreur inattendue s'est produite lors du transfert de l'image"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          Additional information can be found in the browser console."
-msgstr ""
-"Une erreur inattendue s’est produite lors du collage du contenu.\n"
-"          Des informations supplémentaires sont disponibles dans la console "
-"du navigateur."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"Une erreur inattendue s'est produite lors du collage du contenu.\n"
-"          Ceci est probablement dû à une incompatibilité liée à la version "
-"de la feuille de calcul."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4351,25 +4335,6 @@ msgstr "La fonction [[FUNCTION_NAME]] n'a trouvé aucun résultat."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"La fonction [[FUNCTION_NAME]] s'attend à ce que criteria_range et criterion "
-"soient des paires."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"La fonction [[FUNCTION_NAME]] s'attend à ce que criteria_range ait la même "
-"dimension."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 "La fonction [[FUNCTION_NAME]] attend des valeurs numériques pour %s, mais a "
@@ -4992,12 +4957,8 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"          number of rows of the second matrix (%s)."
+"equal to the           number of rows of the second matrix (%s)."
 msgstr ""
-"Dans [[FUNCTION_NAME]], le nombre de colonnes de la première matrice (%s) "
-"doit être égal au \n"
-"          nombre de lignes de la seconde matrice (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6298,6 +6259,12 @@ msgstr "Nouveau tableau croisé dynamique"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Next coupon date after the settlement date."
 msgstr "Prochaine date de bon de réduction après la date de règlement."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13568,14 +13535,9 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Suppression ou non des messages textuels vides dans les résultats du "
-"fractionnement. Le comportement par défaut est de traiter\n"
-"les délimiteurs consécutifs comme un seul (si TRUE). Si FALSE, les valeurs "
-"des cellules vides sont ajoutées entre les délimiteurs consécutifs."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13805,6 +13767,12 @@ msgstr "Ans"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
 msgid "Yesterday"
 msgstr "Hier"
@@ -13821,6 +13789,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "Les tableaux ne peuvent pas se chevaucher."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"and image content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14230,6 +14206,57 @@ msgstr "hier"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "zéro"
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          Additional information can be found in the browser console."
+#~ msgstr ""
+#~ "Une erreur inattendue s’est produite lors du collage du contenu.\n"
+#~ "          Des informations supplémentaires sont disponibles dans la "
+#~ "console du navigateur."
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "Une erreur inattendue s'est produite lors du collage du contenu.\n"
+#~ "          Ceci est probablement dû à une incompatibilité liée à la "
+#~ "version de la feuille de calcul."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "La fonction [[FUNCTION_NAME]] s'attend à ce que criteria_range et "
+#~ "criterion soient des paires."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "La fonction [[FUNCTION_NAME]] s'attend à ce que criteria_range ait la "
+#~ "même dimension."
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "          number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "Dans [[FUNCTION_NAME]], le nombre de colonnes de la première matrice (%s) "
+#~ "doit être égal au \n"
+#~ "          nombre de lignes de la seconde matrice (%s)."
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Suppression ou non des messages textuels vides dans les résultats du "
+#~ "fractionnement. Le comportement par défaut est de traiter\n"
+#~ "les délimiteurs consécutifs comme un seul (si TRUE). Si FALSE, les "
+#~ "valeurs des cellules vides sont ajoutées entre les délimiteurs "
+#~ "consécutifs."
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."

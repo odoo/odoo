@@ -33,8 +33,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:37+0000\n"
-"PO-Revision-Date: 2026-04-16 10:24+0000\n"
+"POT-Creation-Date: 2026-04-24 17:35+0000\n"
+"PO-Revision-Date: 2026-04-21 22:27+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/account/"
 "es/>\n"
@@ -196,7 +196,7 @@ msgstr "%(exception)s para %(user)s%(end_datetime_string)s%(reason)s."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(label)s en %(currency_amount)s"
 
 #. module: account
 #. odoo-python
@@ -3376,8 +3376,9 @@ msgstr "Depreciación acumulada"
 #. module: account
 #: model:account.account,name:account.1_retained_earnings
 #: model:account.account,name:account.2_account_account_us_retained_earnings
+#, fuzzy
 msgid "Accumulated Retained Earnings"
-msgstr ""
+msgstr "Reservas acumuladas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -4317,7 +4318,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "Aplicación de resultados"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -6822,7 +6823,7 @@ msgstr "Saldo acumulado en función del dominio y el orden elegido en la vista."
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "Resultados acumulados no distribuidos"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -11301,7 +11302,7 @@ msgstr "Son asientos"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
 msgid "Is Exact Move Duplicate"
-msgstr ""
+msgstr "Es un asiento duplicado exacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -12880,7 +12881,7 @@ msgstr "Solicitud de cancelación necesaria"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "Necesita actualización"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -14971,7 +14972,7 @@ msgstr "Cuenta de ganancias"
 #: model:account.account,name:account.1_profit_or_loss
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Profit or Loss Appropriation"
-msgstr ""
+msgstr "Aplicación del resultado"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -15166,13 +15167,6 @@ msgstr "Valores de codificación rápida"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
 msgstr "Codificación rápida"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2one_account_account/many2one_account_account.js:0
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Quick search: %s"
-msgstr "Búsqueda rápida: %s"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rd
@@ -20206,7 +20200,7 @@ msgstr "Actualizar términos y condiciones"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "Actualizar la aplicación"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -22433,6 +22427,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factura de autofacturación (ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "Quick search: %s"
+#~ msgstr "Búsqueda rápida: %s"
 
 #~ msgid "%(name)s - Draft at (%(currency_amount)s)"
 #~ msgstr "%(name)s - Borrador en (%(currency_amount)s)"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"POT-Creation-Date: 2026-04-24 17:36+0000\n"
 "PO-Revision-Date: 2026-04-14 13:03+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
@@ -108,21 +108,22 @@ msgstr ""
 "                        <t t-else=\"\">Bonjour,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Votre commande <t t-out=\"object.tracking_number\">"
-"...</t> d'un montant de <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">xx,xx €</t> a été confirmée. "
-"<span t-if=\"object.preset_time or client.street\">Elle sera prête</span> "
-"<span t-if=\"object.preset_time\">à <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00</"
-"t></span> <span t-if=\"client.street\">at <t t-out=\"street\">rue</t>, <t t-"
-"out=\"state\">état</t>, <t t-out=\"client.zip or ''\">code postal</t>, <t t-"
-"out=\"city\">ville</t>, <t t-out=\"country\">pays</t></span></div>\n"
+"                    <div>Votre commande <t t-"
+"out=\"object.tracking_number\">...</t> d'un montant de <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">xx,xx €</t> a "
+"été confirmée. <span t-if=\"object.preset_time or client.street\">Elle sera "
+"prête</span> <span t-if=\"object.preset_time\">à <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00</t></span> <span t-if=\"client.street\">at <t t-"
+"out=\"street\">rue</t>, <t t-out=\"state\">état</t>, <t t-out=\"client.zip "
+"or ''\">code postal</t>, <t t-out=\"city\">ville</t>, <t t-"
+"out=\"country\">pays</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Merci,</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Vous trouverez votre reçu en pièce jointe</div>"
-"\n"
+"                        <div>Vous trouverez votre reçu en pièce jointe</"
+"div>\n"
 "                        <br/>\n"
 "                    </div>\n"
 "                    <t t-out=\"store_name\">Nom du magasin</t>\n"
@@ -175,18 +176,18 @@ msgstr ""
 "                        <t t-else=\"\">Bonjour,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Votre commande <t t-out=\"object.tracking_number\">"
-"...</t> d’un montant de <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">xx,xx €</t> a été confirmée. "
-"<span t-if=\"object.preset_time\">Elle sera prête à <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00</"
-"t></span></div>\n"
+"                    <div>Votre commande <t t-"
+"out=\"object.tracking_number\">...</t> d’un montant de <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">xx,xx €</t> a "
+"été confirmée. <span t-if=\"object.preset_time\">Elle sera prête à <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Merci,</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Vous trouverez votre reçu en pièce jointe</div>"
-"\n"
+"                        <div>Vous trouverez votre reçu en pièce jointe</"
+"div>\n"
 "                        <br/>\n"
 "                    </div>\n"
 "                    <t t-out=\"store_name\">Nom du magasin</t>\n"
@@ -356,12 +357,6 @@ msgstr "Choisir le mode de commande autonome"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Choose when the customer will pay"
 msgstr "Choisir le moment où le client paiera"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Choose your"
-msgstr "Choisissez votre"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -645,6 +640,12 @@ msgstr "Saisissez votre valeur personnalisée"
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Enter your tracker number"
 msgstr "Saisissez votre numéro de suivi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Extra:"
+msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1825,8 +1826,8 @@ msgstr "https://odoo.com"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "included"
-msgstr "inclus"
+msgid "included &"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1847,10 +1848,22 @@ msgstr "odoo"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "per extra unit"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "Choose your"
+#~ msgstr "Choisissez votre"
+
+#~ msgid "included"
+#~ msgstr "inclus"
 
 #~ msgid "Select your address"
 #~ msgstr "Sélectionnez votre adresse"

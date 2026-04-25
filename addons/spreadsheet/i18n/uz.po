@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -293,6 +293,12 @@ msgstr "%s yaroqli hafta emas (u 0 va 53 orasidagi son bo‘lishi kerak)"
 #, fuzzy
 msgid "%s matches in all sheets"
 msgstr "Barcha varaqlarda %s ta moslik"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "'${str}'"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1323,28 +1329,6 @@ msgstr ""
 #, fuzzy
 msgid "An unexpected error occurred during the image transfer"
 msgstr "Rasmni uzatishda kutilmagan xatolik yuz berdi."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          Additional information can be found in the browser console."
-msgstr ""
-"Kontentni joylashtirishda kutilmagan xato yuz berdi. Qo‘shimcha ma'lumotni "
-"brauzer konsolidan topishingiz mumkin."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"Kontentni joylashtirishda kutilmagan xato yuz berdi. Bunga jadval "
-"versiyalarining mos kelmasligi sabab bo‘lgan bo‘lishi mumkin."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4945,27 +4929,6 @@ msgstr "[[FUNCTION_NAME]] funksiyasi hech qanday natija topmadi."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"[[FUNCTION_NAME]] funksiyasi mezon oralig‘i va mezonning juft bo‘lishini "
-"kutadi."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"[[FUNCTION_NAME]] funksiyasi mezon oralig‘i bir xil o‘lchamga ega bo‘lishini "
-"kutmoqda"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
@@ -5671,14 +5634,10 @@ msgstr "[[FUNCTION_NAME]] hisoblashda '%s' ni '%s' ichida topib bo‘lmadi"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"          number of rows of the second matrix (%s)."
+"equal to the           number of rows of the second matrix (%s)."
 msgstr ""
-"[[FUNCTION_NAME]] da birinchi matritsaning ustunlar soni (%s) ikkinchi "
-"matritsaning qatorlar soniga (%s) teng bo‘lishi kerak"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7174,6 +7133,12 @@ msgstr "Yangi pivot"
 #, fuzzy
 msgid "Next coupon date after the settlement date."
 msgstr "Hisob-kitob sanasidan keyingi kupon sanasi."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -15491,17 +15456,11 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Ajratilgan natijalardan bo‘sh matn xabarlarini olib tashlash yoki "
-"tashlamaslik. Standart holat ketma-ket ajratuvchilarni bitta deb "
-"hisoblashdir (agar TRUE bo‘lsa). Agar FALSE bo‘lsa, ketma-ket ajratuvchilar "
-"orasiga bo‘sh katak qiymatlari qo‘shiladi."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -15761,6 +15720,12 @@ msgstr "Yillar"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
 #, fuzzy
 msgid "Yesterday"
@@ -15779,6 +15744,14 @@ msgstr "Mavjud filtr ichidagi katakchalarni birlashtirish mumkin emas."
 #, fuzzy
 msgid "You cannot create overlapping tables."
 msgstr "Bir-birini qoplaydigan jadvallar yaratib bo‘lmaydi."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"and image content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -16256,3 +16229,56 @@ msgstr "kecha"
 #, fuzzy
 msgid "zero"
 msgstr "nol"
+
+#, fuzzy
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          Additional information can be found in the browser console."
+#~ msgstr ""
+#~ "Kontentni joylashtirishda kutilmagan xato yuz berdi. Qo‘shimcha "
+#~ "ma'lumotni brauzer konsolidan topishingiz mumkin."
+
+#, fuzzy
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "Kontentni joylashtirishda kutilmagan xato yuz berdi. Bunga jadval "
+#~ "versiyalarining mos kelmasligi sabab bo‘lgan bo‘lishi mumkin."
+
+#, fuzzy
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] funksiyasi mezon oralig‘i va mezonning juft bo‘lishini "
+#~ "kutadi."
+
+#, fuzzy
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] funksiyasi mezon oralig‘i bir xil o‘lchamga ega "
+#~ "bo‘lishini kutmoqda"
+
+#, fuzzy
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "          number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] da birinchi matritsaning ustunlar soni (%s) ikkinchi "
+#~ "matritsaning qatorlar soniga (%s) teng bo‘lishi kerak"
+
+#, fuzzy
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Ajratilgan natijalardan bo‘sh matn xabarlarini olib tashlash yoki "
+#~ "tashlamaslik. Standart holat ketma-ket ajratuvchilarni bitta deb "
+#~ "hisoblashdir (agar TRUE bo‘lsa). Agar FALSE bo‘lsa, ketma-ket "
+#~ "ajratuvchilar orasiga bo‘sh katak qiymatlari qo‘shiladi."

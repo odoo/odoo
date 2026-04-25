@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"POT-Creation-Date: 2026-04-24 17:35+0000\n"
 "PO-Revision-Date: 2026-04-14 13:02+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
@@ -285,8 +285,8 @@ msgstr ""
 "del <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">data</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\">ora</t>.</span>"
-"\n"
+"time_format='short',                          lang_code=lg)\">ora</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Saluti,</div>\n"
@@ -2893,6 +2893,12 @@ msgstr "Pericoloso: troppi prodotti"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "Dashboard"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Database Connection Lost"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7968,6 +7974,12 @@ msgstr "Sessione relativa: %(link)s"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Reload"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
@@ -9336,6 +9348,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The company must have a fiscal country set."
 msgstr "È necessario configurare un Paese fiscale per l'azienda."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid ""
+"The connection to the local database was lost. Reloading the page will "
+"restore it and prevent any loss of unsaved orders."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
