@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:37+0000\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
 "PO-Revision-Date: 2025-10-18 14:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -14095,6 +14095,12 @@ msgid "Need Cancel Request"
 msgstr "Bekor qilish so‘rovi kerak"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Need to update"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 #, fuzzy
@@ -16818,13 +16824,6 @@ msgid "Quick encoding"
 msgstr "Tezkor kodlash"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-#, fuzzy
-msgid "Quick search: %s"
-msgstr "Tezkor qidiruv: %s"
-
-#. module: account
 #: model:account.account,name:account.1_expense_rd
 #, fuzzy
 msgid "RD Expenses"
@@ -17977,6 +17976,7 @@ msgstr "Ism yoki soliq ID'sini qidirish..."
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/m2o_cell_with_extra_m2o_fields/m2o_cell_with_extra_m2o_fields.js:0
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 #, fuzzy
 msgid "Search: %s"
@@ -18679,6 +18679,12 @@ msgstr ""
 #, fuzzy
 msgid "Show Inalterability Features"
 msgstr "O‘zgartirib bo‘lmaslik xususiyatlarini ko‘rsatish"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
+#: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
+msgid "Show Invoice Vendor Bill"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -22631,6 +22637,12 @@ msgid "Update Terms & Conditions"
 msgstr "Shartlar va qoidalarni yangilash"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Update app"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Update exchange rates automatically"
@@ -25080,6 +25092,10 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} o‘z-o‘zini hisoblash hisob-fakturasi (Havola "
 "{{ object.name or 'mavjud emas' }})"
+
+#, fuzzy
+#~ msgid "Quick search: %s"
+#~ msgstr "Tezkor qidiruv: %s"
 
 #, fuzzy
 #~ msgid "Undistributed Profits/Losses"

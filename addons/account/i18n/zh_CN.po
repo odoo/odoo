@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:37+0000\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
 "PO-Revision-Date: 2026-04-23 11:51+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -992,14 +992,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        尊敬的 <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
-"<br/><br/>\n"
+"        尊敬的 <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br/><br/>\n"
 "        感谢您的付款。\n"
-"        兹附上您的付款收据  <span style=\"font-weight:bold;\" t-out=\""
-"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> 金额\n"
-"        为 <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">$ 10.00</span> ，由 <t t-"
-"out=\"object.company_id.name or ''\">YourCompany</t>开具。\n"
+"        兹附上您的付款收据  <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"金额\n"
+"        为 <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> ，由 <t t-out=\"object.company_id.name or ''\">YourCompany</t>开具。\n"
 "        <br/><br/>\n"
 "        如有任何疑问，欢迎随时联系我们。\n"
 "        <br/><br/>\n"
@@ -12378,6 +12379,12 @@ msgid "Need Cancel Request"
 msgstr "需要取消请求"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Need to update"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 msgid "Needed Terms"
@@ -14680,12 +14687,6 @@ msgid "Quick encoding"
 msgstr "快速编码"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Quick search: %s"
-msgstr "快速搜索: %s"
-
-#. module: account
 #: model:account.account,name:account.1_expense_rd
 msgid "RD Expenses"
 msgstr "研发费用"
@@ -15662,6 +15663,7 @@ msgstr "搜索名称或税号..."
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/m2o_cell_with_extra_m2o_fields/m2o_cell_with_extra_m2o_fields.js:0
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 msgid "Search: %s"
 msgstr "搜索: %s"
@@ -16242,6 +16244,12 @@ msgstr "显示完整会计功能"
 #: model:res.groups,name:account.group_account_secured
 msgid "Show Inalterability Features"
 msgstr "显示不可更改性特征"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
+#: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
+msgid "Show Invoice Vendor Bill"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -19554,6 +19562,12 @@ msgid "Update Terms & Conditions"
 msgstr "更新条款与细则"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Update app"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Update exchange rates automatically"
 msgstr "自动更新汇率"
@@ -21561,6 +21575,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 自助开票发票（参考号 {{ object.name or 'n/"
 "a' }}）"
+
+#~ msgid "Quick search: %s"
+#~ msgstr "快速搜索: %s"
 
 #~ msgid "Undistributed Profits/Losses"
 #~ msgstr "未分配利润/损失"

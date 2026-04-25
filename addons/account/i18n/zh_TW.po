@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:37+0000\n"
-"PO-Revision-Date: 2026-04-23 11:53+0000\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
+"PO-Revision-Date: 2026-04-25 12:34+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-2/account/zh_Hant/>\n"
@@ -9522,8 +9522,8 @@ msgid ""
 "excluding this tax group before displaying it. If not set, the tax group "
 "will be displayed after the 'Untaxed amount' subtotal."
 msgstr ""
-"如果設定，此值將在文件上用作顯示前排除此稅組的小計的標籤. 如果未設定，稅組將"
-"顯示在'未稅金額'小計之後."
+"若設定此值，文件中未包括此稅組的小計，會使用此值作為標籤，在金額前方顯示。若"
+"未有設定，稅組會在「未連稅金額」小計之後顯示。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -12082,6 +12082,12 @@ msgid "Need Cancel Request"
 msgstr "需要取消請求"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Need to update"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 msgid "Needed Terms"
@@ -12096,7 +12102,7 @@ msgstr "需要條款不公平的"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
 msgid "Negative value of amount field if payment_type is outbound"
-msgstr "如果payment_type 為出站金額欄位的負值"
+msgstr "若 payment_type（付款類型）是對外，會顯示金額欄位數值的負值"
 
 #. module: account
 #. odoo-python
@@ -12999,12 +13005,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__outbound
 msgid "Outbound"
-msgstr "境外"
+msgstr "對外"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_line_ids
 msgid "Outbound Payment Methods"
-msgstr "境外付款方式"
+msgstr "對外付款方式"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -14382,12 +14388,6 @@ msgid "Quick encoding"
 msgstr "快速編碼"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Quick search: %s"
-msgstr "快速搜尋： %s"
-
-#. module: account
 #: model:account.account,name:account.1_expense_rd
 msgid "RD Expenses"
 msgstr "研發開支"
@@ -15364,6 +15364,7 @@ msgstr "搜尋名稱或稅務編號⋯"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/m2o_cell_with_extra_m2o_fields/m2o_cell_with_extra_m2o_fields.js:0
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 msgid "Search: %s"
 msgstr "搜尋 - %s"
@@ -15945,6 +15946,12 @@ msgstr "顯示所有會計功能"
 #: model:res.groups,name:account.group_account_secured
 msgid "Show Inalterability Features"
 msgstr "顯示不變性功能"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
+#: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
+msgid "Show Invoice Vendor Bill"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -19267,6 +19274,12 @@ msgid "Update Terms & Conditions"
 msgstr "更新條款和條件"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Update app"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Update exchange rates automatically"
 msgstr "自動更新幣別匯率"
@@ -21278,6 +21291,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 自助開立賬單發票 (參考編號：{{ object.name or "
 "'不適用' }})"
+
+#~ msgid "Quick search: %s"
+#~ msgstr "快速搜尋： %s"
 
 #~ msgid "Undistributed Profits/Losses"
 #~ msgstr "未分配利潤/虧損"
