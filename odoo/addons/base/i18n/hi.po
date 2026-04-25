@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-16 16:38+0000\n"
-"PO-Revision-Date: 2026-03-29 12:14+0000\n"
+"PO-Revision-Date: 2026-04-24 07:55+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/base/hi/>\n"
 "Language: hi\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -206,6 +206,83 @@ msgid ""
 "\n"
 "**Købskonto:**      4010 Restaurationsbesøg\n"
 msgstr ""
+"\n"
+"\n"
+"डेनमार्क के लिए लोकलाइज़ेशन मॉड्यूल\n"
+"===============================\n"
+"\n"
+"यह **डेनमार्क के लिए अकाउंटिंग चार्ट** को मैनेज करने वाला मॉड्यूल है. यह एक-व्यक्ति बिज़नेस "
+"के साथ-साथ I/S, IVS, ApS और A/S दोनों को कवर करता है\n"
+"\n"
+"**मॉड्यूल सेट करता है:**\n"
+"\n"
+"- **डेनिश खाता प्लान**\n"
+"\n"
+"- डेनिश वैट\n"
+"        - 25 % mओम्स\n"
+"        - रेस्टोरेंट वैट 6.25 %        - उल्टा भुगतान दायित्व\n"
+"\n"
+"- लेखा समूह\n"
+"        - ईयू (व्यवसाय)\n"
+"        - ईयू (निजी)\n"
+"        - तीसरे देश\n"
+"\n"
+"- वित्तीय रिपोर्ट\n"
+"        - आय विवरण\n"
+"        - बैलेंस शीट\n"
+"        - वैट निपटान\n"
+"            - निपटान\n"
+"            - कॉलम A, B और C\n"
+"\n"
+"- **एंग्लो-सैक्सन अकाउंटिंग विधि**.\n"
+"\n"
+"\n"
+"\n"
+"प्रॉडक्ट सेटअप:\n"
+"=================\n"
+"\n"
+"**वस्तु**\n"
+"\n"
+"**विक्रय टैक्स:**      विक्रय टैक्स 25 %\n"
+"\n"
+"**विक्रय खाता:**     1.010 वस्तुओं का विक्रय (टैक्स सहित)\n"
+"\n"
+"**खरीद टैक्स:**       खरीद टैक्स 25 %\n"
+"\n"
+"**खरीद खाता:**      2.010 प्रत्यक्ष वस्तु लागत (टैक्स सहित)\n"
+"\n"
+".\n"
+"\n"
+"**सेवा**\n"
+"\n"
+"**विक्रय टैक्स:**      विक्रय टैक्स 25 %, सेवाएं\n"
+"\n"
+"**विक्रय खाता:**     1.011 सेवाओं का विक्रय सहित टैक्स\n"
+"\n"
+"**खरीद टैक्स:**       खरीद टैक्स 25 %, सेवाएं\n"
+"\n"
+"**खरीद खाता:**      2.011 प्रत्यक्ष लागत सेवाएँ सहित टैक्स.\n"
+"\n"
+"\n"
+"\n"
+"**उल्टी भुगतान देयता वाली वस्तुएँ**\n"
+"\n"
+"**बिक्री टैक्स:**      उल्टी भुगतान देयता के साथ बिक्री\n"
+"\n"
+"**बिक्री खाता:**     1.012 माल की बिक्री, वैट को छोड़कर\n"
+"\n"
+"**खरीद वैट:**       उल्टी भुगतान देयता के साथ खरीद\n"
+"\n"
+"**खरीद खाता:**      2.012 प्रत्यक्ष माल लागत, वैट को छोड़कर\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**भोजन**\n"
+"\n"
+"**खरीद पर वैट:**      भोजन पर वैट 6.25 %, खरीद पर वैट\n"
+"\n"
+"**खरीद खाता:**      4010 भोजन व्यय\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -2015,6 +2092,17 @@ msgid ""
 "while on the payment screen\n"
 "* Supported cards: Visa, MasterCard, Rupay, UPI\n"
 msgstr ""
+"\n"
+"Paytm पीओएस पेमेंट की अनुमति दें\n"
+"==============================\n"
+"\n"
+"यह मॉड्यूल ग्राहकों को डेबिट/क्रेडिट कार्ड और UPI से अपने ऑर्डर का पेमेंट करने की अनुमति देता "
+"है. लेनदेन Paytm पीओएस द्वारा प्रोसेस किए जाते हैं. एक Paytm व्यापारी खाते की ज़रूरत है. "
+"यह निम्नलिखित की अनुमति देता है:\n"
+"\n"
+"* पेमेंट स्क्रीन पर रहते हुए केवल एक क्रेडिट/डेबिट कार्ड या क्यूआर कोड को स्वाइप/स्कैन करके तेज़ "
+"भुगतान\n"
+"* काम करने वाले कार्ड: Visa, MasterCard, Rupay, UPI\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_pine_labs
@@ -2050,6 +2138,17 @@ msgid ""
 "while on the payment screen\n"
 "* Supported cards: Visa, MasterCard, Rupay, UPI\n"
 msgstr ""
+"\n"
+"Razorpay पीओएस पेमेंट की अनुमति दें\n"
+"==============================\n"
+"\n"
+"यह मॉड्यूल ग्राहकों को डेबिट/क्रेडिट कार्ड और UPI से अपने ऑर्डर का पेमेंट करने की अनुमति देता "
+"है. लेनदेन Razorpay पीओएस द्वारा प्रोसेस किए जाते हैं. एक Razorpay व्यापारी खाते की "
+"ज़रूरत है. यह निम्नलिखित की अनुमति देता है:\n"
+"\n"
+"* पेमेंट स्क्रीन पर रहते हुए केवल एक क्रेडिट/डेबिट कार्ड या क्यूआर कोड को स्वाइप/स्कैन करके तेज़ "
+"भुगतान\n"
+"* काम करने वाले कार्ड: Visa, MasterCard, Rupay, UPI\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment
@@ -2673,6 +2772,48 @@ msgid ""
 "-------------------------------------------------\n"
 "Create electronic sales invoices with Avatax.\n"
 msgstr ""
+"\n"
+"ब्राज़ीलियाई लोकलाइज़ेशन के लिए बेस मॉड्यूल\n"
+"==========================================\n"
+"\n"
+"इस मॉड्यूल में शामिल हैं:\n"
+"\n"
+"- सामान्य ब्राज़ीलियाई अकाउंट चार्ट\n"
+"- ब्राज़ीलियाई टैक्स जैसे:\n"
+"\n"
+"  - IPI\n"
+"  - ICMS\n"
+"  - PIS\n"
+"  - COFINS\n"
+"  - ISS\n"
+"  - IR\n"
+"  - CSLL\n"
+"\n"
+"- दस्तावेज़ प्रकार जैसे NFC-e, NFS-e, वगैरह.\n"
+"- पहचान दस्तावेज़ जैसे CNPJ और CPF\n"
+"\n"
+"ब्राज़ील के नियमों के अनुसार काम करने के लिए इस मुख्य मॉड्यूल के साथ कुछ अन्य मॉड्यूल भी जोड़े "
+"गए हैं.\n"
+"\n"
+"ब्राज़ील - अकाउंटिंग रिपोर्ट (l10n_br_reports)\n"
+"---------------------------------------------\n"
+"एक आसान टैक्स रिपोर्ट जोड़ता है जो किसी दिए गए समय अवधि में प्रति टैक्स समूह टैक्स राशि "
+"की जांच करने में मदद करता है. साथ ही ब्राज़ीलियाई बाज़ार के लिए अनुकूलित P&L और BS भी "
+"जोड़ता है.\n"
+"\n"
+"Avatax ब्राज़ील (l10n_br_avatax)\n"
+"------------------------------\n"
+"Avatax के माध्यम से ब्राज़ीलियाई टैक्स गणना जोड़ता है और Avatax का\n"
+"सही ढंग से उपयोग करने और सही टैक्स प्राप्त करने के लिए ज़रूरी\n"
+"वित्तीय जानकारी भेजने हेतु Odoo को कॉन्फ़िगर करने के लिए सभी ज़रूरी फ़ील्ड्स को जोड़ता है.\n"
+"\n"
+"ब्राज़ील में SOs के लिए Avatax (l10n_br_avatax_sale)\n"
+"----------------------------------------------\n"
+"सेल्स ऑर्डर मॉड्यूल के विस्तार के साथ l10n_br_avatax मॉड्यूल के समान।\n"
+"\n"
+"Avatax के माध्यम से इलेक्ट्रॉनिक इनवॉइस (l10n_br_edi)\n"
+"-------------------------------------------------\n"
+"Avatax के साथ इलेक्ट्रॉनिक सेल्स इनवॉइस बनाएं.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kh_reports
@@ -2711,6 +2852,15 @@ msgid ""
 "When you reconcile, simply select the corresponding batch payment to "
 "reconcile all the payments in the batch.\n"
 msgstr ""
+"\n"
+"बैच पेमेंट\n"
+"=======================================\n"
+"बैच पेमेंट, पेमेंट को ग्रुप में रखने की अनुमति देते हैं.\n"
+"\n"
+"इनका उपयोग मुख्य रूप से बैंक में एक साथ जमा करने के लिए कई चेकों को ग्रुप करने हेतु किया जाता "
+"है.\n"
+"जमा की गई कुल राशि आपके बैंक स्टेटमेंट में एक ही ट्रांजेक्शन के रूप में दिखाई देगी.\n"
+"मिलान करते समय, बस संबंधित बैच पेमेंट को चुनें, ताकि सभी पेमेंट का मिलान एक साथ हो सके.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -3682,6 +3832,22 @@ msgid ""
 "delivery, the system will automatically calculate the linked DDTs for every\n"
 "invoice line to export in the FatturaPA XML.\n"
 msgstr ""
+"\n"
+"डॉकीमेंटो डी ट्रांसपोर्तो (डीडीटी)\n"
+"\n"
+"जब भी A और B के बीच सामान का हस्तांतरण होता है, तो डीडीटी एक वैधता के रूप में काम "
+"करता है, उदाहरण के लिए जब पुलिस आपको रोकती है।\n"
+"\n"
+"जब आप किसी इतालवी कंपनी में एक आउटगोइंग पिकिंग प्रिंट करना चाहते हैं, तो यह इसके बजाय "
+"DDT प्रिंट कर देगा। यह डिलीवरी स्लिप की तरह है, लेकिन इसमें प्रॉडक्ट का मूल्य, परिवहन का "
+"कारण, वाहक, ... भी शामिल होता है, जो इसे एक DDT बनाता है।\n"
+"\n"
+"हम DDT के लिए एक अलग सीक्वेंस का भी उपयोग करते हैं, क्योंकि संख्या में कोई अंतराल नहीं होना "
+"चाहिए और इसका उपयोग केवल तभी किया जाना चाहिए जब सामान भेजा जाता है.\n"
+"\n"
+"जब इनवॉइस उनके सेल्स ऑर्डर से और सेल्स ऑर्डर डिलीवरी से संबंधित होते हैं, तो सिस्टम "
+"FatturaPA XML में एक्सपोर्ट करने के लिए प्रत्येक इनवॉइस लाइन के लिए अपने-आप संबंधित DDT "
+"की गणना करेगा.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_hr_payroll
@@ -3725,6 +3891,27 @@ msgid ""
 "the replaced invoice and the new one and you can reset an invoice\n"
 "you have not already sent to the government to reuse its number.\n"
 msgstr ""
+"\n"
+"E-Faktur मेन्यू (इंडोनेशिया)\n"
+"फ़ॉर्मेट: 010.000-16.00000001\n"
+"* पहले 2 (दो) अंक लेनदेन कोड हैं\n"
+"* अगला 1 (एक) अंक स्थिति कोड है\n"
+"* अगले 3 (तीन) अंक शाखा कोड हैं\n"
+"* पहले 2 (दो) अंक जारी करने का वर्ष हैं\n"
+"* अगले 8 (आठ) अंक क्रमांक (Nomor Urut) हैं\n"
+"\n"
+"ग्राहक इनवॉइस को E-Faktur के रूप में एक्सपोर्ट करने में चालू करने के लिए, आपको "
+"Accounting > Customers > e-Faktur में सरकार द्वारा आपको आवंटित संख्याओं की रेंज दर्ज "
+"करनी होगी.\n"
+"\n"
+"जब आप किसी इनवॉइस को मान्य करते हैं, जहां पार्टनर के पास ID PKP फ़ील्ड चेक किया हुआ "
+"होता है, तो उस इनवॉइस को एक टैक्स संख्या आवंटित की जाएगी।\n"
+"इसके बाद, आप इनवॉइस सूची में अभी भी निर्यात किए जाने वाले चालानों को फ़िल्टर कर सकते हैं "
+"और csv डाउनलोड करने के लिए एक्शन > डाउनलोड E-Faktur पर क्लिक कर सकते हैं और इसे "
+"सरकार की साइट पर अपलोड कर सकते हैं.\n"
+"\n"
+"आप पुराने और नए इनवॉइस की जानकारी देकर पहले से भेजे गए इनवॉइस को दूसरे से बदल सकते हैं, "
+"और सरकार को नहीं भेजे गए इनवॉइस को रीसेट करके उसका नंबर दोबारा इस्तेमाल कर सकते हैं.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_factoring
@@ -5224,6 +5411,12 @@ msgid ""
 "original invoice.  \n"
 "The wizard used is similar as the one for the credit note.\n"
 msgstr ""
+"\n"
+"कई देशों में, डेबिट नोट का उपयोग किसी मौजूदा इनवॉइस की राशि में वृद्धि के लिए या  \n"
+"कुछ खास मामलों में क्रेडिट नोट को रद्द करने के लिए किया जाता है. \n"
+"यह एक नियमित इनवॉइस की तरह है, लेकिन हमें मूल इनवॉइस के साथ लिंक का हिसाब रखना "
+"होगा.  \n"
+"उपयोग किया गया विज़ॉर्ड क्रेडिट नोट वाले की तरह ही है.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -5384,6 +5577,21 @@ msgid ""
 "    - Payroll Advice and Report\n"
 "    - Yearly Salary by Employee Report\n"
 msgstr ""
+"\n"
+"भारतीय पेरोल वेतन नियम.\n"
+"============================\n"
+"\n"
+"    -भारत के लोकलाइज़ेशन के लिए hr_payroll का कॉन्फ़िगरेशन\n"
+"    -भारत के पेस्लिप के लिए सभी मुख्य योगदान नियम.\n"
+"    * नई पेस्लिप रिपोर्ट\n"
+"    * कर्मचारी अनुबंध\n"
+"    * बेसिक / ग्रॉस / नेट सैलरी कॉन्फ़िगर करने की अनुमति\n"
+"    * कर्मचारी पेस्लिप\n"
+"    * भत्ता / कटौती\n"
+"    * लीव्स मैनेजमेंट के साथ इंटिग्रेट किया गया\n"
+"    * मेडिकल भत्ता, यात्रा भत्ता, चाइल्ड भत्ता, ...\n"
+"    - पेरोल सलाह और रिपोर्ट\n"
+"    - कर्मचारी के हिसाब से वार्षिक वेतन रिपोर्ट\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_hr_payroll
@@ -5594,6 +5802,14 @@ msgid ""
 "level including customer and supplier transactions.\n"
 "Necessary master data is also included.\n"
 msgstr ""
+"\n"
+"लिथुआनियाई SAF-T, XML फ़ॉर्मैट का उपयोग करके अलग-अलग तरह के अकाउंटिंग ट्रांज़ैक्शन डेटा को "
+"एक्सपोर्ट करने के लिए एक स्टैंडर्ड फ़ाइल फ़ॉर्मैट है.\n"
+"उपयोग किया जाने वाला XSD वर्शन v2.01 (2019 से) है. यह लिथुआनियाई अधिकारियों द्वारा "
+"उपयोग किया जाने वाला सबसे नया वर्शन है.\n"
+"SAF-T फाइनेंशियल का पहला वर्शन ग्राहक और सप्लायर ट्रांज़ैक्शन के साथ सामान्य लेजर स्तर तक "
+"सीमित है.\n"
+"ज़रूरी मास्टर डेटा भी शामिल है.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_livechat
@@ -7490,6 +7706,17 @@ msgid ""
 "\n"
 "Note: Only the admin user is allowed to make those customizations.\n"
 msgstr ""
+"\n"
+"स्टूडियो - Odoo को कस्टमाइज़ करें\n"
+"=======================\n"
+"\n"
+"यह ऐडऑन उपयोगकर्ता को यूज़र इंटरफ़ेस के ज़्यादातर चीज़ों को एक सरल और ग्राफ़िकल तरीके से "
+"कस्टमाइज़ करने की अनुमति देता है. इसमें दो मुख्य विशेषताएं हैं:\n"
+"\n"
+"* एक नया ऐप्लिकेशन बनाएं (मॉड्यूल, टॉप लेवल मेन्यू आइटम, और डिफ़ॉल्ट ऐक्शन जोड़ें)\n"
+"* एक मौजूदा ऐप्लिकेशन को कस्टमाइज़ करें (मेन्यू, ऐक्शन, व्यू, अनुवाद, ... संपादित करें)\n"
+"\n"
+"नोट: सिर्फ़ एडमिन उपयोगकर्ता को ही ये कस्टमाइज़ेशन करने की अनुमति है.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_studio
@@ -7563,6 +7790,25 @@ msgid ""
 "sending by mail.\n"
 "\n"
 msgstr ""
+"\n"
+"स्विस लोकलाइज़ेशन\n"
+"==================\n"
+"यह मॉड्यूल स्विट्ज़रलैंड (स्विस PME/KMU 2015) के लिए एक चार्ट ऑफ़ अकाउंट, टैक्स को "
+"परिभाषित करता है और जब आप एक इनवॉइस प्रिंट करते हैं या इसे मेल द्वारा भेजते हैं तो एक "
+"क्यूआर-बिल के जनरेट करने की सुविधा देता है\n"
+"क्यूआर बिल इनवॉइस से अटैच हो जाता है और इसके भुगतान को आसान बनाता है.\n"
+"\n"
+"एक क्यूआर-बिल तब जनरेट होगा अगर:\n"
+"    - आपके इनवॉइस पर सेट किए गए भागीदार का स्विट्जरलैंड में एक पूरा पता (सड़क, शहर, "
+"डाक कोड और देश) है\n"
+"    - इनवॉइस पर स्विस क्यूआर-कोड जनरेट करने का विकल्प चुना गया है (डिफ़ॉल्ट रूप से किया "
+"जाता है)\n"
+"    - आपके बैंक जर्नल पर एक सही खाता नंबर/QR IBAN सेट किया गया है\n"
+"    - (QR-IBAN का उपयोग करते समय): इनवॉइस का भुगतान संदर्भ एक क्यूआर-संदर्भ है\n"
+"\n"
+"अगर आपकी सेटिंग्स सही हैं, तो सिस्टम अपने आप क्यूआर कोड वाला बिल बना देगा. जब भी आप "
+"बिल प्रिंट करेंगे या ईमेल करेंगे, तो यह क्यूआर-बिल मुख्य इनवॉइस के साथ लगकर आएगा.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll
@@ -8746,6 +8992,14 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website editing and customization capabilities."
 msgstr ""
+"\n"
+"यह मॉड्यूल एक पूरी तरह से इंटिग्रेट किए गए कस्टमर पोर्टल के लिए ज़रूरी बेस कोड जोड़ता है.\n"
+"इसमें बेस कंट्रोलर क्लास और बेस टेम्प्लेट्स शामिल हैं. बिज़नेस ऐडऑन\n"
+"ग्राहक पोर्टल का विस्तार करने के लिए, अपने खास टेम्प्लेट और कंट्रोलर जोड़ेंगे.\n"
+"\n"
+"इस मॉड्यूल में odoo v10 वेबसाइट_पोर्टल से अधिकांश कोड शामिल है. इस मॉड्यूल का उद्देश्य \n"
+"वेबसाइट में बदलाव और अपनी ज़रूरत के हिसाब से बदलने की क्षमताओं पर निर्भरता के बिना \n"
+"एक ग्राहक पोर्टल दिखाने की अनुमति देना है।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_qr_code_sepa
@@ -9041,6 +9295,19 @@ msgid ""
 "- Check on middle: Peachtree standard\n"
 "- Check on bottom: ADP standard\n"
 msgstr ""
+"\n"
+"यह मॉड्यूल आपके भुगतानों को पहले से प्रिंट किए गए चेकों पर प्रिंट करने की अनुमति देता है.\n"
+"आप कंपनी सेटिंग में आउटपुट (लेआउट, स्टब्स, पेपर फ़ॉर्मैट वगैरह) को कॉन्फ़िगर कर सकते हैं और "
+"जर्नल सेटिंग में चेक नंबरिंग (यदि आप बिना नंबर वाले पहले से प्रिंट किए गए चेक का उपयोग करते "
+"हैं) का मैनेजमेंट कर सकते हैं।\n"
+"कनाडाई भुगतान संघ (https://www.payments.ca/sites/default/files/"
+"standard_006_complete_0.pdf) के अनुसार\n"
+"\n"
+"इसके साथ काम करने वाले फ़ॉर्मैट\n"
+"-----------------\n"
+"- ऊपर चेक: Quicken / QuickBooks स्टैंडर्ड\n"
+"- बीच में चेक: Peachtree स्टैंडर्ड\n"
+"- नीचे चेक: ADP स्टैंडर्ड\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -12642,7 +12909,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Languages"
-msgstr ""
+msgstr "भाषाएं जोड़ें"
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_helpdesk
@@ -14876,7 +15143,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 msgid "Architecture"
-msgstr ""
+msgstr "आर्किटेक्चर"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_diff
@@ -14999,7 +15266,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_art_craft
 msgid "Arts & Crafts Store"
-msgstr ""
+msgstr "आर्ट और क्राफ़्ट स्टोर"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -15634,7 +15901,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_certification_organism
 msgid "Audit & Certification"
-msgstr ""
+msgstr "ऑडिट और सर्टिफ़िकेशन"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.ISK
@@ -19787,7 +20054,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Date format"
-msgstr ""
+msgstr "तारीख का फ़ॉर्मैट"
 
 #. module: base
 #. odoo-python
@@ -28828,7 +29095,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_micro_brewery
 msgid "Microbrewery"
-msgstr ""
+msgstr "माइक्रोब्रुअरी"
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -35127,7 +35394,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__remaining
 msgid "Remaining"
-msgstr ""
+msgstr "बचा हुआ"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_remote_work
@@ -36315,7 +36582,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__usage__ir_cron
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 msgid "Scheduled Action"
-msgstr ""
+msgstr "शेड्यूल किया गया ऐक्शन"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -36890,7 +37157,7 @@ msgstr "सर्विस"
 #: model:ir.model.fields,field_description:base.field_ir_profile__session
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_search
 msgid "Session"
-msgstr ""
+msgstr "सेशन"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__session_identifier
@@ -37350,7 +37617,7 @@ msgstr "सॉफ़्टवेयर रीसेलर"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_solar_installation
 msgid "Solar Energy Systems"
-msgstr ""
+msgstr "सोलर एनर्जी सिस्टम"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.PEN
@@ -43761,7 +44028,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "second"
-msgstr ""
+msgstr "दूसरा"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__selection

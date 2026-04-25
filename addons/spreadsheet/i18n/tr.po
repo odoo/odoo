@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-02-07 18:01+0000\n"
+"POT-Creation-Date: 2026-04-24 17:39+0000\n"
+"PO-Revision-Date: 2026-04-25 18:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
 "spreadsheet/tr/>\n"
@@ -42,7 +42,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -278,35 +278,21 @@ msgstr "üm sayfalarda %s eşleşmesi"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(0) Exact match. \n"
-"        (-1) Return next smaller item if no match. \n"
-"        (1) Return next greater item if no match. \n"
-"        (2) Wildcard match."
+"(0) Exact match.         (-1) Return next smaller item if no match.         "
+"(1) Return next greater item if no match.         (2) Wildcard match."
 msgstr ""
-"(0) Tam eşleşme. \n"
-"        (-1) Eşleşme yoksa bir sonraki küçük öğeyi döndür. \n"
-"        (1) Eşleşme yoksa bir sonraki büyük öğeyi döndür. \n"
-"        (2) Joker karakter eşleşmesi."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(1) Search starting at first item. \n"
-"      (-1) Search starting at last item. \n"
-"      (2) Perform a binary search that relies on lookup_array being sorted "
-"in ascending order. If not sorted, invalid results will be returned. \n"
-"      (-2) Perform a binary search that relies on lookup_array being sorted "
-"in descending order. If not sorted, invalid results will be returned.\n"
-"      "
+"(1) Search starting at first item.       (-1) Search starting at last "
+"item.       (2) Perform a binary search that relies on lookup_array being "
+"sorted in ascending order. If not sorted, invalid results will be "
+"returned.       (-2) Perform a binary search that relies on lookup_array "
+"being sorted in descending order. If not sorted, invalid results will be "
+"returned.      "
 msgstr ""
-"(1) İlk öğeden başlayarak ara. \n"
-"      (-1) Son öğeden başlayarak ara. \n"
-"      (2) arama_dizisi’nin artan düzende sıralı olmasına dayanan ikili arama "
-"yap. Sıralı değilse, geçersiz sonuçlar döndürülür. \n"
-"      (-2) arama_dizisi’nin azalan düzende sıralı olmasına dayanan ikili "
-"arama yap. Sıralı değilse, geçersiz sonuçlar döndürülür.\n"
-"      "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1060,17 +1046,6 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred during the image transfer"
 msgstr "Görüntü aktarımı sırasında beklenmeyen bir hata oluştu"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"İçeriği yapıştırırken beklenmeyen bir hata oluştu.\n"
-"          Bu muhtemelen elektronik çizelge sürüm uyuşmazlığından "
-"kaynaklanıyor."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3692,24 +3667,6 @@ msgstr "Fonksiyon [[FONKSİYON_ADI]] herhangi bir sonuç bulamadı."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"[[FUNCTION_NAME]] işlevi, ölçüt_aralığı ve ölçütün çiftler halinde olmasını "
-"bekliyor."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"[[FUNCTION_NAME]] işlevi ölçüt_aralığının aynı boyuta sahip olmasını bekliyor"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 "Fonksiyon [[FUNCTION_NAME]], %s için sayı değerleri bekliyor, ancak boolean "
@@ -4149,12 +4106,8 @@ msgstr "[[FUNCTION_NAME]] değerlendirmesinde, '%s' içinde '%s' bulunamıyor."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"        number of rows of the second matrix (%s)."
+"equal to the         number of rows of the second matrix (%s)."
 msgstr ""
-"[[FONKSİYON_ADI]] içinde ilk matrisin (%s) sütun sayısı, ikinci matrisin "
-"(%s) satır sayısına \n"
-"        eşit olmalıdır."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5319,6 +5272,12 @@ msgstr "Yeni pivot"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Next coupon date after the settlement date."
 msgstr "İtfa tarihinden sonraki kupon tarihi."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr "Hayır"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11434,14 +11393,9 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Bölme sonuçlarından boş metinlerin kaldırılıp kaldırılmayacağı. Varsayılan "
-"davranış, \n"
-"        ardışık ayırıcıların tek bir ayırıcı olarak kabul edilmesidir (DOĞRU "
-"ise). YANLIŞ ise, ardışık ayırıcıların arasına boş hücre değerleri eklenir."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11457,12 +11411,8 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether the array should be scanned by column. True scans the array by "
-"column and false (default) \n"
-"      scans the array by row."
+"column and false (default)       scans the array by row."
 msgstr ""
-"Dizinin sütunlara göre taranıp taranmayacağı. Doğru, sütunlara göre tararken "
-"yanlış (varsayılan) \n"
-"      satırlara göre tarar."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11623,6 +11573,12 @@ msgstr "Yılbaşından bugüne"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr "Evet"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You can't merge cells inside of an existing filter."
 msgstr "Mevcut bir filtrenin içindeki hücreler birleştirilemez."
@@ -11632,6 +11588,14 @@ msgstr "Mevcut bir filtrenin içindeki hücreler birleştirilemez."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "Çakışan tablolar oluşturamazsınız."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11933,6 +11897,88 @@ msgstr "dün"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "sıfır"
+
+#~ msgid ""
+#~ "(0) Exact match. \n"
+#~ "        (-1) Return next smaller item if no match. \n"
+#~ "        (1) Return next greater item if no match. \n"
+#~ "        (2) Wildcard match."
+#~ msgstr ""
+#~ "(0) Tam eşleşme. \n"
+#~ "        (-1) Eşleşme yoksa bir sonraki küçük öğeyi döndür. \n"
+#~ "        (1) Eşleşme yoksa bir sonraki büyük öğeyi döndür. \n"
+#~ "        (2) Joker karakter eşleşmesi."
+
+#~ msgid ""
+#~ "(1) Search starting at first item. \n"
+#~ "      (-1) Search starting at last item. \n"
+#~ "      (2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in ascending order. If not sorted, invalid results will be "
+#~ "returned. \n"
+#~ "      (-2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in descending order. If not sorted, invalid results will be "
+#~ "returned.\n"
+#~ "      "
+#~ msgstr ""
+#~ "(1) İlk öğeden başlayarak ara. \n"
+#~ "      (-1) Son öğeden başlayarak ara. \n"
+#~ "      (2) arama_dizisi’nin artan düzende sıralı olmasına dayanan ikili "
+#~ "arama yap. Sıralı değilse, geçersiz sonuçlar döndürülür. \n"
+#~ "      (-2) arama_dizisi’nin azalan düzende sıralı olmasına dayanan ikili "
+#~ "arama yap. Sıralı değilse, geçersiz sonuçlar döndürülür.\n"
+#~ "      "
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "İçeriği yapıştırırken beklenmeyen bir hata oluştu.\n"
+#~ "          Bu muhtemelen elektronik çizelge sürüm uyuşmazlığından "
+#~ "kaynaklanıyor."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] işlevi, ölçüt_aralığı ve ölçütün çiftler halinde "
+#~ "olmasını bekliyor."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] işlevi ölçüt_aralığının aynı boyuta sahip olmasını "
+#~ "bekliyor"
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "        number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "[[FONKSİYON_ADI]] içinde ilk matrisin (%s) sütun sayısı, ikinci matrisin "
+#~ "(%s) satır sayısına \n"
+#~ "        eşit olmalıdır."
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Bölme sonuçlarından boş metinlerin kaldırılıp kaldırılmayacağı. "
+#~ "Varsayılan davranış, \n"
+#~ "        ardışık ayırıcıların tek bir ayırıcı olarak kabul edilmesidir "
+#~ "(DOĞRU ise). YANLIŞ ise, ardışık ayırıcıların arasına boş hücre değerleri "
+#~ "eklenir."
+
+#~ msgid ""
+#~ "Whether the array should be scanned by column. True scans the array by "
+#~ "column and false (default) \n"
+#~ "      scans the array by row."
+#~ msgstr ""
+#~ "Dizinin sütunlara göre taranıp taranmayacağı. Doğru, sütunlara göre "
+#~ "tararken yanlış (varsayılan) \n"
+#~ "      satırlara göre tarar."
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."

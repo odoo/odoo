@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-14 08:29+0000\n"
+"POT-Creation-Date: 2026-04-24 17:39+0000\n"
+"PO-Revision-Date: 2026-04-25 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/"
 "spreadsheet/hr/>\n"
@@ -39,7 +39,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -273,23 +273,20 @@ msgstr "%s podudaranja u svim listovima"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(0) Exact match. \n"
-"        (-1) Return next smaller item if no match. \n"
-"        (1) Return next greater item if no match. \n"
-"        (2) Wildcard match."
+"(0) Exact match.         (-1) Return next smaller item if no match.         "
+"(1) Return next greater item if no match.         (2) Wildcard match."
 msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(1) Search starting at first item. \n"
-"      (-1) Search starting at last item. \n"
-"      (2) Perform a binary search that relies on lookup_array being sorted "
-"in ascending order. If not sorted, invalid results will be returned. \n"
-"      (-2) Perform a binary search that relies on lookup_array being sorted "
-"in descending order. If not sorted, invalid results will be returned.\n"
-"      "
+"(1) Search starting at first item.       (-1) Search starting at last "
+"item.       (2) Perform a binary search that relies on lookup_array being "
+"sorted in ascending order. If not sorted, invalid results will be "
+"returned.       (-2) Perform a binary search that relies on lookup_array "
+"being sorted in descending order. If not sorted, invalid results will be "
+"returned.      "
 msgstr ""
 
 #. module: spreadsheet
@@ -903,7 +900,8 @@ msgstr "Iznos primljen po dospijeću za vrijednosni papir."
 msgid ""
 "An array or range containing the income or payments associated with the "
 "investment."
-msgstr "Polje ili raspon koji sadrži prihode ili plaćanja povezana s ulaganjem."
+msgstr ""
+"Polje ili raspon koji sadrži prihode ili plaćanja povezana s ulaganjem."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1025,23 +1023,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "An range with dates corresponding to the cash flows in cashflow_amounts."
-msgstr "Raspon s datumima koji odgovaraju novčanim tokovima u cashflow_amounts."
+msgstr ""
+"Raspon s datumima koji odgovaraju novčanim tokovima u cashflow_amounts."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred during the image transfer"
 msgstr "Došlo je do neočekivane greške tijekom prijenosa slike"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"Došlo je do neočekivane greške prilikom lijepljenja sadržaja.\n"
-"          Ovo je vjerojatno zbog nepodudaranja verzije proračunske tablice."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3638,23 +3627,6 @@ msgstr "Funkcija [[FUNCTION_NAME]] nije pronašla nikakav rezultat."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"Funkcija [[FUNCTION_NAME]] očekuje da criteria_range i kriterij budu u "
-"parovima."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr "Funkcija [[FUNCTION_NAME]] očekuje da criteria_range ima istu dimenziju"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 "Funkcija [[FUNCTION_NAME]] očekuje brojčane vrijednosti za %s, ali je dobila "
@@ -4096,8 +4068,7 @@ msgstr "U evaluaciji [[FUNCTION_NAME]], nije moguće pronaći '%s' unutar '%s'."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"        number of rows of the second matrix (%s)."
+"equal to the         number of rows of the second matrix (%s)."
 msgstr ""
 
 #. module: spreadsheet
@@ -5254,6 +5225,12 @@ msgstr "Novi pivot"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Next coupon date after the settlement date."
 msgstr "Datum sljedećeg kupona nakon datuma namire."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr "Ne"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7058,8 +7035,8 @@ msgstr "Razdoblje amortizacije, u smislu broja razdoblja."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The amount invested (irrespective of face value of each security)."
 msgstr ""
-"Uloženi iznos (bez obzira na nominalnu vrijednost svakog vrijednosnog papira)"
-"."
+"Uloženi iznos (bez obzira na nominalnu vrijednost svakog vrijednosnog "
+"papira)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11341,14 +11318,9 @@ msgstr "Treba li dijeliti tekst oko svakog znaka sadržanog u razdjelniku."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Treba li ukloniti prazne tekstualne poruke iz rezultata dijeljenja. Zadano "
-"ponašanje je tretirati \n"
-"        uzastopne razdjelnike kao jedan (ako je TRUE). Ako je FALSE, prazne "
-"vrijednosti ćelija dodaju se između uzastopnih razdjelnika."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11362,8 +11334,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether the array should be scanned by column. True scans the array by "
-"column and false (default) \n"
-"      scans the array by row."
+"column and false (default)       scans the array by row."
 msgstr ""
 
 #. module: spreadsheet
@@ -11526,6 +11497,12 @@ msgstr "Od početka godine"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr "Da"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You can't merge cells inside of an existing filter."
 msgstr "Ne možete spajati ćelije unutar postojećeg filtra."
@@ -11535,6 +11512,14 @@ msgstr "Ne možete spajati ćelije unutar postojećeg filtra."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "Ne možete stvarati preklapajuće tablice."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11830,3 +11815,35 @@ msgstr "jučer"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "nula"
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "Došlo je do neočekivane greške prilikom lijepljenja sadržaja.\n"
+#~ "          Ovo je vjerojatno zbog nepodudaranja verzije proračunske "
+#~ "tablice."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "Funkcija [[FUNCTION_NAME]] očekuje da criteria_range i kriterij budu u "
+#~ "parovima."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "Funkcija [[FUNCTION_NAME]] očekuje da criteria_range ima istu dimenziju"
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Treba li ukloniti prazne tekstualne poruke iz rezultata dijeljenja. "
+#~ "Zadano ponašanje je tretirati \n"
+#~ "        uzastopne razdjelnike kao jedan (ako je TRUE). Ako je FALSE, "
+#~ "prazne vrijednosti ćelija dodaju se između uzastopnih razdjelnika."

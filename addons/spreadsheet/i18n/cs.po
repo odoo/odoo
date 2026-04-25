@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-03-21 09:25+0000\n"
+"POT-Creation-Date: 2026-04-24 17:39+0000\n"
+"PO-Revision-Date: 2026-04-25 18:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-18/"
 "spreadsheet/cs/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -261,35 +261,21 @@ msgstr "%s shod ve všech tabulkách"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(0) Exact match. \n"
-"        (-1) Return next smaller item if no match. \n"
-"        (1) Return next greater item if no match. \n"
-"        (2) Wildcard match."
+"(0) Exact match.         (-1) Return next smaller item if no match.         "
+"(1) Return next greater item if no match.         (2) Wildcard match."
 msgstr ""
-"(0) Přesná shoda. \n"
-"        (-1) RVrátí další menší položku, pokud není žádná shoda. \n"
-"        (1) Vrátí další větší položku, pokud není žádná shoda.. \n"
-"        (2)  Shoda se zástupným znakem."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(1) Search starting at first item. \n"
-"      (-1) Search starting at last item. \n"
-"      (2) Perform a binary search that relies on lookup_array being sorted "
-"in ascending order. If not sorted, invalid results will be returned. \n"
-"      (-2) Perform a binary search that relies on lookup_array being sorted "
-"in descending order. If not sorted, invalid results will be returned.\n"
-"      "
+"(1) Search starting at first item.       (-1) Search starting at last "
+"item.       (2) Perform a binary search that relies on lookup_array being "
+"sorted in ascending order. If not sorted, invalid results will be "
+"returned.       (-2) Perform a binary search that relies on lookup_array "
+"being sorted in descending order. If not sorted, invalid results will be "
+"returned.      "
 msgstr ""
-"(1) Hledání začíná od první položky. \n"
-"      (-1) Hledání začíná od poslední položky. \n"
-"      (2) Provede binární vyhledávání, které předpokládá, že lookup_array je "
-"seřazeno vzestupně. Pokud není seřazeno, budou vráceny neplatné výsledky. \n"
-"      (-2)  Provede binární vyhledávání, které předpokládá, že lookup_array "
-"je seřazeno sestupně. Pokud není seřazeno, budou vráceny neplatné výsledky.\n"
-"      "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1038,16 +1024,6 @@ msgstr "Rozsah s daty odpovídajícími peněžním tokům v cashflow_amounts."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred during the image transfer"
 msgstr "Během přenosu obrázku došlo k neočekávané chybě."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"Při vkládání obsahu došlo k neočekávané chybě.\n"
-"          Pravděpodobně kvůli nekompatibilitě verzí kalkulační tabulky."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3637,24 +3613,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"Funkce [[FUNCTION_NAME]] očekává, že rozsah kritérií a kritérium budou ve "
-"dvojicích."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"Funkce [[FUNCTION_NAME]] očekává, že rozsah kritérií bude mít stejnou dimenzi"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 
@@ -4080,8 +4038,7 @@ msgstr "Ve vyhodnocení [[FUNCTION_NAME]] nelze najít '%s' uvnitř '%s'."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"        number of rows of the second matrix (%s)."
+"equal to the         number of rows of the second matrix (%s)."
 msgstr ""
 
 #. module: spreadsheet
@@ -5228,6 +5185,12 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Next coupon date after the settlement date."
 msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr "Ne"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11158,14 +11121,9 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Zda odstranit prázdné textové zprávy z rozdělených výsledků. Výchozí chování "
-"je považovat \n"
-"        po sobě jdoucí oddělovače za jeden (pokud je TRUE). Pokud je FALSE, "
-"prázdné hodnoty buněk se přidají mezi po sobě jdoucí oddělovače."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11179,8 +11137,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether the array should be scanned by column. True scans the array by "
-"column and false (default) \n"
-"      scans the array by row."
+"column and false (default)       scans the array by row."
 msgstr ""
 
 #. module: spreadsheet
@@ -11334,6 +11291,12 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr "Ano"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You can't merge cells inside of an existing filter."
 msgstr ""
@@ -11342,6 +11305,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"content will be pasted."
 msgstr ""
 
 #. module: spreadsheet
@@ -11636,3 +11607,67 @@ msgstr "včera"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "nula"
+
+#~ msgid ""
+#~ "(0) Exact match. \n"
+#~ "        (-1) Return next smaller item if no match. \n"
+#~ "        (1) Return next greater item if no match. \n"
+#~ "        (2) Wildcard match."
+#~ msgstr ""
+#~ "(0) Přesná shoda. \n"
+#~ "        (-1) RVrátí další menší položku, pokud není žádná shoda. \n"
+#~ "        (1) Vrátí další větší položku, pokud není žádná shoda.. \n"
+#~ "        (2)  Shoda se zástupným znakem."
+
+#~ msgid ""
+#~ "(1) Search starting at first item. \n"
+#~ "      (-1) Search starting at last item. \n"
+#~ "      (2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in ascending order. If not sorted, invalid results will be "
+#~ "returned. \n"
+#~ "      (-2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in descending order. If not sorted, invalid results will be "
+#~ "returned.\n"
+#~ "      "
+#~ msgstr ""
+#~ "(1) Hledání začíná od první položky. \n"
+#~ "      (-1) Hledání začíná od poslední položky. \n"
+#~ "      (2) Provede binární vyhledávání, které předpokládá, že lookup_array "
+#~ "je seřazeno vzestupně. Pokud není seřazeno, budou vráceny neplatné "
+#~ "výsledky. \n"
+#~ "      (-2)  Provede binární vyhledávání, které předpokládá, že "
+#~ "lookup_array je seřazeno sestupně. Pokud není seřazeno, budou vráceny "
+#~ "neplatné výsledky.\n"
+#~ "      "
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "Při vkládání obsahu došlo k neočekávané chybě.\n"
+#~ "          Pravděpodobně kvůli nekompatibilitě verzí kalkulační tabulky."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "Funkce [[FUNCTION_NAME]] očekává, že rozsah kritérií a kritérium budou ve "
+#~ "dvojicích."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "Funkce [[FUNCTION_NAME]] očekává, že rozsah kritérií bude mít stejnou "
+#~ "dimenzi"
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Zda odstranit prázdné textové zprávy z rozdělených výsledků. Výchozí "
+#~ "chování je považovat \n"
+#~ "        po sobě jdoucí oddělovače za jeden (pokud je TRUE). Pokud je "
+#~ "FALSE, prázdné hodnoty buněk se přidají mezi po sobě jdoucí oddělovače."
