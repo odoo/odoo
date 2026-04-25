@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from uuid import uuid4
 
 from odoo import _, api, fields, models
@@ -550,12 +549,14 @@ class LoyaltyProgram(models.Model):
     @api.depends("program_type")
     def _compute_from_program_type(self):
         program_type_defaults = self._program_type_default_values()
-        grouped_programs = defaultdict(lambda: self.env["loyalty.program"])
-        for program in self:
-            grouped_programs[program.program_type] |= program
-        for program_type, programs in grouped_programs.items():
+        for program_type, programs in self.grouped('program_type').items():
             if program_type in program_type_defaults:
-                programs.write(program_type_defaults[program_type])
+                vals = program_type_defaults[program_type]
+                if "reward_ids" in vals and self._fields["reward_ids"].convert_to_cache(
+                    vals["reward_ids"], programs
+                ):
+                    programs = programs.with_context(loyalty_skip_reward_check=True, program_type=program_type)
+                programs.write(vals)
 
     @api.depends("currency_id", "program_type")
     def _compute_portal_point_name(self):
@@ -608,6 +609,7 @@ class LoyaltyProgram(models.Model):
             # We need add the program type to the context to avoid getting the default value
             # ('discount') for reward type when calling the `default_get` method of
             # `loyalty.reward`.
+            # res = super().write(vals)
             if "program_type" in vals:
                 self = self.with_context(program_type=vals["program_type"])
                 res = super().write(vals)
