@@ -403,15 +403,24 @@ class Environment(Mapping[str, "BaseModel"]):
         else:
             _logger.warning("Too many iterations for flushing fields!")
 
+    def protect_key(self, field: Field) -> tuple[Field, typing.Any]:
+        if field in self._field_depends_context:
+            return (field, self.cache_key(field))
+        if field.translate:
+            return (field, (self.lang or 'en_US'))
+        if field.company_dependent:
+            return (field, (self.company.id,))
+        return (field, None)
+
     def is_protected(self, field: Field, record: BaseModel) -> bool:
         """ Return whether `record` is protected against invalidation or
             recomputation for `field`.
         """
-        return record.id in self._protected.get(field, ())
+        return record.id in self._protected.get(self.protect_key(field), ())
 
     def protected(self, field: Field) -> BaseModel:
         """ Return the recordset for which ``field`` should not be invalidated or recomputed. """
-        return self[field.model_name].browse(self._protected.get(field, ()))
+        return self[field.model_name].browse(self._protected.get(self.protect_key(field), ()))
 
     @typing.overload
     def protecting(self, what: Collection[Field], records: BaseModel) -> typing.ContextManager[None]:
@@ -441,7 +450,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
             for field, rec_ids in ids_by_field.items():
                 ids = protected.get(field)
-                protected[field] = ids.union(rec_ids) if ids else frozenset(rec_ids)
+                protected[self.protect_key(field)] = ids.union(rec_ids) if ids else frozenset(rec_ids)
             yield
         finally:
             protected.popmap()
@@ -596,7 +605,7 @@ class Transaction:
         # x2many fields if they are not in cache yet
         self.field_data_patches = defaultdict["Field", defaultdict["IdType", list["IdType"]]](lambda: defaultdict(list))
         # fields to protect {field: ids}
-        self.protected = StackMap["Field", OrderedSet["IdType"]]()
+        self.protected = StackMap[tuple["Field", typing.Any], OrderedSet["IdType"]]()
         # pending computations {field: ids}
         self.tocompute = defaultdict["Field", OrderedSet["IdType"]](OrderedSet)
         # backward-compatible view of the cache

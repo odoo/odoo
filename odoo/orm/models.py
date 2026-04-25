@@ -6544,7 +6544,7 @@ class TopModel(BaseModel):
         field_protected_ids: dict[str, set | frozenset] = {}
         unprotected_fnames = []
         for fname in vals:
-            if (field := self._fields.get(fname)) and (protected_ids := self.env._protected.get(field)):
+            if (field := self._fields.get(fname)) and (protected_ids := self.env._protected.get(self.env.protect_key(field))):
                 field_protected_ids[fname] = protected_ids
             else:
                 unprotected_fnames.append(fname)
