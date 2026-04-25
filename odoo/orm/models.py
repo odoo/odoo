@@ -387,6 +387,8 @@ class BaseModel(metaclass=MetaModel):
     pool: Registry  # all registry classes have a registry on the class
     # TODO replace most usages with self.env.registry; pool is reserved for class instance
 
+    _record_cls: MetaModel
+
     _fields__: dict[str, Field]
     _fields: MappingProxyType[str, Field]
 
@@ -557,7 +559,7 @@ class BaseModel(metaclass=MetaModel):
 
         cls = self.env.registry[self._name]
         methods = []
-        for attr, func in getmembers(cls, is_constraint):
+        for attr, func in getmembers(cls._record_cls, is_constraint):
             if callable(func._constrains):
                 func = wrap(func, func._constrains(self.sudo()))
             for name in func._constrains:
