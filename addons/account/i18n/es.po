@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-03-12 16:49+0000\n"
+"POT-Creation-Date: 2026-04-24 17:36+0000\n"
+"PO-Revision-Date: 2026-04-25 12:16+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/es/>\n"
@@ -43,7 +43,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -195,7 +195,7 @@ msgstr "%(exception)s para %(user)s%(end_datetime_string)s%(reason)s."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(label)s en %(currency_amount)s"
 
 #. module: account
 #. odoo-python
@@ -235,6 +235,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
 "delivered at %(unit_price)s"
 msgstr ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s facturado, %(qty_delivered)s "
+"entregado a %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -260,7 +262,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; diferencia de precio para %(product)s"
 
 #. module: account
 #. odoo-python
@@ -4334,7 +4336,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "Aplicación de resultados"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -4917,7 +4919,7 @@ msgstr "Banco de Odoo"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Configuración bancaria"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -5260,7 +5262,7 @@ msgstr "Al deseleccionar el campo activo ocultará un INCOTERM que no use."
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. module: account
 #. odoo-python
@@ -6839,7 +6841,7 @@ msgstr "Saldo acumulado en función del dominio y el orden elegido en la vista."
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "Resultados acumulados no distribuidos"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -7125,7 +7127,7 @@ msgstr "Cierre {label} {percent}%"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -9664,13 +9666,13 @@ msgstr "Bienes"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
+msgstr "Bienes entregados no facturados (valoración permanente)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
+msgstr "Bienes facturados no entregados (valoración permanente)"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
@@ -11301,7 +11303,7 @@ msgstr "Son asientos"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
 msgid "Is Exact Move Duplicate"
-msgstr ""
+msgstr "Es un asiento duplicado exacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -12870,7 +12872,7 @@ msgstr "Solicitud de cancelación necesaria"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "Necesita actualización"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -14958,7 +14960,7 @@ msgstr "Cuenta de ganancias"
 #: model:account.account,name:account.1_profit_or_loss
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Profit or Loss Appropriation"
-msgstr ""
+msgstr "Aplicación del resultado"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -15153,13 +15155,6 @@ msgstr "Valores de codificación rápida"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
 msgstr "Codificación rápida"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2one_account_account/many2one_account_account.js:0
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Quick search: %s"
-msgstr "Búsqueda rápida: %s"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rd
@@ -18184,6 +18179,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"La cuenta bancaria de tu empresa no es de confianza. Pídele a un "
+"administrador o a alguien con derechos de aprobación que la verifique."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18274,6 +18271,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"La cuenta bancaria de la empresa (%(account_number)s) vinculada a esta "
+"factura no es de confianza. Dirígete a la configuración bancaria, comprueba "
+"que sea correcta o corrige el número y haz clic en «Enviar dinero» para "
+"validarla."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -19182,6 +19183,8 @@ msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
 msgstr ""
+"Se ha producido un error al importar la factura; adjunto encontrarás el XML "
+"recibido"
 
 #. module: account
 #. odoo-python
@@ -19911,7 +19914,7 @@ msgstr "Transferir a %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Nombre del producto traducido"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -20236,7 +20239,7 @@ msgstr "Actualizar términos y condiciones"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "Actualizar la aplicación"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20524,6 +20527,25 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Valor para el importe de la línea de ajuste\n"
+"    * Porcentaje: porcentaje del saldo, entre 0 y 100.\n"
+"    * Fijo: el valor fijo del ajuste. El importe se contabilizará como "
+"débito si es negativo y, como crédito, si es positivo.\n"
+"    * Desde etiqueta: no es necesario indicar delimitadores de expresión "
+"regular (regex), solo la regex. Por ejemplo, si quieres extraer el importe "
+"de:\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Podrías introducir:\n"
+"BRT: ([\\d,]+)\n"
+"    Si la etiqueta es “01870912 0009065 00115” y necesitas el importe en "
+"formato decimal\n"
+"    (por ejemplo, 90.65), puedes usar una regex con grupos de captura, por "
+"ejemplo:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    En este caso:\n"
+"    • el primer grupo captura la parte entera\n"
+"    • el segundo grupo captura la parte decimal (los dos últimos dígitos)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -21283,7 +21305,7 @@ msgstr ""
 msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
-msgstr ""
+msgstr "No es posible eliminar los impuestos que se están usando. Archívalos."
 
 #. module: account
 #. odoo-python
@@ -21479,7 +21501,7 @@ msgstr "No puede publicar un asiento en un diario archivado (%(journal)s)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "No puedes registrar un asiento con una cuenta analítica archivada: %s"
 
 #. module: account
 #. odoo-python
@@ -22412,6 +22434,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factura de autofacturación (ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "Quick search: %s"
+#~ msgstr "Búsqueda rápida: %s"
 
 #~ msgid "%(name)s - Draft at (%(currency_amount)s)"
 #~ msgstr "%(name)s - Borrador en (%(currency_amount)s)"
