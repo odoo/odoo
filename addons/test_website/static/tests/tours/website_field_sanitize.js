@@ -15,7 +15,7 @@ registerWebsitePreviewTour("website_designer_iframe_video",
         ...clickOnSave(),
         {
             content: "Check that the video was correctly saved",
-            trigger: ":iframe .media_iframe_video[data-oe-expression*='G8b4UZIcTfg']",
+            trigger: ":iframe .media_iframe_video[data-oe-expression*='nbso3NVz3p8']",
             run: () => {},
         },
     ]
@@ -31,7 +31,7 @@ registerWebsitePreviewTour("website_restricted_editor_iframe_video", {
         {
             content: "Check that the video iframe was correctly restored after saving the changes",
             trigger:
-                ":iframe [data-oe-field]:not([data-oe-sanitize-prevent-edition]) .media_iframe_video[data-oe-expression*='G8b4UZIcTfg']",
+                ":iframe [data-oe-field]:not([data-oe-sanitize-prevent-edition]) .media_iframe_video[data-oe-expression*='nbso3NVz3p8']",
             run: () => {},
         },
         {

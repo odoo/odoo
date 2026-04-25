@@ -3,8 +3,10 @@ from datetime import date, timedelta
 
 from odoo import Command
 from odoo.fields import Date
+from odoo.osv import expression
 from odoo.tools import float_is_zero
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import Form, tagged, new_test_user
@@ -1221,6 +1223,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
             self.skipTest("This test requires the installation of the account_account module")
 
+        self.env['ir.config_parameter'].sudo().set_param('sale.invoiced_timesheet', 'approved')
+
         product = self.env['product.product'].create({
             'name': "Service delivered, create task in global project",
             'standard_price': 30,
@@ -1244,7 +1248,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
         sale_order.action_confirm()
         task = sale_order.tasks_ids
-        self.env['account.analytic.line'].create({
+        timesheets = self.env['account.analytic.line'].create([{
             'name': 'Test Line',
             'date': '2026-01-08',
             'project_id': task.project_id.id,
@@ -1252,7 +1256,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 2,
             'employee_id': self.employee_user.id,
             'company_id': self.company_data['company'].id,
-        })
+        }] * 2)
+        timesheets[0].validated = True
         context = {
             'active_model': 'sale.order',
             'active_ids': [self.so.id],
@@ -1390,6 +1395,69 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         invoice_dict = wizard.create_invoices()
         invoice_days = self.env['account.move'].browse(invoice_dict['res_id'])
         self.assertEqual(invoice_days.invoice_line_ids.quantity, 1)
+
+    def test_portal_sale_order_timesheet_visibility(self):
+        """
+        Ensure a portal user only sees timesheets of subscribed SO lines.
+        Steps:
+        1. Create a portal user.
+        2. Use one SO line from self.so.
+        3. Create a second SO with product.
+        4. Log timesheets on both SO lines' tasks.
+        5. Subscribe portal user only to the first SO line's task.
+        6. Verify:
+        - User can sees timesheet for subscribed SO line (line 1).
+        - User does not see timesheet for the other SO line (line 2).
+        """
+        portal_user = mail_new_test_user(
+            self.env,
+            name='Portal user',
+            login='portal_user',
+            email='portal_user@example.com',
+            groups='base.group_portal',
+        )
+        so_line_1 = self.so.order_line[1]
+        sale_order_2 = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'user_id': self.user_employee_company_B.id,
+        })
+        so_line_2 = self.env['sale.order.line'].create({
+            'order_id': sale_order_2.id,
+            'product_id': self.product_order_timesheet3.id,
+        })
+        sale_order_2.action_confirm()
+        AnalyticLine = self.env['account.analytic.line']
+        timesheets_entry = AnalyticLine.create([
+            {
+                'name': 'Timesheet for line 1',
+                'employee_id': self.employee_user.id,
+                'task_id': so_line_1.task_id.id,
+                'so_line': so_line_1.id,
+            },
+            {
+                'name': 'Timesheet for line 2',
+                'employee_id': self.employee_user.id,
+                'task_id': so_line_2.task_id.id,
+                'so_line': so_line_2.id,
+            },
+        ])
+        timesheet_1, timesheet_2 = timesheets_entry[0], timesheets_entry[1]
+        (so_line_1.task_id | so_line_2.task_id).message_subscribe(partner_ids=portal_user.partner_id.ids)
+        domain = AnalyticLine.with_user(portal_user)._timesheet_get_portal_domain()
+        domain = expression.AND([
+            domain,
+            [('so_line', 'in', so_line_1.ids)]
+        ])
+
+        timesheets = AnalyticLine.search(domain)
+        self.assertIn(
+            timesheet_1.id, timesheets.ids,
+            "Portal user should see the timesheet of the subscribed SO line (line 1)."
+        )
+        self.assertNotIn(
+            timesheet_2.id, timesheets.ids,
+            "Portal user should not see the timesheet of another SO line (line 2)."
+        )
 
 @tagged('-at_install', 'post_install')
 class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):

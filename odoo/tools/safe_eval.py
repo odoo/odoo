@@ -50,7 +50,7 @@ for module in _ALLOWED_MODULES:
 
 _UNSAFE_ATTRIBUTES = [
     # Frames
-    'f_builtins', 'f_code', 'f_globals', 'f_locals',
+    'f_builtins', 'f_code', 'f_globals', 'f_locals', 'f_generator',
     # Python 2 functions
     'func_code', 'func_globals',
     # Code object
@@ -102,6 +102,8 @@ _CONST_OPCODES = set(to_opcodes([
     'RETURN_CONST',
     # 3.13
     'TO_BOOL',
+    # 3.14 https://docs.python.org/3/whatsnew/3.14.html#cpython-bytecode-changes
+    'LOAD_SMALL_INT',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
@@ -181,6 +183,13 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'STORE_FAST_STORE_FAST', 'STORE_FAST_LOAD_FAST',
     'CONVERT_VALUE', 'FORMAT_SIMPLE', 'FORMAT_WITH_SPEC',
     'SET_FUNCTION_ATTRIBUTE',
+    # 3.14
+    'LOAD_FAST_BORROW', 'LOAD_FAST_BORROW_LOAD_FAST_BORROW',  # LOAD_FAST optimizations
+    'POP_ITER',
+    # Hardcoded list of constants, does not bypasses __builtins__
+    # c.f. https://github.com/python/cpython/blob/9181d776daf87f0e4e2ce02c08f162150fdf7d79/Python/pylifecycle.c#L830-L836
+    'LOAD_COMMON_CONSTANT',
+    'NOT_TAKEN',
 ])) - _BLACKLIST
 
 

@@ -161,8 +161,10 @@ class SaleOrderLine(models.Model):
         refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
         timesheet_domain = [
             '|',
-            ('timesheet_invoice_id', '=', False),
-            ('timesheet_invoice_id.state', '=', 'cancel')]
+                ('timesheet_invoice_id', '=', False),
+                '&',
+                    ('timesheet_invoice_id.state', '=', 'cancel'),
+                    ('timesheet_invoice_id.payment_state', '!=', 'invoicing_legacy')]
         if refund_account_moves:
             credited_timesheet_domain = [('timesheet_invoice_id.state', '=', 'posted'), ('timesheet_invoice_id', 'in', refund_account_moves.ids)]
             timesheet_domain = expression.OR([timesheet_domain, credited_timesheet_domain])
@@ -172,14 +174,11 @@ class SaleOrderLine(models.Model):
         if end_date:
             domain = expression.AND([domain, [('date', '<=', end_date)]])
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
-        uom_hour = self.env.ref('uom.product_uom_hour')
 
         for line in lines_by_timesheet:
             qty_to_invoice = mapping.get(line.id, 0.0)
             if qty_to_invoice:
-                unit_amount = sum(line.timesheet_ids.filtered(lambda ts: start_date <= ts.date <= end_date and not ts.timesheet_invoice_id).mapped('unit_amount'))
-                units_to_invoice = uom_hour._compute_quantity(unit_amount, line.product_uom, rounding_method='HALF-UP', raise_if_failure=False)
-                line.qty_to_invoice = units_to_invoice
+                line.qty_to_invoice = qty_to_invoice
             else:
                 prev_inv_status = line.invoice_status
                 line.qty_to_invoice = qty_to_invoice

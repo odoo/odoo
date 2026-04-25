@@ -286,19 +286,6 @@ class ResPartner(models.Model):
             self_partner.peppol_eas,
             self_partner._get_peppol_edi_format(),
         )
-        if (
-                new_value != 'valid'
-                and self_partner.peppol_eas in ('0208', '9925')
-        ):
-            # checks the inverse `eas:endpoint` if the belgian user was not found on Peppol in the first try
-            inverse_eas = '9925' if self_partner.peppol_eas == '0208' else '0208'
-            inverse_endpoint = f'BE{self_partner.peppol_endpoint}' if self_partner.peppol_eas == '0208' else self_partner.peppol_endpoint[2:]
-            if (peppol_state := self._get_peppol_verification_state(inverse_endpoint, inverse_eas, self_partner._get_peppol_edi_format())) == 'valid':
-                self_partner.write({
-                    'peppol_eas': inverse_eas,
-                    'peppol_endpoint': inverse_endpoint,
-                })
-                new_value = peppol_state
 
         if new_value != old_value:
             self_partner.peppol_verification_state = new_value

@@ -323,6 +323,78 @@ class TestEdiZatca(TestSaEdiCommon):
                         move=refund_invoice,
                     )
 
+    @freeze_time('2022-09-05')
+    def test_invoice_with_reversed_downpayment_invoice(self):
+        """ SO with a reversed downpayment + a new downpayment must
+        not crash when generating the ZATCA XML of the final invoice.
+        """
+        if 'sale' not in self.env["ir.module.module"]._installed():
+            self.skipTest("Sale module is not installed")
+
+        saudi_pricelist = self.env['product.pricelist'].create({
+            'name': 'SAR',
+            'currency_id': self.env.ref('base.SAR').id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_sa.id,
+            'pricelist_id': saudi_pricelist.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000,
+                'product_uom_qty': 1,
+                'tax_id': [Command.set(self.tax_15.ids)],
+            })],
+        })
+        sale_order.action_confirm()
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.customer_invoice_journal.id,
+        }
+
+        # Mark the product SOL as delivered so the final invoice contains it.
+        sale_order.order_line.filtered(lambda l: not l.is_downpayment).qty_delivered = 1
+
+        # 1. First downpayment, then reverse it through the Credit Note
+        dp1_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 115,
+        })
+        dp1 = dp1_wizard._create_invoices(sale_order)
+        dp1.invoice_date_due = '2022-09-22'
+        dp1.action_post()
+
+        reversal_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move',
+            active_ids=dp1.ids,
+        ).create({
+            'journal_id': dp1.journal_id.id,
+            'reason': 'Repro opw-6116265',
+        })
+        reversal_wizard.reverse_moves(is_modify=True)
+        self.assertEqual(dp1.payment_state, 'reversed')
+
+        # 2. DP2 is the draft produced by the reversal wizard; post it.
+        dp2 = reversal_wizard.new_move_ids
+        self.assertEqual(len(dp2), 1)
+        dp2.invoice_date_due = '2022-09-22'
+        dp2.action_post()
+
+        # 3. Final invoice — should not raise "Expected singleton" during XML generation
+        final_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})
+        final = final_wizard._create_invoices(sale_order)
+        final.invoice_line_ids.filtered('is_downpayment').name = 'Down Payment'
+        final.invoice_date_due = '2022-09-22'
+        final.action_post()
+        final.l10n_sa_confirmation_datetime = datetime.now()
+
+        # Must not raise: previously crashed with "Expected singleton: account.move(dp1, dp2)"
+        final._l10n_sa_generate_unsigned_data()
+        generated_file = self.env['account.edi.format']._l10n_sa_generate_zatca_template(final)
+        self.assertIn(dp2.name, generated_file.decode() if isinstance(generated_file, bytes) else generated_file)
+
     def testInvoiceWithRetention(self):
         """Test standard invoice generation."""
 
