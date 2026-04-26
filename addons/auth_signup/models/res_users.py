@@ -288,13 +288,14 @@ class ResUsers(models.Model):
                 'email_to': self.email
             }
 
-            body = self.env['mail.render.mixin']._render_template(
+            user_lang = self.lang or self.env.lang or 'en_US'
+            body = self.env['mail.render.mixin'].with_context(lang=user_lang)._render_template(
                     'auth_signup.alert_login_new_device',
                     model='res.users', res_ids=self.ids,
                     engine='qweb_view', options={'post_process': True},
                     add_context=self._prepare_new_device_notice_values())[self.id]
             mail = self.env['mail.mail'].sudo().create({
-                'subject': _('New Connection to your Account'),
+                'subject': self.with_context(lang=user_lang).env._('New Connection to your Account'),
                 'email_from': self.company_id.email_formatted or self.email_formatted,
                 'body_html': body,
                 **email_values,

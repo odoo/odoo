@@ -88,3 +88,25 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.env.flush_all()
         with self.registry.cursor() as cr:
             users.with_env(users.env(cr=cr)).send_unregistered_user_reminder(after_days=5, batch_size=100)
+
+    def test_alert_new_device_lang(self):
+        self.env['res.lang']._activate_lang('fr_BE')
+        user = self.user_demo
+        user.lang = 'fr_BE'
+
+        view = self.env.ref('auth_signup.alert_login_new_device')
+        view.with_context(lang='en_US').arch = '<div>EN</div>'
+        view.update_field_translations('arch_db', {
+           'fr_BE': {
+                'EN': 'FR',
+            }
+        })
+
+        self.env['mail.mail'].search([]).sudo().unlink()
+        with (
+            patch.object(self.env.registry['mail.mail'], 'unlink', lambda m: None),
+            patch.object(self.env.registry['res.users'], '_should_alert_new_device', lambda u: True),
+        ):
+            self.authenticate('demo', 'demo')
+            mail = self.env['mail.mail'].search([], limit=1)
+            self.assertEqual(mail.body_html, '<div>FR</div>')
