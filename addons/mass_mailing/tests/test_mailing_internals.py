@@ -578,6 +578,42 @@ class TestMassMailingMailServer(MassMailCommon):
         with self.assertRaises(ValidationError):
             self.public_server.owner_user_id = self.user_marketing
 
+    def test_fallback_excludes_personal_mail_server(self):
+        """When no dedicated server is configured, the personal server must
+        not be picked even if its from_filter matches the campaign sender."""
+        # Wipe pre-existing servers so _find_mail_server only sees the two we set up.
+        self.env['ir.mail_server'].sudo().search([('id', '!=', self.public_server.id)]).unlink()
+        self.env['ir.mail_server'].sudo().create({
+            'from_filter': 'user_marketing@test.mycompany.com',
+            'name': 'personal_server',
+            'owner_user_id': self.user_marketing.id,
+            'smtp_host': 'personal.example.com',
+            'smtp_user': 'user_marketing@test.mycompany.com',
+        })
+
+        recipient = self.env['res.partner'].create({
+            'email': 'target@test.mycompany.com',
+            'name': 'Target',
+        })
+        mailing = self.env['mailing.mailing'].create({
+            'body_html': '<p>x</p>',
+            'email_from': 'user_marketing@test.mycompany.com',
+            'mailing_domain': [('id', '=', recipient.id)],
+            'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': 'M',
+            'subject': 'S',
+            'user_id': self.user_marketing.id,
+        })
+
+        with self.mock_smtplib_connection():
+            mailing.with_user(self.user_marketing).action_send_mail()
+
+        self.connect_mocked.assert_called_once()
+        self.assertEqual(
+            self.connect_mocked.call_args.kwargs['mail_server_id'],
+            self.public_server.id,
+        )
+
 
 @tagged("mass_mailing", "utm")
 class TestMassMailUTM(MassMailCommon):
