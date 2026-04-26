@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
 
 
@@ -33,3 +34,27 @@ class IrMail_Server(models.Model):
             if usages:
                 usages_super.setdefault(record.id, []).extend(usages)
         return usages_super
+
+    @api.constrains('owner_user_id')
+    def _check_owner_user_id_not_mass_mailing(self):
+        servers_with_owner = self.filtered('owner_user_id')
+        if not servers_with_owner:
+            return
+
+        default_id = self.env['mailing.mailing']._get_default_mail_server_id()
+        if default_id and default_id in servers_with_owner.ids:
+            raise ValidationError(_(
+                "Cannot set an owner on '%(server)s': it is configured as the dedicated Email Marketing server.",
+                server=self.browse(default_id).display_name,
+            ))
+
+        used = self.env['mailing.mailing'].sudo().search([
+            ('mail_server_id', 'in', servers_with_owner.ids),
+            ('state', '!=', 'done'),
+        ], limit=1)
+        if used:
+            raise ValidationError(_(
+                "Cannot set an owner on '%(server)s': it is used by mailing '%(mailing)s'.",
+                server=used.mail_server_id.display_name,
+                mailing=used.display_name,
+            ))
