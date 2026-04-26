@@ -526,6 +526,59 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing.mailing_model_name, 'res.partner')
 
 
+@tagged("mass_mailing")
+class TestMassMailingMailServer(MassMailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.public_server = cls.env['ir.mail_server'].sudo().create({
+            'from_filter': 'test.mycompany.com',
+            'name': 'public_server',
+            'smtp_host': 'public.example.com',
+            'smtp_user': 'public@test.mycompany.com',
+        })
+
+    def test_owner_allowed_when_server_used_by_done_mailing(self):
+        """A server used only by a finished mailing can still be turned into
+        a personal server."""
+        mailing = self.env['mailing.mailing'].create({
+            'body_html': '<p>x</p>',
+            'mail_server_id': self.public_server.id,
+            'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': 'M',
+            'subject': 'S',
+        })
+        mailing.write({'state': 'done'})
+
+        self.public_server.owner_user_id = self.user_marketing
+        self.assertEqual(self.public_server.owner_user_id, self.user_marketing)
+
+    def test_owner_blocked_when_server_is_dedicated_default(self):
+        """A server set as the Email Marketing dedicated server cannot be
+        turned into a personal server."""
+        self.env['ir.config_parameter'].sudo().set_param(
+            'mass_mailing.mail_server_id', str(self.public_server.id))
+
+        with self.assertRaises(ValidationError):
+            self.public_server.owner_user_id = self.user_marketing
+
+    def test_owner_blocked_when_server_used_by_mailing(self):
+        """A server already in use by a queued mailing cannot be turned into
+        a personal server."""
+        mailing = self.env['mailing.mailing'].create({
+            'body_html': '<p>x</p>',
+            'mail_server_id': self.public_server.id,
+            'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': 'M',
+            'subject': 'S',
+        })
+        mailing.action_put_in_queue()
+
+        with self.assertRaises(ValidationError):
+            self.public_server.owner_user_id = self.user_marketing
+
+
 @tagged("mass_mailing", "utm")
 class TestMassMailUTM(MassMailCommon):
 
