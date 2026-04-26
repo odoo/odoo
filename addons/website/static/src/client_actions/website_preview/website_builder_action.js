@@ -24,6 +24,7 @@ import { router } from "@web/core/browser/router";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 import { CreatePageMessage } from "./create_page_message";
 import { post } from "@web/core/network/http_service";
+import { deleteQueryParam } from "@website/utils/misc";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 
@@ -116,6 +117,11 @@ export class WebsiteBuilderClientAction extends Component {
                 )}?path=${encodedPath}`;
                 this.websiteService.currentWebsiteId = websiteId;
             };
+            // Restore the draft mode state, so it stays consistent after navigation.
+            if (await this.websiteService.getCanHaveDraftPreview()) {
+                const pathUrl = new URL(this.path, window.location.origin);
+                this.websiteService.isDraftPreview = pathUrl.searchParams.has("draft_preview");
+            }
             const proms = [
                 this.websiteService.fetchWebsites(),
                 this.websiteService.fetchUserGroups(),
@@ -456,13 +462,25 @@ export class WebsiteBuilderClientAction extends Component {
                 if (target !== "_blank") {
                     if (isTopWindowURL(closestEl)) {
                         url = new URL(href);
-                    } else if (
-                        this.websiteContent.el.contentWindow.location.pathname !==
-                        new URL(href).pathname
-                    ) {
+                    } else {
                         // This scenario triggers a navigation inside the iframe.
-                        this.websiteService.websiteRootInstance = undefined;
-                        this.isNavigatingToAnotherPage = Promise.withResolvers();
+                        if (
+                            this.websiteContent.el.contentWindow.location.pathname !==
+                            new URL(href).pathname
+                        ) {
+                            this.websiteService.websiteRootInstance = undefined;
+                            this.isNavigatingToAnotherPage = Promise.withResolvers();
+                        }
+                        // If draft preview is active, inject the param before
+                        // the browser navigates
+                        if (this.websiteService.isDraftPreview) {
+                            ev.preventDefault();
+                            const draftUrl = new URL(href);
+                            draftUrl.searchParams.set("draft_preview", "1");
+                            this.websiteContent.el.contentWindow.location.href =
+                                draftUrl.toString();
+                            return;
+                        }
                     }
                 }
             }
@@ -741,16 +759,6 @@ export class WebsiteBuilderClientAction extends Component {
 
     get isMicrosoftEdge() {
         return isBrowserMicrosoftEdge();
-    }
-}
-
-function deleteQueryParam(param, target = window, adaptBrowserUrl = false) {
-    const url = new URL(target.location.href);
-    url.searchParams.delete(param);
-    // TODO: maybe to use in the action service
-    target.history.replaceState(target.history.state, null, url);
-    if (adaptBrowserUrl) {
-        deleteQueryParam(param);
     }
 }
 

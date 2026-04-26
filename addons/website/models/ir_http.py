@@ -250,10 +250,20 @@ class IrHttp(models.AbstractModel):
         else:
             allowed_company_ids = user.company_id.ids
 
+        extra_context = {}
+        # Allow to preview draft content by passing `?draft_preview=1` in the URL.
+        if (
+            request.httprequest.args.get('draft_preview')
+            and request.env['res.config.settings'].is_draft_preview_enabled()
+            and user.has_group('website.group_website_designer')
+        ):
+            extra_context['draft_preview'] = True
+
         request.update_context(
             allowed_company_ids=allowed_company_ids,
             website_id=website.id,
             **cls._get_editor_context(),
+            **extra_context,
         )
 
         request.website = website.with_context(request.env.context)

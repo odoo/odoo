@@ -41,7 +41,12 @@ export class WebsiteSavePlugin extends Plugin {
         return this.services.orm.call(
             "ir.ui.view",
             "save",
-            [viewID, el.outerHTML, (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null],
+            [
+                viewID,
+                el.outerHTML,
+                (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null,
+                this.services.website.isDraftPreview,
+            ],
             { context }
         );
     }

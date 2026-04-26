@@ -20,6 +20,7 @@ from . import website
 from . import website_menu
 from . import website_page_properties
 from . import website_page
+from . import website_draft_field
 from . import website_rewrite
 from . import ir_rule
 from . import ir_ui_menu

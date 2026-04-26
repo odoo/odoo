@@ -48,3 +48,37 @@ class TestIrAsset(odoo.tests.HttpCase):
         self.assertEqual(files[0][0], '/website/test/base0.css', "First asset should be the base one.")
         self.assertEqual(files[1][0], '/website/test/base1.css', "Second asset should be the base one.")
         self.assertEqual(files[2][0], '/website/test/base2.css', "Third asset should be the base one.")
+
+    def test_02_draft_active_states(self):
+        IrAsset = self.env['ir.asset']
+        Website = self.env['website']
+        website_1 = Website.create({'name': "Website 1"})
+
+        asset = IrAsset.create({
+            'key': 'test_draft',
+            'name': 'Draft Asset',
+            'bundle': 'test_bundle.irasset',
+            'path': '/website/test/draft.css',
+            'active': True,
+            'website_id': website_1.id
+        })
+        asset = asset.with_context(website_id=website_1.id)
+
+        asset.set_active_draft(True)
+        self.assertEqual(asset.active_draft, 1)
+        self.assertTrue(asset.active)
+
+        # Disable in draft -> should set draft flag but not touch live active
+        asset.set_active_draft(False)
+        self.assertEqual(asset.active_draft, 0)
+        self.assertTrue(asset.active)
+
+        # Apply draft -> should copy draft to live and clear draft flag
+        asset.apply_active_draft()
+        self.assertEqual(asset.active_draft, -1)
+        self.assertFalse(asset.active)
+
+        # Enable in draft -> should set draft flag to 1
+        asset.set_active_draft(True)
+        self.assertEqual(asset.active_draft, 1)
+        self.assertFalse(asset.active)

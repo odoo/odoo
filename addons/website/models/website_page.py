@@ -516,3 +516,66 @@ class WebsitePage(models.Model):
                 'view_id': page.view_id.id,
                 'group_ids': page.group_ids.ids,
             }
+
+    @api.model
+    def publish_draft(self, page_url, website_id):
+        """ Publishe the single page by publishing every view related to the page, together with the assets."""
+        if not (page_url and website_id):
+            return
+        pages = self.search([
+            ('url', '=', page_url),
+            ('website_id', '=', website_id),
+        ])
+        for page in pages:
+            if not page.can_publish:
+                continue
+            page.view_id.publish_draft()
+        # After publishing page-linked views, also publish shared views
+        # (header, footer, etc.)
+        shared_views = self.env['ir.ui.view'].with_context(active_test=False).search([
+            ('website_id', '=', website_id),
+            ('page_ids', '=', False),            # no page — shared view
+            '|',
+            ('arch_draft', '!=', False),
+            ('active_draft', '!=', -1),
+        ])
+        shared_views.publish_draft()
+        # Publish all pending embedded field drafts for this page
+        # (e.g. product descriptions, partner names edited inline)
+        self.env['website.draft.field'].search([
+            ('website_id', '=', website_id),
+            ('page_url', '=', page_url),
+        ]).publish()
+        # Publish all draft asset customizations (scss/js overrides, active_draft flags)
+        self.env['website.assets'].publish_draft(website_id)
+
+    @api.model
+    def delete_draft(self, page_url, website_id, page_only=True):
+        """ Delete the drafts of views/assets/fields related to the page, or shared."""
+        if not (page_url and website_id):
+            return
+        self.search([
+            ('url', '=', page_url),
+            ('website_id', '=', website_id),
+        ]).view_id.delete_draft()
+
+        self.env['website.draft.field'].search([
+            ('website_id', '=', website_id),
+            ('page_url', '=', page_url),
+        ]).unlink()
+
+        if page_only:
+            return
+
+        # Delete shared views' drafts
+        shared_views = self.env['ir.ui.view'].with_context(active_test=False).search([
+            ('website_id', '=', website_id),
+            ('page_ids', '=', False),
+            '|',
+            ('arch_draft', '!=', False),
+            ('active_draft', '!=', -1),
+        ])
+        shared_views.delete_draft()
+
+        # Remove all draft asset customizations
+        self.env['website.assets'].delete_draft(website_id)
