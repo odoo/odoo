@@ -561,7 +561,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         tx._post_process()
 
         with patch.object(
-            self.env.registry["mail.thread"], "message_post", autospec=True
+            self.env.registry["mail.thread"].__bases__[1], "message_post", autospec=True
         ) as message_post_mock:
             tx.action_refund()
             author_id = message_post_mock.call_args[1].get("author_id")

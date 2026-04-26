@@ -1026,7 +1026,7 @@ class TestSequenceMixinBankStatementLoadImport(TestSequenceMixinCommon):
 
         with (
             patch.object(self.env.registry['account.bank.statement.line'], '_load_records_create', side_effect=new_load_records_create),
-            patch.object(self.env.registry['sequence.mixin'], '_get_sequence_cache', side_effect=count_empty_cache),
+            patch.object(self.env.registry['sequence.mixin'].__bases__[1], '_get_sequence_cache', side_effect=count_empty_cache),
         ):
             results = self.env['account.bank.statement.line'].load(fields_list, data)
 
