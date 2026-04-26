@@ -488,6 +488,10 @@ class TestPersonalServer(MailCommon):
             IrMailServer.send_email(message, mail_server_id=self.mail_server_user.id)
         self.assertFalse(self.emails)
 
+    def test_personal_mail_server_copy(self):
+        """Duplicating a personal OMS clears the owner so the copy is reachable."""
+        self.assertFalse(self.mail_server_1.copy().owner_user_id)
+
     @mute_logger('odoo.models.unlink')
     def test_personal_mail_server_limit(self):
         # Test the limit per personal mail servers
