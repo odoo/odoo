@@ -16,6 +16,7 @@ export class BuilderSlidingPanel extends Component {
         fullHeight: { type: Boolean, optional: true },
         darkBackground: { type: Boolean, optional: true },
         openByDefault: { type: Boolean, optional: true },
+        onClose: { type: Function, optional: true },
         slots: { type: Object, optional: true },
     };
     static defaultProps = {
@@ -77,6 +78,7 @@ export class BuilderSlidingPanel extends Component {
         this.updateDisplayTimeout = setTimeout(() => {
             this.updateDisplay("d-none");
             this.openButtonRef.el.focus();
+            this.props.onClose?.();
         }, 180);
     }
 

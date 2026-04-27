@@ -6,7 +6,8 @@
                     label.translate="Colors"
                     extraClasses="'btn-secondary p-0 d-flex o-hb-theme-color-slider-btn'"
                     darkBackground="true"
-                    openByDefault="!!this.colorPresetToShow">
+                    openByDefault="!!this.colorPresetToShow"
+                    onClose="() => this.closeThemeColorsPreview()">
                     <div class="d-flex w-100">
                         <t t-foreach="[1,2,3,4,5]" t-as="i" t-key="i">
                             <span class="flex-grow-1 o_preview_alpha_background"
@@ -14,6 +15,12 @@
                             </span>
                         </t>
                     </div>
+                    <t t-set-slot="topOptions">
+                        <button class="o-hb-btn btn btn-primary ms-auto fa fa-fw" t-on-click="this.openThemeColorsPreview"
+                            t-att-class="this.showThemeColorsPreview ? 'fa-eye-slash' : 'fa-eye'"
+                            title="Colors preview" aria-label="Colors preview" type="button">
+                        </button>
+                    </t>
                     <t t-set-slot="content">
                         <BuilderContext preview="false">
                             <!-- TODO
@@ -25,7 +32,7 @@
                             </we-alert>-->
                             <BuilderOptionsSection>
                                 <BuilderRow>
-                                    <div class="d-flex flex-row gap-3 w-100 justify-content-between ps-2" style="height: 50px">
+                                    <div class="d-flex flex-row gap-3 w-100 justify-content-between ps-2 mt-1" style="height: 50px">
                                         <div class="d-flex flex-column h-100 justify-content-between">
                                             <span class="fst-italic">Main</span>
                                             <div class="d-flex flex-row gap-1">

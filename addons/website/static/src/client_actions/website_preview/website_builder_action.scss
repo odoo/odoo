@@ -92,6 +92,23 @@
     }
 }
 
+.o_dialog:has(.o_theme_colors_preview_dialog) {
+    .modal {
+        width: calc(100% - #{$o-we-sidebar-width});
+        background-color: rgba($modal-backdrop-bg, 0.75);
+
+        .modal-dialog {
+            max-width: 100%;
+            padding: calc(var(--modal-margin) / 2);
+
+            .modal-content {
+                // Handle dark body backgrounds
+                border: 1px solid rgba(white, .175);
+            }
+        }
+    }
+}
+
 .o_builder_disabled {
     opacity: 0.5;
     cursor: wait;
