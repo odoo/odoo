@@ -272,6 +272,7 @@ class TestCase(_TestCase):
         module = module.replace('.', '/')
         module = f'{module}.py'
 
+<<<<<<< 3372d1f6b18e7d7746b7fa766ac17bb2f9112a4e
         return {
             'module': module,
             'test_class': self.__class__.__name__,
@@ -285,6 +286,25 @@ class TestCase(_TestCase):
     def get_log_metadata(self, _log):
         return {
             'canonical_tag': self.get_canonical_tag(_log),
+||||||| 2744396733bb3ad60813e9e093d67192c0d38b36
+    def get_log_metadata(self):
+        metadata = {
+            'canonical_tag': self.canonical_tag,
+=======
+        return {
+            'module': module,
+            'test_class': self.__class__.__name__,
+            'test_method': self._testMethodName,
+            'params': None,
+        }
+
+    def get_canonical_tag(self, log=None):
+        return self._make_canonical_tag(**self._get_canonical_tags_params(log))
+
+    def get_log_metadata(self, _log):
+        metadata = {
+            'canonical_tag': self.get_canonical_tag(_log),
+>>>>>>> 79dab02174a9d5c38cf2e51b5b7a90deaa0a421e
         }
 
 

@@ -288,6 +288,115 @@ class LegacyWebSuite(odoo.tests.HttpCase):
             self.assertNotRegex('utils > bl1', f)
             self.assertNotRegex('utils > bl2', f)
 
+<<<<<<< 3372d1f6b18e7d7746b7fa766ac17bb2f9112a4e
+||||||| 2744396733bb3ad60813e9e093d67192c0d38b36
+@odoo.tests.tagged('post_install', '-at_install')
+class HOOTCommon(odoo.tests.HttpCase):
+
+    def setUp(self):
+        super().setUp()
+        self.hoot_filters = self.get_hoot_filters()
+
+    def _generate_hash(self, test_string):
+        hash = 0
+        for char in test_string:
+            hash = (hash << 5) - hash + ord(char)
+            hash = hash & 0xFFFFFFFF
+        return f'{hash:08x}'
+
+    def get_hoot_filters(self):
+        filters = _get_filters(self._test_params)
+        filter = ''
+        for sign, f in filters:
+            h = self._generate_hash(f)
+            if sign == '-':
+                h = f'-{h}'
+            # Since we don't know if the descriptor we have is a test or a suite, we need to provide the hash for a generic "job"
+            filter += f'&id={h}'
+        return filter
+
+    def test_generate_hoot_hash(self):
+        self.assertEqual(self._generate_hash('@web/core'), 'e39ce9ba')
+        self.assertEqual(self._generate_hash('@web/core/autocomplete'), '69a6561d') # suite
+        self.assertEqual(self._generate_hash('@web/core/autocomplete/open dropdown on input'), 'ee565d54') # test
+
+    def test_get_hoot_filter(self):
+        self._test_params = []
+        self.assertEqual(self.get_hoot_filters(), '')
+        expected = '&id=e39ce9ba&id=-69a6561d'
+        self._test_params = [('+', '@web/core,-@web/core/autocomplete')]
+        self.assertEqual(self.get_hoot_filters(), expected)
+        self._test_params = [('+', '@web/core'), ('-', '@web/core/autocomplete')]
+        self.assertEqual(self.get_hoot_filters(), expected)
+        self._test_params = [('+', '-@web/core/autocomplete,-@web/core/autocomplete2')]
+        self.assertEqual(self.get_hoot_filters(), '&id=-69a6561d&id=-cb246db5')
+        self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
+        self.assertEqual(self.get_hoot_filters(), '&id=69a6561d&id=cb246db5')
+
+@odoo.tests.tagged('post_install', '-at_install')
+class WebSuite(QunitCommon, HOOTCommon):
+
+=======
+@odoo.tests.tagged('post_install', '-at_install')
+class HOOTCommon(odoo.tests.HttpCase):
+
+    def setUp(self):
+        super().setUp()
+        self.hoot_filters = self.get_hoot_filters()
+
+    def _generate_hash(self, test_string):
+        hash = 0
+        for char in test_string:
+            hash = (hash << 5) - hash + ord(char)
+            hash = hash & 0xFFFFFFFF
+        return f'{hash:08x}'
+
+    def get_hoot_filters(self):
+        filters = _get_filters(self._test_params)
+        filter = ''
+        for sign, f in filters:
+            h = self._generate_hash(f)
+            if sign == '-':
+                h = f'-{h}'
+            # Since we don't know if the descriptor we have is a test or a suite, we need to provide the hash for a generic "job"
+            filter += f'&id={h}'
+        return filter
+
+    def _get_canonical_tags_params(self, log=None):
+        result = super()._get_canonical_tags_params(log)
+        if log:
+            message = log.msg
+            if log.args:
+                message = log.msg % log.args
+            if '[HOOT] Test "@' in message:
+                match = re.search(r'\[HOOT\] Test "(@([^/]+)/[^"]+)"', message)
+                if match:
+                    test = match.group(1)
+                    result['params'] = test
+        return result
+
+    def test_generate_hoot_hash(self):
+        self.assertEqual(self._generate_hash('@web/core'), 'e39ce9ba')
+        self.assertEqual(self._generate_hash('@web/core/autocomplete'), '69a6561d') # suite
+        self.assertEqual(self._generate_hash('@web/core/autocomplete/open dropdown on input'), 'ee565d54') # test
+
+    def test_get_hoot_filter(self):
+        self._test_params = []
+        self.assertEqual(self.get_hoot_filters(), '')
+        expected = '&id=e39ce9ba&id=-69a6561d'
+        self._test_params = [('+', '@web/core,-@web/core/autocomplete')]
+        self.assertEqual(self.get_hoot_filters(), expected)
+        self._test_params = [('+', '@web/core'), ('-', '@web/core/autocomplete')]
+        self.assertEqual(self.get_hoot_filters(), expected)
+        self._test_params = [('+', '-@web/core/autocomplete,-@web/core/autocomplete2')]
+        self.assertEqual(self.get_hoot_filters(), '&id=-69a6561d&id=-cb246db5')
+        self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
+        self.assertEqual(self.get_hoot_filters(), '&id=69a6561d&id=cb246db5')
+
+@odoo.tests.tagged('post_install', '-at_install')
+class WebSuite(QunitCommon, HOOTCommon):
+
+>>>>>>> 79dab02174a9d5c38cf2e51b5b7a90deaa0a421e
     @odoo.tests.no_retry
     def test_qunit(self):
         # ! DEPRECATED

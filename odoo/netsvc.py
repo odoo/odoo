@@ -80,8 +80,20 @@ class PostgreSQLHandler(logging.Handler):
                 from . import modules
                 metadata = {}
                 if modules.module.current_test:
+<<<<<<< 3372d1f6b18e7d7746b7fa766ac17bb2f9112a4e
                     with contextlib.suppress(Exception):
                         metadata['test'] = modules.module.current_test.get_log_metadata(record)
+||||||| 2744396733bb3ad60813e9e093d67192c0d38b36
+                    try:
+                        metadata['test'] = modules.module.current_test.get_log_metadata()
+                    except:
+                        pass
+=======
+                    try:
+                        metadata['test'] = modules.module.current_test.get_log_metadata(record)
+                    except:
+                        pass
+>>>>>>> 79dab02174a9d5c38cf2e51b5b7a90deaa0a421e
 
                 if metadata:
                     cr.execute("""
