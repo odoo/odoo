@@ -63,14 +63,14 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
      * This override makes it so that, after creating a calendar event through the activity buttons/widget
      * on a record, the user is redirected back to the record they clicked the activity button on.
      */
-    async onRecordSaved() {
-        await super.onRecordSaved(arguments);
+    async onRecordSaved(record, changes) {
         if (this.props.context.return_to_parent_breadcrumb) {
-            const breadcrumb = this.actionService.currentController.config.breadcrumbs.at(-2);
-            if (breadcrumb) {
-                // todo guce postfreeze: make safer (knowledge macro system?)
-                breadcrumb.onSelected();
-            }
+            this.redirectionObj = this.actionService.currentController.config.breadcrumbs.at(-2);
+        }
+        await super.onRecordSaved(...arguments);
+        if (this.redirectionObj && !this.isPostSaveNotificationModal) {
+            // todo guce postfreeze: make safer (knowledge macro system?)
+            this.redirectionObj.onSelected();
         }
     }
 }

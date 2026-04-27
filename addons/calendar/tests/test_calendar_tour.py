@@ -4,11 +4,12 @@ from datetime import date, datetime
 
 from odoo import Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestCalendarTours(HttpCaseWithUserDemo):
+class TestCalendarTours(HttpCaseWithUserDemo, MailCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -67,3 +68,27 @@ class TestCalendarTours(HttpCaseWithUserDemo):
         self.start_tour(url, 'test_calendar_decline_tour', login='demo')
         attendee = self.env['calendar.attendee'].search([('event_id', '=', event.id), ('partner_id', '=', user_demo.partner_id.id)])
         self.assertEqual(attendee.state, 'declined')  # Check if the event has been correctly declined
+
+    def test_calendar_invite_tour(self):
+        """Check that the modal allowing to send invitations is displayed when new attendees are added and that they receive them."""
+        created_event_partner, updated_event_partner, past_event_partner = self.env["res.partner"].create([{
+            'name': 'Created Event Partner',
+            "email": 'created.event.partner@odoo.com',
+        }, {
+            "name": 'Updated Event Partner',
+            "email": 'updated.event.partner@odoo.com',
+        }, {
+            "name": 'Past Event Partner',
+            "email": 'past.event.partner@odoo.com',
+        }])
+        past_event = self.env['calendar.event'].with_user(self.user_demo).create({
+            'name': 'Past Event',
+            'start': '2010-01-01 08:00:00',
+        })
+        with self.mock_mail_gateway():
+            # Check that the modal allowing to send invitations is displayed each time attendees are added to upcoming events.
+            self.start_tour(f'/odoo/calendar/calendar.event/{past_event.id}', 'calendar_invite_tour', login='demo')
+        # Check that the new attendees receive invitations for the upcoming event.
+        self.assertMailMail(created_event_partner, 'sent', author=self.user_demo.partner_id)
+        self.assertMailMail(updated_event_partner, 'sent', author=self.user_demo.partner_id)
+        self.assertNoMail(past_event_partner)

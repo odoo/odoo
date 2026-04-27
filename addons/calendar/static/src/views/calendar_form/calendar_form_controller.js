@@ -2,12 +2,15 @@ import { FormController } from "@web/views/form/form_controller";
 import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { useUnlinkCalendarEvent } from "@calendar/views/hooks";
 import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 
 export class CalendarFormController extends FormController {
     setup() {
         super.setup();
         this.actionService = useService("action");
         this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
+        this.isPostSaveNotificationModal = false;
+        this.redirectionObj = null;
         this.unlinkCalendarEvent = useUnlinkCalendarEvent({ model: this.model });
     }
 
@@ -58,5 +61,46 @@ export class CalendarFormController extends FormController {
             [record.resId], recurrenceUpdate
         ]);
         this.env.config.historyBack();
+    }
+
+    /**
+     * This method is meant to be overridden.
+     */
+    getInvitedAttendees(record, changes) {
+        return (changes.partner_ids ?? []).reduce((acc, partner) => {
+            if (partner[0] === 4) { // To only get the event's new partners and send them an invitation if needed.
+                acc.push(partner[1]);
+            }
+            return acc;
+        }, []);
+    }
+
+    /**
+     * @override
+     */
+    async onRecordSaved(record, changes) {
+        await super.onRecordSaved(...arguments);
+        if (record.data.start >= luxon.DateTime.now()) {
+            const invitedAttendees = this.getInvitedAttendees(record, changes);
+            if (invitedAttendees.length > 0) {
+                const actionOpenInviteWizard = await this.orm.call("calendar.event", "action_open_invite_wizard", [
+                    record.resId,
+                    invitedAttendees,
+                    this.redirectionObj ? { "type": "ir.actions.act_url", "url": this.redirectionObj.url, "target": "self" } : null,
+                ]);
+                if (actionOpenInviteWizard && actionOpenInviteWizard.type) {
+                    this.isPostSaveNotificationModal = true; // To not perform the redirection at the end of the saving but after the notification modal submission.
+                    this.actionService.doAction(actionOpenInviteWizard);
+                }
+            }
+        }
+    }
+
+    /**
+     * @override
+     */
+    async onWillSaveRecord(record, changes) {
+        user.updateContext({ disable_auto_send_invitation_emails : true });
+        super.onWillSaveRecord(...arguments);
     }
 }
