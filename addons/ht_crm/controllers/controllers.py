@@ -1,21 +1,21 @@
 # from odoo import http
 
 
-# class SalePhones(http.Controller):
-#     @http.route('/sale_phones/sale_phones', auth='public')
+# class HtCrm(http.Controller):
+#     @http.route('/ht_crm/ht_crm', auth='public')
 #     def index(self, **kw):
 #         return "Hello, world"
 
-#     @http.route('/sale_phones/sale_phones/objects', auth='public')
+#     @http.route('/ht_crm/ht_crm/objects', auth='public')
 #     def list(self, **kw):
-#         return http.request.render('sale_phones.listing', {
-#             'root': '/sale_phones/sale_phones',
-#             'objects': http.request.env['sale_phones.sale_phones'].search([]),
+#         return http.request.render('ht_crm.listing', {
+#             'root': '/ht_crm/ht_crm',
+#             'objects': http.request.env['ht_crm.ht_crm'].search([]),
 #         })
 
-#     @http.route('/sale_phones/sale_phones/objects/<model("sale_phones.sale_phones"):obj>', auth='public')
+#     @http.route('/ht_crm/ht_crm/objects/<model("ht_crm.ht_crm"):obj>', auth='public')
 #     def object(self, obj, **kw):
-#         return http.request.render('sale_phones.object', {
+#         return http.request.render('ht_crm.object', {
 #             'object': obj
 #         })
 
