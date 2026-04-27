@@ -629,6 +629,7 @@ class MailActivity(models.Model):
                             'display_assignee': activity.user_id != self.env.user,
                             **self._get_activity_done_message_extra_values(activity),
                         },
+                        mail_activity_id=activity.id,
                         mail_activity_type_id=activity.activity_type_id.id,
                         subtype_xmlid='mail.mt_activities',
                     )

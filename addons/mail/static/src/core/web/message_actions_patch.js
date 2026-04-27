@@ -106,3 +106,10 @@ registerMessageAction("forward", {
     },
     sequence: 72,
 });
+registerMessageAction("reuse-activity", {
+    condition: ({ message }) => message.isActivity,
+    icon: "fa fa-recycle",
+    name: _t("Reuse"),
+    onSelected: ({ message }) => message.reuseActivity(),
+    sequence: 125,
+});

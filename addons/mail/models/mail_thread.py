@@ -3166,6 +3166,7 @@ class MailThread(models.AbstractModel):
             'incoming_email_to',
             'is_internal',
             'mail_activity_type_id',
+            'mail_activity_id',
             'mail_server_id',
             'message_id',
             'message_type',

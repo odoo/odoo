@@ -89,16 +89,14 @@ const StorePatch = {
     /**
      * @param {string} resModel
      * @param {number[]} resIds
-     * @param {number|undefined} defaultActivityTypeId
+     * @param {Object} [defaultContextValues] default values to pass in the activity form view.
      */
-    async scheduleActivity(resModel, resIds, defaultActivityTypeId = undefined) {
+    async scheduleActivity(resModel, resIds, defaultContextValues = {}) {
         const context = {
             active_model: resModel,
             active_ids: resIds,
             active_id: resIds[0],
-            ...(defaultActivityTypeId !== undefined
-                ? { default_activity_type_id: defaultActivityTypeId }
-                : {}),
+            ...defaultContextValues,
         };
         await new Promise((resolve) =>
             this.env.services.action.doAction(
