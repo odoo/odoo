@@ -69,17 +69,6 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
-    <record id="hr_employee_public_comp_rule" model="ir.rule">
-        <field name="name">Employee multi company rule</field>
-        <field name="model_id" ref="model_hr_employee_public"/>
-        <field name="domain_force">['|', '|', '|',
-            ('company_id', 'in', company_ids + [False]),
-            ('parent_id.user_id', '=', user.id),
-            ('id', '=', user.employee_id.parent_id.id),
-            ('user_id', '=', user.id)
-        ]</field>
-    </record>
-
     <record id="ir_rule_hr_employee_departure_multi_company" model="ir.rule">
         <field name="name">HR Employee Departure: Multi Company</field>
         <field name="model_id" ref="model_hr_employee_departure"/>

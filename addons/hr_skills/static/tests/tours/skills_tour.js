@@ -10,6 +10,11 @@ registry.category("web_tour.tours").add("hr_skills_tour", {
             run: "click",
         },
         {
+            content: "Open Management menu",
+            trigger: '[data-menu-xmlid="hr.menu_hr_employee_payroll"]',
+            run: "click",
+        },
+        {
             content: "Create a new employee",
             trigger: ".o-kanban-button-new",
             run: "click",

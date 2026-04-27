@@ -1540,7 +1540,7 @@ class HrEmployee(models.Model):
         if access_uid:
             user = self.env['res.users'].browse(access_uid).sudo()
 
-        if not user.has_group('hr.group_hr_user'):
+        if not user.has_group('hr.group_hr_user') or not self.env['hr.employee'].browse(res['res_id']).has_access('read'):
             res['res_model'] = 'hr.employee.public'
 
         return res
