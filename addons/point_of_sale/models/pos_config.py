@@ -207,8 +207,11 @@ class PosConfig(models.Model):
     statistics_for_current_session = fields.Json(string="Session Statistics", compute="_compute_statistics_for_session")
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
     iface_printbill = fields.Boolean(string='Bill Printing', help="Allows to print the Bill before payment.")
-
     pos_snooze_ids = fields.One2many('pos.product.template.snooze', 'pos_config_id', string='Snoozed Products')
+    use_download_invoice = fields.Boolean(
+        string='Download Invoice',
+        help="Automatically download the invoice PDF when an order is invoiced."
+    )
 
     def _get_next_order_refs(self, device_identifier='0'):
         next_number = self.order_backend_seq_id._next()
@@ -661,7 +664,7 @@ class PosConfig(models.Model):
         if prepa_printers_menuitem:
             prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('use_order_printer', '=', True)], limit=1) > 0
 
-    @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories',
+    @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories', 'use_download_invoice',
         'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id', 'module_pos_appointment', 'set_tip_after_payment')
     def _compute_local_data_integrity(self):
         self.last_data_change = self.env.cr.now()

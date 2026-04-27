@@ -211,7 +211,7 @@ export function filterIs(name) {
 export function invoicePrinted() {
     return [
         {
-            trigger: ProductScreen.controlButtonTrigger("Reprint Invoice"),
+            trigger: ProductScreen.controlButtonTrigger("Print Invoice"),
         },
     ];
 }

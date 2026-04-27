@@ -156,7 +156,8 @@ class PosOrder(models.Model):
 
     def _generate_order_invoice(self):
         if self.to_invoice and self.state == 'paid' and self.config_id.invoice_journal_id:
-            self._generate_pos_order_invoice()
+            should_generate_pdf = self.env.context.get('generate_pdf') or self.config_id.use_download_invoice
+            self.with_context(generate_pdf=should_generate_pdf)._generate_pos_order_invoice()
         elif not self.config_id.invoice_journal_id:
             _logger.warning('Trying to create an invoice without any journal configured')
             raise UserError(_('No invoice journal configured for this POS session.'))
@@ -380,6 +381,7 @@ class PosOrder(models.Model):
         help="List of journal entries created when this POS order was reversed and invoiced after session close."
     )
     source = fields.Selection(string="Origin", selection=[('pos', 'Point of Sale')], default='pos')
+    defer_invoice_pdf = fields.Boolean(string="Defer Invoice PDF Generation", index=True)
 
     _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
 
@@ -689,6 +691,30 @@ class PosOrder(models.Model):
 
     def get_reference_last_part(self):
         return self.pos_reference.split('-')[-1]
+
+    @api.model
+    def _cron_process_pos_orders(self):
+        """
+        Entry point for the POS 5-minute cron.
+
+        This method acts as a central handler that runs various
+        PoS order-related background tasks (e.g., processing deferred
+        invoices, syncing orders, cleanup operations).
+
+        Each task should be implemented in its own dedicated method
+        and called from here to keep responsibilities well separated.
+        """
+        self._process_deferred_invoice_orders()
+
+    @api.model
+    def _process_deferred_invoice_orders(self):
+        orders = self.search([('defer_invoice_pdf', '=', True)])
+        for order in orders:
+            try:
+                order.account_move.with_context(skip_invoice_sync=True)._generate_and_send()
+            except (UserError, ValidationError) as e:
+                _logger.error("Error processing order %s: %s", order.name, e)
+            order.defer_invoice_pdf = False
 
     def action_view_invoice(self):
         invoices = self.account_move
@@ -1102,6 +1128,13 @@ class PosOrder(models.Model):
             "target": "new",
         }
 
+    def action_invoice_download_pdf(self):
+        self.ensure_one()
+        if self.defer_invoice_pdf:
+            self.account_move.with_context(skip_invoice_sync=True)._generate_and_send()
+            self.defer_invoice_pdf = False
+        return self.account_move.action_invoice_download_pdf()
+
     def action_pos_order_invoice(self):
         self.ensure_one()
         if not (move := self.account_move):
@@ -1157,6 +1190,8 @@ class PosOrder(models.Model):
 
         if self.env.context.get('generate_pdf', True):
             invoice.with_context(skip_invoice_sync=True)._generate_and_send()
+        else:
+            order.defer_invoice_pdf = True
 
         return invoice
 

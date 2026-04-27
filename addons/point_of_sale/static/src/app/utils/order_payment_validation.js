@@ -162,7 +162,11 @@ export default class OrderPaymentValidation {
 
             // 2. Invoice, should not stop the validation process but a dialog is shown if an
             // error occurred.
-            if (this.shouldDownloadInvoice() && this.order.isToInvoice()) {
+            if (
+                this.pos.config.use_download_invoice &&
+                this.shouldDownloadInvoice() &&
+                this.order.isToInvoice()
+            ) {
                 if (this.order.raw.account_move) {
                     await this.pos.env.services.account_move.downloadPdf(
                         this.order.raw.account_move

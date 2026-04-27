@@ -57,6 +57,7 @@ class TestVNEDIPOSTour(TestVNEDI, TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             "l10n_vn_auto_send_to_sinvoice": True,
             "l10n_vn_pos_symbol": self.symbol.id,
+            "use_download_invoice": True,
         })
 
         with patch("odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService._send_request", side_effect=self._mock_sinvoice_send_request), \

@@ -23,7 +23,7 @@ patch(InvoiceButton.prototype, {
     get commandName() {
         if (this.pos.isVietnamCompany() && this.pos.config.l10n_vn_auto_send_to_sinvoice) {
             const name = super.commandName;
-            return name === _t("Reprint Invoice") ? _t("Print Tax Invoice") : name;
+            return name === _t("Print Invoice") ? _t("Print Tax Invoice") : name;
         }
         return super.commandName;
     },
