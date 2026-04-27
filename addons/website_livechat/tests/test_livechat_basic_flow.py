@@ -168,6 +168,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 "discuss.channel": self._filter_channels_fields(
                     {
                         "ai_agent_id": False,
+                        'ai_session_ids': [],
                         "channel_type": "livechat",
                         "chatbot": False,
                         "chatbot_current_step_id": False,
@@ -345,6 +346,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             self._filter_channels_fields(
                 {
                     "ai_agent_id": False,
+                    "ai_session_ids": [],
                     "channel_type": "livechat",
                     "chatbot": False,
                     "chatbot_current_step_id": False,
