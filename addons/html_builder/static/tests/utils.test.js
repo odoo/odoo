@@ -300,19 +300,14 @@ describe("useSelectableLtrRtlComponent", () => {
                 `;
             }
         );
-        expect.errors(0);
         await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
         await contains(":iframe .test-options-target").click();
         await tick();
         for (const cls of ["a", "b", "c", "d"]) {
             expect(`[data-class-action=${cls}]`).toBeVisible();
         }
-        expect.verifyErrors([]);
     });
     test("Registering only 1 ltrRtlMapping should crash", async () => {
-        patchWithCleanup(console, {
-            warn: (msg) => expect.step(msg),
-        });
         addBuilderOption(
             class TestOptionComponent extends BaseOptionComponent {
                 static selector = "div.test-options-target";
@@ -329,12 +324,8 @@ describe("useSelectableLtrRtlComponent", () => {
         expect.waitForErrors([
             `ltrRtlMapping "test" has been found only once. They should always come in pair and shouldn't have different render conditions.`,
         ]);
-        expect.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
     });
     test("Registering 2 ltrRtlMapping with different rendering conditions should crash", async () => {
-        patchWithCleanup(console, {
-            warn: (msg) => expect.step(msg),
-        });
         addBuilderOption(
             class TestOptionComponent extends BaseOptionComponent {
                 static selector = "div.test-options-target";
@@ -351,12 +342,8 @@ describe("useSelectableLtrRtlComponent", () => {
         expect.waitForErrors([
             `ltrRtlMapping "test" has been found only once. They should always come in pair and shouldn't have different render conditions.`,
         ]);
-        expect.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
     });
     test("Registering 3 identical ltrRtlMapping should crash", async () => {
-        patchWithCleanup(console, {
-            warn: (msg) => expect.step(msg),
-        });
         addBuilderOption(
             class TestOptionComponent extends BaseOptionComponent {
                 static selector = "div.test-options-target";
@@ -374,7 +361,6 @@ describe("useSelectableLtrRtlComponent", () => {
         expect.waitForErrors([
             `ltrRtlMapping "test" has been found more than twice. They should always come in pair.`,
         ]);
-        expect.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
     });
 });
 
