@@ -34,6 +34,17 @@
   <cac:InvoiceLine>
     <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
     <cac:Item>
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE</cbc:Description>
+      <!-- License Plate in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'PlateNumber' -->
+      <cac:AdditionalItemProperty>
+        <cbc:Name>PlateNumber</cbc:Name>
+        <cbc:Value>1-ABC-123</cbc:Value>
+      </cac:AdditionalItemProperty>
+    </cac:Item>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:Item>
       <!-- VIN in Item/Description -->
       <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE ABCDEF012347GHJKL</cbc:Description>
     </cac:Item>

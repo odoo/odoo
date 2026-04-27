@@ -60,6 +60,7 @@ class TestUblImportBis3InvoiceBEVehicle(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice.invoice_line_ids, [
             {'vehicle_id': self.car.id},  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'SerialNumber'
             {'vehicle_id': self.car2.id},  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'VIN'
+            {'vehicle_id': self.car.id},  # match License Plate in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'PlateNumber'
             {'vehicle_id': self.car3.id},  # search VIN in Item/Description
             {'vehicle_id': self.car.id},  # search License Plate in Item/Description
             {'vehicle_id': self.car.id},  # search combined License Plate and VIN in Item/Description
