@@ -14,17 +14,8 @@ export const CALL_ICON_MUTED = "fa fa-microphone-slash";
 /** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
 
 /**
- * @typedef {Object} CallActionSpecificDefinition
- * @property {boolean} [isTracked]
- */
-
-/**
- * @typedef {ActionDefinition & CallActionSpecificDefinition} CallActionDefinition
- */
-
-/**
  * @param {string} id
- * @param {CallActionDefinition} definition
+ * @param {ActionDefinition} definition
  */
 export function registerCallAction(id, definition) {
     callActionsRegistry.add(id, definition);
@@ -37,7 +28,6 @@ export const muteAction = {
         channel?.isSelfInCall && (owner.env.inCallMenu || !store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) => store.rtc.selfSession?.isMute,
-    isTracked: true,
     icon: ({ action, owner, store }) =>
         action.isActive
             ? store.rtc.selfSession?.is_deaf && !owner.env.inCallMenu
@@ -49,7 +39,7 @@ export const muteAction = {
     sequence: 10,
     sequenceGroup: 100,
     tags: ({ action, store }) => {
-        const tags = [];
+        const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
         if (action.isActive) {
             tags.push(ACTION_TAGS.DANGER);
         }
@@ -78,13 +68,15 @@ registerCallAction("deafen", {
         channel?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
-    isTracked: true,
     icon: ({ action }) => (action.isActive ? CALL_ICON_DEAFEN : "fa fa-headphones"),
     hotkey: "shift+d",
     onSelected: ({ store }) => store.rtc.toggleDeafen(),
     sequence: 10,
     sequenceGroup: 100,
-    tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
+    tags: ({ action }) => [
+        ACTION_TAGS.CALL_ACTION_TRACKED,
+        action.isActive ? ACTION_TAGS.DANGER : undefined,
+    ],
 });
 export const cameraOnAction = {
     badge: ({ owner, store, channel }) =>
@@ -101,13 +93,12 @@ export const cameraOnAction = {
             ? _t("Stop camera")
             : _t("Turn camera on"),
     isActive: ({ store }) => store.rtc.selfSession?.is_camera_on,
-    isTracked: true,
     icon: "fa fa-video-camera",
     onSelected: ({ owner, store }) => store.rtc.toggleVideo("camera", { env: owner.env }),
     sequence: 10,
     sequenceGroup: 120,
     tags: ({ action, store, channel }) => {
-        const tags = [];
+        const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
         if (action.isActive) {
             tags.push(ACTION_TAGS.SUCCESS);
         }
@@ -149,12 +140,12 @@ registerCallAction("raise-hand", {
     condition: ({ channel }) => channel?.isSelfInCall,
     name: ({ store }) => (store.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
     isActive: ({ store }) => store.rtc.selfSession?.raisingHand,
-    isTracked: true,
     icon: "fa fa-hand-paper-o",
     hotkey: "shift+h",
     onSelected: ({ store }) => store.rtc.raiseHand(!store.rtc.selfSession.raisingHand),
     sequence: 50,
     sequenceGroup: 200,
+    tags: ACTION_TAGS.CALL_ACTION_TRACKED,
 });
 registerCallAction("share-screen", {
     condition: ({ channel }) => channel?.isSelfInCall && !isMobileOS(),
@@ -165,13 +156,15 @@ registerCallAction("share-screen", {
             : store.rtc.selfSession.is_screen_sharing_on
             ? _t("Stop Sharing Screen")
             : _t("Share Screen"),
-    isTracked: true,
     isActive: ({ store }) => store.rtc.selfSession?.is_screen_sharing_on,
     icon: "fa fa-desktop",
     onSelected: ({ owner, store }) => store.rtc.toggleVideo("screen", { env: owner.env }),
     sequence: 40,
     sequenceGroup: 200,
-    tags: ({ action }) => (action.isActive ? ACTION_TAGS.SUCCESS : undefined),
+    tags: ({ action }) => [
+        ACTION_TAGS.CALL_ACTION_TRACKED,
+        action.isActive ? ACTION_TAGS.SUCCESS : undefined,
+    ],
 });
 registerCallAction("fullscreen", {
     btnClass: ({ channel }) =>
@@ -326,10 +319,6 @@ export class CallAction extends Action {
     get params() {
         const channel = this.channelFn();
         return Object.assign(super.params, { channel });
-    }
-
-    get isTracked() {
-        return this.definition.isTracked;
     }
 }
 

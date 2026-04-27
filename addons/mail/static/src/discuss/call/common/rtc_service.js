@@ -20,6 +20,7 @@ import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { CallAction } from "@mail/discuss/call/common/call_actions";
+import { ACTION_TAGS } from "@mail/core/common/action";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -424,7 +425,9 @@ export class Rtc extends Record {
         return Boolean(this.localSession);
     }
 
+    /** @type {CallAction[]} */
     callActions = fields.Attr([], {
+        /** @this {import("models").Rtc} */
         compute() {
             const transformedActions = registry
                 .category("discuss.call/actions")
@@ -435,12 +438,13 @@ export class Rtc extends Record {
             }
             return transformedActions;
         },
+        /** @this {import("models").Rtc} */
         onUpdate() {
             for (const action of this.callActions) {
                 if (action.isActive === this.lastActions[action.id]) {
                     continue;
                 }
-                if (!action.isTracked) {
+                if (!action.tags.includes(ACTION_TAGS.CALL_ACTION_TRACKED)) {
                     continue;
                 }
                 if (action.isActive) {
