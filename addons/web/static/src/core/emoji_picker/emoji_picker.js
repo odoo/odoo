@@ -36,6 +36,17 @@ export function useEmojiPicker(...args) {
     return usePicker(EmojiPicker, ...args);
 }
 
+export function useEmojiPickerStoreScroll() {
+    const storeScroll = {
+        scrollValue: 0,
+        set: (value) => {
+            storeScroll.scrollValue = value;
+        },
+        get: () => storeScroll.scrollValue,
+    };
+    return storeScroll;
+}
+
 export const PICKER_PROPS = [
     "PickerComponent?",
     "close?",
@@ -154,9 +165,7 @@ export class EmojiPicker extends Component {
             if (!this.gridRef.el) {
                 return;
             }
-            if (this.props.storeScroll) {
-                this.props.storeScroll.set(this.gridRef.el.scrollTop);
-            }
+            this.props.storeScroll?.set(this.gridRef.el.scrollTop);
         });
     }
 
@@ -493,13 +502,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
         animation: false,
         popoverClass: options.popoverClass ?? "" + " bg-100 border border-secondary",
     });
-    props.storeScroll = {
-        scrollValue: 0,
-        set: (value) => {
-            props.storeScroll.scrollValue = value;
-        },
-        get: () => props.storeScroll.scrollValue,
-    };
+    props.storeScroll = useEmojiPickerStoreScroll();
 
     /**
      * @param {import("@web/core/utils/hooks").Ref} ref
