@@ -1017,6 +1017,7 @@ class AccountEdiCommon(models.AbstractModel):
                 ('amount_type', '=', 'percent'),
                 ('type_tax_use', '=', tax_type),
                 ('amount', '=', amount),
+                ('fiscal_position_ids', 'in', [False, record.fiscal_position_id.id])
             ]
             tax = self.env['account.tax']
             if hasattr(record, '_get_specific_tax'):
