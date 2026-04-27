@@ -2211,6 +2211,7 @@ class HrEmployee(models.Model):
             'name': self.env._('End of collaboration'),
             'res_model': 'hr.employee.departure',
             'type': 'ir.actions.act_window',
+            'views': [(self.env.ref('hr.hr_employee_departure_view_form').id, 'form')],
             'view_mode': 'form',
             'target': 'new',
             'context': {
