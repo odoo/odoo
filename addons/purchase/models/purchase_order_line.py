@@ -791,7 +791,7 @@ class PurchaseOrderLine(models.Model):
         if not 'accrual_entry_date' in self.env.context:
             return False
         accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
-        return accrual_date < fields.Date.context_today(self)
+        return accrual_date and accrual_date < fields.Date.context_today(self)
 
     def _update_date_planned(self, updated_date):
         self.date_planned = updated_date
