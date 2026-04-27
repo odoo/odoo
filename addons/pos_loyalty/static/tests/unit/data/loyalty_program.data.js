@@ -44,7 +44,7 @@ export class LoyaltyProgram extends models.ServerModel {
             portal_point_name: "Points",
             trigger_product_ids: [],
             rule_ids: [1],
-            reward_ids: [],
+            reward_ids: [1],
         },
         {
             id: 2,
@@ -62,7 +62,7 @@ export class LoyaltyProgram extends models.ServerModel {
             portal_point_name: "E-Wallet Points",
             trigger_product_ids: [],
             rule_ids: [],
-            reward_ids: [],
+            reward_ids: [2],
         },
         {
             id: 3,

@@ -54,7 +54,6 @@ class LoyaltyProgram(models.Model):
         string="Conditional rules",
         comodel_name="loyalty.rule",
         inverse_name="program_id",
-        compute="_compute_from_program_type",
         store=True,
         readonly=False,
         copy=True,
@@ -62,8 +61,17 @@ class LoyaltyProgram(models.Model):
     reward_ids = fields.One2many(
         string="Rewards",
         comodel_name="loyalty.reward",
+        compute="_compute_reward_ids",
+        inverse="_inverse_reward_ids",
+        compute_sql="_compute_sql_reward_ids",
+        compute_sudo=False,
+        store=False,
+        readonly=False,
+        copy=False,
+    )
+    real_reward_ids = fields.One2many(
+        comodel_name="loyalty.reward",
         inverse_name="program_id",
-        compute="_compute_from_program_type",
         store=True,
         readonly=False,
         copy=True,
@@ -71,7 +79,6 @@ class LoyaltyProgram(models.Model):
     communication_plan_ids = fields.One2many(
         comodel_name="loyalty.mail",
         inverse_name="program_id",
-        compute="_compute_from_program_type",
         store=True,
         readonly=False,
         copy=True,
@@ -127,7 +134,6 @@ class LoyaltyProgram(models.Model):
             ("future", "Future orders"),
             ("both", "Current & Future orders"),
         ],
-        compute="_compute_from_program_type",
         store=True,
         readonly=False,
         required=True,
@@ -139,7 +145,6 @@ class LoyaltyProgram(models.Model):
         Use a code: Customers will be eligible for a reward if they enter a code.
         """,
         selection=[("auto", "Automatic"), ("with_code", "Use a code")],
-        compute="_compute_from_program_type",
         store=True,
         readonly=False,
     )
@@ -197,6 +202,30 @@ class LoyaltyProgram(models.Model):
             raise UserError(
                 _("The validity period's start date must be anterior or equal to its end date.")
             )
+
+    @api.depends("real_reward_ids")
+    def _compute_reward_ids(self):
+        for program in self.with_context(active_test=False):
+            program.reward_ids = program.real_reward_ids
+
+    def _inverse_reward_ids(self):
+        for program in self.with_context(active_test=False):
+            if program.reward_ids:
+                # loyalty_skip_reward_check:
+                # There is an issue when we change the program type, since we clear the rewards and create
+                # new ones. The ORM actually does it in this order upon writing, triggering the constraint
+                # before creating the new rewards. However, we can check that the result of reward_ids would
+                # actually be empty or not, and if not, skip the constraint.
+                #
+                # program_type:
+                # We need add the program type to the context to avoid getting the default value ('discount')
+                # for reward type when calling the `default_get` method of `loyalty.reward`
+                program.with_context(loyalty_skip_reward_check=True, program_type=program.program_type).real_reward_ids = program.reward_ids
+            else:
+                program.real_reward_ids = program.reward_ids
+
+    def _compute_sql_reward_ids(self, table):
+        return table.reward_ids
 
     @api.constrains("reward_ids")
     def _constrains_reward_ids(self):
@@ -288,6 +317,9 @@ class LoyaltyProgram(models.Model):
             "buy_x_get_y": _("Promos"),
             "next_order_coupons": _("Coupons"),
         }
+
+    def _program_type_default_fields(self):
+        return {"applies_on", "trigger", "portal_visible", "portal_point_name", "rule_ids", "reward_ids", "communication_plan_ids"}
 
     @api.model
     def _program_type_default_values(self):
@@ -546,16 +578,12 @@ class LoyaltyProgram(models.Model):
             },
         }
 
-    @api.depends("program_type")
-    def _compute_from_program_type(self):
+    @api.onchange("program_type")
+    def _onchange_program_type(self):
         program_type_defaults = self._program_type_default_values()
         for program_type, programs in self.grouped('program_type').items():
             if program_type in program_type_defaults:
                 vals = program_type_defaults[program_type]
-                if "reward_ids" in vals and self._fields["reward_ids"].convert_to_cache(
-                    vals["reward_ids"], programs
-                ):
-                    programs = programs.with_context(loyalty_skip_reward_check=True, program_type=program_type)
                 programs.write(vals)
 
     @api.depends("currency_id", "program_type")
@@ -598,28 +626,9 @@ class LoyaltyProgram(models.Model):
             raise UserError(_("You can not delete a program in an active state"))
 
     def write(self, vals):
-        # There is an issue when we change the program type, since we clear the rewards and create
-        # new ones. The ORM actually does it in this order upon writing, triggering the constraint
-        # before creating the new rewards. However, we can check that the result of reward_ids would
-        # actually be empty or not, and if not, skip the constraint.
-        if "reward_ids" in vals and self._fields["reward_ids"].convert_to_cache(
-            vals["reward_ids"], self
-        ):
-            self = self.with_context(loyalty_skip_reward_check=True)
-            # We need add the program type to the context to avoid getting the default value
-            # ('discount') for reward type when calling the `default_get` method of
-            # `loyalty.reward`.
-            # res = super().write(vals)
-            if "program_type" in vals:
-                self = self.with_context(program_type=vals["program_type"])
-                res = super().write(vals)
-            else:
-                for program in self:
-                    program = program.with_context(program_type=program.program_type)
-                    super(LoyaltyProgram, program).write(vals)
-                res = True
-        else:
-            res = super().write(vals)
+        if vals.get("program_type") and self._program_type_default_fields().isdisjoint(vals):
+            vals = {**self._program_type_default_values()[vals["program_type"]], **vals}
+        super().write(vals)
 
         # Propagate active state to children
         if "active" in vals:
@@ -631,7 +640,7 @@ class LoyaltyProgram(models.Model):
                     active_test=True
                 ).discount_line_product_id.active = program.active
 
-        return res
+        return True
 
     @api.model
     def get_program_templates(self):
@@ -789,12 +798,16 @@ class LoyaltyProgram(models.Model):
         instances. Thus, it should be explicitly removed from an incoming vals dict unless, of
         course, it was actually a visible field.
         """
-        for vals in vals_list:
+        program_type_default_vals = self._program_type_default_values()
+        for i, vals in enumerate(vals_list):
             if "trigger_product_ids" in vals and vals.get("program_type") not in [
                 "gift_card",
                 "ewallet",
             ]:
                 del vals["trigger_product_ids"]
+            if self._program_type_default_fields().isdisjoint(vals):
+                program_type = vals.get("program_type", self.default_get(['program_type']).get('program_type'))
+                vals_list[i] = {**program_type_default_vals[program_type], **vals}
 
         return super().create(vals_list)
 
