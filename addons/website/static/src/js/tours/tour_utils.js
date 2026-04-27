@@ -330,11 +330,18 @@ function clickOnExtraMenuItem(stepOptions, backend = false) {
     return Object.assign({}, {
         content: "Click on the extra menu dropdown toggle if it is there",
         trigger: `${backend ? "iframe" : ""} .top_menu`,
-        run: function () {
+        run: async function () {
             const extraMenuButton = this.$anchor[0].querySelector('.o_extra_menu_items a.nav-link');
             // Don't click on the extra menu button if it's already visible.
             if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
+                const dropdownFullyOpen = Promise.withResolvers();
+                extraMenuButton.addEventListener(
+                    "shown.bs.dropdown",
+                    dropdownFullyOpen.resolve,
+                    {once: true}
+                );
                 extraMenuButton.click();
+                await dropdownFullyOpen.promise;
             }
         },
     }, stepOptions);
