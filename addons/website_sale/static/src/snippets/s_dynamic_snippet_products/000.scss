@@ -3,6 +3,15 @@
         --gutter-x: var(--o-wsale-products-grid-gap, 16px);
     }
 
+    // Space the slides like the cards inside them.
+    .carousel {
+        --o-carousel-transition-gap: var(--o-wsale-products-grid-gap, 16px);
+
+        &.o_carousel_multi_items {
+            --o-carousel-gap: var(--o-wsale-products-grid-gap, 16px);
+        }
+    }
+
     .carousel-item {
         padding-top: var(--o-carousel-item-padding-v);
         padding-bottom: var(--o-carousel-item-padding-v);
