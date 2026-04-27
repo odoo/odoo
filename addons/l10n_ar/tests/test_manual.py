@@ -412,3 +412,17 @@ class TestArManual(common.TestArCommon):
         })
         debit_note_wizard.create_debit()
         self.assertTrue(invoice.reversal_move_ids.debit_note_ids)
+
+    def test_pre_printed_invoice_warning(self):
+        """Test that a warning is included when at an Invoice using a 'Pre-printed Invoice' Journal."""
+        invoice = self._create_invoice_ar()  # Created with 'Pre-printed Invoice' Journal
+        self.assertTrue(
+            'l10n_ar_apos_sys_preprinted_warning' in invoice.alerts,
+            'Pre-printed Invoice warning should be included.',
+        )
+        # Trigger alerts field recompute
+        self.journal.l10n_ar_is_pos = False
+        self.assertTrue(
+            'l10n_ar_apos_sys_preprinted_warning' not in (invoice.alerts or {}),
+            'Pre-printed Invoice warning should not be included.',
+        )

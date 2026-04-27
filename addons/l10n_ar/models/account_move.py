@@ -70,6 +70,11 @@ class AccountMove(models.Model):
 
         super(AccountMove, self - docs_used_for_inv_and_ref)._check_invoice_type_document_type()
 
+    @api.depends('journal_id.l10n_ar_is_pos', 'journal_id.l10n_ar_afip_pos_system')
+    def _compute_alerts(self):
+        # EXTENDS 'account'
+        super()._compute_alerts()
+
     def _get_afip_invoice_concepts(self):
         """ Return the list of values of the selection field. """
         return [('1', 'Products / Definitive export of goods'), ('2', 'Services'), ('3', 'Products and Services'),
@@ -261,6 +266,21 @@ class AccountMove(models.Model):
                 else:
                     raise UserError(_('The document number can not be changed for this journal, you can only modify'
                                       ' the POS number if there is not posted (or posted before) invoices'))
+
+    def _get_alerts(self):
+        # EXTENDS 'account'
+        alerts = super()._get_alerts()
+        journal = self.journal_id
+        if journal.l10n_ar_is_pos and journal.l10n_ar_afip_pos_system == 'II_IM':
+            alerts['l10n_ar_apos_sys_preprinted_warning'] = {
+                'level': 'warning',
+                'message': _(
+                    'Headers and footers are omitted from the printed PDF for Pre-Printed Journals. '
+                    'If you need them included on the PDF, please select an Online (not sent to ARCA) '
+                    'or Electronic Invoice (sent to ARCA) journal instead.'
+                )
+            }
+        return alerts
 
     def _get_formatted_sequence(self, number=0):
         return "%s %05d-%08d" % (self.l10n_latam_document_type_id.doc_code_prefix,
