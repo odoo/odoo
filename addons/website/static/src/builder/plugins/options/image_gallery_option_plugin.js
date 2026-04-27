@@ -457,6 +457,9 @@ export class ImageGalleryOptionPlugin extends Plugin {
 export class AddImageAction extends BuilderAction {
     static id = "addImage";
     static dependencies = ["media", "imageGalleryOption"];
+    setup() {
+        this.canTimeout = false;
+    }
     async apply({ editingElement }) {
         await this.dependencies.media.openMediaDialog({
             onlyImages: true,
