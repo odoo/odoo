@@ -82,7 +82,7 @@ class PostgreSQLHandler(logging.Handler):
                 metadata = {}
                 if module.current_test:
                     try:
-                        metadata['test'] = module.current_test.get_log_metadata()
+                        metadata['test'] = module.current_test.get_log_metadata(record)
                     except:
                         pass
 
