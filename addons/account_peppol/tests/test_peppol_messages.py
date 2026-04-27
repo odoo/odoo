@@ -854,7 +854,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         self.assertRecordValues(move.line_ids, [
             {
-                'name': 'product_a',
+                'name': 'product_a\nproduct_a',
                 'quantity': 1.0,
                 'price_unit': 100.0,
                 'tax_ids': tax_21.ids,
