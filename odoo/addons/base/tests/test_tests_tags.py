@@ -212,6 +212,57 @@ class TestSelector(TransactionCase):
         self.assertEqual({(None, 'module', None, None, None), }, tags.include)  # all in module
         self.assertEqual({('standard', None, None, None, None), }, tags.exclude)  # exept standard ones
 
+    def test_tags_selector_split(self):
+        self.assertEqual(
+            list(TagsSelector(r'.test_1[param1,param2]').parameters),
+            [(('standard', None, None, 'test_1', None), ('+', r'param1,param2'))],
+        )
+        self.assertEqual(
+            list(TagsSelector(r'.test_1[param1[],param2]').parameters),
+            [(('standard', None, None, 'test_1', None), ('+', r'param1[],param2'))],
+            "[] is balanced and should not split the parameters",
+        )
+        self.assertEqual(
+            list(TagsSelector(r'.test_1[param1,param2[]]').parameters),
+            [(('standard', None, None, 'test_1', None), ('+', r'param1,param2[]'))],
+            "[] is balanced and should not split the parameters",
+        )
+        self.assertEqual(
+            list(TagsSelector(r'.test_1[param1\],param2]').parameters),
+            [(('standard', None, None, 'test_1', None), ('+', r'param1],param2'))],
+            "] can be escaped",
+        )
+        self.assertEqual(
+            list(TagsSelector(r'.test_1[param1\[\],param2]').parameters),
+            [(('standard', None, None, 'test_1', None), ('+', r'param1[],param2'))],
+            "[ and ] can be escaped",
+        )
+        self.assertEqual(
+            list(TagsSelector(r'.test_1[param1,param2\]]').parameters),
+            [(('standard', None, None, 'test_1', None), ('+', r'param1,param2]'))],
+            "] can be escaped in second param",
+        )
+        self.assertEqual(
+            list(TagsSelector(r'.test_1[par\am1,param2]').parameters),
+            [(('standard', None, None, 'test_1', None), ('+', r'par\am1,param2'))],
+            "string containing backslashes should work",
+        )
+        self.assertEqual(
+            list(TagsSelector(r'.test_1[par\\am1,param2]').parameters),
+            [(('standard', None, None, 'test_1', None), ('+', r'par\am1,param2'))],
+            "string containing backslashes can be escaped",
+        )
+        self.assertEqual(
+            list(TagsSelector('.test_1[should paste text and understand \\\\n newlines]').parameters),
+            [(('standard', None, None, 'test_1', None), ('+', 'should paste text and understand \\n newlines'))],
+            "backslashes can be escaped",
+        )
+        self.assertEqual(
+            list(TagsSelector(r'.test_method[test, with brackets\], and backslash\\ ]').parameters),
+            [(('standard', None, None, 'test_method', None), ('+', r'test, with brackets], and backslash\ '))],
+            "backslashes can be escaped",
+        )
+
 
 @tagged('nodatabase')
 class TestSelectorSelection(TransactionCase):
