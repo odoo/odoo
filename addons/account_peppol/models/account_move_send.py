@@ -52,9 +52,9 @@ class AccountMoveSend(models.AbstractModel):
         not_peppol_moves = moves.filtered(lambda m: 'peppol' not in moves_data[m]['sending_methods'])
         what_is_peppol_alert = {
             'level': 'info',
-            'action_text': _("Why should you use it ?"),
+            'action_text': _("Why should you use it?"),
             'action': {
-                'name': _("Why should I use PEPPOL ?"),
+                'name': _("Why should I use Peppol?"),
                 'type': 'ir.actions.client',
                 'tag': 'account_peppol.what_is_peppol',
                 'target': 'new',
