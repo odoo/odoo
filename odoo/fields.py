@@ -3212,7 +3212,7 @@ class Many2one(_Relational):
         cache = records.env.cache
         corecord = self.convert_to_record(value, records)
         for invf in records.pool.field_inverses[self]:
-            valid_records = records.filtered_domain(invf.get_domain_list(corecord))
+            valid_records = records.sudo().filtered_domain(invf.get_domain_list(corecord))
             if not valid_records:
                 continue
             ids0 = cache.get(corecord, invf, None)

@@ -954,6 +954,25 @@ class TestPurchase(AccountTestInvoicingCommon):
             "Mail shouldn't link to the base URL",
         )
 
+    def test_create_rfq_with_manual_one2many_to_pol(self):
+        """ A manual one2many on product.product targeting purchase.order.line
+        with a domain on a stored related field (state) must not raise when
+        creating an RFQ while the multi-company record rule on POL is active.
+        """
+        self.env['ir.model.fields'].create({
+            'name': 'x_test_pol_ids',
+            'field_description': 'Test POLs',
+            'ttype': 'one2many',
+            'model_id': self.env['ir.model']._get_id('product.product'),
+            'relation': 'purchase.order.line',
+            'relation_field': 'product_id',
+            'domain': "[('state', 'in', ('purchase', 'done'))]",
+        })
+        self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        })
+
     def test_product_price_on_purchase_order_view_catalog(self):
         """
         Ensure vendor price & discount from supplierinfo are applied
