@@ -1962,11 +1962,23 @@ Please change the quantity done or the rounding precision of your unit of measur
                         if available_move_lines.get((move_line.location_id, move_line.lot_id, move_line.package_id, move_line.owner_id)):
                             available_move_lines[(move_line.location_id, move_line.lot_id, move_line.package_id, move_line.owner_id)] -= move_line.quantity_product_uom
 
+                    location_ids, lot_ids = set(), set()
+                    for (location, lot, dummy, dummy) in available_move_lines:
+                        location_ids.add(location.id)
+                        lot_ids.add(lot.id)
+
+                    quants_cache = self.env['stock.quant']._get_quants_by_products_locations(
+                        move.product_id, self.env['stock.location'].browse(location_ids),
+                        extra_domain=['|', ('lot_id', 'in', list(lot_ids)), ('lot_id', '=', False)]
+                    )
+
                     taken_quantities = {}
                     all_move_line_vals = []
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
-                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, need), location_id, lot_id, package_id, owner_id, strict=True)
+                        move_line_vals, taken_quantity = move.with_context(quants_cache=quants_cache)._update_reserved_quantity_vals(
+                            min(quantity, need), location_id, lot_id, package_id, owner_id, strict=True
+                        )
                         all_move_line_vals += move_line_vals
                         if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
                             taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
