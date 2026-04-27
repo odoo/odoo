@@ -69,8 +69,6 @@ class PosSelfKiosk(http.Controller):
             raise werkzeug.exceptions.NotFound()
 
         if pos_config and pos_config.has_active_session and pos_config.self_ordering_mode == 'mobile':
-            if config_access_token:
-                config_access_token = pos_config.access_token
             table_sudo = table_identifier and (
                 request.env["restaurant.table"]
                 .sudo()
@@ -78,9 +76,9 @@ class PosSelfKiosk(http.Controller):
             )
             if table_sudo and table_sudo.parent_id:
                 table_sudo = table_sudo.parent_id
-        elif pos_config.self_ordering_mode == 'kiosk':
-            if config_access_token:
-                config_access_token = pos_config.access_token
+        # In mobile mode, always set config_access_token (needed for notification), even without an active session
+        if config_access_token and pos_config.self_ordering_mode in ['kiosk', 'mobile']:
+            config_access_token = pos_config.access_token
         else:
             config_access_token = ''
 
