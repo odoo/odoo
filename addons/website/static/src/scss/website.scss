@@ -1588,6 +1588,9 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
                     margin-right: 0;
                 }
             }
+            .carousel-item-prev:not(.carousel-item-end) {
+                transform: translateX(calc(-100% - var(--o-carousel-gap)));
+            }
             .active.carousel-item-end + .carousel-item-prev.carousel-item-end,
             .carousel-item-prev.carousel-item-end ~ .carousel-item {
                 right: calc(var(--o-carousel-item-width-percentage) + var(--o-carousel-gap));
