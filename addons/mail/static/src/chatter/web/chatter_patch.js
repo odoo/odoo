@@ -103,6 +103,8 @@ const chatterPatch = {
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
+        /** @type {Map<string, Function>} */
+        this.uploadHandlers = new Map();
         useCustomDropzone(
             this.rootRef,
             MailAttachmentDropzone,
@@ -407,16 +409,34 @@ const chatterPatch = {
         this.load(thread, ["suggestedRecipients"]);
     },
 
-    async onUploaded(data) {
-        await this.attachmentUploader.uploadData(data);
-        if (this.props.hasParentReloadOnAttachmentsChanged) {
-            this.reloadParentView();
+    /**
+     * @param {string} data deprecated, passing thread is enough
+     * @param {import("models").Thread} thread
+     */
+    onUploaded(data, { thread } = {}) {
+        const threadLocalId = thread.localId;
+        if (!this.uploadHandlers.has(threadLocalId)) {
+            const self = this;
+            this.uploadHandlers.set(threadLocalId, async function handleUpload(data) {
+                try {
+                    await self.attachmentUploader.uploadData(data, { thread });
+                    if (!thread.eq(self.state.thread)) {
+                        return;
+                    }
+                    if (self.props.hasParentReloadOnAttachmentsChanged) {
+                        self.reloadParentView();
+                    }
+                    self.state.isAttachmentBoxOpened = true;
+                    if (self.rootRef.el) {
+                        self.rootRef.el.scrollTop = 0;
+                    }
+                    self.state.thread.scrollTop = "bottom";
+                } finally {
+                    self.uploadHandlers.delete(threadLocalId);
+                }
+            });
         }
-        this.state.isAttachmentBoxOpened = true;
-        if (this.rootRef.el) {
-            this.rootRef.el.scrollTop = 0;
-        }
-        this.state.thread.scrollTop = "bottom";
+        return this.uploadHandlers.get(threadLocalId);
     },
 
     async reloadParentView() {
